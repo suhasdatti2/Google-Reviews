@@ -1,0 +1,60 @@
+<section class="section" id="pricing">
+  <div class="page-width">
+    <span class="kicker">{{ section.settings.kicker }}</span>
+    <h2 class="section-heading">{{ section.settings.heading }}</h2>
+    <p class="section-sub">{{ section.settings.subheading }}</p>
+
+    <div class="pricing">
+      {%- for block in section.blocks -%}
+        <div class="price-card{% if block.settings.featured %} price-card--featured{% endif %}" {{ block.shopify_attributes }}>
+          {%- if block.settings.badge != blank -%}
+            <span class="price-card__badge">{{ block.settings.badge }}</span>
+          {%- endif -%}
+          <span class="price-card__name">{{ block.settings.name }}</span>
+          <span class="price-card__price">{{ block.settings.price }}</span>
+          <p class="price-card__note">{{ block.settings.note }}</p>
+          <ul>
+            <li>Programmed with your Google review link</li>
+            <li>No app needed — works with iPhone &amp; Android</li>
+            <li>No monthly fee, ever</li>
+            <li>Arrives tested &amp; ready to use</li>
+          </ul>
+          <a class="btn {% if block.settings.featured %}btn--primary{% else %}btn--ghost{% endif %} btn--full" href="{{ block.settings.link | default: '/products/google-review-nfc-card' }}">{{ block.settings.button_label }}</a>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Pricing",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "Pricing" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "One-time price. No subscriptions." },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Every card is programmed with your Google review link before it ships."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "plan",
+      "name": "Plan",
+      "settings": [
+        { "type": "text", "id": "name", "label": "Plan name", "default": "1 Card" },
+        { "type": "text", "id": "price", "label": "Price", "default": "$19.99" },
+        { "type": "text", "id": "note", "label": "Note", "default": "Perfect for the front counter." },
+        { "type": "text", "id": "badge", "label": "Badge (optional)" },
+        { "type": "checkbox", "id": "featured", "label": "Highlight this plan", "default": false },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Get My Review Card" },
+        { "type": "url", "id": "link", "label": "Button link" }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [{ "name": "Pricing" }]
+}
+{% endschema %}

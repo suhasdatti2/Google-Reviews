@@ -1,0 +1,106 @@
+<section class="product-page">
+  <div class="page-width product-grid">
+
+    <div class="product-media">
+      {%- if product.featured_image != blank -%}
+        {{ product.featured_image | image_url: width: 1100 | image_tag: alt: product.featured_image.alt, loading: 'eager' }}
+      {%- else -%}
+        {% render 'card-mockup' %}
+        <p class="card-mockup-caption">Glossy black NFC card · matte white print · credit-card size</p>
+      {%- endif -%}
+    </div>
+
+    <div class="product-info">
+      <h1>{{ product.title }}</h1>
+      <p class="product-info__price">{{ product.selected_or_first_available_variant.price | money }}</p>
+      <p class="product-info__tagline">{{ section.settings.tagline }}</p>
+
+      {%- form 'product', product, class: 'product-form' -%}
+        {%- if product.variants.size > 1 -%}
+          <div class="form-field">
+            <label for="variant-select">Choose your pack</label>
+            <select id="variant-select" name="id">
+              {%- for variant in product.variants -%}
+                <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
+                  {{ variant.title }} — {{ variant.price | money }}{% unless variant.available %} (sold out){% endunless %}
+                </option>
+              {%- endfor -%}
+            </select>
+          </div>
+        {%- else -%}
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        {%- endif -%}
+
+        <div class="personalize">
+          <h3>Personalize your card</h3>
+
+          <div class="form-field">
+            <label for="prop-business">Business name *</label>
+            <input id="prop-business" type="text" name="properties[Business name]" required placeholder="e.g. Fresh Fades Barbershop">
+          </div>
+
+          <div class="form-field">
+            <label for="prop-link">Google review link *</label>
+            <input id="prop-link" type="url" name="properties[Google review link]" required placeholder="https://g.page/r/...">
+            <p class="hint">Not sure where to find it? Paste your Google Business Profile link — we'll sort out the rest.</p>
+          </div>
+
+          <div class="form-field">
+            <label for="prop-contact">Best email or phone *</label>
+            <input id="prop-contact" type="text" name="properties[Contact email or phone]" required placeholder="you@business.com">
+            <p class="hint">We'll only use this if we have a question about your link.</p>
+          </div>
+
+          <p class="personalize__note">Prefer to send it later? Order now and email your review link to {{ settings.contact_email }} — just include your order number.</p>
+        </div>
+
+        <button type="submit" class="btn btn--primary btn--lg btn--full" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+          {%- if product.selected_or_first_available_variant.available -%}
+            {{ section.settings.buy_label }}
+          {%- else -%}
+            Sold out
+          {%- endif -%}
+        </button>
+      {%- endform -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <ul class="product-benefits">
+          {%- for block in section.blocks -%}
+            <li {{ block.shopify_attributes }}><strong>{{ block.settings.title }}</strong> — {{ block.settings.text }}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if product.description != blank -%}
+        <div class="product-description rte">{{ product.description }}</div>
+      {%- endif -%}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product",
+  "settings": [
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline under price",
+      "default": "Programmed with your Google review link. No app. No monthly fee."
+    },
+    { "type": "text", "id": "buy_label", "label": "Buy button label", "default": "Add to Cart — Get More Reviews" }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "One tap, no typing" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Customers tap the card and your Google review page opens instantly." }
+      ]
+    }
+  ],
+  "max_blocks": 6
+}
+{% endschema %}

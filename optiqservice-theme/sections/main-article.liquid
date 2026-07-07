@@ -1,0 +1,21 @@
+<section class="page-hero">
+  <div class="page-width">
+    <h1>{{ article.title }}</h1>
+    <p class="section-sub">{{ article.published_at | date: '%B %d, %Y' }}</p>
+  </div>
+</section>
+<section class="section--tight">
+  <div class="page-width">
+    {%- if article.image != blank -%}
+      {{ article.image | image_url: width: 1200 | image_tag: alt: article.title, style: 'border-radius: 14px; margin-bottom: 32px;' }}
+    {%- endif -%}
+    <div class="rte">{{ article.content }}</div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Article",
+  "settings": []
+}
+{% endschema %}

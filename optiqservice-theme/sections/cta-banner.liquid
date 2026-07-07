@@ -1,0 +1,25 @@
+<section class="section cta-banner">
+  <div class="page-width">
+    <h2>{{ section.settings.heading }}</h2>
+    <p>{{ section.settings.subheading }}</p>
+    <a class="btn btn--primary btn--lg" href="{{ section.settings.button_link | default: '/products/google-review-nfc-card' }}">{{ section.settings.button_label }}</a>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "CTA banner",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Your next great review is one tap away" },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Order today, send us your review link, and your card arrives programmed and ready to use."
+    },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Start Getting Reviews" },
+    { "type": "url", "id": "button_link", "label": "Button link" }
+  ],
+  "presets": [{ "name": "CTA banner" }]
+}
+{% endschema %}

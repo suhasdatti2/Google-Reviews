@@ -1,0 +1,27 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "OptiqService Mono",
+    "theme_version": "1.0.0",
+    "theme_author": "OptiqService",
+    "theme_documentation_url": "https://optiqservice.com",
+    "theme_support_url": "mailto:sales@optiqservice.com"
+  },
+  {
+    "name": "Brand",
+    "settings": [
+      {
+        "type": "text",
+        "id": "contact_email",
+        "label": "Contact email",
+        "default": "sales@optiqservice.com"
+      },
+      {
+        "type": "text",
+        "id": "tagline",
+        "label": "Footer tagline",
+        "default": "Tap-to-review NFC cards for local businesses. No app. No monthly fee."
+      }
+    ]
+  }
+]

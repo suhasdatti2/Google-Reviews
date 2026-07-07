@@ -1,0 +1,260 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "kicker": "NFC review cards for local businesses",
+        "heading": "Get More Google Reviews With One Tap",
+        "subheading": "A premium NFC card programmed with your Google review link. Happy customers tap it with their phone and your review page opens instantly — no app, no monthly fee.",
+        "button_label": "Get My Review Card",
+        "secondary_label": "See How It Works",
+        "trust_line": "Works with iPhone & Android · No app needed · One-time purchase"
+      }
+    },
+    "highlight": {
+      "type": "product-highlight",
+      "settings": {
+        "kicker": "The card",
+        "heading": "Designed to sit on your counter. Built to get tapped.",
+        "subheading": "A glossy black card with a clean matte white design. It says exactly what it does: Tap to Review.",
+        "caption": "Glossy black NFC card · matte white print · credit-card size"
+      },
+      "blocks": {
+        "spec1": {
+          "type": "spec",
+          "settings": {
+            "title": "Credit-card size",
+            "text": "Fits the counter, the till, a lanyard, or your hand at the end of a great haircut."
+          }
+        },
+        "spec2": {
+          "type": "spec",
+          "settings": {
+            "title": "NFC chip inside",
+            "text": "Programmed with your Google review link before it ships. Tap it — your review page opens."
+          }
+        },
+        "spec3": {
+          "type": "spec",
+          "settings": {
+            "title": "No batteries, no charging",
+            "text": "NFC is powered by the customer's phone. The card just works, day after day."
+          }
+        }
+      },
+      "block_order": ["spec1", "spec2", "spec3"]
+    },
+    "how": {
+      "type": "how-it-works",
+      "settings": {
+        "kicker": "How it works",
+        "heading": "From order to first review in four steps",
+        "subheading": "We handle the setup. You just put the card where customers can tap it."
+      },
+      "blocks": {
+        "step1": {
+          "type": "step",
+          "settings": {
+            "title": "Order your card",
+            "text": "Pick 1, 2, or 3 cards. One-time price — no subscription, ever."
+          }
+        },
+        "step2": {
+          "type": "step",
+          "settings": {
+            "title": "Send your review link",
+            "text": "Enter your business name and Google review link at checkout. Not sure where to find it? We'll help."
+          }
+        },
+        "step3": {
+          "type": "step",
+          "settings": {
+            "title": "We program your card",
+            "text": "Every card is programmed with your link and tap-tested before it ships."
+          }
+        },
+        "step4": {
+          "type": "step",
+          "settings": {
+            "title": "Customers tap & review",
+            "text": "They tap the card with their phone, your review page opens, and leaving a review takes seconds."
+          }
+        }
+      },
+      "block_order": ["step1", "step2", "step3", "step4"]
+    },
+    "who": {
+      "type": "who-its-for",
+      "settings": {
+        "kicker": "Who it's for",
+        "heading": "Made for businesses that live on reviews",
+        "subheading": "If your customers walk out happy, give them the easiest possible way to say so."
+      },
+      "blocks": {
+        "aud1": {
+          "type": "audience",
+          "settings": {
+            "title": "Barbershops",
+            "text": "Hand it over while they check out the fresh cut in the mirror."
+          }
+        },
+        "aud2": {
+          "type": "audience",
+          "settings": {
+            "title": "Restaurants & cafés",
+            "text": "Drop it with the check — the tap takes less time than signing the receipt."
+          }
+        },
+        "aud3": {
+          "type": "audience",
+          "settings": {
+            "title": "Salons & spas",
+            "text": "Catch clients at their best — right after the appointment."
+          }
+        },
+        "aud4": {
+          "type": "audience",
+          "settings": {
+            "title": "Auto detailers",
+            "text": "They just saw their car transformed. Make the review as easy as the tap."
+          }
+        },
+        "aud5": {
+          "type": "audience",
+          "settings": {
+            "title": "Gyms & studios",
+            "text": "Keep it at the front desk for members who love the place."
+          }
+        },
+        "aud6": {
+          "type": "audience",
+          "settings": {
+            "title": "Local shops",
+            "text": "Turn friendly counter chat into reviews new customers can find."
+          }
+        }
+      },
+      "block_order": ["aud1", "aud2", "aud3", "aud4", "aud5", "aud6"]
+    },
+    "pricing": {
+      "type": "pricing",
+      "settings": {
+        "kicker": "Pricing",
+        "heading": "One-time price. No subscriptions.",
+        "subheading": "Every card is programmed with your Google review link before it ships."
+      },
+      "blocks": {
+        "plan1": {
+          "type": "plan",
+          "settings": {
+            "name": "1 Card",
+            "price": "$19.99",
+            "note": "Perfect for the front counter or register.",
+            "badge": "",
+            "featured": false,
+            "button_label": "Get My Review Card"
+          }
+        },
+        "plan2": {
+          "type": "plan",
+          "settings": {
+            "name": "2 Cards",
+            "price": "$34.99",
+            "note": "Save $5 — one for the counter, one for the team.",
+            "badge": "Most Popular",
+            "featured": true,
+            "button_label": "Get My Review Cards"
+          }
+        },
+        "plan3": {
+          "type": "plan",
+          "settings": {
+            "name": "3 Cards",
+            "price": "$49.99",
+            "note": "Save $10 — cover every station, table, or register.",
+            "badge": "Best Value",
+            "featured": false,
+            "button_label": "Get My Review Cards"
+          }
+        }
+      },
+      "block_order": ["plan1", "plan2", "plan3"]
+    },
+    "faq": {
+      "type": "faq",
+      "settings": {
+        "kicker": "FAQ",
+        "heading": "Questions, answered",
+        "subheading": "Anything else? Email sales@optiqservice.com — we reply within one business day."
+      },
+      "blocks": {
+        "q1": {
+          "type": "question",
+          "settings": {
+            "question": "How does the card work?",
+            "answer": "There's an NFC chip inside the card, programmed with your Google review link. When a customer holds their phone near the card, their phone reads the chip and opens your Google review page — the same technology as tap-to-pay."
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "question": "Do my customers need an app?",
+            "answer": "No. NFC reading is built into modern iPhones and Android phones. Customers just unlock their phone and hold it near the card — no app, no QR code, no typing."
+          }
+        },
+        "q3": {
+          "type": "question",
+          "settings": {
+            "question": "How do you program my review link?",
+            "answer": "At checkout you'll enter your business name and Google review link. We program the chip, tap-test it on both iPhone and Android, and ship it ready to use. Nothing to set up on your end."
+          }
+        },
+        "q4": {
+          "type": "question",
+          "settings": {
+            "question": "What if I don't know my Google review link?",
+            "answer": "No problem. Order anyway and email us at sales@optiqservice.com — we'll send you a 2-minute guide to finding it, or find it for you if you share your business name and city."
+          }
+        },
+        "q5": {
+          "type": "question",
+          "settings": {
+            "question": "Are there any monthly fees?",
+            "answer": "No. It's a one-time purchase. You own the card, the link is programmed directly onto the chip, and there's nothing to renew or subscribe to."
+          }
+        },
+        "q6": {
+          "type": "question",
+          "settings": {
+            "question": "Which phones does it work with?",
+            "answer": "Virtually all iPhones and Android phones from the last several years support tap-to-read NFC out of the box. If a customer has a much older phone, they can still find you on Google the usual way."
+          }
+        },
+        "q7": {
+          "type": "question",
+          "settings": {
+            "question": "Does it guarantee 5-star reviews?",
+            "answer": "No — and nothing legitimately can. What the card does is remove the friction: instead of asking customers to search for your business and find the review button, one tap takes them straight there. What they write is entirely up to them."
+          }
+        },
+        "q8": {
+          "type": "question",
+          "settings": {
+            "question": "Can the card be reprogrammed if my link changes?",
+            "answer": "Yes. If your Google review link ever changes, email us and we'll walk you through reprogramming it or sort out a replacement."
+          }
+        }
+      },
+      "block_order": ["q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8"]
+    },
+    "cta": {
+      "type": "cta-banner",
+      "settings": {
+        "heading": "Your next great review is one tap away",
+        "subheading": "Order today, send us your review link, and your card arrives programmed and ready to use.",
+        "button_label": "Start Getting Reviews"
+      }
+    }
+  },
+  "order": ["hero", "highlight", "how", "who", "pricing", "faq", "cta"]
+}

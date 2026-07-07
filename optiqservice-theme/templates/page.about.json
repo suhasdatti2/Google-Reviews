@@ -1,0 +1,17 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {}
+    },
+    "cta": {
+      "type": "cta-banner",
+      "settings": {
+        "heading": "Your next great review is one tap away",
+        "subheading": "Order today, send us your review link, and your card arrives programmed and ready to use.",
+        "button_label": "Get My Review Card"
+      }
+    }
+  },
+  "order": ["main", "cta"]
+}

@@ -1,0 +1,57 @@
+<section class="cart-page">
+  <div class="page-width">
+    <h1>Your cart</h1>
+
+    {%- if cart.item_count == 0 -%}
+      <div class="empty-state">
+        <p>Your cart is empty.</p>
+        <a class="btn btn--primary" href="/products/google-review-nfc-card">Get My Review Card</a>
+      </div>
+    {%- else -%}
+      <form action="{{ routes.cart_url }}" method="post" novalidate>
+        {%- for item in cart.items -%}
+          <div class="cart-line">
+            {%- if item.image != blank -%}
+              {{ item.image | image_url: width: 176 | image_tag: class: 'cart-line__img', alt: item.title }}
+            {%- else -%}
+              <div class="cart-line__img"></div>
+            {%- endif -%}
+            <div>
+              <div class="cart-line__title">{{ item.product.title }}{% unless item.variant.title == 'Default Title' %} — {{ item.variant.title }}{% endunless %}</div>
+              {%- if item.properties.size > 0 -%}
+                <div class="cart-line__props">
+                  {%- for property in item.properties -%}
+                    {%- if property.last != blank -%}
+                      <div>{{ property.first }}: {{ property.last }}</div>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </div>
+              {%- endif -%}
+              <a class="cart-line__remove" href="{{ item.url_to_remove }}">Remove</a>
+            </div>
+            <div class="cart-line__qty">
+              <input type="number" name="updates[]" value="{{ item.quantity }}" min="0" aria-label="Quantity">
+            </div>
+            <div>{{ item.final_line_price | money }}</div>
+          </div>
+        {%- endfor -%}
+
+        <div class="cart-footer">
+          <span class="cart-footer__total">Subtotal: {{ cart.total_price | money }}</span>
+          <span class="cart-footer__note">Programming is included — taxes and shipping calculated at checkout.</span>
+          <div style="display: flex; gap: 12px;">
+            <button type="submit" name="update" class="btn btn--ghost">Update Cart</button>
+            <button type="submit" name="checkout" class="btn btn--primary">Checkout</button>
+          </div>
+        </div>
+      </form>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cart",
+  "settings": []
+}
+{% endschema %}

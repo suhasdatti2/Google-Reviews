@@ -1,0 +1,45 @@
+<section class="section" id="how-it-works">
+  <div class="page-width">
+    <span class="kicker">{{ section.settings.kicker }}</span>
+    <h2 class="section-heading">{{ section.settings.heading }}</h2>
+    <p class="section-sub">{{ section.settings.subheading }}</p>
+
+    <div class="steps">
+      {%- for block in section.blocks -%}
+        <div class="step" {{ block.shopify_attributes }}>
+          <span class="step__num">{{ forloop.index }}</span>
+          <h3>{{ block.settings.title }}</h3>
+          <p>{{ block.settings.text }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "How it works",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "How it works" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "From order to first review in four steps" },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "We handle the setup. You just put the card where customers can tap it."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Order your card" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Pick 1, 2, or 3 cards at checkout." }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [{ "name": "How it works" }]
+}
+{% endschema %}

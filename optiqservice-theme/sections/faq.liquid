@@ -1,0 +1,38 @@
+<section class="section" id="faq">
+  <div class="page-width">
+    <span class="kicker">{{ section.settings.kicker }}</span>
+    <h2 class="section-heading">{{ section.settings.heading }}</h2>
+    <p class="section-sub">{{ section.settings.subheading }}</p>
+
+    <div class="faq-list">
+      {%- for block in section.blocks -%}
+        <details class="faq-item" {{ block.shopify_attributes }}>
+          <summary>{{ block.settings.question }}</summary>
+          <div class="faq-item__body">{{ block.settings.answer }}</div>
+        </details>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "FAQ",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "FAQ" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Questions, answered" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Anything else? Email sales@optiqservice.com — we reply fast." }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "How does the card work?" },
+        { "type": "textarea", "id": "answer", "label": "Answer", "default": "The card has an NFC chip inside, programmed with your Google review link." }
+      ]
+    }
+  ],
+  "presets": [{ "name": "FAQ" }]
+}
+{% endschema %}

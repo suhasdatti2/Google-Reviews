@@ -1,0 +1,56 @@
+<footer class="site-footer">
+  <div class="page-width">
+    <div class="site-footer__grid">
+      <div class="site-footer__brand">
+        <a class="site-header__logo" href="{{ routes.root_url }}">Optiq<span>Service</span></a>
+        <p>{{ settings.tagline }}</p>
+      </div>
+
+      <div>
+        <h4>Shop</h4>
+        <ul>
+          {%- if section.settings.menu != blank -%}
+            {%- for link in section.settings.menu.links -%}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {%- endfor -%}
+          {%- else -%}
+            <li><a href="{{ routes.root_url }}#pricing">Pricing</a></li>
+            <li><a href="{{ routes.root_url }}#faq">FAQ</a></li>
+            <li><a href="{{ routes.root_url }}pages/about">About us</a></li>
+            <li><a href="{{ routes.root_url }}pages/contact">Contact</a></li>
+          {%- endif -%}
+        </ul>
+      </div>
+
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li><a href="mailto:{{ settings.contact_email }}">{{ settings.contact_email }}</a></li>
+          {%- for policy in shop.policies -%}
+            {%- if policy != blank -%}
+              <li><a href="{{ policy.url }}">{{ policy.title }}</a></li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+
+    <div class="site-footer__bottom">
+      <span>&copy; {{ 'now' | date: '%Y' }} OptiqService. All rights reserved.</span>
+      <span>Google is a trademark of Google LLC. OptiqService is not affiliated with Google.</span>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Footer menu"
+    }
+  ]
+}
+{% endschema %}

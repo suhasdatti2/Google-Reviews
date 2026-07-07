@@ -1,0 +1,49 @@
+<section class="page-hero">
+  <div class="page-width">
+    <h1>{{ collection.title }}</h1>
+    {%- if collection.description != blank -%}
+      <div class="rte">{{ collection.description }}</div>
+    {%- endif -%}
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="page-width">
+    {%- paginate collection.products by 12 -%}
+      {%- if collection.products.size == 0 -%}
+        <div class="empty-state">
+          <p>No products here yet.</p>
+        </div>
+      {%- else -%}
+        <div class="product-card-grid">
+          {%- for product in collection.products -%}
+            <a class="product-card" href="{{ product.url }}">
+              <div class="product-card__media">
+                {%- if product.featured_image != blank -%}
+                  {{ product.featured_image | image_url: width: 600 | image_tag: alt: product.featured_image.alt }}
+                {%- else -%}
+                  {% render 'card-mockup' %}
+                {%- endif -%}
+              </div>
+              <div class="product-card__body">
+                <h3>{{ product.title }}</h3>
+                <p>From {{ product.price_min | money }}</p>
+              </div>
+            </a>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- if paginate.pages > 1 -%}
+        <div class="pagination">{{ paginate | default_pagination }}</div>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection",
+  "settings": []
+}
+{% endschema %}

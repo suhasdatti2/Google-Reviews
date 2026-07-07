@@ -1,0 +1,47 @@
+<section class="page-hero">
+  <div class="page-width">
+    <h1>Search</h1>
+    <form action="{{ routes.search_url }}" method="get" class="search-bar" role="search">
+      <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Search products and pages" aria-label="Search">
+      <button type="submit" class="btn btn--primary">Search</button>
+    </form>
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="page-width">
+    {%- if search.performed -%}
+      {%- paginate search.results by 12 -%}
+        {%- if search.results.size == 0 -%}
+          <div class="empty-state"><p>No results for "{{ search.terms | escape }}".</p></div>
+        {%- else -%}
+          <div class="product-card-grid">
+            {%- for item in search.results -%}
+              <a class="product-card" href="{{ item.url }}">
+                {%- if item.featured_image != blank -%}
+                  <div class="product-card__media">
+                    {{ item.featured_image | image_url: width: 600 | image_tag: alt: item.title }}
+                  </div>
+                {%- endif -%}
+                <div class="product-card__body">
+                  <h3>{{ item.title }}</h3>
+                  {%- if item.price -%}<p>From {{ item.price | money }}</p>{%- endif -%}
+                </div>
+              </a>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+        {%- if paginate.pages > 1 -%}
+          <div class="pagination">{{ paginate | default_pagination }}</div>
+        {%- endif -%}
+      {%- endpaginate -%}
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Search",
+  "settings": []
+}
+{% endschema %}
