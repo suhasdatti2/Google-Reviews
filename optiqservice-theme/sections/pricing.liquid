@@ -13,11 +13,12 @@
           <span class="price-card__name">{{ block.settings.name }}</span>
           <span class="price-card__price">{{ block.settings.price }}</span>
           <p class="price-card__note">{{ block.settings.note }}</p>
+          {%- assign feature_lines = section.settings.features | strip | newline_to_br | split: '<br />' -%}
           <ul>
-            <li>Programmed with your Google review link</li>
-            <li>No app needed — works with iPhone &amp; Android</li>
-            <li>No monthly fee, ever</li>
-            <li>Arrives tested &amp; ready to use</li>
+            {%- for line in feature_lines -%}
+              {%- assign feature = line | strip -%}
+              {%- if feature != blank -%}<li>{{ feature }}</li>{%- endif -%}
+            {%- endfor -%}
           </ul>
           <a class="btn {% if block.settings.featured %}btn--primary{% else %}btn--ghost{% endif %} btn--full" href="{{ block.settings.link | default: '/products/google-review-nfc-card' }}">{{ block.settings.button_label }}</a>
         </div>
@@ -37,6 +38,12 @@
       "id": "subheading",
       "label": "Subheading",
       "default": "Every card is programmed with your Google review link before it ships."
+    },
+    {
+      "type": "textarea",
+      "id": "features",
+      "label": "Feature bullets (one per line, shown on every plan)",
+      "default": "Programmed with your Google review link\nNo app needed — works with iPhone and Android\nNo monthly fee, ever\nArrives tested and ready to use"
     }
   ],
   "blocks": [
@@ -54,7 +61,7 @@
       ]
     }
   ],
-  "max_blocks": 3,
+  "max_blocks": 4,
   "presets": [{ "name": "Pricing" }]
 }
 {% endschema %}

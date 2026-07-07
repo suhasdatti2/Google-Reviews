@@ -2,12 +2,7 @@
   <div class="page-width product-grid">
 
     <div class="product-media">
-      {%- if product.featured_image != blank -%}
-        {{ product.featured_image | image_url: width: 1100 | image_tag: alt: product.featured_image.alt, loading: 'eager' }}
-      {%- else -%}
-        {% render 'card-mockup' %}
-        <p class="card-mockup-caption">Glossy black NFC card · matte white print · credit-card size</p>
-      {%- endif -%}
+      {% render 'product-gallery', product: product %}
     </div>
 
     <div class="product-info">
@@ -18,10 +13,10 @@
       {%- form 'product', product, class: 'product-form' -%}
         {%- if product.variants.size > 1 -%}
           <div class="form-field">
-            <label for="variant-select">Choose your pack</label>
+            <label for="variant-select">{{ section.settings.variant_label }}</label>
             <select id="variant-select" name="id">
               {%- for variant in product.variants -%}
-                <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
+                <option value="{{ variant.id }}" data-media-id="{{ variant.featured_image.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
                   {{ variant.title }} — {{ variant.price | money }}{% unless variant.available %} (sold out){% endunless %}
                 </option>
               {%- endfor -%}
@@ -89,7 +84,8 @@
       "label": "Tagline under price",
       "default": "Programmed with your Google review link. No app. No monthly fee."
     },
-    { "type": "text", "id": "buy_label", "label": "Buy button label", "default": "Add to Cart — Get More Reviews" }
+    { "type": "text", "id": "buy_label", "label": "Buy button label", "default": "Add to Cart — Get More Reviews" },
+    { "type": "text", "id": "variant_label", "label": "Variant selector label", "default": "Choose your pack" }
   ],
   "blocks": [
     {

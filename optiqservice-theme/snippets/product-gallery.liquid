@@ -1,0 +1,95 @@
+{%- assign imgs = product.images -%}
+<div class="product-gallery" data-gallery>
+  <div class="product-gallery__stage">
+    {%- if imgs.size > 1 -%}
+      <button class="pg-arrow pg-arrow--prev" type="button" data-pg-prev aria-label="Previous image">&#8249;</button>
+      <button class="pg-arrow pg-arrow--next" type="button" data-pg-next aria-label="Next image">&#8250;</button>
+    {%- endif -%}
+    <div class="product-gallery__viewport" data-pg-viewport>
+      {%- if imgs.size > 0 -%}
+        {%- for image in imgs -%}
+          <div class="product-gallery__slide{% if forloop.first %} is-active{% endif %}" data-pg-slide data-media-id="{{ image.id }}">
+            {%- if forloop.first -%}
+              {{ image | image_url: width: 1100 | image_tag: alt: image.alt, loading: 'eager' }}
+            {%- else -%}
+              {{ image | image_url: width: 1100 | image_tag: alt: image.alt, loading: 'lazy' }}
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      {%- else -%}
+        <div class="product-gallery__slide is-active" data-pg-slide>
+          {% render 'card-mockup' %}
+          <p class="card-mockup-caption">Glossy black NFC card · matte white print · credit-card size</p>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- if imgs.size > 1 -%}
+    <div class="product-gallery__thumbs" data-pg-thumbs>
+      {%- for image in imgs -%}
+        <button class="product-gallery__thumb{% if forloop.first %} is-active{% endif %}" type="button" data-pg-thumb data-index="{{ forloop.index0 }}" data-media-id="{{ image.id }}" aria-label="View image {{ forloop.index }}">
+          {{ image | image_url: width: 220 | image_tag: alt: image.alt, loading: 'lazy' }}
+        </button>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>
+
+<script>
+(function () {
+  var root = document.querySelector('[data-gallery]');
+  if (!root) { return; }
+  var slides = [].slice.call(root.querySelectorAll('[data-pg-slide]'));
+  var thumbs = [].slice.call(root.querySelectorAll('[data-pg-thumb]'));
+  var current = 0;
+
+  function show(i) {
+    if (i < 0) { i = slides.length - 1; }
+    if (i >= slides.length) { i = 0; }
+    for (var s = 0; s < slides.length; s++) { slides[s].classList.toggle('is-active', s === i); }
+    for (var t = 0; t < thumbs.length; t++) { thumbs[t].classList.toggle('is-active', t === i); }
+    current = i;
+  }
+
+  function showByMediaId(id) {
+    for (var s = 0; s < slides.length; s++) {
+      if (slides[s].getAttribute('data-media-id') === String(id)) { show(s); return; }
+    }
+  }
+
+  var prev = root.querySelector('[data-pg-prev]');
+  var next = root.querySelector('[data-pg-next]');
+  if (prev) { prev.addEventListener('click', function () { show(current - 1); }); }
+  if (next) { next.addEventListener('click', function () { show(current + 1); }); }
+
+  for (var t = 0; t < thumbs.length; t++) {
+    (function (btn) {
+      btn.addEventListener('click', function () { show(parseInt(btn.getAttribute('data-index'), 10)); });
+    })(thumbs[t]);
+  }
+
+  // When a customer picks a color/variant that has its own image, jump to it.
+  var select = document.getElementById('variant-select');
+  if (select) {
+    select.addEventListener('change', function () {
+      var opt = select.options[select.selectedIndex];
+      var mid = opt.getAttribute('data-media-id');
+      if (mid) { showByMediaId(mid); }
+    });
+  }
+
+  // Swipe on touch devices.
+  var viewport = root.querySelector('[data-pg-viewport]');
+  var startX = null;
+  if (viewport) {
+    viewport.addEventListener('touchstart', function (e) { startX = e.touches[0].clientX; }, { passive: true });
+    viewport.addEventListener('touchend', function (e) {
+      if (startX === null) { return; }
+      var dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 40) { show(dx < 0 ? current + 1 : current - 1); }
+      startX = null;
+    });
+  }
+})();
+</script>

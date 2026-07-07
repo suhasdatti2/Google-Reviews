@@ -1,0 +1,98 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "settings": {
+        "tagline": "Simple tap-to-review cards, priced to hand out. Programmed with your Google review link. No app, no QR code, no monthly fee.",
+        "buy_label": "Add to Cart — Stock Up",
+        "variant_label": "Choose your quantity"
+      },
+      "blocks": {
+        "b1": {
+          "type": "benefit",
+          "settings": {
+            "title": "Cheaper by the box",
+            "text": "the more you order, the less you pay per card — made to give away, not just display."
+          }
+        },
+        "b2": {
+          "type": "benefit",
+          "settings": {
+            "title": "Made to hand out",
+            "text": "drop one in every takeout bag, tuck it with the bill, or staple it to the receipt while the meal is fresh."
+          }
+        },
+        "b3": {
+          "type": "benefit",
+          "settings": {
+            "title": "Programmed for you",
+            "text": "send us your Google review link and every card in the box arrives set up and tap-tested."
+          }
+        },
+        "b4": {
+          "type": "benefit",
+          "settings": {
+            "title": "One tap, no app",
+            "text": "customers tap the card with their phone and your review page opens — no QR code, nothing to download."
+          }
+        },
+        "b5": {
+          "type": "benefit",
+          "settings": {
+            "title": "Simple, clean design",
+            "text": "does the job without the premium counter-card price, so you can put one in every customer's hand."
+          }
+        }
+      },
+      "block_order": ["b1", "b2", "b3", "b4", "b5"]
+    },
+    "faq": {
+      "type": "faq",
+      "settings": {
+        "kicker": "FAQ",
+        "heading": "Bulk cards, answered",
+        "subheading": "Anything else? Email sales@optiqservice.com — we reply within one business day."
+      },
+      "blocks": {
+        "q1": {
+          "type": "question",
+          "settings": {
+            "question": "How many should a restaurant order?",
+            "answer": "A good rule of thumb: one card for every 5–10 customers you serve in a week, so you never run out. Most single-location restaurants start with the 50-pack, then reorder once they see how many taps turn into reviews. Busy takeout spots often jump straight to the 100-pack."
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "question": "What's the difference between these and the counter card?",
+            "answer": "The premium Counter Card is a bigger, glossy card built to sit on your counter or station for years. These bulk cards are smaller, simpler, and priced to give away — perfect for bills, receipts, and takeout bags. Both are programmed with the same Google review link and work with one tap."
+          }
+        },
+        "q3": {
+          "type": "question",
+          "settings": {
+            "question": "Can customers keep the card?",
+            "answer": "Yes — that's the idea. Hand it over, drop it in the bag, or clip it to the receipt. Even if they tap it later at home, it still opens your review page."
+          }
+        },
+        "q4": {
+          "type": "question",
+          "settings": {
+            "question": "Does it guarantee reviews?",
+            "answer": "No — nothing legitimately can. Bulk cards make leaving a Google review as easy as one tap, and putting a card in more hands means more chances for happy customers to follow through. What they write is always up to them."
+          }
+        }
+      },
+      "block_order": ["q1", "q2", "q3", "q4"]
+    },
+    "cta": {
+      "type": "cta-banner",
+      "settings": {
+        "heading": "Put a review card in every customer's hand",
+        "subheading": "Order a box, send us your review link, and every card arrives programmed and ready to hand out.",
+        "button_label": "Stock Up on Cards"
+      }
+    }
+  },
+  "order": ["main", "faq", "cta"]
+}

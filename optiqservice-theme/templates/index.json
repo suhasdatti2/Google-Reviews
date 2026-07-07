@@ -136,49 +136,113 @@
       },
       "block_order": ["aud1", "aud2", "aud3", "aud4", "aud5", "aud6"]
     },
-    "pricing": {
+    "pricing_counter": {
       "type": "pricing",
       "settings": {
-        "kicker": "Pricing",
-        "heading": "One-time price. No subscriptions.",
-        "subheading": "Every card is programmed with your Google review link before it ships."
+        "kicker": "For the counter",
+        "heading": "Premium Counter Cards",
+        "subheading": "Bigger, premium black cards built to live on your counter, register, or barber station. Programmed with your Google review link — no QR code, no monthly fee.",
+        "features": "Programmed with your Google review link\nPremium glossy-black card, matte white print\nNo app and no QR code — just tap\nNo monthly fee, arrives tested and ready"
       },
       "blocks": {
         "plan1": {
           "type": "plan",
           "settings": {
-            "name": "1 Card",
-            "price": "$19.99",
-            "note": "Perfect for the front counter or register.",
+            "name": "Solo Station",
+            "price": "$29.99",
+            "note": "One premium card for your main counter or register.",
             "badge": "",
             "featured": false,
-            "button_label": "Get My Review Card"
+            "button_label": "Get My Card",
+            "link": "/products/google-review-nfc-card"
           }
         },
         "plan2": {
           "type": "plan",
           "settings": {
-            "name": "2 Cards",
-            "price": "$34.99",
-            "note": "Save $5 — one for the counter, one for the team.",
+            "name": "Twin Station",
+            "price": "$49.99",
+            "note": "Two cards — counter plus one more station. Save $10.",
             "badge": "Most Popular",
             "featured": true,
-            "button_label": "Get My Review Cards"
+            "button_label": "Get My Cards",
+            "link": "/products/google-review-nfc-card"
           }
         },
         "plan3": {
           "type": "plan",
           "settings": {
-            "name": "3 Cards",
-            "price": "$49.99",
-            "note": "Save $10 — cover every station, table, or register.",
+            "name": "Full Counter",
+            "price": "$64.99",
+            "note": "Three cards to cover every station. Save $25.",
             "badge": "Best Value",
             "featured": false,
-            "button_label": "Get My Review Cards"
+            "button_label": "Get My Cards",
+            "link": "/products/google-review-nfc-card"
           }
         }
       },
       "block_order": ["plan1", "plan2", "plan3"]
+    },
+    "pricing_bulk": {
+      "type": "pricing",
+      "settings": {
+        "kicker": "For handing out",
+        "heading": "Bulk Handout Cards",
+        "subheading": "Smaller, simpler cards priced to give away — with bills, receipts, takeout orders, and customer bags. The more you order, the less you pay per card.",
+        "features": "Programmed with your Google review link\nMade to hand out with bills, receipts, and bags\nNo app and no QR code — just tap\nSimple clean design, no monthly fee"
+      },
+      "blocks": {
+        "bulk1": {
+          "type": "plan",
+          "settings": {
+            "name": "Starter Pack",
+            "price": "$49.99",
+            "note": "10 cards · $5.00 each. Test it with your busiest shift.",
+            "badge": "",
+            "featured": false,
+            "button_label": "Order 10 Cards",
+            "link": "/products/bulk-review-cards"
+          }
+        },
+        "bulk2": {
+          "type": "plan",
+          "settings": {
+            "name": "Busy Shop",
+            "price": "$99.99",
+            "note": "25 cards · $4.00 each. For steady daily traffic.",
+            "badge": "",
+            "featured": false,
+            "button_label": "Order 25 Cards",
+            "link": "/products/bulk-review-cards"
+          }
+        },
+        "bulk3": {
+          "type": "plan",
+          "settings": {
+            "name": "High Volume",
+            "price": "$174.99",
+            "note": "50 cards · $3.50 each. The sweet spot for most restaurants.",
+            "badge": "Best Value",
+            "featured": true,
+            "button_label": "Order 50 Cards",
+            "link": "/products/bulk-review-cards"
+          }
+        },
+        "bulk4": {
+          "type": "plan",
+          "settings": {
+            "name": "Max Pack",
+            "price": "$299.99",
+            "note": "100 cards · $3.00 each. Lowest price per card — stock up.",
+            "badge": "Lowest Per Card",
+            "featured": false,
+            "button_label": "Order 100 Cards",
+            "link": "/products/bulk-review-cards"
+          }
+        }
+      },
+      "block_order": ["bulk1", "bulk2", "bulk3", "bulk4"]
     },
     "faq": {
       "type": "faq",
@@ -256,5 +320,5 @@
       }
     }
   },
-  "order": ["hero", "highlight", "how", "who", "pricing", "faq", "cta"]
+  "order": ["hero", "highlight", "how", "who", "pricing_counter", "pricing_bulk", "faq", "cta"]
 }

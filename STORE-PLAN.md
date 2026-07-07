@@ -229,11 +229,10 @@ I can take your Google link right now and have your card here this week — want
 ## Launch checklist (do these in Shopify admin after importing the theme)
 
 1. **Import theme:** Online Store → Themes → Add theme → Upload zip → `optiqservice-theme.zip` → Publish
-2. **Create the product:**
-   - Title: `Google Review NFC Card` (handle will be `google-review-nfc-card` — the theme's buttons link to it)
-   - Paste the product description from section 3
-   - Add a variant option named "Pack": `1 Card` — $19.99, `2 Cards` — $34.99, `3 Cards` — $49.99
-   - Upload product photos when ready (theme shows a card mockup until then)
+2. **Create two products** (pricing details in `PRICING-PLAN.md`, which supersedes any earlier price mentions in this file):
+   - **Premium Counter Card** — Title `Google Review NFC Card` (handle `google-review-nfc-card`), template `product`. Variant option "Pack": `Solo Station` $29.99, `Twin Station` $49.99, `Full Counter` $64.99. Paste the description from section 3.
+   - **Bulk Handout Cards** — Title `Bulk Google Review Cards` (handle `bulk-review-cards`), template `product.bulk`. Variant option "Quantity": `10 Cards` $49.99, `25 Cards` $99.99, `50 Cards` $174.99, `100 Cards` $299.99.
+   - Upload photos to each product — the product page shows a big image with a **clickable thumbnail slider** (arrows + thumbnails) so customers can browse colorways. Add multiple photos per product; if you attach a photo to a specific color variant, picking that color jumps the gallery to it. The theme shows a card mockup until you upload photos.
 3. **Create pages:**
    - Page "About" → paste section 6 copy → theme template `page.about`
    - Page "Contact" → theme template `page.contact` (copy is built in)
