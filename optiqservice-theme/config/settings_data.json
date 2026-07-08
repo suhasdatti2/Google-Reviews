@@ -1,6 +1,10 @@
 {
   "current": {
     "contact_email": "sales@optiqservice.com",
-    "tagline": "Tap-to-review NFC cards for local businesses. No app. No monthly fee."
+    "tagline": "Tap-to-review NFC cards for local businesses. No app. No monthly fee.",
+    "membership_variant_id": "48712385888488",
+    "membership_selling_plan_id": "",
+    "membership_name": "Review Growth Plan",
+    "membership_price": "$14.99"
   }
 }
