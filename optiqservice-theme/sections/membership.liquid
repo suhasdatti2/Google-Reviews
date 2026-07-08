@@ -10,7 +10,16 @@
           <span class="plan-card__name">{{ section.settings.plan_name }}</span>
           <div class="plan-card__price">{{ section.settings.price }}<span class="plan-card__period">{{ section.settings.period }}</span></div>
         </div>
-        <a class="btn btn--primary btn--lg" href="{{ section.settings.link | default: '/pages/contact' }}">{{ section.settings.button_label }}</a>
+        {%- if settings.membership_variant_id != blank -%}
+          <button type="button" class="btn btn--primary btn--lg"
+            data-add-variant="{{ settings.membership_variant_id }}"
+            {% if settings.membership_selling_plan_id != blank %}data-selling-plan="{{ settings.membership_selling_plan_id }}"{% endif %}
+            data-fallback="{{ section.settings.link | default: '/pages/contact' }}">
+            {{ section.settings.button_label }}
+          </button>
+        {%- else -%}
+          <a class="btn btn--primary btn--lg" href="{{ section.settings.link | default: '/pages/contact' }}">{{ section.settings.button_label }}</a>
+        {%- endif -%}
       </div>
 
       <div class="plan-card__benefits">

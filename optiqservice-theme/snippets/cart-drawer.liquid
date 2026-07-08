@@ -1,0 +1,48 @@
+{%- comment -%}
+  Slide-in cart drawer. Contents are rendered by assets/cart.js from Shopify's
+  live /cart.js data, so it always reflects the real server-side cart.
+{%- endcomment -%}
+<div class="cart-drawer" data-cart-drawer aria-hidden="true">
+  <div class="cart-drawer__overlay" data-cart-overlay></div>
+  <aside class="cart-drawer__panel" role="dialog" aria-label="Shopping cart" aria-modal="true">
+    <header class="cart-drawer__head">
+      <h2>Your cart</h2>
+      <button type="button" class="cart-drawer__x" data-cart-close aria-label="Close cart">&times;</button>
+    </header>
+
+    <div class="cart-drawer__body" data-cart-body>
+      <div class="cart-drawer__empty"><p>Your cart is empty.</p></div>
+    </div>
+
+    <footer class="cart-drawer__footer" data-cart-footer hidden>
+      {%- if settings.membership_variant_id != blank -%}
+        <button type="button" class="cart-drawer__upsell"
+                data-add-variant="{{ settings.membership_variant_id }}"
+                {% if settings.membership_selling_plan_id != blank %}data-selling-plan="{{ settings.membership_selling_plan_id }}"{% endif %}
+                data-fallback="{{ routes.root_url }}pages/membership">
+          + Add {{ settings.membership_name | default: 'Review Growth Plan' }} — {{ settings.membership_price | default: '$14.99' }}/mo
+        </button>
+      {%- else -%}
+        <a class="cart-drawer__upsell" href="{{ routes.root_url }}pages/membership" data-cart-close>
+          + Add {{ settings.membership_name | default: 'Review Growth Plan' }} (optional monthly)
+        </a>
+      {%- endif -%}
+
+      <label class="cart-drawer__note-label" for="cart-drawer-note">Order notes / special instructions</label>
+      <textarea id="cart-drawer-note" class="cart-drawer__note" data-cart-note rows="2"
+                placeholder="e.g. deliver by Friday, or paste your Google review link here">{{ cart.note }}</textarea>
+
+      <div class="cart-drawer__row">
+        <span data-cart-savings hidden></span>
+      </div>
+      <div class="cart-drawer__subtotal">
+        <span>Subtotal</span>
+        <strong data-cart-subtotal>{{ cart.items_subtotal_price | money }}</strong>
+      </div>
+      <p class="cart-drawer__fineprint">Taxes and shipping calculated at checkout. Programming is included.</p>
+
+      <a class="btn btn--primary btn--lg btn--full" href="{{ routes.cart_url }}/checkout">Checkout</a>
+      <a class="cart-drawer__viewcart" href="{{ routes.cart_url }}" data-cart-close>View full cart</a>
+    </footer>
+  </aside>
+</div>

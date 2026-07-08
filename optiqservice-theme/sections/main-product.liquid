@@ -7,24 +7,42 @@
 
     <div class="product-info">
       <h1>{{ product.title }}</h1>
-      <p class="product-info__price">{{ product.selected_or_first_available_variant.price | money }}</p>
+      <p class="product-info__price" data-product-price>{{ product.selected_or_first_available_variant.price | money }}</p>
       <p class="product-info__tagline">{{ section.settings.tagline }}</p>
 
-      {%- form 'product', product, class: 'product-form' -%}
-        {%- if product.variants.size > 1 -%}
-          <div class="form-field">
-            <label for="variant-select">{{ section.settings.variant_label }}</label>
-            <select id="variant-select" name="id">
-              {%- for variant in product.variants -%}
-                <option value="{{ variant.id }}" data-media-id="{{ variant.featured_image.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
-                  {{ variant.title }} — {{ variant.price | money }}{% unless variant.available %} (sold out){% endunless %}
-                </option>
-              {%- endfor -%}
-            </select>
+      {%- comment -%} Real product data for the variant picker in product-form.js {%- endcomment -%}
+      <script type="application/json" data-product-json>{{ product | json }}</script>
+
+      <form data-product-form class="product-form">
+        {%- unless product.has_only_default_variant -%}
+          {%- for option in product.options_with_values -%}
+            <div class="product-option" data-option-index="{{ forloop.index0 }}">
+              <span class="product-option__label">{{ option.name }}</span>
+              <div class="product-option__values">
+                {%- for value in option.values -%}
+                  {%- assign is_selected = false -%}
+                  {%- if product.selected_or_first_available_variant.options[forloop.parentloop.index0] == value -%}{%- assign is_selected = true -%}{%- endif -%}
+                  <label class="product-option__value{% if is_selected %} is-selected{% endif %}">
+                    <input type="radio" name="option-{{ forloop.parentloop.index0 }}" value="{{ value | escape }}" {% if is_selected %}checked{% endif %}>
+                    <span>{{ value }}</span>
+                  </label>
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endfor -%}
+        {%- endunless -%}
+
+        {# Selected variant id — kept in sync by product-form.js #}
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+
+        <div class="product-qty">
+          <label for="prod-qty">Quantity</label>
+          <div class="qty-stepper">
+            <button type="button" data-qty-dec aria-label="Decrease quantity">&minus;</button>
+            <input id="prod-qty" name="quantity" type="number" value="1" min="1" inputmode="numeric">
+            <button type="button" data-qty-inc aria-label="Increase quantity">&plus;</button>
           </div>
-        {%- else -%}
-          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-        {%- endif -%}
+        </div>
 
         <div class="personalize">
           <h3>Personalize your card</h3>
@@ -49,20 +67,26 @@
           <p class="personalize__note">Prefer to send it later? Order now and email your review link to {{ settings.contact_email }} — just include your order number.</p>
         </div>
 
-        <button type="submit" class="btn btn--primary btn--lg btn--full" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
-          {%- if product.selected_or_first_available_variant.available -%}
-            {{ section.settings.buy_label }}
-          {%- else -%}
-            Sold out
-          {%- endif -%}
-        </button>
-      {%- endform -%}
+        <div class="product-actions">
+          <button type="submit" class="btn btn--primary btn--lg btn--full" data-add-to-cart data-label="{{ section.settings.buy_label }}">{{ section.settings.buy_label }}</button>
+          <button type="button" class="btn btn--ghost btn--lg btn--full" data-buy-now>Buy Now</button>
+        </div>
+      </form>
 
       {%- if section.settings.show_membership_upsell -%}
         <div class="membership-upsell">
           <h3>{{ section.settings.membership_title }} — {{ section.settings.membership_price }}{{ section.settings.membership_period }}</h3>
           <p>{{ section.settings.membership_description }}</p>
-          <a class="btn btn--ghost" href="{{ section.settings.membership_link | default: '/pages/membership' }}">{{ section.settings.membership_button_label }}</a>
+          {%- if settings.membership_variant_id != blank -%}
+            <button type="button" class="btn btn--ghost"
+              data-add-variant="{{ settings.membership_variant_id }}"
+              {% if settings.membership_selling_plan_id != blank %}data-selling-plan="{{ settings.membership_selling_plan_id }}"{% endif %}
+              data-fallback="{{ section.settings.membership_link | default: '/pages/membership' }}">
+              {{ section.settings.membership_button_label }}
+            </button>
+          {%- else -%}
+            <a class="btn btn--ghost" href="{{ section.settings.membership_link | default: '/pages/membership' }}">{{ section.settings.membership_button_label }}</a>
+          {%- endif -%}
         </div>
       {%- endif -%}
 
@@ -92,8 +116,7 @@
       "label": "Tagline under price",
       "default": "Programmed with your Google review link. No app. No monthly fee."
     },
-    { "type": "text", "id": "buy_label", "label": "Buy button label", "default": "Add to Cart — Get More Reviews" },
-    { "type": "text", "id": "variant_label", "label": "Variant selector label", "default": "Choose your pack" },
+    { "type": "text", "id": "buy_label", "label": "Add to cart button label", "default": "Add to Cart — Get More Reviews" },
     { "type": "header", "content": "Membership upsell" },
     { "type": "checkbox", "id": "show_membership_upsell", "label": "Show membership upsell box", "default": true },
     { "type": "text", "id": "membership_title", "label": "Title", "default": "Add Review Growth Plan" },
@@ -106,7 +129,7 @@
       "default": "Keep your review card updated and get monthly tools to help your business collect more honest Google reviews. Includes free link updates, monthly review check-ins, customer message templates, priority support, and discounts on future cards."
     },
     { "type": "text", "id": "membership_button_label", "label": "Button label", "default": "Add Review Growth Plan" },
-    { "type": "url", "id": "membership_link", "label": "Button link" }
+    { "type": "url", "id": "membership_link", "label": "Fallback link (used if no membership variant ID is set)" }
   ],
   "blocks": [
     {

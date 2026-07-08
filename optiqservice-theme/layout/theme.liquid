@@ -14,6 +14,19 @@
   <link rel="canonical" href="{{ canonical_url }}">
   {{ content_for_header }}
   {{ 'base.css' | asset_url | stylesheet_tag }}
+  <script>
+    // Globals used by cart.js / product-form.js
+    window.Shopify = window.Shopify || {};
+    Shopify.routes = Shopify.routes || {};
+    Shopify.routes.root = {{ routes.root_url | json }};
+    window.OptiqSettings = {
+      moneyFormat: {{ shop.money_format | json }},
+      membershipVariantId: {{ settings.membership_variant_id | json }},
+      membershipSellingPlanId: {{ settings.membership_selling_plan_id | json }}
+    };
+  </script>
+  <script src="{{ 'cart.js' | asset_url }}" defer></script>
+  <script src="{{ 'product-form.js' | asset_url }}" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -22,5 +35,6 @@
     {{ content_for_layout }}
   </main>
   {% section 'footer' %}
+  {% render 'cart-drawer' %}
 </body>
 </html>

@@ -15,6 +15,7 @@
           <button type="button" class="configurator__qty{% if block.settings.featured %} is-active{% endif %}" data-config-qty
             data-price="{{ block.settings.price }}"
             data-link="{{ block.settings.link | default: '/products/google-review-nfc-card' }}"
+            data-variant-id="{{ block.settings.variant_id }}"
             data-label="{{ block.settings.qty_label }}">
             <span class="configurator__qty-label">{{ block.settings.qty_label }}</span>
             <span class="configurator__qty-price">{{ block.settings.price }}</span>
@@ -74,8 +75,20 @@
     [].slice.call(panel.querySelectorAll('[data-config-qty]')).forEach(function (b) { b.classList.remove('is-active'); });
     btn.classList.add('is-active');
     priceEl.textContent = btn.getAttribute('data-price');
-    cta.href = btn.getAttribute('data-link');
-    cta.textContent = 'Get ' + btn.getAttribute('data-label') + ' — ' + btn.getAttribute('data-price');
+    var link = btn.getAttribute('data-link');
+    var variantId = btn.getAttribute('data-variant-id');
+    cta.href = link;
+    // If a real variant ID is set, the shared cart handler adds it to the cart.
+    // Otherwise the button stays a normal link to the product page.
+    if (variantId) {
+      cta.setAttribute('data-add-variant', variantId);
+      cta.setAttribute('data-fallback', link);
+    } else {
+      cta.removeAttribute('data-add-variant');
+    }
+    cta.textContent = variantId
+      ? ('Add ' + btn.getAttribute('data-label') + ' — ' + btn.getAttribute('data-price'))
+      : ('Get ' + btn.getAttribute('data-label') + ' — ' + btn.getAttribute('data-price'));
   }
 
   function setMode(mode) {

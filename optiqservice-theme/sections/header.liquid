@@ -17,9 +17,10 @@
       {%- endif -%}
     </nav>
 
-    <a class="site-header__cart" href="{{ routes.cart_url }}">
-      Cart{% if cart.item_count > 0 %} ({{ cart.item_count }}){% endif %}
-    </a>
+    <button type="button" class="site-header__cart" data-cart-toggle aria-label="Open cart">
+      Cart
+      <span class="site-header__cart-count" data-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
+    </button>
   </div>
 </header>
 

@@ -23,5 +23,23 @@
         "default": "Tap-to-review NFC cards for local businesses. No app. No monthly fee."
       }
     ]
+  },
+  {
+    "name": "Cart & membership",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Paste the Review Growth Plan's VARIANT ID here so the \"Add Membership\" buttons add it to the cart. Find it in Shopify admin: Products → Review Growth Plan → click the variant → the number at the end of the URL (…/variants/XXXXXXXXXX). Until it's filled in, membership buttons link to the membership page instead."
+      },
+      { "type": "text", "id": "membership_variant_id", "label": "Membership variant ID" },
+      {
+        "type": "text",
+        "id": "membership_selling_plan_id",
+        "label": "Membership selling plan ID (from the Subscriptions app)",
+        "info": "Needed for recurring monthly billing. Leave blank for a one-time charge while testing."
+      },
+      { "type": "text", "id": "membership_name", "label": "Membership name", "default": "Review Growth Plan" },
+      { "type": "text", "id": "membership_price", "label": "Membership price label", "default": "$14.99" }
+    ]
   }
 ]
