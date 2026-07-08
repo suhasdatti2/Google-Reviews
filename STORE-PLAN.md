@@ -127,18 +127,20 @@ Already ordered and need to send your Google review link? Email it to us with yo
 
 ## 10. Homepage layout (as built in the theme)
 
-1. **Hero** — headline, subheadline, primary CTA, trust line, card mockup
-2. **Product highlight** — card mockup/photo + 3 quick specs
-3. **How it works** — 4 steps: order → send link → we program → customers tap
-4. **Who it's for** — barbers, restaurants, salons, detailers, gyms, local shops
-5. **Pricing** — 1 / 2 / 3 card packs, middle highlighted "Most Popular"
+1. **Hero** — headline, subheadline, primary CTA, trust line, photo (upload your own — shows a plain placeholder until you do)
+2. **Card showcase** — colorway/design picker boxes on the right; the selected card's photo shows on the left. Directly below the image sits one purchase widget: a **Counter Cards / Bulk Cards toggle**, quantity buttons for each mode (1/2/3 for Counter, 10/25/50/100 for Bulk), a live price, a buy button, and a single **"+ Add Membership (optional)"** link to the Membership page. This replaces the old three separate pricing/membership sections so there's one place to shop, not three scroll stops.
+3. **Product highlight** — 3 quick specs (credit-card size, NFC chip, no batteries)
+4. **How it works** — 4 steps: order → send link → we program → customers tap
+5. **Who it's for** — barbers, restaurants, salons, detailers, gyms, local shops
 6. **FAQ** — 8-question accordion
 7. **CTA banner** — final push to product page
 8. **Footer** — tagline, links, policies, contact email, Google trademark note
 
+Membership still has its own full comparison at `/pages/membership` (linked from the configurator and nav) — the homepage just doesn't repeat it in full.
+
 ## 11. Product page layout (as built in the theme)
 
-1. Product photo (falls back to the built-in card mockup until you upload photos)
+1. Product photo gallery — a big image with a clickable thumbnail row and prev/next arrows so customers can browse colorways. Shows a plain "add photo" placeholder until you upload real images — the theme never invents a card design.
 2. Title + price + tagline ("Programmed with your Google review link. No app. No monthly fee.")
 3. Pack selector (1 / 2 / 3 cards — via product variants)
 4. **Personalize your card** box — Business name, Google review link, Email/phone (required fields, saved to the order automatically as line item properties — no app needed)
@@ -232,17 +234,18 @@ I can take your Google link right now and have your card here this week — want
 2. **Create two products** (pricing details in `PRICING-PLAN.md`, which supersedes any earlier price mentions in this file):
    - **Premium Counter Card** — Title `Google Review NFC Card` (handle `google-review-nfc-card`), template `product`. Variant option "Pack": `Solo Station` $29.99, `Twin Station` $49.99, `Full Counter` $64.99. Paste the description from section 3.
    - **Bulk Handout Cards** — Title `Bulk Google Review Cards` (handle `bulk-review-cards`), template `product.bulk`. Variant option "Quantity": `10 Cards` $49.99, `25 Cards` $99.99, `50 Cards` $174.99, `100 Cards` $299.99.
-   - Upload photos to each product — the product page shows a big image with a **clickable thumbnail slider** (arrows + thumbnails) so customers can browse colorways. Add multiple photos per product; if you attach a photo to a specific color variant, picking that color jumps the gallery to it. The theme shows a card mockup until you upload photos.
+   - Upload photos to each product — the product page shows a big image with a **clickable thumbnail slider** (arrows + thumbnails) so customers can browse colorways. Add multiple photos per product; if you attach a photo to a specific color variant, picking that color jumps the gallery to it. The theme never generates a fake card design — it shows a plain "add photo" placeholder until you upload real images, in the gallery, the homepage showcase, and the hero.
 3. **Create pages:**
    - Page "About" → paste section 6 copy → theme template `page.about`
    - Page "Contact" → theme template `page.contact` (copy is built in)
 4. **Menus (Online Store → Navigation):**
-   - Main menu: How it works (`/#how-it-works`), Pricing (`/#pricing`), FAQ (`/#faq`), About (`/pages/about`), Contact (`/pages/contact`)
+   - Main menu: Cards (`/#cards`), How it works (`/#how-it-works`), Membership (`/pages/membership`), FAQ (`/#faq`), About (`/pages/about`), Contact (`/pages/contact`)
    - Footer menu: About, Contact, or leave default (theme has sensible fallbacks)
 5. **Policies (Settings → Policies):** paste sections 7 and 8; add a standard privacy policy from Shopify's generator
 6. **Checkout personalization:** already handled — the product page asks for Business name, Google review link, and Email/phone as required fields; they appear on every order automatically. The page also tells buyers they can email the link to sales@optiqservice.com instead.
 7. **Sender email:** Settings → Notifications → set sender to sales@optiqservice.com
-8. **Test order:** place one, confirm the three personalization fields show up on the order, then refund it
-9. Launch. Improve photos and copy after it's live — done beats perfect.
+8. **Homepage showcase + configurator:** in the theme editor, open the homepage's "Card showcase" section — each "Colorway / photo" block needs a real photo uploaded (it shows a placeholder until then), and each "Pricing option" block's link already points to `/products/google-review-nfc-card` or `/products/bulk-review-cards` to match the two products from step 2. Edit prices/labels there if they ever change — no code required.
+9. **Test order:** place one, confirm the three personalization fields show up on the order, then refund it
+10. Launch. Improve photos and copy after it's live — done beats perfect.
 
 **Compliance note baked into all copy:** we never claim guaranteed 5-star reviews — the card "makes leaving a review easier." The footer also carries a "not affiliated with Google" line. Keep both.

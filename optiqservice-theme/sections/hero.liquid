@@ -14,7 +14,7 @@
       {%- if section.settings.image != blank -%}
         {{ section.settings.image | image_url: width: 900 | image_tag: loading: 'eager', alt: section.settings.image.alt }}
       {%- else -%}
-        {% render 'card-mockup' %}
+        {% render 'image-placeholder', label: 'Add your hero photo in theme settings' %}
       {%- endif -%}
     </div>
   </div>
@@ -41,7 +41,7 @@
       "label": "Trust line",
       "default": "Works with iPhone & Android · No app needed · One-time purchase"
     },
-    { "type": "image_picker", "id": "image", "label": "Hero image (optional — shows card mockup if empty)" }
+    { "type": "image_picker", "id": "image", "label": "Hero image" }
   ],
   "presets": [{ "name": "Hero" }]
 }

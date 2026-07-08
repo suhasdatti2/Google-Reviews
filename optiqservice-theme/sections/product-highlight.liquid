@@ -4,20 +4,6 @@
     <h2 class="section-heading">{{ section.settings.heading }}</h2>
     <p class="section-sub">{{ section.settings.subheading }}</p>
 
-    {%- assign highlight_product = section.settings.product -%}
-    {%- if highlight_product != blank and highlight_product.featured_image != blank -%}
-      <div class="card-mockup-wrap" style="margin-top: 40px;">
-        <a href="{{ highlight_product.url }}">
-          {{ highlight_product.featured_image | image_url: width: 900 | image_tag: alt: highlight_product.featured_image.alt, style: 'border-radius: 14px; max-width: 480px;' }}
-        </a>
-      </div>
-    {%- else -%}
-      <div style="margin-top: 40px;">
-        {% render 'card-mockup' %}
-        <p class="card-mockup-caption">{{ section.settings.caption }}</p>
-      </div>
-    {%- endif -%}
-
     <div class="spec-row">
       {%- for block in section.blocks -%}
         <div class="spec" {{ block.shopify_attributes }}>
@@ -40,9 +26,7 @@
       "id": "subheading",
       "label": "Subheading",
       "default": "A glossy black card with a clean matte white design. It says exactly what it does: Tap to Review."
-    },
-    { "type": "product", "id": "product", "label": "Product (uses its photo when set)" },
-    { "type": "text", "id": "caption", "label": "Mockup caption", "default": "Glossy black NFC card · matte white print · credit-card size" }
+    }
   ],
   "blocks": [
     {

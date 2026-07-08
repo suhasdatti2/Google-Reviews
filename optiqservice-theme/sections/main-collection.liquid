@@ -22,7 +22,7 @@
                 {%- if product.featured_image != blank -%}
                   {{ product.featured_image | image_url: width: 600 | image_tag: alt: product.featured_image.alt }}
                 {%- else -%}
-                  {% render 'card-mockup' %}
+                  {% render 'image-placeholder', square: true %}
                 {%- endif -%}
               </div>
               <div class="product-card__body">
