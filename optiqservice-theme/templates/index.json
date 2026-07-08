@@ -1,5 +1,170 @@
 {
   "sections": {
+    "showcase": {
+      "type": "card-showcase",
+      "settings": {
+        "kicker": "Pick your card",
+        "heading": "See exactly what you're getting",
+        "subheading": "Tap a card to preview it. Every one is programmed with your Google review link before it ships — add your own photos to show real colorways."
+      },
+      "blocks": {
+        "c1": {
+          "type": "card",
+          "settings": {
+            "name": "Counter Card — Black",
+            "price": "$29.99",
+            "note": "Our premium counter card in classic matte black.",
+            "color": "black",
+            "tag": "Premium high-quality material",
+            "badge": "Bestseller",
+            "button_label": "Choose Black",
+            "link": "/products/google-review-nfc-card",
+            "mockup_title": "Tap to Review",
+            "mockup_sub": "Leave us a Google review"
+          }
+        },
+        "c2": {
+          "type": "card",
+          "settings": {
+            "name": "Counter Card — Navy",
+            "price": "$29.99",
+            "note": "Deep navy with the same clean white print.",
+            "color": "navy",
+            "tag": "Premium high-quality material",
+            "button_label": "Choose Navy",
+            "link": "/products/google-review-nfc-card",
+            "mockup_title": "Tap to Review",
+            "mockup_sub": "Leave us a Google review"
+          }
+        },
+        "c3": {
+          "type": "card",
+          "settings": {
+            "name": "Counter Card — Graphite",
+            "price": "$29.99",
+            "note": "A softer gunmetal grey for a modern look.",
+            "color": "graphite",
+            "tag": "Premium high-quality material",
+            "button_label": "Choose Graphite",
+            "link": "/products/google-review-nfc-card",
+            "mockup_title": "Tap to Review",
+            "mockup_sub": "Leave us a Google review"
+          }
+        },
+        "c4": {
+          "type": "card",
+          "settings": {
+            "name": "Counter Card — White",
+            "price": "$29.99",
+            "note": "Clean white card with black print — bright on any counter.",
+            "color": "white",
+            "tag": "Premium high-quality material",
+            "button_label": "Choose White",
+            "link": "/products/google-review-nfc-card",
+            "mockup_title": "Tap to Review",
+            "mockup_sub": "Leave us a Google review"
+          }
+        },
+        "c5": {
+          "type": "card",
+          "settings": {
+            "name": "Counter Card — Gold Edition",
+            "price": "$34.99",
+            "note": "Black card with gold print. A premium limited look.",
+            "color": "gold",
+            "tag": "Limited edition",
+            "badge": "Limited",
+            "button_label": "Choose Gold",
+            "link": "/products/google-review-nfc-card",
+            "mockup_title": "Tap to Review",
+            "mockup_sub": "Leave us a Google review"
+          }
+        },
+        "c6": {
+          "type": "card",
+          "settings": {
+            "name": "Bulk Handout — Black",
+            "price": "From $3.00/card",
+            "note": "Smaller, simpler cards made to hand out with bills and bags.",
+            "color": "black",
+            "tag": "Made to give away",
+            "button_label": "Shop Bulk Cards",
+            "link": "/products/bulk-review-cards",
+            "mockup_title": "Tap to Review",
+            "mockup_sub": "Scan-free · one tap"
+          }
+        }
+      },
+      "block_order": ["c1", "c2", "c3", "c4", "c5", "c6"]
+    },
+    "membership": {
+      "type": "membership",
+      "settings": {
+        "kicker": "Optional membership",
+        "heading": "Want more than a card? Add a plan.",
+        "subheading": "Every card works with no monthly fee. Membership is optional — for businesses that want free replacements, monthly restocks, and multi-location support.",
+        "disclaimer": "Your card is yours to keep either way. Membership only adds services on top — cancel anytime."
+      },
+      "blocks": {
+        "t1": {
+          "type": "tier",
+          "settings": {
+            "name": "No Membership",
+            "price": "$0",
+            "period": "",
+            "note": "You own your card outright — no strings.",
+            "features": "Your card is yours forever\nNo monthly fee, ever\nEmail help finding your review link",
+            "badge": "",
+            "featured": false,
+            "button_label": "Just Buy a Card",
+            "link": "/products/google-review-nfc-card"
+          }
+        },
+        "t2": {
+          "type": "tier",
+          "settings": {
+            "name": "Optiq Pro",
+            "price": "$9.99",
+            "period": "/mo",
+            "note": "For the single-location business that wants peace of mind.",
+            "features": "Free card replacement if lost or damaged (1 / quarter)\nReprogram your review link anytime, free\nPriority support\nMonthly review-growth tips",
+            "badge": "Most Popular",
+            "featured": true,
+            "button_label": "Start Pro",
+            "link": "/products/optiq-pro-membership"
+          }
+        },
+        "t3": {
+          "type": "tier",
+          "settings": {
+            "name": "Optiq Business",
+            "price": "$19.99",
+            "period": "/mo",
+            "note": "For growing shops and up to 3 locations.",
+            "features": "Everything in Pro\nCovers up to 3 locations\n5 fresh bulk handout cards shipped monthly\nSimple monthly review-count report",
+            "badge": "",
+            "featured": false,
+            "button_label": "Choose Business",
+            "link": "/products/optiq-business-membership"
+          }
+        },
+        "t4": {
+          "type": "tier",
+          "settings": {
+            "name": "Optiq Franchise",
+            "price": "$49.99",
+            "period": "/mo",
+            "note": "For multi-location brands that want it handled.",
+            "features": "Everything in Business\nUp to 10 locations\n25 bulk handout cards restocked monthly\nDedicated account manager",
+            "badge": "Best for chains",
+            "featured": false,
+            "button_label": "Talk to Us",
+            "link": "/pages/contact"
+          }
+        }
+      },
+      "block_order": ["t1", "t2", "t3", "t4"]
+    },
     "hero": {
       "type": "hero",
       "settings": {
@@ -320,5 +485,5 @@
       }
     }
   },
-  "order": ["hero", "highlight", "how", "who", "pricing_counter", "pricing_bulk", "faq", "cta"]
+  "order": ["hero", "highlight", "showcase", "how", "who", "pricing_counter", "pricing_bulk", "membership", "faq", "cta"]
 }

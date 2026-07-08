@@ -1,0 +1,126 @@
+<section class="section card-showcase" id="cards">
+  <div class="page-width">
+    <span class="kicker">{{ section.settings.kicker }}</span>
+    <h2 class="section-heading">{{ section.settings.heading }}</h2>
+    <p class="section-sub">{{ section.settings.subheading }}</p>
+
+    <div class="showcase" data-showcase>
+      <div class="showcase__preview">
+        {%- for block in section.blocks -%}
+          <div class="showcase__stage{% if forloop.first %} is-active{% endif %}" data-showcase-stage data-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+            <div class="showcase__media">
+              {%- if block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 900 | image_tag: alt: block.settings.name }}
+              {%- else -%}
+                {% render 'card-mockup', variant: block.settings.color, title: block.settings.mockup_title, sub: block.settings.mockup_sub %}
+              {%- endif -%}
+              {%- if block.settings.tag != blank -%}
+                <span class="showcase__chip"><span class="showcase__chip-dot"></span>{{ block.settings.tag }}</span>
+              {%- endif -%}
+            </div>
+            <div class="showcase__meta">
+              <div>
+                <h3 class="showcase__name">{{ block.settings.name }}</h3>
+                {%- if block.settings.note != blank -%}<p class="showcase__note">{{ block.settings.note }}</p>{%- endif -%}
+              </div>
+              <div class="showcase__buy">
+                <span class="showcase__price">{{ block.settings.price }}</span>
+                <a class="btn btn--primary" href="{{ block.settings.link | default: '#pricing' }}">{{ block.settings.button_label | default: 'Choose This Card' }}</a>
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      <div class="showcase__options" data-showcase-options>
+        {%- for block in section.blocks -%}
+          <button type="button" class="showcase__option{% if forloop.first %} is-active{% endif %}" data-showcase-option data-index="{{ forloop.index0 }}" aria-label="View {{ block.settings.name }}">
+            <span class="showcase__option-media">
+              {%- if block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 320 | image_tag: alt: block.settings.name }}
+              {%- else -%}
+                {% render 'card-mockup', variant: block.settings.color, title: block.settings.mockup_title, sub: block.settings.mockup_sub, mini: true %}
+              {%- endif -%}
+            </span>
+            <span class="showcase__option-text">
+              <span class="showcase__option-name">{{ block.settings.name }}</span>
+              <span class="showcase__option-price">{{ block.settings.price }}</span>
+            </span>
+            {%- if block.settings.badge != blank -%}<span class="showcase__option-badge">{{ block.settings.badge }}</span>{%- endif -%}
+          </button>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var root = document.querySelector('[data-showcase]');
+  if (!root) { return; }
+  var stages = [].slice.call(root.querySelectorAll('[data-showcase-stage]'));
+  var options = [].slice.call(root.querySelectorAll('[data-showcase-option]'));
+
+  function select(i) {
+    for (var s = 0; s < stages.length; s++) { stages[s].classList.toggle('is-active', s === i); }
+    for (var o = 0; o < options.length; o++) { options[o].classList.toggle('is-active', o === i); }
+  }
+
+  for (var o = 0; o < options.length; o++) {
+    (function (btn) {
+      btn.addEventListener('click', function () { select(parseInt(btn.getAttribute('data-index'), 10)); });
+    })(options[o]);
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Card showcase",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "Pick your card" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "See exactly what you're getting" },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Tap a card to preview it. Every one is programmed with your Google review link before it ships."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card option",
+      "settings": [
+        { "type": "text", "id": "name", "label": "Card name", "default": "Counter Card — Black" },
+        { "type": "text", "id": "price", "label": "Price", "default": "$29.99" },
+        { "type": "textarea", "id": "note", "label": "Short description", "default": "Our premium counter card in classic matte black." },
+        { "type": "image_picker", "id": "image", "label": "Card photo (optional)" },
+        {
+          "type": "select",
+          "id": "color",
+          "label": "Mockup color (used if no photo)",
+          "options": [
+            { "value": "black", "label": "Black" },
+            { "value": "graphite", "label": "Graphite" },
+            { "value": "navy", "label": "Navy" },
+            { "value": "crimson", "label": "Crimson" },
+            { "value": "forest", "label": "Forest" },
+            { "value": "gold", "label": "Gold" },
+            { "value": "white", "label": "White" }
+          ],
+          "default": "black"
+        },
+        { "type": "text", "id": "tag", "label": "Image chip label (optional)", "default": "Premium high-quality material" },
+        { "type": "text", "id": "badge", "label": "Box badge (optional)" },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Choose This Card" },
+        { "type": "url", "id": "link", "label": "Button link" },
+        { "type": "text", "id": "mockup_title", "label": "Mockup top text", "default": "Tap to Review" },
+        { "type": "text", "id": "mockup_sub", "label": "Mockup bottom text", "default": "Leave us a Google review" }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [{ "name": "Card showcase" }]
+}
+{% endschema %}

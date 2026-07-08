@@ -14,8 +14,9 @@
               <li><a href="{{ link.url }}">{{ link.title }}</a></li>
             {%- endfor -%}
           {%- else -%}
+            <li><a href="{{ routes.root_url }}#cards">Cards</a></li>
             <li><a href="{{ routes.root_url }}#pricing">Pricing</a></li>
-            <li><a href="{{ routes.root_url }}#faq">FAQ</a></li>
+            <li><a href="{{ routes.root_url }}#membership">Membership</a></li>
             <li><a href="{{ routes.root_url }}pages/about">About us</a></li>
             <li><a href="{{ routes.root_url }}pages/contact">Contact</a></li>
           {%- endif -%}

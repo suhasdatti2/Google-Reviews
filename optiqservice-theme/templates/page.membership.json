@@ -1,0 +1,81 @@
+{
+  "sections": {
+    "membership": {
+      "type": "membership",
+      "settings": {
+        "kicker": "Optional membership",
+        "heading": "OptiqService Membership Plans",
+        "subheading": "Every card works with no monthly fee. Membership is optional — for businesses that want free replacements, monthly restocks, and multi-location support.",
+        "disclaimer": "Your card is yours to keep either way. Membership only adds services on top — cancel anytime."
+      },
+      "blocks": {
+        "t1": {
+          "type": "tier",
+          "settings": {
+            "name": "No Membership",
+            "price": "$0",
+            "period": "",
+            "note": "You own your card outright — no strings.",
+            "features": "Your card is yours forever\nNo monthly fee, ever\nEmail help finding your review link",
+            "badge": "",
+            "featured": false,
+            "button_label": "Just Buy a Card",
+            "link": "/products/google-review-nfc-card"
+          }
+        },
+        "t2": {
+          "type": "tier",
+          "settings": {
+            "name": "Optiq Pro",
+            "price": "$9.99",
+            "period": "/mo",
+            "note": "For the single-location business that wants peace of mind.",
+            "features": "Free card replacement if lost or damaged (1 / quarter)\nReprogram your review link anytime, free\nPriority support\nMonthly review-growth tips",
+            "badge": "Most Popular",
+            "featured": true,
+            "button_label": "Start Pro",
+            "link": "/products/optiq-pro-membership"
+          }
+        },
+        "t3": {
+          "type": "tier",
+          "settings": {
+            "name": "Optiq Business",
+            "price": "$19.99",
+            "period": "/mo",
+            "note": "For growing shops and up to 3 locations.",
+            "features": "Everything in Pro\nCovers up to 3 locations\n5 fresh bulk handout cards shipped monthly\nSimple monthly review-count report",
+            "badge": "",
+            "featured": false,
+            "button_label": "Choose Business",
+            "link": "/products/optiq-business-membership"
+          }
+        },
+        "t4": {
+          "type": "tier",
+          "settings": {
+            "name": "Optiq Franchise",
+            "price": "$49.99",
+            "period": "/mo",
+            "note": "For multi-location brands that want it handled.",
+            "features": "Everything in Business\nUp to 10 locations\n25 bulk handout cards restocked monthly\nDedicated account manager",
+            "badge": "Best for chains",
+            "featured": false,
+            "button_label": "Talk to Us",
+            "link": "/pages/contact"
+          }
+        }
+      },
+      "block_order": ["t1", "t2", "t3", "t4"]
+    },
+    "cta": {
+      "type": "cta-banner",
+      "settings": {
+        "heading": "Not sure which plan fits?",
+        "subheading": "Start with a card — no monthly fee — and add a membership whenever you're ready.",
+        "button_label": "Get My Review Card"
+      }
+    }
+  },
+  "order": ["membership", "cta"]
+}
