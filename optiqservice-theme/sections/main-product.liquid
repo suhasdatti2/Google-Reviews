@@ -58,6 +58,14 @@
         </button>
       {%- endform -%}
 
+      {%- if section.settings.show_membership_upsell -%}
+        <div class="membership-upsell">
+          <h3>{{ section.settings.membership_title }} — {{ section.settings.membership_price }}{{ section.settings.membership_period }}</h3>
+          <p>{{ section.settings.membership_description }}</p>
+          <a class="btn btn--ghost" href="{{ section.settings.membership_link | default: '/pages/membership' }}">{{ section.settings.membership_button_label }}</a>
+        </div>
+      {%- endif -%}
+
       {%- if section.blocks.size > 0 -%}
         <ul class="product-benefits">
           {%- for block in section.blocks -%}
@@ -85,7 +93,20 @@
       "default": "Programmed with your Google review link. No app. No monthly fee."
     },
     { "type": "text", "id": "buy_label", "label": "Buy button label", "default": "Add to Cart — Get More Reviews" },
-    { "type": "text", "id": "variant_label", "label": "Variant selector label", "default": "Choose your pack" }
+    { "type": "text", "id": "variant_label", "label": "Variant selector label", "default": "Choose your pack" },
+    { "type": "header", "content": "Membership upsell" },
+    { "type": "checkbox", "id": "show_membership_upsell", "label": "Show membership upsell box", "default": true },
+    { "type": "text", "id": "membership_title", "label": "Title", "default": "Add Review Growth Plan" },
+    { "type": "text", "id": "membership_price", "label": "Price", "default": "$14.99" },
+    { "type": "text", "id": "membership_period", "label": "Period suffix", "default": "/mo" },
+    {
+      "type": "textarea",
+      "id": "membership_description",
+      "label": "Description",
+      "default": "Keep your review card updated and get monthly tools to help your business collect more honest Google reviews. Includes free link updates, monthly review check-ins, customer message templates, priority support, and discounts on future cards."
+    },
+    { "type": "text", "id": "membership_button_label", "label": "Button label", "default": "Add Review Growth Plan" },
+    { "type": "url", "id": "membership_link", "label": "Button link" }
   ],
   "blocks": [
     {

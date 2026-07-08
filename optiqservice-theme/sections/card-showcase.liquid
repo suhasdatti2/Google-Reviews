@@ -9,7 +9,7 @@
         {%- assign card_i = 0 -%}
         {%- for block in section.blocks -%}
           {%- if block.type == 'card' -%}
-            <div class="showcase__stage{% if card_i == 0 %} is-active{% endif %}" data-showcase-stage data-index="{{ card_i }}" {{ block.shopify_attributes }}>
+            <div class="showcase__stage{% if card_i == 0 %} is-active{% endif %}" data-showcase-stage data-index="{{ card_i }}" data-card-mode="{{ block.settings.mode }}" {{ block.shopify_attributes }}>
               <div class="showcase__media">
                 {%- if block.settings.image != blank -%}
                   {{ block.settings.image | image_url: width: 900 | image_tag: alt: block.settings.name }}
@@ -34,7 +34,7 @@
         {%- assign opt_i = 0 -%}
         {%- for block in section.blocks -%}
           {%- if block.type == 'card' -%}
-            <button type="button" class="showcase__option{% if opt_i == 0 %} is-active{% endif %}" data-showcase-option data-index="{{ opt_i }}" aria-label="View {{ block.settings.name }}">
+            <button type="button" class="showcase__option{% if opt_i == 0 %} is-active{% endif %}" data-showcase-option data-index="{{ opt_i }}" data-card-mode="{{ block.settings.mode }}" aria-label="View {{ block.settings.name }}">
               <span class="showcase__option-media">
                 {%- if block.settings.image != blank -%}
                   {{ block.settings.image | image_url: width: 200 | image_tag: alt: block.settings.name }}
@@ -74,6 +74,20 @@
       btn.addEventListener('click', function () { select(parseInt(btn.getAttribute('data-index'), 10)); });
     })(options[o]);
   }
+
+  function filterByMode(mode) {
+    var firstVisible = -1;
+    for (var i = 0; i < options.length; i++) {
+      var match = options[i].getAttribute('data-card-mode') === mode;
+      options[i].style.display = match ? '' : 'none';
+      if (match && firstVisible === -1) { firstVisible = i; }
+    }
+    if (firstVisible !== -1) { select(firstVisible); }
+  }
+
+  document.addEventListener('optiq:mode-change', function (e) {
+    filterByMode(e.detail.mode);
+  });
 })();
 </script>
 
@@ -100,6 +114,17 @@
       "type": "card",
       "name": "Colorway / photo",
       "settings": [
+        {
+          "type": "select",
+          "id": "mode",
+          "label": "Shows under",
+          "info": "Controls which toggle (Counter or Bulk) this photo appears under.",
+          "options": [
+            { "value": "counter", "label": "Counter Cards" },
+            { "value": "bulk", "label": "Bulk Cards" }
+          ],
+          "default": "counter"
+        },
         { "type": "text", "id": "name", "label": "Name", "default": "Counter Card — Black" },
         { "type": "textarea", "id": "note", "label": "Short description", "default": "Our premium counter card in classic matte black." },
         { "type": "image_picker", "id": "image", "label": "Card photo" },

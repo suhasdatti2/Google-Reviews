@@ -10,9 +10,9 @@
       </div>
       <p class="hero__trust">{{ section.settings.trust_line }}</p>
     </div>
-    <div>
+    <div class="hero__media">
       {%- if section.settings.image != blank -%}
-        {{ section.settings.image | image_url: width: 900 | image_tag: loading: 'eager', alt: section.settings.image.alt }}
+        {{ section.settings.image | image_url: width: 1400 | image_tag: loading: 'eager', alt: section.settings.image.alt }}
       {%- else -%}
         {% render 'image-placeholder', label: 'Add your hero photo in theme settings' %}
       {%- endif -%}

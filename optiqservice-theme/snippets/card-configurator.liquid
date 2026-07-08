@@ -40,6 +40,14 @@
     </div>
   </div>
 
+  <div class="configurator__custom">
+    <label for="config-custom-qty">Need a custom amount?</label>
+    <div class="configurator__custom-row">
+      <input type="number" id="config-custom-qty" min="1" placeholder="e.g. 40" data-config-custom-input>
+      <a class="btn btn--ghost" data-config-custom-cta href="mailto:{{ settings.contact_email | default: 'sales@optiqservice.com' }}">Email Us a Quote</a>
+    </div>
+  </div>
+
   <div class="configurator__summary">
     <span class="configurator__price" data-config-price>&nbsp;</span>
     <a class="btn btn--primary btn--lg" data-config-cta href="/products/google-review-nfc-card">Select an option</a>
@@ -73,6 +81,7 @@
   function setMode(mode) {
     modeBtns.forEach(function (b) { b.classList.toggle('is-active', b.getAttribute('data-config-mode') === mode); });
     panels.forEach(function (p) { p.hidden = p.getAttribute('data-config-panel') !== mode; });
+    document.dispatchEvent(new CustomEvent('optiq:mode-change', { detail: { mode: mode } }));
     var panel = root.querySelector('[data-config-panel="' + mode + '"]');
     if (!panel) { return; }
     var activeBtn = panel.querySelector('[data-config-qty].is-active') || panel.querySelector('[data-config-qty]');
@@ -86,6 +95,23 @@
   [].slice.call(root.querySelectorAll('[data-config-qty]')).forEach(function (b) {
     b.addEventListener('click', function () { activateQty(b); });
   });
+
+  var customInput = root.querySelector('[data-config-custom-input]');
+  var customCta = root.querySelector('[data-config-custom-cta]');
+  if (customInput && customCta) {
+    var baseMailto = customCta.getAttribute('href');
+    var updateCustomLink = function () {
+      var qty = customInput.value || 'a custom number of';
+      var activeMode = root.querySelector('[data-config-mode].is-active');
+      var modeLabel = activeMode ? activeMode.textContent.trim() : 'cards';
+      var subject = encodeURIComponent('Custom card quantity quote');
+      var body = encodeURIComponent('Hi, I would like a quote for ' + qty + ' ' + modeLabel + '.');
+      customCta.setAttribute('href', baseMailto + '?subject=' + subject + '&body=' + body);
+    };
+    customInput.addEventListener('input', updateCustomLink);
+    modeBtns.forEach(function (b) { b.addEventListener('click', updateCustomLink); });
+    updateCustomLink();
+  }
 
   setMode('counter');
 })();

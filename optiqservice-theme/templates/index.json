@@ -26,6 +26,7 @@
         "c1": {
           "type": "card",
           "settings": {
+            "mode": "counter",
             "name": "Counter Card — Black",
             "note": "Our premium counter card in classic matte black.",
             "tag": "Premium high-quality material",
@@ -35,6 +36,7 @@
         "c2": {
           "type": "card",
           "settings": {
+            "mode": "counter",
             "name": "Counter Card — Navy",
             "note": "Deep navy with the same clean white print.",
             "tag": "Premium high-quality material"
@@ -43,6 +45,7 @@
         "c3": {
           "type": "card",
           "settings": {
+            "mode": "counter",
             "name": "Counter Card — Graphite",
             "note": "A softer gunmetal grey for a modern look.",
             "tag": "Premium high-quality material"
@@ -51,6 +54,7 @@
         "c4": {
           "type": "card",
           "settings": {
+            "mode": "counter",
             "name": "Counter Card — White",
             "note": "Clean white card with black print — bright on any counter.",
             "tag": "Premium high-quality material"
@@ -59,8 +63,18 @@
         "c5": {
           "type": "card",
           "settings": {
-            "name": "Bulk Handout Card",
+            "mode": "bulk",
+            "name": "Bulk Handout Card — Black",
             "note": "Smaller, simpler card made to hand out with bills, receipts, and bags.",
+            "tag": "Made to give away"
+          }
+        },
+        "c6": {
+          "type": "card",
+          "settings": {
+            "mode": "bulk",
+            "name": "Bulk Handout Card — White",
+            "note": "Same handout card in clean white, if you'd rather match a lighter brand.",
             "tag": "Made to give away"
           }
         },
@@ -135,7 +149,7 @@
           }
         }
       },
-      "block_order": ["c1", "c2", "c3", "c4", "c5", "q1", "q2", "q3", "q4", "q5", "q6", "q7"]
+      "block_order": ["c1", "c2", "c3", "c4", "c5", "c6", "q1", "q2", "q3", "q4", "q5", "q6", "q7"]
     },
     "highlight": {
       "type": "product-highlight",

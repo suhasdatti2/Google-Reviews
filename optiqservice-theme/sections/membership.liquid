@@ -1,80 +1,72 @@
-<section class="section" id="membership">
+<section class="section membership-plan" id="membership">
   <div class="page-width">
     <span class="kicker">{{ section.settings.kicker }}</span>
     <h2 class="section-heading">{{ section.settings.heading }}</h2>
     <p class="section-sub">{{ section.settings.subheading }}</p>
 
+    <div class="plan-card">
+      <div class="plan-card__head">
+        <div>
+          <span class="plan-card__name">{{ section.settings.plan_name }}</span>
+          <div class="plan-card__price">{{ section.settings.price }}<span class="plan-card__period">{{ section.settings.period }}</span></div>
+        </div>
+        <a class="btn btn--primary btn--lg" href="{{ section.settings.link | default: '/pages/contact' }}">{{ section.settings.button_label }}</a>
+      </div>
+
+      <div class="plan-card__benefits">
+        {%- for block in section.blocks -%}
+          <div class="plan-benefit" {{ block.shopify_attributes }}>
+            <span class="plan-benefit__icon" aria-hidden="true"></span>
+            <div>
+              <h3>{{ block.settings.title }}</h3>
+              <p>{{ block.settings.text }}</p>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+
     {%- if section.settings.disclaimer != blank -%}
       <p class="membership-note">{{ section.settings.disclaimer }}</p>
     {%- endif -%}
-
-    <div class="pricing">
-      {%- for block in section.blocks -%}
-        <div class="price-card{% if block.settings.featured %} price-card--featured{% endif %}" {{ block.shopify_attributes }}>
-          {%- if block.settings.badge != blank -%}
-            <span class="price-card__badge">{{ block.settings.badge }}</span>
-          {%- endif -%}
-          <span class="price-card__name">{{ block.settings.name }}</span>
-          <span class="price-card__price">{{ block.settings.price }}<span class="price-card__period">{{ block.settings.period }}</span></span>
-          <p class="price-card__note">{{ block.settings.note }}</p>
-
-          {%- assign feature_lines = block.settings.features | strip | newline_to_br | split: '<br />' -%}
-          <ul>
-            {%- for line in feature_lines -%}
-              {%- assign feature = line | strip -%}
-              {%- if feature != blank -%}<li>{{ feature }}</li>{%- endif -%}
-            {%- endfor -%}
-          </ul>
-
-          <a class="btn {% if block.settings.featured %}btn--primary{% else %}btn--ghost{% endif %} btn--full" href="{{ block.settings.link | default: '#pricing' }}">{{ block.settings.button_label }}</a>
-        </div>
-      {%- endfor -%}
-    </div>
   </div>
 </section>
 
 {% schema %}
 {
-  "name": "Membership",
+  "name": "Membership plan",
   "settings": [
     { "type": "text", "id": "kicker", "label": "Kicker", "default": "Optional membership" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Want more than a card? Add a plan." },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "What does membership actually get you?" },
     {
       "type": "textarea",
       "id": "subheading",
       "label": "Subheading",
-      "default": "Every card works with no monthly fee. Membership is optional — for businesses that want free replacements, monthly restocks, and multi-location support."
+      "default": "Your card works forever with no monthly fee. This is a separate, optional add-on for businesses that want ongoing help."
     },
+    { "type": "text", "id": "plan_name", "label": "Plan name", "default": "Review Growth Plan" },
+    { "type": "text", "id": "price", "label": "Price", "default": "$14.99" },
+    { "type": "text", "id": "period", "label": "Period suffix", "default": "/mo" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Add Review Growth Plan" },
+    { "type": "url", "id": "link", "label": "Button link" },
     {
       "type": "textarea",
       "id": "disclaimer",
       "label": "Small print",
-      "default": "Your card is yours to keep either way. Membership only adds services on top — cancel anytime."
+      "default": "Don't need this? Every card works standalone with no monthly fee — membership just adds ongoing help on top. Cancel anytime."
     }
   ],
   "blocks": [
     {
-      "type": "tier",
-      "name": "Plan",
+      "type": "benefit",
+      "name": "Benefit",
       "settings": [
-        { "type": "text", "id": "name", "label": "Plan name", "default": "Optiq Pro" },
-        { "type": "text", "id": "price", "label": "Price", "default": "$9.99" },
-        { "type": "text", "id": "period", "label": "Period suffix", "default": "/mo" },
-        { "type": "text", "id": "note", "label": "Short note", "default": "For the single-location business that wants peace of mind." },
-        {
-          "type": "textarea",
-          "id": "features",
-          "label": "Features (one per line)",
-          "default": "Free card replacement if lost or damaged\nReprogram your review link anytime, free\nPriority support\nMonthly review-growth tips"
-        },
-        { "type": "text", "id": "badge", "label": "Badge (optional)" },
-        { "type": "checkbox", "id": "featured", "label": "Highlight this plan", "default": false },
-        { "type": "text", "id": "button_label", "label": "Button label", "default": "Start Membership" },
-        { "type": "url", "id": "link", "label": "Button link" }
+        { "type": "text", "id": "title", "label": "Title", "default": "Free card & link updates" },
+        { "type": "textarea", "id": "text", "label": "Explanation", "default": "If your Google review link ever changes, we reprogram your card for free." }
       ]
     }
   ],
-  "max_blocks": 4,
-  "presets": [{ "name": "Membership" }]
+  "max_blocks": 6,
+  "presets": [{ "name": "Membership plan" }]
 }
 {% endschema %}

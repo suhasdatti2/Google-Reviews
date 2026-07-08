@@ -4,75 +4,59 @@
       "type": "membership",
       "settings": {
         "kicker": "Optional membership",
-        "heading": "OptiqService Membership Plans",
-        "subheading": "Every card works with no monthly fee. Membership is optional — for businesses that want free replacements, monthly restocks, and multi-location support.",
-        "disclaimer": "Your card is yours to keep either way. Membership only adds services on top — cancel anytime."
+        "heading": "What does membership actually get you?",
+        "subheading": "Your card works forever with no monthly fee. This is a separate, optional add-on for businesses that want ongoing help getting reviews.",
+        "plan_name": "Review Growth Plan",
+        "price": "$14.99",
+        "period": "/mo",
+        "button_label": "Add Review Growth Plan",
+        "link": "/products/review-growth-plan",
+        "disclaimer": "Don't need this? Every card works standalone with no monthly fee — membership just adds ongoing help on top. Cancel anytime."
       },
       "blocks": {
-        "t1": {
-          "type": "tier",
+        "b1": {
+          "type": "benefit",
           "settings": {
-            "name": "No Membership",
-            "price": "$0",
-            "period": "",
-            "note": "You own your card outright — no strings.",
-            "features": "Your card is yours forever\nNo monthly fee, ever\nEmail help finding your review link",
-            "badge": "",
-            "featured": false,
-            "button_label": "Just Buy a Card",
-            "link": "/products/google-review-nfc-card"
+            "title": "Free card & link updates",
+            "text": "If your Google review link ever changes, we reprogram your card for free — no charge, no new card needed."
           }
         },
-        "t2": {
-          "type": "tier",
+        "b2": {
+          "type": "benefit",
           "settings": {
-            "name": "Optiq Pro",
-            "price": "$9.99",
-            "period": "/mo",
-            "note": "For the single-location business that wants peace of mind.",
-            "features": "Free card replacement if lost or damaged (1 / quarter)\nReprogram your review link anytime, free\nPriority support\nMonthly review-growth tips",
-            "badge": "Most Popular",
-            "featured": true,
-            "button_label": "Start Pro",
-            "link": "/products/optiq-pro-membership"
+            "title": "20% off future cards",
+            "text": "Need a replacement or extra cards for a new station? Members always pay 20% less."
           }
         },
-        "t3": {
-          "type": "tier",
+        "b3": {
+          "type": "benefit",
           "settings": {
-            "name": "Optiq Business",
-            "price": "$19.99",
-            "period": "/mo",
-            "note": "For growing shops and up to 3 locations.",
-            "features": "Everything in Pro\nCovers up to 3 locations\n5 fresh bulk handout cards shipped monthly\nSimple monthly review-count report",
-            "badge": "",
-            "featured": false,
-            "button_label": "Choose Business",
-            "link": "/products/optiq-business-membership"
+            "title": "Monthly review check-in",
+            "text": "We check your Google reviews once a month and send you a quick update — like \"You're at 4.6 stars with 82 reviews, up 7 this month.\""
           }
         },
-        "t4": {
-          "type": "tier",
+        "b4": {
+          "type": "benefit",
           "settings": {
-            "name": "Optiq Franchise",
-            "price": "$49.99",
-            "period": "/mo",
-            "note": "For multi-location brands that want it handled.",
-            "features": "Everything in Business\nUp to 10 locations\n25 bulk handout cards restocked monthly\nDedicated account manager",
-            "badge": "Best for chains",
-            "featured": false,
-            "button_label": "Talk to Us",
-            "link": "/pages/contact"
+            "title": "Review reminder template",
+            "text": "Every month we send a ready-to-use text or email script — like \"Thanks for visiting us today! Leaving a quick Google review helps our small business a lot.\""
+          }
+        },
+        "b5": {
+          "type": "benefit",
+          "settings": {
+            "title": "Priority support",
+            "text": "If your card ever stops working or you need help, members go to the front of the line."
           }
         }
       },
-      "block_order": ["t1", "t2", "t3", "t4"]
+      "block_order": ["b1", "b2", "b3", "b4", "b5"]
     },
     "cta": {
       "type": "cta-banner",
       "settings": {
-        "heading": "Not sure which plan fits?",
-        "subheading": "Start with a card — no monthly fee — and add a membership whenever you're ready.",
+        "heading": "Not sure if you need it?",
+        "subheading": "Start with a card — no monthly fee — and add the Review Growth Plan whenever you're ready.",
         "button_label": "Get My Review Card"
       }
     }
