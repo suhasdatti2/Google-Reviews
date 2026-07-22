@@ -1,0 +1,221 @@
+/* Product page redesign v2 (Seed-style, checkmark selectors, left thumb rail).
+   Scoped to .pdp so it never affects other sections. Uses the theme's
+   existing CSS variables and its existing gold accent (#e8b923, already
+   used elsewhere in the theme) for badges. */
+.pdp { padding: 40px 0 72px; position: relative; z-index: 1; }
+.pdp__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 48px;
+  align-items: start;
+}
+
+/* ---------- Left column: images + title + description + trust ---------- */
+.pdp__media-row { display: flex; gap: 14px; }
+.pdp__thumbs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 110px;
+  flex-shrink: 0;
+}
+.pdp__thumb {
+  background: var(--bg-raised); border: 1px solid var(--border); border-radius: 14px;
+  padding: 10px 6px; cursor: pointer; transition: border-color .15s ease, background .15s ease;
+  display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;
+}
+.pdp__thumb-media { width: 100%; aspect-ratio: 1 / 1; border-radius: 8px; overflow: hidden; background: var(--bg-raised-2); }
+.pdp__thumb-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pdp__thumb-name { font-size: 11.5px; font-weight: 600; line-height: 1.25; }
+.pdp__thumb.is-active { border-color: var(--white); background: var(--bg-raised-2); }
+.pdp__thumb:focus-visible { outline: 2px solid var(--white); outline-offset: 2px; }
+
+.pdp__stage {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pdp__stage img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.pdp__intro { margin-top: 24px; }
+.pdp__title { font-size: clamp(24px, 3vw, 34px); line-height: 1.15; margin-bottom: 10px; }
+.pdp__tagline { color: var(--ink-muted); margin-bottom: 20px; max-width: 46ch; }
+
+.pdp__features {
+  display: flex; flex-wrap: wrap; gap: 10px 22px; margin-bottom: 18px;
+}
+.pdp__feature {
+  display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink);
+}
+.pdp__feature svg { width: 17px; height: 17px; flex-shrink: 0; color: var(--ink-muted); }
+
+.pdp__trust-row {
+  display: flex; flex-wrap: wrap; gap: 10px 22px;
+  border-top: 1px solid var(--border); padding-top: 16px;
+}
+.pdp__trust-item { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--ink-muted); }
+.pdp__trust-item svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+.pdp__details { margin-top: 20px; border-top: 1px solid var(--border); padding-top: 16px; }
+.pdp__details summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+.pdp__details .rte { margin-top: 12px; color: var(--ink-muted); font-size: 14px; }
+
+/* ---------- Right column: purchase panel ---------- */
+.pdp__panel-inner { max-width: 560px; }
+.pdp__section { border: 0; padding: 0; margin: 0 0 24px; }
+.pdp__legend { font-size: 15px; font-weight: 700; letter-spacing: .01em; margin-bottom: 12px; padding: 0; }
+
+/* Shared checkmark badge for card / option / bundle selectors */
+.pdp__check {
+  position: absolute; top: 10px; left: 10px; width: 21px; height: 21px;
+  border-radius: 50%; border: 1.5px solid var(--border-strong); background: var(--bg);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; z-index: 1;
+}
+.pdp__check::after {
+  content: ""; width: 9px; height: 5px; margin-top: -1px;
+  border-left: 2px solid var(--black); border-bottom: 2px solid var(--black);
+  transform: rotate(-45deg); opacity: 0;
+}
+.is-selected .pdp__check { background: var(--white); border-color: var(--white); }
+.is-selected .pdp__check::after { opacity: 1; }
+
+.pdp__cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.pdp__card {
+  position: relative;
+  display: flex; align-items: center; gap: 12px; text-align: left;
+  background: var(--bg-raised); border: 1px solid var(--border); border-radius: 14px;
+  padding: 12px 12px 12px 14px; cursor: pointer; transition: border-color .15s ease, background .15s ease;
+}
+.pdp__card.is-selected { border-color: var(--white); background: var(--bg-raised-2); }
+.pdp__card:focus-visible { outline: 2px solid var(--white); outline-offset: 2px; }
+.pdp__card-media { width: 52px; height: 52px; border-radius: 8px; overflow: hidden; flex-shrink: 0; background: var(--bg-raised-2); }
+.pdp__card-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pdp__card-body { display: flex; flex-direction: column; gap: 4px; }
+.pdp__card-name { font-size: 13.5px; font-weight: 600; line-height: 1.25; }
+.pdp__card-badge {
+  display: inline-block; align-self: flex-start; background: #e8b923; color: #1a1400;
+  font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px;
+}
+
+.pdp__options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pdp__option {
+  position: relative;
+  text-align: left; background: var(--bg-raised); border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px 14px 14px; cursor: pointer; transition: border-color .15s ease, background .15s ease;
+}
+.pdp__option.is-selected { border-color: var(--white); background: var(--bg-raised-2); }
+.pdp__option:focus-visible { outline: 2px solid var(--white); outline-offset: 2px; }
+.pdp__option-icon { position: absolute; top: 12px; right: 12px; width: 20px; height: 20px; color: var(--ink-muted); }
+.pdp__option-name { display: block; font-weight: 700; font-size: 15px; margin: 4px 0 2px; }
+.pdp__option-price { display: block; font-weight: 700; font-size: 13px; color: var(--ink-muted); margin-bottom: 2px; }
+.pdp__option-sub { display: block; color: var(--ink-muted); font-size: 12.5px; margin-bottom: 8px; }
+.pdp__option-benefits { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; }
+.pdp__option-benefits li { position: relative; padding-left: 17px; font-size: 12px; color: var(--ink); }
+.pdp__option-benefits li::before { content: "\2713"; position: absolute; left: 0; color: #4ade80; font-weight: 700; }
+
+.pdp__qr { display: flex; gap: 12px; align-items: flex-start; background: var(--bg-raised); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; cursor: pointer; margin-bottom: 24px; position: relative; }
+.pdp__qr input { position: absolute; opacity: 0; width: 0; height: 0; }
+.pdp__qr-box { width: 22px; height: 22px; border-radius: 6px; border: 1px solid var(--border-strong); flex-shrink: 0; margin-top: 2px; position: relative; transition: background .15s ease, border-color .15s ease; }
+.pdp__qr input:checked + .pdp__qr-box { background: var(--white); border-color: var(--white); }
+.pdp__qr input:checked + .pdp__qr-box::after { content: "\2713"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--black); font-size: 14px; font-weight: 700; }
+.pdp__qr input:focus-visible + .pdp__qr-box { outline: 2px solid var(--white); outline-offset: 2px; }
+.pdp__qr-copy strong { display: block; font-size: 14px; }
+.pdp__qr-copy small { display: block; color: var(--ink-muted); font-size: 13px; margin-top: 2px; }
+
+.pdp__bundles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.pdp__bundle {
+  position: relative; text-align: center; background: var(--bg-raised); border: 1px solid var(--border);
+  border-radius: 14px; padding: 20px 8px 14px; cursor: pointer; transition: border-color .15s ease, background .15s ease;
+  display: flex; flex-direction: column; gap: 4px; align-items: center;
+}
+.pdp__bundle.is-selected { border-color: var(--white); background: var(--bg-raised-2); }
+.pdp__bundle:focus-visible { outline: 2px solid var(--white); outline-offset: 2px; }
+.pdp__bundle.is-soldout { opacity: .45; pointer-events: none; }
+.pdp__bundle-badge {
+  position: absolute; top: -10px; right: 10px; white-space: nowrap;
+  background: #e8b923; color: #1a1400; font-size: 10.5px; font-weight: 700;
+  padding: 3px 9px; border-radius: 999px;
+}
+.pdp__bundle-qty { font-weight: 700; font-size: 15px; margin-top: 4px; }
+.pdp__bundle-prices { display: flex; flex-direction: column; gap: 2px; }
+.pdp__bundle-was { color: var(--ink-muted); text-decoration: line-through; font-size: 12.5px; }
+.pdp__bundle-now { font-weight: 700; font-size: 16px; }
+.pdp__bundle-save { color: #4ade80; font-size: 11.5px; font-weight: 600; }
+
+.pdp__personalize { border-top: 1px solid var(--border); padding-top: 22px; margin-bottom: 22px; }
+.pdp__personalize-title { font-size: 15px; margin-bottom: 14px; }
+.pdp__field { margin-bottom: 14px; }
+.pdp__field label { display: block; font-size: 13px; margin-bottom: 6px; color: var(--ink); }
+.pdp__field input {
+  width: 100%; background: var(--bg-raised); border: 1px solid var(--border-strong); color: var(--ink);
+  border-radius: 10px; padding: 12px 14px; font-size: 15px; font-family: inherit;
+}
+.pdp__field input:focus { outline: none; border-color: var(--white); }
+.pdp__hint, .pdp__personalize-note { color: var(--ink-muted); font-size: 12px; margin-top: 6px; }
+
+/* Order summary: icon rows + price/save row */
+.pdp__summary { background: var(--bg-raised); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; margin-bottom: 18px; }
+.pdp__summary-list { list-style: none; padding: 0; margin: 0 0 14px; display: grid; gap: 10px; }
+.pdp__summary-list li { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: var(--ink-muted); }
+.pdp__summary-list li svg { width: 17px; height: 17px; flex-shrink: 0; color: var(--ink-muted); }
+.pdp__summary-list li span.pdp__summary-label { flex: 1; }
+.pdp__summary-list li span.pdp__summary-value { color: var(--ink); font-weight: 600; text-align: right; }
+.pdp__summary-price-row {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  border-top: 1px solid var(--border); padding-top: 14px;
+}
+.pdp__summary-save { color: #4ade80; font-weight: 600; font-size: 14px; }
+.pdp__summary-price { display: flex; align-items: baseline; gap: 8px; }
+.pdp__price { font-size: 26px; font-weight: 700; }
+.pdp__compare { color: var(--ink-muted); text-decoration: line-through; font-size: 16px; }
+
+.pdp__buy-row { display: flex; gap: 10px; margin-bottom: 12px; }
+.pdp__qty-stepper {
+  display: flex; align-items: center; border: 1px solid var(--border-strong); border-radius: 10px;
+  overflow: hidden; flex-shrink: 0;
+}
+.pdp__qty-stepper button {
+  background: var(--bg-raised); border: none; color: var(--ink); width: 38px; height: 52px;
+  font-size: 18px; cursor: pointer; line-height: 1;
+}
+.pdp__qty-stepper button:hover { background: var(--bg-raised-2); }
+.pdp__qty-stepper input {
+  width: 40px; height: 52px; text-align: center; border: none; border-left: 1px solid var(--border); border-right: 1px solid var(--border);
+  background: var(--bg-raised); color: var(--ink); font-size: 15px; font-weight: 600;
+}
+.pdp__addcart { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.pdp__addcart svg { width: 18px; height: 18px; }
+.pdp__addcart.is-disabled, .pdp__addcart:disabled { opacity: .5; cursor: not-allowed; }
+.pdp__error { color: #ff6b6b; font-size: 14px; margin-top: 4px; margin-bottom: 12px; text-align: center; }
+
+.pdp__trust-row--panel { border-top: 1px solid var(--border); padding-top: 16px; justify-content: space-between; }
+
+.pdp__feature svg,
+.pdp__trust-item svg,
+.pdp__option-icon,
+.pdp__summary-list li svg,
+.pdp__addcart svg {
+  stroke-width: 1.6;
+}
+
+@media (max-width: 900px) {
+  .pdp__grid { grid-template-columns: 1fr; gap: 28px; }
+  .pdp__panel-inner { max-width: none; }
+  .pdp__media-row { flex-direction: column; }
+  .pdp__thumbs { flex-direction: row; width: auto; overflow-x: auto; order: 2; }
+  .pdp__thumb { flex: 0 0 84px; }
+  .pdp__stage { order: 1; }
+}
+@media (max-width: 520px) {
+  .pdp__cards { grid-template-columns: 1fr 1fr; }
+  .pdp__options { grid-template-columns: 1fr; }
+  .pdp__bundles { grid-template-columns: 1fr 1fr; }
+  .pdp__features, .pdp__trust-row, .pdp__trust-row--panel { gap: 10px 16px; }
+}

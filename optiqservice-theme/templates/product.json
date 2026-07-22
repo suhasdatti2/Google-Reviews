@@ -4,7 +4,15 @@
       "type": "main-product",
       "settings": {
         "tagline": "Programmed with your Google review link. No app. No monthly fee.",
-        "buy_label": "Add to Cart — Get More Reviews"
+        "buy_label": "Add to Cart — Get More Reviews",
+        "bulk_restaurant_pack_product_image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_11_43_27_PM_1.png",
+        "bulk_square_handout_cards_product_image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_11_43_27_PM_2.png",
+        "main_counter_card_product_image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_41_03_PM_4.png",
+        "review_growth_plan_product_image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_11_43_28_PM_4.png",
+        "card_image_counter_black": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_41_02_PM_3.png",
+        "card_image_counter_white": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_40_15_PM_4.png",
+        "card_image_bulk_black": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_58_27_PM_4.png",
+        "card_image_bulk_white": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_08_02_25_PM_3.png"
       },
       "blocks": {
         "b1": {
