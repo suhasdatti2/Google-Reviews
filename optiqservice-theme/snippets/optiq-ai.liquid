@@ -1,0 +1,102 @@
+{%- if settings.optiq_ai_enabled == false -%}{%- else -%}
+{%- comment -%}
+  OPTIQ AI - widget mount.
+  Rendered once from layout/theme.liquid so the assistant is available on
+  every storefront page. The knowledge payload it reads is rendered directly
+  beneath it by snippets/optiq-ai-knowledge.liquid, regenerated live on each
+  page load. CSS hides the whole widget on the authenticated dashboard and
+  sign-in screens, which are their own full-viewport product.
+
+  The panel is a floating card anchored to the launcher in the bottom-right
+  corner. There is no backdrop: the page behind stays lit and clickable while
+  the customer is talking. All of this markup ships on every page load -
+  optiq-ai.js only toggles classes on it, so the launcher works even if the
+  knowledge payload fails to parse.
+
+  Every control in the composer does something real. There are no decorative
+  buttons: the three tool icons run actual queries and the status line
+  reports the true state of the knowledge index.
+{%- endcomment -%}
+
+{%- comment -%}
+  The endpoint is a Theme setting, not a hard-coded URL, so it can be switched
+  off or repointed without a code change. It is a URL only - the API key lives
+  on the Worker and never reaches the browser.
+{%- endcomment -%}
+{%- assign oqa_endpoint = settings.optiq_ai_endpoint | default: '' | strip -%}
+
+{{ 'optiq-ai.css' | asset_url | stylesheet_tag }}
+
+<div class="oqa" data-optiq-ai data-oqa-endpoint="{{ oqa_endpoint | escape }}">
+
+  <button class="oqa__launch" type="button" data-oqa-launch aria-expanded="false" aria-controls="optiq-ai-panel" aria-label="Open Optiq AI assistant">
+    <span class="oqa__launch-dot">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6Z"/>
+      </svg>
+    </span>
+    Ask Optiq AI
+  </button>
+
+  <aside class="oqa__panel" id="optiq-ai-panel" data-oqa-panel role="dialog" aria-modal="false" aria-label="Optiq AI assistant" aria-hidden="true">
+
+    <header class="oqa__head">
+      <span class="oqa__bead" aria-hidden="true"></span>
+      <b class="oqa__name">Optiq AI</b>
+      <span class="oqa__pill" data-oqa-pill>Live store data</span>
+      <button class="oqa__x" type="button" data-oqa-close aria-label="Close assistant">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6 6 18"/>
+        </svg>
+      </button>
+    </header>
+
+    <div class="oqa__log" data-oqa-log role="log" aria-live="polite"></div>
+
+    <form class="oqa__form" data-oqa-form>
+      <div class="oqa__composer" data-oqa-composer>
+        <label class="oqa__sr" for="oqa-input">Ask Optiq AI a question</label>
+        <textarea id="oqa-input" class="oqa__input" data-oqa-input rows="1" maxlength="2000"
+                  placeholder="Ask me anything about Optiq&hellip;" autocomplete="off"></textarea>
+
+        <div class="oqa__tools">
+          <div class="oqa__toolset">
+            <button class="oqa__tool" type="button" data-oqa-ask="What products do you have?" aria-label="Show all products" title="Show all products">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+              </svg>
+            </button>
+            <button class="oqa__tool" type="button" data-oqa-ask="How much is shipping and how long does it take?" aria-label="Shipping and delivery" title="Shipping and delivery">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M1 3h13v13H1z"/><path d="M14 8h4l3 3v5h-7"/><circle cx="5.5" cy="18.5" r="2"/><circle cx="17.5" cy="18.5" r="2"/>
+              </svg>
+            </button>
+            <button class="oqa__tool" type="button" data-oqa-reset aria-label="Start a new conversation" title="Start a new conversation">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/>
+              </svg>
+            </button>
+          </div>
+
+          <span class="oqa__count" data-oqa-count aria-hidden="true">0/2000</span>
+
+          <button class="oqa__send" type="submit" data-oqa-send aria-label="Send message">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4.5 19.5 20 12 4.5 4.5 7 12Z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <footer class="oqa__foot">
+      <span class="oqa__hint">Press <kbd>Shift</kbd> + <kbd>Enter</kbd> for a new line</span>
+      <span class="oqa__status" data-oqa-status><i></i> Connected to live store</span>
+    </footer>
+
+  </aside>
+</div>
+
+{% render 'optiq-ai-knowledge' %}
+<script src="{{ 'optiq-ai.js' | asset_url }}" defer></script>
+{%- endif -%}

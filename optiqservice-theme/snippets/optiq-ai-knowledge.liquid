@@ -1,0 +1,309 @@
+{%- comment -%}
+  ==========================================================================
+  OPTIQ AI - LIVE KNOWLEDGE INDEX
+  --------------------------------------------------------------------------
+  This is the assistant's entire source of truth. It is rendered by Liquid on
+  every single page load, which means it is regenerated from live Shopify data
+  every time anyone opens the site. There is no cache to refresh and no sync
+  job to run:
+
+    - change a price in Shopify        -> the AI quotes the new price instantly
+    - add a product                    -> the AI knows about it instantly
+    - archive / unpublish a product    -> the AI stops mentioning it instantly
+    - edit a description               -> the AI answers from the new text
+    - a variant sells out              -> availability updates instantly
+    - add a page or policy             -> the AI can link to it instantly
+
+  Everything below in the "products / pages / policies / articles / nav"
+  blocks is derived automatically. Nothing is hardcoded, so it cannot go
+  stale.
+
+  THE ONE EXCEPTION - "facts" at the bottom.
+  Some customer-facing copy on this site does not live in a Shopify object at
+  all; it lives inside theme section blocks (the FAQ accordions on
+  /pages/google-review-cards and /pages/ai-receptionist). Liquid cannot read
+  another template's section settings, so that copy is mirrored into the
+  "facts" array below. It is seeded with the real current wording. If you edit
+  those FAQ sections in the theme editor, update the matching fact here so the
+  assistant and the page never disagree.
+
+  HALLUCINATION POLICY: assets/optiq-ai.js is only ever allowed to state
+  something that appears in this payload. If a question cannot be answered
+  from here, it says so and points to support. It never guesses.
+  ==========================================================================
+{%- endcomment -%}
+
+{%- liquid
+  assign support_email = 'sales@optiqservice.com'
+  assign ai_page = '/pages/ai-receptionist'
+  assign cards_page = '/pages/google-review-cards'
+-%}
+
+<script type="application/json" id="optiq-ai-data">
+{
+  "shop": {
+    "name": {{ shop.name | json }},
+    "url": {{ shop.url | json }},
+    "email": {{ support_email | json }},
+    "currency": {{ cart.currency.iso_code | json }},
+    "moneyFormat": {{ shop.money_format | strip_html | json }}
+  },
+
+  "products": [
+    {%- assign plist = collections.all.products -%}
+    {%- for p in plist -%}
+    {
+      "title": {{ p.title | json }},
+      "handle": {{ p.handle | json }},
+      "url": {{ p.url | json }},
+      "type": {{ p.type | json }},
+      "vendor": {{ p.vendor | json }},
+      "tags": {{ p.tags | json }},
+      "description": {{ p.description | strip_html | strip_newlines | truncate: 1200 | json }},
+      "available": {{ p.available | json }},
+      "priceMin": {{ p.price_min | json }},
+      "priceMax": {{ p.price_max | json }},
+      "priceMinText": {{ p.price_min | money | strip_html | json }},
+      "priceMaxText": {{ p.price_max | money | strip_html | json }},
+      "compareAt": {{ p.compare_at_price_max | default: 0 | json }},
+      "compareAtText": {{ p.compare_at_price_max | default: 0 | money | strip_html | json }},
+      "onSale": {% if p.compare_at_price_max > p.price_min %}true{% else %}false{% endif %},
+      {%- comment -%} image_url raises a Liquid error on a nil image, and that
+        error text would be printed straight into the payload and break the
+        JSON. Card Hosting and AI Receptionist have no image, so this guard is
+        load-bearing, not defensive decoration. {%- endcomment -%}
+      "image": {% if p.featured_image %}{{ p.featured_image | image_url: width: 200 | json }}{% else %}""{% endif %},
+      "options": [
+        {%- for o in p.options_with_values -%}
+        { "name": {{ o.name | json }}, "values": [{% for v in o.values %}{{ v | json }}{% unless forloop.last %},{% endunless %}{% endfor %}] }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ],
+      "variants": [
+        {%- for v in p.variants limit: 60 -%}
+        {
+          "title": {{ v.title | json }},
+          "price": {{ v.price | json }},
+          "priceText": {{ v.price | money | strip_html | json }},
+          "available": {{ v.available | json }},
+          "options": {{ v.options | json }}
+        }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ],
+      "collections": [{% for c in p.collections %}{{ c.title | json }}{% unless forloop.last %},{% endunless %}{% endfor %}]
+    }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ],
+
+  {%- comment -%} Comma placement is driven by a "first" flag, never by forloop.last,
+      because entries can be skipped - forloop.last would then emit a trailing
+      comma and the whole payload would fail to parse. {%- endcomment -%}
+  "pages": [
+    { "title": "Home", "url": {{ routes.root_url | json }}, "handle": "home", "summary": "" }
+    {%- for pg in pages -%}
+      {%- unless pg.handle == 'sign-in' or pg.handle == 'my-receptionist' or pg.handle == 'data-sharing-opt-out' -%}
+      ,{ "title": {{ pg.title | json }}, "url": {{ pg.url | json }}, "handle": {{ pg.handle | json }},
+        "summary": {{ pg.content | strip_html | strip_newlines | truncate: 600 | json }} }
+      {%- endunless -%}
+    {%- endfor -%}
+  ],
+
+  "policies": [
+    {%- assign pol_first = true -%}
+    {%- for policy in shop.policies -%}
+      {%- if policy != blank -%}
+        {%- unless pol_first %},{% endunless -%}
+        {%- assign pol_first = false -%}
+        { "title": {{ policy.title | json }}, "url": {{ policy.url | json }},
+          "body": {{ policy.body | strip_html | strip_newlines | truncate: 900 | json }} }
+      {%- endif -%}
+    {%- endfor -%}
+  ],
+
+  "articles": [
+    {%- assign art_first = true -%}
+    {%- for blog in blogs -%}
+      {%- for a in blog.articles limit: 25 -%}
+        {%- unless art_first %},{% endunless -%}
+        {%- assign art_first = false -%}
+        { "title": {{ a.title | json }}, "url": {{ a.url | json }},
+          "summary": {{ a.excerpt_or_content | strip_html | strip_newlines | truncate: 500 | json }} }
+      {%- endfor -%}
+    {%- endfor -%}
+  ],
+
+  "routes": {
+    "cart": {{ routes.cart_url | json }},
+    "search": {{ routes.search_url | json }},
+    "account": {{ routes.account_url | json }},
+    "login": "/pages/sign-in",
+    "dashboard": "/pages/my-receptionist",
+    "allProducts": {{ routes.all_products_collection_url | json }},
+    "contact": "/pages/contact",
+    "aiReceptionist": {{ ai_page | json }},
+    "reviewCards": {{ cards_page | json }}
+  },
+
+  "customer": { "loggedIn": {% if customer %}true{% else %}false{% endif %},
+                "firstName": {% if customer %}{{ customer.first_name | json }}{% else %}null{% endif %} },
+
+  {%- comment -%}
+    ---- CURATED FACTS ----
+    Mirrors of copy that lives in theme section blocks (see header comment).
+    "topics" are the words that should surface this fact. Keep answers exactly
+    in step with the page they came from.
+  {%- endcomment -%}
+  "facts": [
+    { "id": "how-card-works", "intent": "general",
+      "topics": ["how","work","works","nfc","tap","chip","technology","function"],
+      "q": "How does the card work?",
+      "a": "Each card has an NFC chip inside, programmed with your review link. When a customer holds their phone near the card, their phone opens your review page automatically - the same tap technology used for contactless payments.",
+      "url": {{ cards_page | json }} },
+
+    { "id": "no-app-needed", "intent": "general",
+      "topics": ["app","download","qr","scan","install","need"],
+      "q": "Do my customers need an app or a QR code?",
+      "a": "No. NFC tap works with the phone's built-in settings on nearly all modern iPhones and Androids - nothing to download, nothing to scan. A printed QR code can be added as an optional backup if you want one.",
+      "url": {{ cards_page | json }} },
+
+    { "id": "programming", "intent": "general",
+      "topics": ["program","programmed","link","setup","set","google","yelp","review link"],
+      "q": "How do you program my review link?",
+      "a": "At checkout, enter your business name and your Google or Yelp review link. We program your card, test it on iPhone and Android, and ship it ready to use - nothing for you to set up.",
+      "url": {{ cards_page | json }} },
+
+    { "id": "counter-vs-bulk", "intent": "compare",
+      "topics": ["difference","differ","compare","versus","vs","between","which","counter","bulk","mini"],
+      "q": "What's the difference between the Main Counter Card and Mini Bulk Cards?",
+      "a": "The Main Counter Card is bigger and built to stay on your counter for years - it costs more because it's made to last and be seen every day. Mini Bulk Cards are smaller and cheaper per card, made to hand out with bills, receipts, and takeout orders. Both open the same review page with one tap.",
+      "url": {{ cards_page | json }} },
+
+    { "id": "unknown-link", "intent": "general",
+      "topics": ["dont know","don't know","link","find","unsure","not sure"],
+      "q": "What if I don't know my review link?",
+      "a": "Order anyway. Email sales@optiqservice.com and we'll send you a quick guide to finding it, or find it for you if you share your business name and city.",
+      "url": {{ cards_page | json }} },
+
+    { "id": "phones", "intent": "general",
+      "topics": ["phone","phones","iphone","android","compatible","compatibility","support","device"],
+      "q": "Which phones does this work with?",
+      "a": "Almost all iPhones and Android phones released in the last several years support NFC tap by default. Customers with older phones can still search for your business the usual way.",
+      "url": {{ cards_page | json }} },
+
+    { "id": "no-guarantee", "intent": "general",
+      "topics": ["guarantee","guaranteed","promise","star","stars","rating","ratings","fake"],
+      "q": "Does this guarantee good reviews?",
+      "a": "No - and we wouldn't trust anyone who claims it does. What the card does is remove the friction: instead of searching for your business and finding the review button, customers get there in one tap. What they write is entirely up to them.",
+      "url": {{ cards_page | json }} },
+
+    { "id": "shipping", "intent": "shipping",
+      "topics": ["ship","shipping","delivery","deliver","arrive","fast","long","when","dispatch","tracking","track"],
+      "q": "How fast will my card ship?",
+      "a": "Every card is programmed with your review link and tap-tested before it ships. Most orders are prepared within a few business days, and you'll get a tracking email as soon as yours is on the way.",
+      "url": {{ cards_page | json }} },
+
+    { "id": "faulty-returns", "intent": "returns",
+      "topics": ["return","returns","refund","faulty","broken","damaged","replace","replacement","wrong","exchange"],
+      "q": "What if my card arrives faulty?",
+      "a": "If a card ever arrives damaged or doesn't tap correctly, email sales@optiqservice.com and we'll sort out a replacement. Because each card is custom-programmed with your review link, we can't take back correctly working cards - but if something isn't right, we're happy to help.",
+      "url": {{ cards_page | json }} },
+
+    { "id": "whats-included", "intent": "general",
+      "topics": ["included","include","comes","get","box","package","order"],
+      "q": "What comes with my order?",
+      "a": "You get your NFC review card (or cards), already programmed with your Google or Yelp review link and tested on iPhone and Android. Nothing to set up - just place it where customers can tap it.",
+      "url": {{ cards_page | json }} },
+
+    { "id": "how-to-order", "intent": "order",
+      "topics": ["order","buy","purchase","checkout","how do i order","place"],
+      "q": "How do I place an order?",
+      "a": "Pick your card and options on the product page, add it to your cart, then check out. At checkout you enter your business name and your Google or Yelp review link so we can program the card before it ships.",
+      "url": {{ cards_page | json }} },
+
+    { "id": "payment", "intent": "payment",
+      "topics": ["pay","payment","card","visa","mastercard","paypal","shop pay","apple pay","google pay","methods"],
+      "q": "What payment methods do you accept?",
+      "a": "Checkout runs on Shopify's secure checkout, which accepts major credit and debit cards plus the accelerated wallets enabled on this store, such as Shop Pay, Apple Pay and Google Pay. You'll see every option available to you on the payment step.",
+      "url": {{ routes.cart_url | json }} },
+
+    { "id": "who-its-for", "intent": "general",
+      "topics": ["who","for","suitable","business","businesses","barber","restaurant","salon","spa","gym","cafe","detailer","shop"],
+      "q": "Who are the review cards for?",
+      "a": "They're made for businesses that live on reviews: barbershops, restaurants and cafes, salons and spas, auto detailers, gyms and studios, and local shops. If your customers walk out happy, the card gives them the easiest possible way to say so.",
+      "url": {{ cards_page | json }} },
+
+    { "id": "brand", "intent": "brand",
+      "topics": ["optiq","about","who are you","company","brand","what is optiq","do"],
+      "q": "What is Optiq?",
+      "a": "Optiq builds tools that help local businesses capture more of the business they already earn. Two things sit at the centre of it: tap-to-review NFC cards that make leaving a Google or Yelp review a single tap, and an AI Receptionist that answers your phone 24/7, books appointments and qualifies leads.",
+      "url": {{ routes.root_url | json }} },
+
+    { "id": "air-booking", "intent": "general",
+      "topics": ["book","booking","appointment","appointments","calendar","schedule"],
+      "q": "Can the AI Receptionist book appointments?",
+      "a": "Yes. It reads your real availability, offers the slots that are actually free, writes the booking into your calendar and sends a confirmation before the caller hangs up.",
+      "url": {{ ai_page | json }} },
+
+    { "id": "air-transfer", "intent": "general",
+      "topics": ["transfer","transfers","route","routing","human","person","escalate"],
+      "q": "Can the AI Receptionist transfer calls?",
+      "a": "Yes. You decide which situations warrant a transfer and where they go. Anything urgent or outside its remit is routed to a person, with the context already gathered.",
+      "url": {{ ai_page | json }} },
+
+    { "id": "air-voice", "intent": "general",
+      "topics": ["voice","sound","accent","tone","custom","customize","customise"],
+      "q": "Can I customize the AI Receptionist voice?",
+      "a": "Yes. Voice, tone, pace and phrasing are tuned during setup, and we keep adjusting until it sounds like your business rather than a robot.",
+      "url": {{ ai_page | json }} },
+
+    { "id": "air-afterhours", "intent": "general",
+      "topics": ["after hours","night","nights","weekend","weekends","holiday","24/7","closed","always"],
+      "q": "Can the AI Receptionist answer after hours?",
+      "a": "That is most of the value. Nights, weekends and holidays are when the majority of missed calls happen, and it answers all of them the same way.",
+      "url": {{ ai_page | json }} },
+
+    { "id": "air-number", "intent": "general",
+      "topics": ["number","phone number","existing","keep","forward","porting"],
+      "q": "Does the AI Receptionist work with my phone number?",
+      "a": "Yes. You keep your existing number and we forward it, so nothing on your printed material, listings or business profile has to change.",
+      "url": {{ ai_page | json }} },
+
+    { "id": "air-setup-time", "intent": "general",
+      "topics": ["setup","set up","how long","install","live","launch","time","week"],
+      "q": "How long does AI Receptionist setup take?",
+      "a": "Usually about a week from the moment we have your hours, services and calendar access. We test the whole flow before switching it live.",
+      "url": {{ ai_page | json }} },
+
+    { "id": "cancel-change", "intent": "returns",
+      "topics": ["cancel","change","amend","edit order","wrong address","mistake","modify"],
+      "q": "Can I change or cancel my order?",
+      "a": "Get in touch as fast as you can at sales@optiqservice.com with your order number. Cards are custom-programmed with your review link, so once yours has been programmed it may already be too late to change - but if we catch it in time we will.",
+      "url": "/pages/contact" },
+
+    { "id": "bulk-pricing", "intent": "discounts",
+      "topics": ["discount","discounts","promo","promotion","promotions","deal","deals","offer","sale","coupon","code","cheaper per"],
+      "q": "Do you offer discounts?",
+      "a": "The Mini Bulk Cards are priced so the cost per card drops the more you order, and the Bulk Restaurant Pack bundles a counter card with 50 mini cards in one price. I don't have any coupon codes or limited-time promotions published on the site - email sales@optiqservice.com to ask what's currently available.",
+      "url": "/products/bulk-review-cards" },
+
+    { "id": "monthly-fee", "intent": "monthlyfee",
+      "topics": ["monthly fee","monthly","subscription","recurring","ongoing cost","every month","per month"],
+      "q": "Is there a monthly fee?",
+      "a": "There are two separate monthly plans in the store and which apply to you depends on your order: the Review Growth Plan ($14.99/month) is described as an optional add-on, and Card Hosting ($4.99/month) is described as powering the tap-to-review redirect. Because the wording differs between pages, please email sales@optiqservice.com to confirm exactly what your order includes before you buy - I don't want to give you the wrong figure.",
+      "url": "/pages/membership" },
+
+    { "id": "contact", "intent": "contact",
+      "topics": ["contact","email","reach","support","help","talk","speak","human","service"],
+      "q": "How do I contact Optiq?",
+      "a": "Email sales@optiqservice.com and we reply within one business day. You can also use the contact form on the contact page.",
+      "url": "/pages/contact" },
+
+    { "id": "account", "intent": "account",
+      "topics": ["account","login","log in","sign in","signin","dashboard","password"],
+      "q": "How do I sign in to my account?",
+      "a": "Use the Log in button at the top of any page. Sign-in is passwordless - enter your email and Shopify sends you a secure verification code. Once you're signed in, the View Dashboard button takes you to your AI Receptionist dashboard.",
+      "url": "/pages/sign-in" }
+  ],
+
+  "ok": true
+}
+</script>

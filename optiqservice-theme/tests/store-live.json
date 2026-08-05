@@ -1,0 +1,89 @@
+{
+  "shop": { "name": "Optiq", "email": "sales@optiqservice.com" },
+  "products": { "nodes": [
+    { "title": "Optiq World Cup Jersey", "handle": "optiq-world-cup-jersey", "productType": "Jersey",
+      "vendor": "Optiq", "tags": ["football","jersey","optiq","soccer","world-cup"],
+      "description": "Stadium-grade World Cup jerseys for every nation.", "status": "ARCHIVED",
+      "options": [{"name":"Nation","optionValues":[{"name":"Argentina"},{"name":"France"}]},{"name":"Size","optionValues":[{"name":"S"},{"name":"M"}]}],
+      "variants": { "nodes": [
+        {"title":"Argentina / S","price":"24.99","compareAtPrice":"49.99","availableForSale":true,"selectedOptions":[{"value":"Argentina"},{"value":"S"}]},
+        {"title":"France / M","price":"24.99","compareAtPrice":"49.99","availableForSale":true,"selectedOptions":[{"value":"France"},{"value":"M"}]} ] },
+      "collections": { "nodes": [{"title":"DO NOT USE - Old Home Page Collection"}] } },
+
+    { "title": "Main Counter Card", "handle": "google-review-nfc-card", "productType": "NFC Review Card",
+      "vendor": "OptiqService", "tags": ["counter","nfc","optiq","review-card"],
+      "description": "Your Main Counter Card is the premium, credit-card-size NFC card built to live on your counter, front desk, barber station, salon desk, register, or checkout area.Once you order, we program it with your Google review link and tap-test it on iPhone and Android. When a customer taps their phone on the card, your Google review page opens instantly. No app, no typing, and no QR code needed.It costs a bit more than the Mini Bulk Cards because it's built to be seen and used every day for years: a heavier card, a cleaner finish, and a permanent spot on your counter, not something you hand out once and never see again. Credit-card size, built for counters and front desks Programmed with your Google review link after purchase One tap opens your Google review page, no app, no QR code required One-time price, no monthly fee Available in black or white Optional printed QR code backup if you want one This card makes leaving a review easier. It doesn't guarantee reviews or star ratings. What your customers write is always up to them.After ordering, we'll use the business name and Google review link from your order to program the card. Not sure of your link? Email sales@optiqservice.com with your order number.",
+      "status": "ACTIVE",
+      "options": [{"name":"Colour","optionValues":[{"name":"Black"},{"name":"White"}]},{"name":"Pack","optionValues":[{"name":"1 Card"},{"name":"2 Cards"},{"name":"3 Cards"}]},{"name":"QR code","optionValues":[{"name":"No QR"},{"name":"With QR"}]}],
+      "variants": { "nodes": [
+        {"title":"Black / 1 Card / No QR","price":"29.99","compareAtPrice":null,"availableForSale":true,"selectedOptions":[{"value":"Black"},{"value":"1 Card"},{"value":"No QR"}]},
+        {"title":"Black / 3 Cards / With QR","price":"79.99","compareAtPrice":null,"availableForSale":true,"selectedOptions":[{"value":"Black"},{"value":"3 Cards"},{"value":"With QR"}]},
+        {"title":"White / 2 Cards / No QR","price":"49.99","compareAtPrice":null,"availableForSale":true,"selectedOptions":[{"value":"White"},{"value":"2 Cards"},{"value":"No QR"}]} ] },
+      "collections": { "nodes": [{"title":"OptiqService TikTok Products"}] } },
+
+    { "title": "Bulk Square Handout Cards", "handle": "bulk-review-cards", "productType": "NFC Review Card",
+      "vendor": "OptiqService", "tags": ["bulk","handout","nfc","optiq","review-card"],
+      "description": "Mini Bulk Cards are the smaller, simpler version of our NFC review card, made to hand out, not display.Perfect for restaurants and busy local businesses: drop one in every takeout bag, tuck it inside the receipt, or hand it over with the bill while the visit is still fresh in your customer's mind.Because they're sold in bulk, they cost less per card than the Main Counter Card. The more you order, the lower your price per card. Each one is still programmed with your Google review link, so a single tap opens your review page. No app, no QR code needed. Great for restaurants, cafes, takeout spots, and any business that serves a lot of customers.",
+      "status": "ACTIVE",
+      "options": [{"name":"Colour","optionValues":[{"name":"Black"},{"name":"White"}]},{"name":"Size","optionValues":[{"name":"10 Cards"},{"name":"25 Cards"},{"name":"50 Cards"},{"name":"100 Cards"}]},{"name":"QR code","optionValues":[{"name":"No QR"},{"name":"With QR"}]}],
+      "variants": { "nodes": [
+        {"title":"Black / 10 Cards / No QR","price":"49.99","compareAtPrice":null,"availableForSale":true,"selectedOptions":[{"value":"Black"},{"value":"10 Cards"},{"value":"No QR"}]},
+        {"title":"Black / 25 Cards / No QR","price":"99.99","compareAtPrice":null,"availableForSale":true,"selectedOptions":[{"value":"Black"},{"value":"25 Cards"},{"value":"No QR"}]},
+        {"title":"Black / 50 Cards / No QR","price":"174.99","compareAtPrice":null,"availableForSale":true,"selectedOptions":[{"value":"Black"},{"value":"50 Cards"},{"value":"No QR"}]},
+        {"title":"Black / 50 Cards / With QR","price":"224.99","compareAtPrice":null,"availableForSale":true,"selectedOptions":[{"value":"Black"},{"value":"50 Cards"},{"value":"With QR"}]},
+        {"title":"Black / 100 Cards / No QR","price":"299.99","compareAtPrice":null,"availableForSale":true,"selectedOptions":[{"value":"Black"},{"value":"100 Cards"},{"value":"No QR"}]},
+        {"title":"White / 100 Cards / With QR","price":"399.99","compareAtPrice":null,"availableForSale":true,"selectedOptions":[{"value":"White"},{"value":"100 Cards"},{"value":"With QR"}]} ] },
+      "collections": { "nodes": [{"title":"OptiqService TikTok Products"}] } },
+
+    { "title": "Bulk Restaurant Pack", "handle": "bulk-restaurant-pack", "productType": "NFC Review Card",
+      "vendor": "OptiqService", "tags": ["bundle","nfc","optiq","restaurant","review-card"],
+      "description": "Built for restaurants that want both: one premium card for the counter, plus a stack of mini cards to send home with customers.This pack includes 1 Main Counter Card for your register or host stand, and 50 Mini Bulk Cards to tuck into takeout bags, bills, and pickup orders. One-time price, no monthly fee.",
+      "status": "ACTIVE",
+      "options": [{"name":"Title","optionValues":[{"name":"Default Title"}]}],
+      "variants": { "nodes": [ {"title":"Default Title","price":"149.99","compareAtPrice":null,"availableForSale":true,"selectedOptions":[{"value":"Default Title"}]} ] },
+      "collections": { "nodes": [{"title":"OptiqService TikTok Products"}] } },
+
+    { "title": "Review Growth Plan", "handle": "review-growth-plan", "productType": "Membership",
+      "vendor": "OptiqService", "tags": ["membership","optiq","subscription"],
+      "description": "The Review Growth Plan is an optional monthly add-on for businesses that want a bit of ongoing help. It is not required to use your card. For $14.99/month, members get: Free link updates if your Google review link ever changes A monthly check-in on your Google reviews Priority support Discounts on future cards Cancel anytime.",
+      "status": "ACTIVE",
+      "options": [{"name":"Title","optionValues":[{"name":"Default Title"}]}],
+      "variants": { "nodes": [ {"title":"Default Title","price":"14.99","compareAtPrice":null,"availableForSale":true,"selectedOptions":[{"value":"Default Title"}]} ] },
+      "collections": { "nodes": [{"title":"OptiqService TikTok Products"}] } },
+
+    { "title": "Card Hosting", "handle": "card-hosting", "productType": "Hosting",
+      "vendor": "Optiq", "tags": ["hosting","subscription"],
+      "description": "Keeps your Optiq card live. The $4.99/month hosting plan powers the tap-to-review redirect on every card you own: we host your review link, keep it pointed at your Google Business Profile, and update it free whenever your link changes.Hosting is required for your card to work. If you cancel, the tap-to-review redirect on your cards is switched off.",
+      "status": "ACTIVE",
+      "options": [{"name":"Title","optionValues":[{"name":"Default Title"}]}],
+      "variants": { "nodes": [ {"title":"Default Title","price":"4.99","compareAtPrice":null,"availableForSale":true,"selectedOptions":[{"value":"Default Title"}]} ] },
+      "collections": { "nodes": [] } },
+
+    { "title": "AI Receptionist", "handle": "ai-receptionist", "productType": "AI Service",
+      "vendor": "Optiq", "tags": ["AI Receptionist","Service"],
+      "description": "An AI receptionist that answers calls 24/7, books appointments, answers customer questions, qualifies leads, and represents your business like your best employee.One-Time Setup - $700. Full AI setup, voice customization, business knowledge upload, appointment integrations, testing and launch.Monthly Plan - $300/month. Unlimited AI receptionist, continuous updates, AI improvements, call analytics, priority support and monthly optimization.",
+      "status": "ACTIVE",
+      "options": [{"name":"Plan","optionValues":[{"name":"One-Time Setup"},{"name":"Monthly"}]},{"name":"Tier","optionValues":[{"name":"Standard"},{"name":"Premium"}]}],
+      "variants": { "nodes": [
+        {"title":"One-Time Setup / Standard","price":"699.00","compareAtPrice":null,"availableForSale":true,"selectedOptions":[{"value":"One-Time Setup"},{"value":"Standard"}]},
+        {"title":"Monthly / Standard","price":"299.00","compareAtPrice":null,"availableForSale":true,"selectedOptions":[{"value":"Monthly"},{"value":"Standard"}]},
+        {"title":"One-Time Setup / Premium","price":"1499.00","compareAtPrice":null,"availableForSale":true,"selectedOptions":[{"value":"One-Time Setup"},{"value":"Premium"}]},
+        {"title":"Monthly / Premium","price":"599.00","compareAtPrice":null,"availableForSale":true,"selectedOptions":[{"value":"Monthly"},{"value":"Premium"}]} ] },
+      "collections": { "nodes": [] } }
+  ] },
+  "pages": { "nodes": [
+    {"title":"Contact","handle":"contact"},
+    {"title":"Your Privacy Choices","handle":"data-sharing-opt-out"},
+    {"title":"About Us","handle":"about-us"},
+    {"title":"FAQs","handle":"faqs"},
+    {"title":"Return Policy","handle":"return-policy"},
+    {"title":"Shipping Policy","handle":"shipping-policy"},
+    {"title":"Terms and Conditions","handle":"terms-and-conditions"},
+    {"title":"Track Order","handle":"track-order"},
+    {"title":"AI Receptionist","handle":"ai-receptionist"},
+    {"title":"Google Review Cards","handle":"google-review-cards"},
+    {"title":"Sign in","handle":"sign-in"},
+    {"title":"My AI Receptionist","handle":"my-receptionist"}
+  ] },
+  "blogs": { "nodes": [ { "handle": "news", "articles": { "nodes": [] } } ] }
+}

@@ -1,0 +1,10 @@
+name = "optiq-ai"
+main = "worker.js"
+compatibility_date = "2026-01-01"
+
+# The API key is NOT set here. Set it as a secret so it never lands in git:
+#   npx wrangler secret put ANTHROPIC_API_KEY
+
+[vars]
+ALLOWED_ORIGINS = "https://optiq.shop,https://www.optiq.shop"
+MODEL = "claude-sonnet-5"

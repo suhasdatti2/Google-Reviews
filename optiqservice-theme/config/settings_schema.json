@@ -1,45 +1,105 @@
 [
   {
     "name": "theme_info",
-    "theme_name": "OptiqService Mono",
+    "theme_name": "Optiq Premium",
     "theme_version": "1.0.0",
-    "theme_author": "OptiqService",
-    "theme_documentation_url": "https://optiqservice.com",
-    "theme_support_url": "mailto:sales@optiqservice.com"
+    "theme_author": "Optiq",
+    "theme_documentation_url": "https://optiq.shop",
+    "theme_support_url": "https://optiq.shop/pages/contact"
   },
   {
     "name": "Brand",
     "settings": [
+      { "type": "image_picker", "id": "logo", "label": "Logo" },
       {
-        "type": "text",
-        "id": "contact_email",
-        "label": "Contact email",
-        "default": "sales@optiqservice.com"
+        "type": "range",
+        "id": "logo_height",
+        "label": "Header logo height",
+        "min": 18,
+        "max": 56,
+        "step": 2,
+        "default": 30,
+        "unit": "px"
       },
+      { "type": "image_picker", "id": "favicon", "label": "Favicon", "info": "Square image, at least 96 x 96px." },
       {
-        "type": "text",
-        "id": "tagline",
-        "label": "Footer tagline",
-        "default": "Tap-to-review NFC cards for local businesses. No app. No monthly fee."
+        "type": "image_picker",
+        "id": "share_image",
+        "label": "Social sharing image",
+        "info": "Shown when a link to the store is shared. 1200 x 630px works best."
       }
     ]
   },
   {
-    "name": "Cart & membership",
+    "name": "Colours",
     "settings": [
       {
         "type": "paragraph",
-        "content": "Paste the Review Growth Plan's VARIANT ID here so the \"Add Membership\" buttons add it to the cart. Find it in Shopify admin: Products → Review Growth Plan → click the variant → the number at the end of the URL (…/variants/XXXXXXXXXX). Until it's filled in, membership buttons link to the membership page instead."
+        "content": "The theme is built on a near-black surface ramp. Accent is used sparingly for primary buttons and highlights so it keeps its impact."
       },
-      { "type": "text", "id": "membership_variant_id", "label": "Membership variant ID" },
+      { "type": "color", "id": "color_background", "label": "Page background", "default": "#08080a" },
+      { "type": "color", "id": "color_accent", "label": "Accent", "default": "#e8c07a" },
+      {
+        "type": "color",
+        "id": "color_accent_ink",
+        "label": "Text on accent",
+        "default": "#14100a",
+        "info": "Keep a strong contrast against the accent colour so button labels stay readable."
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "range",
+        "id": "page_width",
+        "label": "Content width",
+        "min": 1100,
+        "max": 1500,
+        "step": 20,
+        "default": 1240,
+        "unit": "px"
+      }
+    ]
+  },
+  {
+    "name": "AI Receptionist page",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Applies once to every section on the AI Receptionist page and product - the hero, the dashboard mockup, pricing and FAQ all pick this up automatically. Leave blank to keep the flat colour."
+      },
+      { "type": "image_picker", "id": "air_bg_image", "label": "Background image" }
+    ]
+  },
+  {
+    "name": "Optiq AI",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Leave the endpoint blank and the assistant answers from a built-in knowledge base. Paste your Worker URL and it answers with a real AI model instead, still quoting live store data for anything about prices, products or policies."
+      },
       {
         "type": "text",
-        "id": "membership_selling_plan_id",
-        "label": "Membership selling plan ID (from the Subscriptions app)",
-        "info": "Needed for recurring monthly billing. Leave blank for a one-time charge while testing."
+        "id": "optiq_ai_endpoint",
+        "label": "AI endpoint URL",
+        "info": "Your deployed optiq-ai-worker URL, e.g. https://optiq-ai.yourname.workers.dev - see optiq-ai-worker/README.md for the five-minute setup. An API key must never be pasted here; the Worker holds it."
       },
-      { "type": "text", "id": "membership_name", "label": "Membership name", "default": "Review Growth Plan" },
-      { "type": "text", "id": "membership_price", "label": "Membership price label", "default": "$14.99" }
+      {
+        "type": "checkbox",
+        "id": "optiq_ai_enabled",
+        "label": "Show Optiq AI on the storefront",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Social",
+    "settings": [
+      { "type": "url", "id": "social_instagram", "label": "Instagram" },
+      { "type": "url", "id": "social_tiktok", "label": "TikTok" },
+      { "type": "url", "id": "social_facebook", "label": "Facebook" }
     ]
   }
 ]
