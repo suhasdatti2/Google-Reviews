@@ -2,35 +2,32 @@
 
 {%- comment -%}
   ==========================================================================
-  OPTIQ - Sign in
+  OPTIQ - Sign in  (inline, no hosted white page)
   --------------------------------------------------------------------------
-  Authentication is owned entirely by Shopify's modern Customer Accounts
-  (passwordless: email -> emailed verification code). This store is already
-  on NEW_CUSTOMER_ACCOUNTS, so `routes.account_login_url` IS that email-code
-  flow - there is nothing to build, fake, or verify in the theme, and doing
-  so would be a security problem (a theme has no backend to check a code
-  against). This section is presentation only; the single button hands off
-  to Shopify's hosted, secure sign-in. No "Sign in with Shop" / Shop App
-  button exists anywhere in this flow - "Continue with Email" is the only
-  entry point, and it goes straight to Shopify's own email-code login.
+  Authentication is Shopify's, and this store is on the latest customer
+  accounts (passwordless: email -> emailed code). Password sign-in no longer
+  exists on this store - it lived in classic/legacy accounts, which Shopify
+  retired for stores not already using them (deprecation, Feb 2026). So the
+  choice here is NOT "password vs code", it is "inline vs a hosted white
+  page". This section takes the inline path.
 
-  POST-LOGIN DESTINATION: after completing the emailed code, a signed-in
-  visitor should land on /pages/ai-receptionist (fully refreshed, logged
-  in) - NOT straight into the dashboard, and NOT on Shopify's default
-  hosted account/orders page. From there the header's "View Dashboard"
-  button is the explicit, visible next step into /pages/my-receptionist.
+  HOW THE WHITE PAGE IS AVOIDED:
+  Shopify's <shopify-account> web component opens the whole sign-in / create-
+  account flow in a sheet ON THIS PAGE - the customer never leaves the
+  storefront and never sees the unstyled hosted screen. We drop a styled
+  "Sign in" and "Create account" button into the component's signed-out slot,
+  so clicking either one opens that inline sheet, and we colour the sheet with
+  the component's CSS variables to match the site.
 
-  Why the fix below matters: Shopify's NEW customer accounts run on a
-  separate hosted domain (account.<shop>.com), not the storefront domain,
-  so a plain relative return_url (e.g. "/pages/ai-receptionist") has no
-  origin for that hosted domain to resolve against and gets silently
-  dropped, landing the customer on its own default orders screen instead.
-  Passing a full, absolute URL (https://<shop-domain>/pages/ai-receptionist)
-  gives it something it can actually redirect to. This is the one lever a
-  theme has over that hosted page; if a future Shopify account-flow version
-  still ignores it, the customer still lands authenticated, and this page
-  itself carries the same redirect for anyone who returns here already
-  signed in.
+  NO DEAD END:
+  If the component runtime has not upgraded the element yet (or at all),
+  `shopify-account:not(:defined)` hides it and reveals the fallback below,
+  which is the previous hosted-login link. So the button always does
+  something: inline when the component is live, hosted link if it is not.
+
+  Shopify owns the component's internals; we can colour it but not redraw it,
+  and the sign-in methods it offers (email code, and Shop / Google if enabled
+  in admin) are controlled in Settings -> Customer accounts, not here.
   ==========================================================================
 {%- endcomment -%}
 
@@ -61,30 +58,49 @@
       <p>{{ section.settings.sub | escape }}</p>
     </div>
 
-    <a class="oqauth-cta" href="{{ login_url }}" data-oq-handoff>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-      {{ section.settings.email_cta | escape }}
-    </a>
+    {%- if shop.customer_accounts_enabled -%}
+      {%- comment -%}
+        The buttons live inside the component's signed-out-avatar slot, so a
+        click on either opens the inline account sheet. The sheet is one flow:
+        a returning email signs in, a new email creates the account - which is
+        why "Create account" points at the same sheet.
+      {%- endcomment -%}
+      <shopify-account class="oqauth-account" menu="customer-account-main-menu">
+        <div slot="signed-out-avatar" class="oqauth-actions">
+          <button type="button" class="oqauth-cta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+            {{ section.settings.email_cta | escape }}
+          </button>
+          <button type="button" class="oqauth-cta oqauth-cta--ghost">
+            {{ section.settings.create_label | escape }}
+          </button>
+        </div>
+      </shopify-account>
+
+      {%- comment -%} Shown only if the component never upgrades - see header. {%- endcomment -%}
+      <div class="oqauth-fallback">
+        <a class="oqauth-cta" href="{{ login_url }}" data-oq-handoff>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          {{ section.settings.email_cta | escape }}
+        </a>
+        <a class="oqauth-cta oqauth-cta--ghost" href="{{ routes.account_register_url }}">
+          {{ section.settings.create_label | escape }}
+        </a>
+      </div>
+    {%- else -%}
+      {%- comment -%} Accounts disabled in admin - only the hosted link is possible. {%- endcomment -%}
+      <a class="oqauth-cta" href="{{ login_url }}" data-oq-handoff>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        {{ section.settings.email_cta | escape }}
+      </a>
+    {%- endif -%}
 
     <p class="oqauth-secure">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
       {{ section.settings.secure_note | escape }}
     </p>
 
-    {%- comment -%}
-      The next two screens (enter email, enter code) are hosted by Shopify on
-      its own domain, so no theme CSS reaches them - see the header comment.
-      Naming the step up front is the one thing the theme CAN do about it: an
-      unexplained jump to a plain page reads as broken, an expected one reads
-      as a security step.
-    {%- endcomment -%}
-    {%- if section.settings.steps_note != blank -%}
-      <p class="oqauth-steps">{{ section.settings.steps_note | escape }}</p>
-    {%- endif -%}
-
     <div class="oqauth-links">
-      <a href="{{ routes.account_register_url }}">{{ section.settings.create_label | escape }}</a>
-      <span>&middot;</span>
       <a href="{{ section.settings.support_url | default: '/pages/contact' }}">{{ section.settings.support_label | escape }}</a>
     </div>
 
@@ -99,10 +115,10 @@
 </div>
 
 <script>
-  // Purely cosmetic: label the button while the browser navigates to
-  // Shopify's hosted sign-in, so a slow hop doesn't look like a dead click.
-  // Navigation is the anchor's own default - nothing here is required for
-  // sign-in to work, and nothing here touches authentication.
+  // Cosmetic only: label the fallback link while the browser navigates, so a
+  // slow hop does not look like a dead click. Runs only for the fallback -
+  // the component path opens inline and never navigates. Nothing here touches
+  // authentication.
   (function () {
     var cta = document.querySelector('[data-oq-handoff]');
     if (!cta) return;
@@ -119,13 +135,10 @@
   "tag": "section",
   "settings": [
     { "type": "text", "id": "heading", "label": "Heading", "default": "Sign in to Optiq" },
-    { "type": "text", "id": "steps_note", "label": "Hand-off note",
-      "default": "Next: enter your email, then the 6-digit code we send you. Two quick steps on Shopify's secure page, then you're back here.",
-      "info": "Sets expectations for Shopify's hosted sign-in screens, which the theme cannot style." },
-    { "type": "textarea", "id": "sub", "label": "Supporting text", "default": "We'll send you a secure verification code to sign in. No password to remember." },
-    { "type": "text", "id": "email_cta", "label": "Primary button", "default": "Continue with Email" },
+    { "type": "textarea", "id": "sub", "label": "Supporting text", "default": "Sign in or create your account right here - no password to remember. We'll email you a secure code." },
+    { "type": "text", "id": "email_cta", "label": "Primary button", "default": "Sign in" },
     { "type": "text", "id": "secure_note", "label": "Reassurance line", "default": "Secure, passwordless sign-in by Shopify" },
-    { "type": "text", "id": "create_label", "label": "Create-account link", "default": "Create account" },
+    { "type": "text", "id": "create_label", "label": "Create-account button", "default": "Create account" },
     { "type": "text", "id": "support_label", "label": "Support link", "default": "Contact support" },
     { "type": "url", "id": "support_url", "label": "Support link URL", "info": "Defaults to /pages/contact" },
     { "type": "header", "content": "Legal" },

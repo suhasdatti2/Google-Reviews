@@ -819,17 +819,45 @@ body:has(.oqauth) .o-footer { display: none !important; }
   .oqapp *, .oqauth * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
 }
 
-/* Hand-off note + button state. The two screens after this one are hosted by
-   Shopify on its own domain and cannot be styled from the theme, so this page
-   names the step instead of letting the jump feel like a fault. */
-.oqauth-steps {
-  margin: 14px 0 0;
-  padding: 11px 13px;
-  border: 1px solid var(--oq-line);
-  border-radius: var(--oq-r-sm);
-  background: var(--oq-surface-2);
-  font-size: 12.5px;
-  line-height: 1.5;
-  color: var(--oq-ink-2);
+/* ---- Inline sign-in (shopify-account component) --------------------------
+   The component opens the whole sign-in / create-account flow in a sheet on
+   this page, so there is no hosted white screen. We style the two buttons in
+   its signed-out slot, colour the sheet via its CSS variables, and fall back
+   to the hosted link only if the component never upgrades. */
+
+.oqauth-account { display: block; }
+.oqauth-actions,
+.oqauth-fallback { display: flex; flex-direction: column; gap: 10px; }
+
+/* The component paints the inline sheet using these. Match the auth card. */
+shopify-account.oqauth-account {
+  --shopify-account-color-background: var(--oq-surface);
+  --shopify-account-color-text: var(--oq-ink);
+  --shopify-account-color-accent: var(--oq-accent);
+  --shopify-account-font-body: var(--oq-font);
+  --shopify-account-dialog-position-top: 12vh;
 }
+
+/* Secondary "Create account" button: outlined, not filled. */
+.oqauth-cta--ghost {
+  background: transparent;
+  color: var(--oq-ink);
+  border: 1px solid var(--oq-line-2);
+  box-shadow: none;
+}
+.oqauth-cta--ghost:hover {
+  background: var(--oq-surface-2);
+  border-color: var(--oq-accent-line);
+  filter: none;
+  box-shadow: none;
+}
+
+/* No-dead-end switch: the fallback shows ONLY while the component is not yet
+   defined; once it upgrades, the slotted buttons take over and this hides.
+   An unknown element still lays out its children, so it is hidden explicitly
+   until defined to avoid showing both. */
+.oqauth-fallback { display: none; }
+shopify-account:not(:defined) { display: none; }
+shopify-account:not(:defined) + .oqauth-fallback { display: flex; }
+
 .oqauth-cta.is-handing-off { opacity: 0.72; pointer-events: none; }
