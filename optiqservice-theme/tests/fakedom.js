@@ -33,6 +33,8 @@ Object.defineProperty(El.prototype, 'innerHTML', {
 });
 El.prototype.setAttribute = function (k, v) { this.attrs[k] = String(v); if (k === 'class') this.className = v; };
 El.prototype.getAttribute = function (k) { return k in this.attrs ? this.attrs[k] : null; };
+El.prototype.hasAttribute = function (k) { return k in this.attrs; };
+El.prototype.removeAttribute = function (k) { delete this.attrs[k]; };
 El.prototype.appendChild = function (c) { c.parentNode = this; this.children.push(c); return c; };
 El.prototype.removeChild = function (c) {
   const i = this.children.indexOf(c); if (i > -1) this.children.splice(i, 1); c.parentNode = null; return c;

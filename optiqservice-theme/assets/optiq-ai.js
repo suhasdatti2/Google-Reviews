@@ -1222,6 +1222,16 @@
     if (!panel || !log) return;
 
     var greeted = false;
+
+    // The theme runs Lenis smooth-scroll, which intercepts the wheel for the
+    // whole page. Anything with its own scrollbar has to opt out or the wheel
+    // does nothing inside it. The markup carries this too; setting it here as
+    // well means the widget still scrolls if it is dropped into a theme whose
+    // snippet has not been updated.
+    [log, input].forEach(function (el) {
+      if (el && !el.hasAttribute("data-lenis-prevent")) el.setAttribute("data-lenis-prevent", "");
+    });
+
     var configured = (root.getAttribute("data-oqa-endpoint") || "").trim();
     ENDPOINT = validEndpoint(configured) ? configured : "";
 

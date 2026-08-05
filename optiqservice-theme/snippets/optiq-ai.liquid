@@ -51,12 +51,15 @@
       </button>
     </header>
 
-    <div class="oqa__log" data-oqa-log role="log" aria-live="polite"></div>
+    {%- comment -%} data-lenis-prevent keeps the theme's smooth-scroll library from
+   swallowing the wheel here - without it the conversation only moves by
+   dragging the scrollbar. See assets/optiq-scroll.js. {%- endcomment -%}
+    <div class="oqa__log" data-oqa-log data-lenis-prevent role="log" aria-live="polite"></div>
 
     <form class="oqa__form" data-oqa-form>
       <div class="oqa__composer" data-oqa-composer>
         <label class="oqa__sr" for="oqa-input">Ask Optiq AI a question</label>
-        <textarea id="oqa-input" class="oqa__input" data-oqa-input rows="1" maxlength="2000"
+        <textarea id="oqa-input" class="oqa__input" data-oqa-input data-lenis-prevent rows="1" maxlength="2000"
                   placeholder="Ask me anything about Optiq&hellip;" autocomplete="off"></textarea>
 
         <div class="oqa__tools">

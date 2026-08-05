@@ -6,6 +6,7 @@ const root = path.join(__dirname, '..');
 module.exports = {
   js: path.join(root, 'assets', 'optiq-ai.js'),
   css: path.join(root, 'assets', 'optiq-ai.css'),
+  scroll: path.join(root, 'assets', 'optiq-scroll.js'),
   snippet: path.join(root, 'snippets', 'optiq-ai.liquid'),
   knowledge: path.join(root, 'snippets', 'optiq-ai-knowledge.liquid'),
   payload: path.join(__dirname, 'live-payload.json')

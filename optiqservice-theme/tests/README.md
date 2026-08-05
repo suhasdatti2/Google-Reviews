@@ -9,6 +9,7 @@ node test3-degraded.js      # broken / missing / truncated payloads never kill t
 node test5-ui.js            # drives the real markup: open, type, Enter, tools, reset, close
 node test6-general.js       # questions the store does not cover + arithmetic over real prices
 node test7-remote.js        # the model path, with the endpoint stubbed
+node test8-scroll.js        # mouse-wheel scrolling vs the Lenis smooth-scroll library
 ```
 
 `render-knowledge.js` deliberately emulates Shopify's error semantics: filters
