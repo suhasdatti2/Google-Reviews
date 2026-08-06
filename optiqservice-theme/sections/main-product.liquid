@@ -27,7 +27,7 @@
 <section class="product-page">
   <div class="page-width product-grid">
 
-    <div class="product-media">
+    <div class="product-media{% if product.handle == 'google-review-nfc-wristband' %} product-media--flush{% endif %}">
       {% render 'product-gallery', product: product, override_image: product_gallery_image %}
     </div>
 
@@ -309,6 +309,19 @@
 }
 @media (max-width: 540px) {
   .vpick__btn { min-width: 0; flex: 1 1 calc(50% - 5px); }
+}
+
+/* Wristband only: base.css's .product-media padding/border leaves a visible
+   dark gap around a photo that already has its own dark background, reading
+   as a double frame. Scoped to this one product rather than changed in
+   base.css, which every other product page's gallery also uses. */
+.product-media--flush {
+  padding: 0;
+  border: none;
+  overflow: hidden;
+}
+.product-media--flush .product-gallery__viewport {
+  border-radius: 0;
 }
 {% endstylesheet %}
 
