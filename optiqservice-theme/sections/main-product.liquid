@@ -1,344 +1,374 @@
+{%- assign product_gallery_image = blank -%}
+{%- case product.handle -%}
+  {%- when 'bulk-restaurant-pack' -%}
+    {%- assign product_gallery_image = section.settings.bulk_restaurant_pack_product_image -%}
+  {%- when 'bulk-review-cards' -%}
+    {%- assign product_gallery_image = section.settings.bulk_square_handout_cards_product_image -%}
+  {%- when 'google-review-nfc-card' -%}
+    {%- assign product_gallery_image = section.settings.main_counter_card_product_image -%}
+  {%- when 'review-growth-plan' -%}
+    {%- assign product_gallery_image = section.settings.review_growth_plan_product_image -%}
+{%- endcase -%}
+
 {%- comment -%}
-  Product buying section, v2 layout: left thumb rail + main image + title/
-  description/trust row, right purchase panel with checkmark-badge selectors
-  and a quantity stepper. Config (variant IDs + prices) is generated from
-  Shopify product data below; logic lives in assets/pdp.js, styles in
-  assets/pdp.css. Any product that isn't a card product gets the original
-  simple buy form (unchanged).
+  What the "Personalize your ___" heading and its review-link field call the
+  item, so a wristband buyer is not asked to personalize a "card". Extend
+  this list rather than hardcoding a single swap, so the next non-card
+  product (a keychain, a stand, whatever) is a one-line addition here, not a
+  parallel set of hardcoded strings this section forgets to update.
 {%- endcomment -%}
-
-{%- assign is_card_configurator = false -%}
-{%- if product.handle == 'google-review-nfc-card' or product.handle == 'bulk-review-cards' -%}
-  {%- assign is_card_configurator = true -%}
+{%- assign personalize_noun = 'card' -%}
+{%- if product.handle == 'google-review-nfc-wristband' -%}
+  {%- assign personalize_noun = 'wristband' -%}
 {%- endif -%}
 
-{%- if is_card_configurator -%}
-  {{ 'pdp.css' | asset_url | stylesheet_tag }}
-  {%- liquid
-    assign counter = all_products['google-review-nfc-card']
-    assign bulk = all_products['bulk-review-cards']
-    assign growth = all_products['review-growth-plan']
-    assign img_cb = section.settings.card_image_counter_black
-    assign img_cw = section.settings.card_image_counter_white
-    assign img_bb = section.settings.card_image_bulk_black
-    assign img_bw = section.settings.card_image_bulk_white
-  -%}
-  {%- capture img_cb_url -%}{%- if img_cb != blank -%}{{ img_cb | image_url: width: 900 }}{%- else -%}{{ counter.featured_image | image_url: width: 900 }}{%- endif -%}{%- endcapture -%}
-  {%- capture img_cw_url -%}{%- if img_cw != blank -%}{{ img_cw | image_url: width: 900 }}{%- else -%}{{ counter.featured_image | image_url: width: 900 }}{%- endif -%}{%- endcapture -%}
-  {%- capture img_bb_url -%}{%- if img_bb != blank -%}{{ img_bb | image_url: width: 900 }}{%- else -%}{{ bulk.featured_image | image_url: width: 900 }}{%- endif -%}{%- endcapture -%}
-  {%- capture img_bw_url -%}{%- if img_bw != blank -%}{{ img_bw | image_url: width: 900 }}{%- else -%}{{ bulk.featured_image | image_url: width: 900 }}{%- endif -%}{%- endcapture -%}
+<section class="product-page">
+  <div class="page-width product-grid">
 
-  <script type="application/json" data-card-config>
-  {
-    "membership": {
-      "id": {{ growth.selected_or_first_available_variant.id | json }},
-      "price": {{ growth.selected_or_first_available_variant.price | json }},
-      "priceMoney": {{ growth.selected_or_first_available_variant.price | money | json }}
-    },
-    "cards": {
-      "counter-black": { "product": "counter", "colour": "black", "name": {{ section.settings.name_counter_black | default: 'Counter Card - Black' | json }}, "image": {{ img_cb_url | strip | json }} },
-      "counter-white": { "product": "counter", "colour": "white", "name": {{ section.settings.name_counter_white | default: 'Counter Card - White' | json }}, "image": {{ img_cw_url | strip | json }} },
-      "bulk-black": { "product": "bulk", "colour": "black", "name": {{ section.settings.name_bulk_black | default: 'Mini Bulk Card - Black' | json }}, "image": {{ img_bb_url | strip | json }} },
-      "bulk-white": { "product": "bulk", "colour": "white", "name": {{ section.settings.name_bulk_white | default: 'Mini Bulk Card - White' | json }}, "image": {{ img_bw_url | strip | json }} }
-    },
-    "variants": [
-      {%- for v in counter.variants -%}
-      {"product":"counter","colour":{{ v.option1 | downcase | json }},"qty":{{ v.option2 | split: ' ' | first | times: 1 | json }},"qr":{% if v.option3 contains 'With' %}true{% else %}false{% endif %},"id":{{ v.id | json }},"price":{{ v.price | json }},"priceMoney":{{ v.price | money | json }},"available":{{ v.available | json }}},
-      {%- endfor -%}
-      {%- for v in bulk.variants -%}
-      {"product":"bulk","colour":{{ v.option1 | downcase | json }},"qty":{{ v.option2 | split: ' ' | first | times: 1 | json }},"qr":{% if v.option3 contains 'With' %}true{% else %}false{% endif %},"id":{{ v.id | json }},"price":{{ v.price | json }},"priceMoney":{{ v.price | money | json }},"available":{{ v.available | json }}}{%- unless forloop.last -%},{%- endunless -%}
-      {%- endfor -%}
-    ],
-    "bundleLabels": { "counter": { "2": "Most Popular", "3": "Best Value" }, "bulk": { "50": "Most Popular", "100": "Best Value" } },
-    "defaultCard": {% if product.handle == 'bulk-review-cards' %}"bulk-black"{% else %}"counter-black"{% endif %}
-  }
-  </script>
-
-  <section class="pdp" data-pdp>
-    <div class="page-width pdp__grid">
-
-      <div class="pdp__media">
-        <div class="pdp__media-row">
-          <div class="pdp__thumbs" role="list" aria-label="Card designs">
-            <button type="button" class="pdp__thumb is-active" data-pdp-thumb="counter-black" role="listitem" aria-label="Counter Card - Black">
-              <span class="pdp__thumb-media"><img src="{{ img_cb_url | strip }}" alt="" loading="lazy" width="140" height="140"></span>
-              <span class="pdp__thumb-name">Counter Card Black</span>
-            </button>
-            <button type="button" class="pdp__thumb" data-pdp-thumb="counter-white" role="listitem" aria-label="Counter Card - White">
-              <span class="pdp__thumb-media"><img src="{{ img_cw_url | strip }}" alt="" loading="lazy" width="140" height="140"></span>
-              <span class="pdp__thumb-name">Counter Card White</span>
-            </button>
-            <button type="button" class="pdp__thumb" data-pdp-thumb="bulk-black" role="listitem" aria-label="Mini Bulk Card - Black">
-              <span class="pdp__thumb-media"><img src="{{ img_bb_url | strip }}" alt="" loading="lazy" width="140" height="140"></span>
-              <span class="pdp__thumb-name">Mini Bulk Card Black</span>
-            </button>
-            <button type="button" class="pdp__thumb" data-pdp-thumb="bulk-white" role="listitem" aria-label="Mini Bulk Card - White">
-              <span class="pdp__thumb-media"><img src="{{ img_bw_url | strip }}" alt="" loading="lazy" width="140" height="140"></span>
-              <span class="pdp__thumb-name">Mini Bulk Card White</span>
-            </button>
-          </div>
-          <div class="pdp__stage">
-            <img data-pdp-main-image src="{{ img_cb_url | strip }}" alt="{{ product.title | escape }}" width="900" height="900">
-          </div>
-        </div>
-
-        <div class="pdp__intro">
-          <h1 class="pdp__title">{{ product.title }}</h1>
-          <p class="pdp__tagline">{{ section.settings.tagline }}</p>
-
-          <div class="pdp__features" aria-label="Key features">
-            <span class="pdp__feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M18 6l-2.5 2.5M8.5 15.5L6 18"/></svg>Premium quality</span>
-            <span class="pdp__feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.6 6.1.6-4.6 4.1 1.3 6-5.4-3.1-5.4 3.1 1.3-6-4.6-4.1 6.1-.6L12 3z"/></svg>Works with Google Reviews</span>
-            <span class="pdp__feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.5 7-11.5A7 7 0 0 0 5 9.5C5 14.5 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.3"/></svg>Works with Yelp Reviews</span>
-            <span class="pdp__feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 15a5 5 0 0 1 5-8.5"/><path d="M9.3 15a2.6 2.6 0 0 1 2.6-4.4"/><circle cx="12.5" cy="15" r="1" fill="currentColor" stroke="none"/></svg>Tap to review</span>
-          </div>
-
-          <div class="pdp__trust-row">
-            <span class="pdp__trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>30-day money-back guarantee</span>
-            <span class="pdp__trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v8H3z"/><path d="M14 10h4l3 3v2h-7z"/><circle cx="7" cy="17.5" r="1.5"/><circle cx="17.5" cy="17.5" r="1.5"/></svg>Fast shipping</span>
-            <span class="pdp__trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Secure checkout</span>
-          </div>
-
-          {%- if product.description != blank -%}
-            <details class="pdp__details">
-              <summary>Product details</summary>
-              <div class="rte">{{ product.description }}</div>
-            </details>
-          {%- endif -%}
-        </div>
-      </div>
-
-      <div class="pdp__panel">
-        <div class="pdp__panel-inner">
-          <form class="pdp__form" data-pdp-form novalidate>
-
-            <fieldset class="pdp__section" data-card-group>
-              <legend class="pdp__legend">1. Choose Your Card</legend>
-              <div class="pdp__cards" role="radiogroup" aria-label="Choose your card">
-                {%- assign card_keys = 'counter-black,counter-white,bulk-black,bulk-white' | split: ',' -%}
-                {%- assign card_names = 'Counter Card - Black,Counter Card - White,Mini Bulk Card - Black,Mini Bulk Card - White' | split: ',' -%}
-                {%- for key in card_keys -%}
-                  <button type="button" class="pdp__card{% if forloop.first %} is-selected{% endif %}" data-card-option="{{ key }}" role="radio" aria-checked="{% if forloop.first %}true{% else %}false{% endif %}">
-                    <span class="pdp__check" aria-hidden="true"></span>
-                    <span class="pdp__card-media">
-                      {%- case key -%}
-                        {%- when 'counter-black' -%}<img src="{{ img_cb_url | strip }}" alt="" loading="lazy" width="200" height="200">
-                        {%- when 'counter-white' -%}<img src="{{ img_cw_url | strip }}" alt="" loading="lazy" width="200" height="200">
-                        {%- when 'bulk-black' -%}<img src="{{ img_bb_url | strip }}" alt="" loading="lazy" width="200" height="200">
-                        {%- when 'bulk-white' -%}<img src="{{ img_bw_url | strip }}" alt="" loading="lazy" width="200" height="200">
-                      {%- endcase -%}
-                    </span>
-                    <span class="pdp__card-body">
-                      <span class="pdp__card-name">{{ card_names[forloop.index0] }}</span>
-                      {%- if forloop.first -%}<span class="pdp__card-badge">Bestseller</span>{%- endif -%}
-                    </span>
-                  </button>
-                {%- endfor -%}
-              </div>
-            </fieldset>
-
-            <fieldset class="pdp__section" data-option-group>
-              <legend class="pdp__legend">2. Choose Your Option</legend>
-              <div class="pdp__options" role="radiogroup" aria-label="Choose your option">
-                <button type="button" class="pdp__option is-selected" data-option="onetime" role="radio" aria-checked="true">
-                  <span class="pdp__check" aria-hidden="true"></span>
-                  <svg class="pdp__option-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg>
-                  <span class="pdp__option-name">One-Time Purchase</span>
-                  <span class="pdp__option-sub">Pay once</span>
-                </button>
-                <button type="button" class="pdp__option pdp__option--membership" data-option="membership" role="radio" aria-checked="false">
-                  <span class="pdp__check" aria-hidden="true"></span>
-                  <svg class="pdp__option-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="3"/><path d="M3 19c0-3 2.7-5 6-5s6 2 6 5"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.2c2.4.4 4 2 4 4.8"/></svg>
-                  <span class="pdp__option-name">Membership</span>
-                  <span class="pdp__option-price">{{ growth.selected_or_first_available_variant.price | money }}/mo</span>
-                  <ul class="pdp__option-benefits">
-                    <li>Link updates</li>
-                    <li>Monthly check-ins</li>
-                    <li>Templates</li>
-                    <li>Priority support</li>
-                  </ul>
-                </button>
-              </div>
-            </fieldset>
-
-            {%- if section.settings.show_qr_addon -%}
-              <label class="pdp__qr" for="pdp-qr">
-                <input type="checkbox" id="pdp-qr" data-pdp-qr>
-                <span class="pdp__qr-box" aria-hidden="true"></span>
-                <span class="pdp__qr-copy">
-                  <strong>{{ section.settings.qr_label }}</strong>
-                  <small data-pdp-qr-note>{{ section.settings.qr_pricing_note }}</small>
-                </span>
-              </label>
-            {%- endif -%}
-
-            <fieldset class="pdp__section" data-bundle-group>
-              <legend class="pdp__legend">3. Save More With Bundles</legend>
-              <div class="pdp__bundles" data-pdp-bundles role="radiogroup" aria-label="Save more with bundles"></div>
-            </fieldset>
-
-            <div class="pdp__personalize">
-              <h3 class="pdp__personalize-title">Personalize your card{% if product.handle == 'bulk-review-cards' %}s{% endif %}</h3>
-              <div class="pdp__field">
-                <label for="pdp-business">Business name *</label>
-                <input id="pdp-business" type="text" data-pdp-business autocomplete="organization" placeholder="e.g. Fresh Fades Barbershop">
-              </div>
-              <div class="pdp__field">
-                <label for="pdp-link">Google or Yelp review link *</label>
-                <input id="pdp-link" type="url" data-pdp-link inputmode="url" placeholder="https://g.page/r/...">
-                <p class="pdp__hint">Not sure where to find it? Paste your profile link and we'll take care of the rest, or send it later.</p>
-              </div>
-              <div class="pdp__field">
-                <label for="pdp-contact">Best email or phone *</label>
-                <input id="pdp-contact" type="text" data-pdp-contact autocomplete="email" placeholder="you@business.com">
-              </div>
-              <p class="pdp__personalize-note">Prefer to send it later? Order now and email your link to {{ settings.contact_email }} with your order number.</p>
-            </div>
-
-            <div class="pdp__summary" data-pdp-summary aria-live="polite">
-              <ul class="pdp__summary-list">
-                <li>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8" cy="10.5" r="1.6"/><path d="M6 15c.5-1.5 1.8-2.3 2.9-2.3S11.4 13.5 11.9 15"/><path d="M14 10h4M14 13h4"/></svg>
-                  <span class="pdp__summary-label">Selected Card</span>
-                  <span class="pdp__summary-value" data-summary-card></span>
-                </li>
-                <li>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12.6 3.4l6 6a2 2 0 0 1 0 2.8l-6.4 6.4a2 2 0 0 1-2.8 0l-6-6V4.4A1 1 0 0 1 4.4 3.4H12.6z"/><circle cx="8" cy="8" r="1.2" fill="currentColor" stroke="none"/></svg>
-                  <span class="pdp__summary-label">Purchase Option</span>
-                  <span class="pdp__summary-value" data-summary-option></span>
-                </li>
-                <li>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>
-                  <span class="pdp__summary-label">Bundle</span>
-                  <span class="pdp__summary-value" data-summary-bundle></span>
-                </li>
-              </ul>
-              <div class="pdp__summary-price-row">
-                <span class="pdp__summary-save" data-summary-save-inline hidden></span>
-                <span class="pdp__summary-price">
-                  <span class="pdp__price" data-pdp-price>&nbsp;</span>
-                  <span class="pdp__compare" data-pdp-compare hidden></span>
-                </span>
-              </div>
-            </div>
-
-            <div class="pdp__buy-row">
-              <div class="pdp__qty-stepper" data-pdp-qty-stepper>
-                <button type="button" data-qty-minus aria-label="Decrease quantity">-</button>
-                <input type="text" inputmode="numeric" data-pdp-qty-input value="1" aria-label="Quantity" readonly>
-                <button type="button" data-qty-plus aria-label="Increase quantity">+</button>
-              </div>
-              <button type="submit" class="btn btn--primary btn--lg pdp__addcart" data-pdp-add>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/><circle cx="9.5" cy="20.5" r="1"/><circle cx="17" cy="20.5" r="1"/></svg>
-                <span data-pdp-add-label>{{ section.settings.buy_label | default: 'Add to Cart' }}</span>
-              </button>
-            </div>
-            <p class="pdp__error" data-pdp-error role="alert" hidden></p>
-
-            <div class="pdp__trust-row pdp__trust-row--panel">
-              <span class="pdp__trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>30-day guarantee</span>
-              <span class="pdp__trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v8H3z"/><path d="M14 10h4l3 3v2h-7z"/><circle cx="7" cy="17.5" r="1.5"/><circle cx="17.5" cy="17.5" r="1.5"/></svg>Fast shipping</span>
-              <span class="pdp__trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Secure checkout</span>
-            </div>
-          </form>
-        </div>
-      </div>
-
+    <div class="product-media">
+      {% render 'product-gallery', product: product, override_image: product_gallery_image %}
     </div>
-  </section>
 
-  <script src="{{ 'pdp.js' | asset_url }}" defer></script>
+    <div class="product-info">
+      <h1>{{ product.title }}</h1>
+      <p class="product-info__price" data-vpick-price>{{ product.selected_or_first_available_variant.price | money }}</p>
+      <p class="product-info__tagline">{{ section.settings.tagline }}</p>
 
-{%- else -%}
+      {%- form 'product', product, class: 'product-form' -%}
+        {%- comment -%}
+          Button-based variant picker instead of a <select>. The old dropdown
+          listed all 12 combinations as one flat list ("Black / 2 Cards / With
+          QR - $59.99"), forcing the shopper to parse three decisions at once.
 
-  {%- comment -%} Fallback: original simple product form, unchanged, for all other products. {%- endcomment -%}
-  {%- assign product_gallery_image = blank -%}
-  {%- case product.handle -%}
-    {%- when 'bulk-restaurant-pack' -%}
-      {%- assign product_gallery_image = section.settings.bulk_restaurant_pack_product_image -%}
-    {%- when 'review-growth-plan' -%}
-      {%- assign product_gallery_image = section.settings.review_growth_plan_product_image -%}
-  {%- endcase -%}
+          Everything below is generated from the product's real options, so it
+          works unchanged for Main Counter Card (Colour / Pack / QR code) and
+          Bulk Square Handout Cards (Colour / Size / QR code) even though their
+          middle option is named differently, and it renders nothing at all for
+          single-variant products like the Review Growth Plan.
+        {%- endcomment -%}
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" data-vpick-id>
 
-  <section class="product-page">
-    <div class="page-width product-grid">
-      <div class="product-media">
-        {% render 'product-gallery', product: product, override_image: product_gallery_image %}
-      </div>
+        {%- unless product.has_only_default_variant -%}
+          <div class="vpick" data-vpick>
+            {%- for option in product.options_with_values -%}
+              {%- assign lowered_name = option.name | downcase -%}
+              <div class="vpick__group">
+                <span class="vpick__label" id="vpick-label-{{ forloop.index0 }}">{{ option.name }}</span>
+                <div class="vpick__opts" role="group" aria-labelledby="vpick-label-{{ forloop.index0 }}">
+                  {%- for value in option.values -%}
+                    <button
+                      type="button"
+                      class="vpick__btn{% if option.selected_value == value %} is-active{% endif %}"
+                      data-vpick-btn
+                      data-index="{{ forloop.parentloop.index0 }}"
+                      data-value="{{ value | escape }}"
+                      aria-pressed="{% if option.selected_value == value %}true{% else %}false{% endif %}">
+                      <span class="vpick__btn-name">{{ value }}</span>
+                      <span class="vpick__btn-sub" data-vpick-sub></span>
+                    </button>
+                  {%- endfor -%}
+                </div>
+                {%- if lowered_name contains 'qr' and section.settings.show_qr_addon and section.settings.qr_pricing_note != blank -%}
+                  <p class="vpick__note">{{ section.settings.qr_pricing_note }}</p>
+                {%- endif -%}
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endunless -%}
 
-      <div class="product-info">
-        <h1>{{ product.title }}</h1>
-        <p class="product-info__price">{{ product.selected_or_first_available_variant.price | money }}</p>
-        <p class="product-info__tagline">{{ section.settings.tagline }}</p>
+        <div class="personalize">
+          <h3>Personalize your {{ personalize_noun }}</h3>
 
-        {%- form 'product', product, class: 'product-form' -%}
-          {%- if product.variants.size > 1 -%}
-            <div class="form-field">
-              <label for="variant-select">{{ section.settings.variant_label }}</label>
-              <select id="variant-select" name="id">
-                {%- for variant in product.variants -%}
-                  <option value="{{ variant.id }}" data-media-id="{{ variant.featured_image.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
-                    {{ variant.title }} - {{ variant.price | money }}{% unless variant.available %} (sold out){% endunless %}
-                  </option>
-                {%- endfor -%}
-              </select>
-            </div>
+          <div class="form-field">
+            <label for="prop-business">Business name *</label>
+            <input id="prop-business" type="text" name="properties[Business name]" required placeholder="e.g. Fresh Fades Barbershop">
+          </div>
+
+          {%- comment -%}
+            Deliberately type="text", not type="url". Most customers do not know
+            their raw Google review link and will type their website, their Maps
+            listing, or just their business name - all of which we can work from.
+            URL validation rejects every one of those and blocks checkout on a
+            field we are happy to sort out after the order is placed.
+          {%- endcomment -%}
+          <div class="form-field">
+            <label for="prop-link">Google review link *</label>
+            <input id="prop-link" type="text" name="properties[Google review link]" required placeholder="Review link, website, or business name" autocomplete="off" spellcheck="false">
+            <p class="hint">Anything works here - your review link, your website, your Google Maps listing, or just your business name and city. If it is not the exact review link, we will track it down for you before we program your {{ personalize_noun }}.</p>
+          </div>
+
+          <div class="form-field">
+            <label for="prop-contact">Best email or phone *</label>
+            <input id="prop-contact" type="text" name="properties[Contact email or phone]" required placeholder="you@business.com">
+            <p class="hint">We'll only reach out if we have a question about your link.</p>
+          </div>
+
+          <p class="personalize__note">Prefer to send it later? Place your order now and email your review link to {{ settings.contact_email }} with your order number.</p>
+        </div>
+
+        <button type="submit" class="btn btn--primary btn--lg btn--full" data-vpick-submit {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+          {%- if product.selected_or_first_available_variant.available -%}
+            {{ section.settings.buy_label }}
           {%- else -%}
-            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+            Sold out
           {%- endif -%}
+        </button>
+      {%- endform -%}
 
-          <button type="submit" class="btn btn--primary btn--lg btn--full" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
-            {%- if product.selected_or_first_available_variant.available -%}
-              {{ section.settings.buy_label }}
-            {%- else -%}
-              Sold out
-            {%- endif -%}
-          </button>
-        {%- endform -%}
-
-        {%- if product.description != blank -%}
-          <div class="product-description rte">{{ product.description }}</div>
-        {%- endif -%}
-      </div>
+      {%- comment -%}
+        The membership upsell box, the benefit checklist, and the long product
+        description used to render here. Removed deliberately: this is a buying
+        page, and three screens of prose under the button gave the shopper more
+        to read rather than more reason to buy. None of that copy is lost - the
+        description still lives on the product in Shopify admin, and the benefit
+        and membership content still runs on the homepage.
+      {%- endcomment -%}
     </div>
-  </section>
 
-{%- endif -%}
+  </div>
+</section>
+
+<script>
+(function () {
+  var root = document.querySelector('[data-vpick]');
+  var idInput = document.querySelector('[data-vpick-id]');
+  var priceEl = document.querySelector('[data-vpick-price]');
+  var submitBtn = document.querySelector('[data-vpick-submit]');
+  if (!root || !idInput) { return; }
+
+  var VARIANTS = [
+    {%- for v in product.variants -%}
+      { id: {{ v.id | json }}, price: {{ v.price | json }}, available: {{ v.available | json }}, options: {{ v.options | json }} }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ];
+  var OPTION_NAMES = {{ product.options | json }};
+  var BUY_LABEL = {{ section.settings.buy_label | default: 'Add to Cart' | json }};
+
+  var buttons = [].slice.call(root.querySelectorAll('[data-vpick-btn]'));
+  var selected = OPTION_NAMES.map(function (_, i) {
+    var active = root.querySelector('[data-vpick-btn][data-index="' + i + '"].is-active');
+    return active ? active.getAttribute('data-value') : null;
+  });
+
+  function money(cents) {
+    return '$' + (cents / 100).toFixed(2);
+  }
+
+  function matches(variant, choice) {
+    for (var i = 0; i < choice.length; i++) {
+      if (choice[i] !== null && variant.options[i] !== choice[i]) { return false; }
+    }
+    return true;
+  }
+
+  function findVariant(choice) {
+    for (var i = 0; i < VARIANTS.length; i++) {
+      if (matches(VARIANTS[i], choice)) { return VARIANTS[i]; }
+    }
+    return null;
+  }
+
+  // The variant you would land on if you flipped one option and kept the rest.
+  function variantIfSwapped(index, value) {
+    var probe = selected.slice();
+    probe[index] = value;
+    return findVariant(probe);
+  }
+
+  function render() {
+    var current = findVariant(selected);
+
+    buttons.forEach(function (btn) {
+      var index = parseInt(btn.getAttribute('data-index'), 10);
+      var value = btn.getAttribute('data-value');
+      var isActive = selected[index] === value;
+      var candidate = variantIfSwapped(index, value);
+      var sub = btn.querySelector('[data-vpick-sub]');
+      var name = String(OPTION_NAMES[index] || '');
+
+      btn.classList.toggle('is-active', isActive);
+      btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      btn.disabled = !(candidate && candidate.available);
+
+      if (!sub) { return; }
+
+      if (!candidate) {
+        sub.textContent = 'Unavailable';
+      } else if (/colou?r/i.test(name)) {
+        // Colour never changes the price, so a number here is just noise.
+        sub.textContent = '';
+      } else if (/qr/i.test(name)) {
+        // Show what this choice ADDS relative to what is selected right now.
+        // The upcharge is not a flat $5 - on bulk packs it scales with pack
+        // size - so it is always read off the real variant prices.
+        var base = current ? parseInt(current.price, 10) : null;
+        var delta = base === null ? null : parseInt(candidate.price, 10) - base;
+        if (delta === null || delta === 0) {
+          sub.textContent = isActive ? 'Included' : '';
+        } else if (delta > 0) {
+          sub.textContent = '+' + money(delta);
+        } else {
+          sub.textContent = '-' + money(Math.abs(delta));
+        }
+      } else {
+        sub.textContent = money(parseInt(candidate.price, 10));
+      }
+    });
+
+    if (current) {
+      idInput.value = current.id;
+      if (priceEl) { priceEl.textContent = money(parseInt(current.price, 10)); }
+      if (submitBtn) {
+        submitBtn.disabled = !current.available;
+        submitBtn.textContent = current.available ? BUY_LABEL : 'Sold out';
+      }
+    } else if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Unavailable';
+    }
+  }
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (btn.disabled) { return; }
+      selected[parseInt(btn.getAttribute('data-index'), 10)] = btn.getAttribute('data-value');
+      render();
+    });
+  });
+
+  // ?qr=1 arrives from the homepage configurator - preselect the QR option
+  // rather than ticking a checkbox that no longer exists.
+  if (new URLSearchParams(window.location.search).get('qr') === '1') {
+    for (var i = 0; i < OPTION_NAMES.length; i++) {
+      if (!/qr/i.test(String(OPTION_NAMES[i]))) { continue; }
+      for (var j = 0; j < buttons.length; j++) {
+        var b = buttons[j];
+        if (parseInt(b.getAttribute('data-index'), 10) !== i) { continue; }
+        if (/with|yes/i.test(b.getAttribute('data-value'))) { selected[i] = b.getAttribute('data-value'); }
+      }
+    }
+  }
+
+  render();
+})();
+</script>
+
+{% stylesheet %}
+.vpick {
+  display: grid;
+  gap: 20px;
+  margin: 0 0 24px;
+}
+.vpick__group { display: grid; gap: 10px; }
+.vpick__label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted, #a1a1aa);
+}
+.vpick__opts { display: flex; flex-wrap: wrap; gap: 10px; }
+.vpick__btn {
+  appearance: none;
+  cursor: pointer;
+  display: grid;
+  gap: 3px;
+  justify-items: start;
+  min-width: 108px;
+  padding: 12px 16px;
+  border: 1px solid var(--border, #2a2a30);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.vpick__btn:hover:not(:disabled) { border-color: rgba(255, 255, 255, 0.3); }
+.vpick__btn:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.vpick__btn.is-active {
+  border-color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.07);
+}
+.vpick__btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.vpick__btn-name { font-size: 15px; font-weight: 600; line-height: 1.2; }
+.vpick__btn-sub {
+  font-size: 13px;
+  line-height: 1.2;
+  color: var(--ink-muted, #a1a1aa);
+}
+.vpick__btn-sub:empty { display: none; }
+.vpick__btn.is-active .vpick__btn-sub { color: inherit; }
+.vpick__note {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-muted, #a1a1aa);
+}
+@media (max-width: 540px) {
+  .vpick__btn { min-width: 0; flex: 1 1 calc(50% - 5px); }
+}
+{% endstylesheet %}
 
 {% schema %}
 {
   "name": "Product",
   "settings": [
-    { "type": "header", "content": "Fallback product page photos" },
-    { "type": "paragraph", "content": "Large image on simple product pages (Bulk Restaurant Pack, Review Growth Plan)." },
-    { "type": "image_picker", "id": "bulk_restaurant_pack_product_image", "label": "Bulk Restaurant Pack image" },
-    { "type": "image_picker", "id": "bulk_square_handout_cards_product_image", "label": "Bulk Square Handout Cards image" },
-    { "type": "image_picker", "id": "main_counter_card_product_image", "label": "Main Counter Card image" },
-    { "type": "image_picker", "id": "review_growth_plan_product_image", "label": "Review Growth Plan image" },
-    { "type": "header", "content": "Card configurator images (Choose Your Card)" },
-    { "type": "image_picker", "id": "card_image_counter_black", "label": "Counter Card - Black" },
-    { "type": "image_picker", "id": "card_image_counter_white", "label": "Counter Card - White" },
-    { "type": "image_picker", "id": "card_image_bulk_black", "label": "Mini Bulk Card - Black" },
-    { "type": "image_picker", "id": "card_image_bulk_white", "label": "Mini Bulk Card - White" },
-    { "type": "text", "id": "name_counter_black", "label": "Name: Counter Black", "default": "Counter Card - Black" },
-    { "type": "text", "id": "name_counter_white", "label": "Name: Counter White", "default": "Counter Card - White" },
-    { "type": "text", "id": "name_bulk_black", "label": "Name: Mini Bulk Black", "default": "Mini Bulk Card - Black" },
-    { "type": "text", "id": "name_bulk_white", "label": "Name: Mini Bulk White", "default": "Mini Bulk Card - White" },
-    { "type": "text", "id": "tagline", "label": "Tagline under price", "default": "Make Google reviews easier for customers with premium NFC cards that open your business's review page with a tap." },
+    {
+      "type": "header",
+      "content": "Product page photos"
+    },
+    {
+      "type": "paragraph",
+      "content": "These control the large image shown on each product buying page. They override product media for this theme."
+    },
+    {
+      "type": "image_picker",
+      "id": "bulk_restaurant_pack_product_image",
+      "label": "Bulk Restaurant Pack product page image"
+    },
+    {
+      "type": "image_picker",
+      "id": "bulk_square_handout_cards_product_image",
+      "label": "Bulk Square Handout Cards product page image"
+    },
+    {
+      "type": "image_picker",
+      "id": "main_counter_card_product_image",
+      "label": "Main Counter Card product page image"
+    },
+    {
+      "type": "image_picker",
+      "id": "review_growth_plan_product_image",
+      "label": "Review Growth Plan product page image"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline under price",
+      "default": "Programmed with your Google review link. One tap, no app, no QR code needed."
+    },
     { "type": "text", "id": "buy_label", "label": "Buy button label", "default": "Add to Cart" },
-    { "type": "text", "id": "variant_label", "label": "Variant selector label (fallback)", "default": "Choose your pack" },
-    { "type": "header", "content": "QR code add-on" },
-    { "type": "checkbox", "id": "show_qr_addon", "label": "Show QR code add-on", "default": true },
-    { "type": "text", "id": "qr_label", "label": "QR add-on label", "default": "Add a printed QR code (optional)" },
-    { "type": "text", "id": "qr_pricing_note", "label": "QR pricing note", "default": "Not required - just an optional backup. Prices update when selected." }
+    { "type": "header", "content": "QR code option" },
+    {
+      "type": "paragraph",
+      "content": "QR is a real product option, so its price comes straight from the variants and updates itself. The note below shows under the QR buttons."
+    },
+    { "type": "checkbox", "id": "show_qr_addon", "label": "Show the QR helper note", "default": true },
+    {
+      "type": "text",
+      "id": "qr_pricing_note",
+      "label": "QR helper note",
+      "default": "Not required - just an optional backup for phones that can't tap."
+    }
   ],
   "blocks": [
     {
       "type": "benefit",
-      "name": "Benefit",
+      "name": "Benefit (unused)",
       "settings": [
-        { "type": "text", "id": "title", "label": "Title", "default": "One tap, no typing" },
-        { "type": "textarea", "id": "text", "label": "Text", "default": "Customers tap the card and your Google review page opens instantly." }
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "textarea", "id": "text", "label": "Text" }
       ]
     }
   ],

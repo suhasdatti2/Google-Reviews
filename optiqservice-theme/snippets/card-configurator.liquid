@@ -1,11 +1,47 @@
 {%- comment -%}
-  Single purchase widget: pick Counter or Bulk, pick a quantity, see the price, buy.
-  Reads "qty" blocks from the passed-in section (grouped by settings.mode).
+  Purchase widget: pick Counter, Bulk, or Wristband, pick a pack, pick QR
+  (Counter/Bulk only), buy.
+
+  There is exactly ONE purchase intent at a time - either a pack button or a
+  typed custom amount, never both - and exactly ONE buy action: the summary
+  button at the bottom. It always shows what you are about to buy ("Get 2
+  Cards - $49.99" or "Get 34 Cards - $736.55") and its click handler adds
+  whichever one is currently active. Picking a pack button clears any typed
+  custom amount; typing a valid custom amount deselects the pack buttons.
+  There used to be a second, separate "Add to Cart" button next to the custom
+  input - removed, because it meant two different buttons could disagree
+  about what you were buying.
+
+  How the custom quantity is priced - the two card products work differently,
+  because their catalogues are shaped differently:
+
+    COUNTER: there is a real single-card variant, so N cards is simply quantity
+    N of it. Shopify's list price is N x $29.99; the "Counter volume pricing"
+    automatic discount then takes the same percentage off that the 3-pack gets
+    ($64.99 vs $89.97 = 27.75%), so 7 cards costs 7 x $21.67 rather than
+    7 x $29.99. That discount is what makes this correct - if it is ever
+    deleted in Shopify admin, customers get charged full list price here.
+    The QR surcharge is baked into the same per-card rate (derived from the
+    3-pack's QR price), so it already scales as +$5/card at any quantity.
+
+    BULK: there is no single-card variant - the smallest thing that exists is a
+    10-pack - and the four pack sizes already carry four different per-card
+    rates ($5.00 / $4.00 / $3.50 / $3.00). So a custom bulk amount is solved as
+    a cheapest-combination problem over the real packs. That needs no discount
+    at all: the price shown is literally the sum of real variant prices, so it
+    cannot disagree with what checkout charges.
+
+  WRISTBAND is neither: it is a single product, no colour, no QR option, and
+  only three real bundle variants (1/2/3). There is nothing to compute - pack
+  buttons map straight to a variant ID - so it skips the custom-quantity row
+  and the QR row entirely rather than running either kind of pricing math
+  against a catalogue shape that does not exist for this product.
 {%- endcomment -%}
 <div class="configurator" data-configurator>
   <div class="configurator__modes" role="tablist">
-    <button type="button" class="configurator__mode is-active" data-config-mode="counter">{{ section.settings.counter_mode_label | default: 'Counter Cards' }}</button>
-    <button type="button" class="configurator__mode" data-config-mode="bulk">{{ section.settings.bulk_mode_label | default: 'Bulk Cards' }}</button>
+    <button type="button" class="configurator__mode is-active" data-config-mode="counter">{{ section.settings.counter_mode_label | default: 'Main Counter Card' }}</button>
+    <button type="button" class="configurator__mode" data-config-mode="bulk">{{ section.settings.bulk_mode_label | default: 'Mini Bulk Cards' }}</button>
+    <button type="button" class="configurator__mode" data-config-mode="wristband">{{ section.settings.wristband_mode_label | default: 'Wristband' }}</button>
   </div>
 
   <div class="configurator__panel" data-config-panel="counter">
@@ -15,7 +51,6 @@
           <button type="button" class="configurator__qty{% if block.settings.featured %} is-active{% endif %}" data-config-qty
             data-price="{{ block.settings.price }}"
             data-link="{{ block.settings.link | default: '/products/google-review-nfc-card' }}"
-            data-variant-id="{{ block.settings.variant_id }}"
             data-label="{{ block.settings.qty_label }}">
             <span class="configurator__qty-label">{{ block.settings.qty_label }}</span>
             <span class="configurator__qty-price">{{ block.settings.price }}</span>
@@ -41,22 +76,78 @@
     </div>
   </div>
 
-  <div class="configurator__custom">
-    <label for="config-custom-qty">Need a custom amount?</label>
-    <div class="configurator__custom-row">
-      <input type="number" id="config-custom-qty" min="1" placeholder="e.g. 40" data-config-custom-input>
-      <a class="btn btn--ghost" data-config-custom-cta href="mailto:{{ settings.contact_email | default: 'sales@optiqservice.com' }}">Email Us a Quote</a>
+  <div class="configurator__panel" data-config-panel="wristband" hidden>
+    <div class="configurator__qtys">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'qty' and block.settings.mode == 'wristband' -%}
+          <button type="button" class="configurator__qty{% if block.settings.featured %} is-active{% endif %}" data-config-qty
+            data-price="{{ block.settings.price }}"
+            data-link="{{ block.settings.link | default: '/products/google-review-nfc-wristband' }}"
+            data-label="{{ block.settings.qty_label }}">
+            <span class="configurator__qty-label">{{ block.settings.qty_label }}</span>
+            <span class="configurator__qty-price">{{ block.settings.price }}</span>
+          </button>
+        {%- endif -%}
+      {%- endfor -%}
     </div>
   </div>
 
+  <div class="configurator__custom" data-config-custom>
+    <label for="config-custom-qty" data-config-custom-label>Need more than 3? Type any amount</label>
+    <div class="configurator__custom-row">
+      <input type="number" id="config-custom-qty" min="4" step="1" inputmode="numeric" placeholder="e.g. 12" autocomplete="off" data-config-custom-input>
+      <span class="configurator__custom-price" data-config-custom-price></span>
+    </div>
+    <p class="configurator__custom-status" data-config-custom-note></p>
+  </div>
+
+  {%- comment -%}
+    QR is a real Shopify option only on the Counter and Bulk cards - the
+    Wristband product has no QR variant at all, so this row is hidden (and
+    force-unchecked) in wristband mode by setMode() below rather than left
+    visible and pointing at pricing/variants that do not exist.
+  {%- endcomment -%}
+  <label class="configurator__qr" data-config-qr-row>
+    <input type="checkbox" data-config-qr>
+    <span class="configurator__qr-box" aria-hidden="true"></span>
+    <span class="configurator__qr-copy">
+      <strong>{{ section.settings.qr_label | default: 'Add a printed QR code (optional)' }}</strong>
+      <span data-config-qr-help>{{ section.settings.qr_counter_text | default: '+$5 per main card - not required, just an optional backup' }}</span>
+    </span>
+  </label>
+
   <div class="configurator__summary">
     <span class="configurator__price" data-config-price>&nbsp;</span>
+    <span class="configurator__qr-total" data-config-qr-total hidden></span>
     <a class="btn btn--primary btn--lg" data-config-cta href="/products/google-review-nfc-card">Select an option</a>
   </div>
 
-  <a class="configurator__membership" href="{{ section.settings.membership_link | default: '/pages/membership' }}">
-    {{ section.settings.membership_label | default: '+ Add Membership (optional)' }}
-  </a>
+  <div class="configurator__memberships" aria-label="Optional membership plan">
+    <div class="configurator__memberships-intro">
+      <span class="configurator__memberships-kicker">{{ section.settings.membership_kicker | default: 'Optional add-on' }}</span>
+      <h3>{{ section.settings.membership_heading | default: 'Add the Review Growth Plan' }}</h3>
+      <p>{{ section.settings.membership_intro | default: 'This optional plan just adds a bit of ongoing help growing your reviews.' }}</p>
+    </div>
+
+    <article class="configurator__membership-card configurator__membership-card--featured configurator__membership-card--solo">
+      <div class="configurator__membership-head">
+        <span>{{ section.settings.growth_plan_name | default: 'Review Growth Plan' }}</span>
+        <strong>{{ section.settings.growth_plan_price | default: '$14.99/mo' }}</strong>
+      </div>
+      <ul>
+        {%- assign growth_benefits = section.settings.growth_plan_benefits | default: 'Free link updates if it ever changes|Monthly review check-ins|Ready-to-use review request templates|Priority support|Discounts on future cards' | split: '|' -%}
+        {%- for benefit in growth_benefits -%}
+          {%- assign clean_benefit = benefit | strip -%}
+          {%- if clean_benefit != blank -%}<li>{{ clean_benefit }}</li>{%- endif -%}
+        {%- endfor -%}
+      </ul>
+      <a class="btn btn--primary btn--full" href="{{ section.settings.growth_plan_link | default: '/products/review-growth-plan' }}">{{ section.settings.growth_plan_button | default: 'Add Review Growth Plan' }}</a>
+    </article>
+
+    <a class="configurator__membership-learn" href="{{ section.settings.membership_link | default: '/pages/membership' }}">
+      {{ section.settings.membership_label | default: 'See full plan details' }}
+    </a>
+  </div>
 </div>
 
 <script>
@@ -65,40 +156,355 @@
   if (!root || !root.hasAttribute('data-configurator')) { root = document.querySelector('[data-configurator]'); }
   if (!root) { return; }
 
+  // Real Shopify variant IDs: mode -> colour -> quantity -> { no QR, with QR }
+  var VARIANTS = {
+    counter: {
+      black: { '1': { no: '48712380186856', qr: '48712380219624' }, '2': { no: '48712380252392', qr: '48712380285160' }, '3': { no: '48712380317928', qr: '48712380350696' } },
+      white: { '1': { no: '48712380383464', qr: '48712380416232' }, '2': { no: '48712380449000', qr: '48712380481768' }, '3': { no: '48712380514536', qr: '48712380547304' } }
+    },
+    bulk: {
+      black: { '10': { no: '48712381759720', qr: '48712381792488' }, '25': { no: '48712381825256', qr: '48712381858024' }, '50': { no: '48712381890792', qr: '48712381923560' }, '100': { no: '48712381956328', qr: '48712381989096' } },
+      white: { '10': { no: '48712382021864', qr: '48712382054632' }, '25': { no: '48712382087400', qr: '48712382120168' }, '50': { no: '48712382152936', qr: '48712382185704' }, '100': { no: '48712382218472', qr: '48712382251240' } }
+    }
+  };
+
+  // Pack prices in cents, mirroring the variants above.
+  var PRICES = {
+    counter: { '1': { no: 2999, qr: 3499 }, '2': { no: 4999, qr: 5999 }, '3': { no: 6499, qr: 7999 } },
+    bulk: { '10': { no: 4999, qr: 5999 }, '25': { no: 9999, qr: 12499 }, '50': { no: 17499, qr: 22499 }, '100': { no: 29999, qr: 39999 } }
+  };
+
+  // Wristband: no colour, no QR - just quantity -> variant ID / price. Kept
+  // as its own flat map rather than forced into the counter/bulk shape above,
+  // because there is no second dimension here to nest it under.
+  var WRISTBAND_VARIANTS = { '1': '48855927161064', '2': '48855927193832', '3': '48855927226600' };
+  var WRISTBAND_PRICES = { '1': 3999, '2': 6999, '3': 9999 };
+
+  // Counter cards: the 3-pack sets the volume rate. $64.99 for 3 against a
+  // $89.97 list price is 27.75% off, and that same percentage is what the
+  // "Counter volume pricing" automatic discount applies to any quantity of 3+
+  // single cards. Derived here rather than hardcoded so it tracks price edits.
+  // The QR rate is derived the same way, from the 3-pack's QR price, which is
+  // exactly $5/card more than the non-QR rate - so QR keeps costing +$5/card
+  // at any custom quantity, not just at the fixed pack sizes.
+  var COUNTER_VOLUME_RATE = {
+    no: PRICES.counter['3'].no / 3,
+    qr: PRICES.counter['3'].qr / 3
+  };
+  var COUNTER_CUSTOM_MIN = 4; // 1-3 are the pack buttons above
+  var BULK_CUSTOM_MIN = 10;   // no bulk variant smaller than a 10-pack exists
+
   var modeBtns = [].slice.call(root.querySelectorAll('[data-config-mode]'));
   var panels = [].slice.call(root.querySelectorAll('[data-config-panel]'));
   var priceEl = root.querySelector('[data-config-price]');
   var cta = root.querySelector('[data-config-cta]');
+  var qrRow = root.querySelector('[data-config-qr-row]');
+  var qrInput = root.querySelector('[data-config-qr]');
+  var qrHelp = root.querySelector('[data-config-qr-help]');
+  var qrTotal = root.querySelector('[data-config-qr-total]');
+  var customRow = root.querySelector('[data-config-custom]');
+  var customInput = root.querySelector('[data-config-custom-input]');
+  var customPrice = root.querySelector('[data-config-custom-price]');
+  var customNote = root.querySelector('[data-config-custom-note]');
+  var customLabel = root.querySelector('[data-config-custom-label]');
+  var currentQtyBtn = null;
+  var currentMode = 'counter';
+  // True when a typed custom amount - not a pack button - is the thing the
+  // summary button below will buy. The two are mutually exclusive.
+  var customActive = false;
+
+  var qrRates = {
+    counter: {{ section.settings.qr_counter_rate | default: 5 | json }},
+    bulk: {{ section.settings.qr_bulk_rate | default: 1 | json }}
+  };
+
+  function money(value) {
+    return '$' + value.toFixed(2).replace('.00', '');
+  }
+
+  function moneyCents(cents) {
+    return '$' + (Math.round(cents) / 100).toFixed(2);
+  }
+
+  function numberFromText(text) {
+    var match = String(text || '').replace(/,/g, '').match(/[\d.]+/);
+    return match ? parseFloat(match[0]) : 0;
+  }
+
+  function qtyFromLabel(label) {
+    var match = String(label || '').match(/\d+/);
+    return match ? parseInt(match[0], 10) : 1;
+  }
+
+  function qrKey() {
+    return (qrInput && qrInput.checked) ? 'qr' : 'no';
+  }
+
+  function productHref() {
+    if (currentMode === 'wristband') { return '/products/google-review-nfc-wristband'; }
+    return currentMode === 'counter' ? '/products/google-review-nfc-card' : '/products/bulk-review-cards';
+  }
+
+  // Colour comes from the currently-selected showcase card's name.
+  function currentColor() {
+    var active = document.querySelector('[data-showcase-stage].is-active .showcase__name');
+    var name = active ? active.textContent.toLowerCase() : '';
+    return name.indexOf('white') > -1 ? 'white' : 'black';
+  }
+
+  function resolveVariant() {
+    if (!currentQtyBtn) { return null; }
+    var qtyKey = String(qtyFromLabel(currentQtyBtn.getAttribute('data-label')));
+    if (currentMode === 'wristband') { return WRISTBAND_VARIANTS[qtyKey] || null; }
+    var byMode = VARIANTS[currentMode];
+    if (!byMode) { return null; }
+    var byColor = byMode[currentColor()] || byMode.black;
+    if (!byColor) { return null; }
+    var entry = byColor[qtyKey];
+    if (!entry) { return null; }
+    return entry[qrKey()];
+  }
+
+  // ---------------------------------------------------------------------
+  // Custom quantity (Counter / Bulk only - Wristband has no custom-quantity
+  // pricing model, and the row is hidden for it in setMode() below).
+  // ---------------------------------------------------------------------
+
+  // Cheapest set of real bulk packs that covers at least `want` cards.
+  // Unbounded-knapsack DP, so it naturally does things like answering "40"
+  // with a single 50-pack ($174.99) instead of 25+10+10 ($199.97) - more
+  // cards AND less money. Without this, tiered pack pricing produces the
+  // absurd result where asking for 24 costs more than asking for 25.
+  function cheapestBulkCombo(want) {
+    var key = qrKey();
+    var sizes = Object.keys(PRICES.bulk).map(Number).sort(function (a, b) { return a - b; });
+    var best = [0];
+    var pick = [null];
+
+    for (var q = 1; q <= want; q++) {
+      best[q] = Infinity;
+      pick[q] = null;
+      for (var s = 0; s < sizes.length; s++) {
+        var size = sizes[s];
+        var prev = Math.max(0, q - size);
+        var cost = best[prev] + PRICES.bulk[String(size)][key];
+        if (cost < best[q]) { best[q] = cost; pick[q] = size; }
+      }
+    }
+
+    var counts = {};
+    var cards = 0;
+    var at = want;
+    while (at > 0 && pick[at]) {
+      var used = pick[at];
+      counts[used] = (counts[used] || 0) + 1;
+      cards += used;
+      at = Math.max(0, at - used);
+    }
+
+    return { cents: best[want], counts: counts, cards: cards };
+  }
+
+  // What a custom quantity costs, and the exact cart lines that produce it.
+  function quoteCustom(want) {
+    var color = currentColor();
+    var key = qrKey();
+
+    if (currentMode === 'counter') {
+      var cents = Math.round(want * COUNTER_VOLUME_RATE[key]);
+      return {
+        cents: cents,
+        cards: want,
+        items: [{ id: VARIANTS.counter[color]['1'][key], quantity: want }],
+        note: want + ' cards at ' + moneyCents(COUNTER_VOLUME_RATE[key]) + ' each - the same volume rate as the 3-pack.'
+      };
+    }
+
+    var combo = cheapestBulkCombo(want);
+    var items = [];
+    var parts = [];
+    Object.keys(combo.counts).sort(function (a, b) { return b - a; }).forEach(function (size) {
+      items.push({ id: VARIANTS.bulk[color][size][key], quantity: combo.counts[size] });
+      parts.push(combo.counts[size] + ' x ' + size + '-pack');
+    });
+
+    var note = parts.join(' + ');
+    if (combo.cards > want) {
+      note += ' - that is ' + combo.cards + ' cards, because it works out cheaper than buying exactly ' + want + '.';
+    }
+
+    return { cents: combo.cents, cards: combo.cards, items: items, note: note };
+  }
+
+  function customMin() {
+    return currentMode === 'counter' ? COUNTER_CUSTOM_MIN : BULK_CUSTOM_MIN;
+  }
+
+  // Renders the bottom summary/buy button from a custom quote.
+  function renderCustomSummary(want, quote) {
+    priceEl.textContent = moneyCents(quote.cents);
+    // Custom quotes already bake the QR surcharge into one all-in number
+    // (see quoteCustom), so there is no separate "+QR" line to show here -
+    // that is what the pack-mode qrTotal element is for.
+    if (qrTotal) { qrTotal.hidden = true; }
+    var qrSuffix = qrInput && qrInput.checked ? ' with QR' : '';
+    cta.textContent = 'Get ' + want + ' Cards' + qrSuffix + ' - ' + moneyCents(quote.cents);
+    cta.href = productHref();
+  }
+
+  function renderIdleSummary() {
+    priceEl.textContent = ' ';
+    if (qrTotal) { qrTotal.hidden = true; }
+    cta.textContent = 'Select an option';
+    cta.href = productHref();
+  }
+
+  // Recomputes the custom row's own preview, and - whenever a valid custom
+  // amount is what is actually active - drives the shared summary button
+  // below from it too. Called on every keystroke in the input AND whenever
+  // QR is toggled, so both stay correct no matter which changed. Wristband
+  // never reaches here with a meaningful state: its custom row is hidden and
+  // its input cannot be focused, so this only ever runs for Counter/Bulk.
+  function updateCustom() {
+    if (!customInput || currentMode === 'wristband') { return; }
+    var min = customMin();
+    customInput.min = min;
+    customInput.placeholder = currentMode === 'counter' ? 'e.g. 12' : 'e.g. 40';
+    if (customLabel) {
+      customLabel.textContent = currentMode === 'counter'
+        ? 'Need more than 3? Type any amount'
+        : 'Need a different amount? Type it in';
+    }
+
+    var want = parseInt(customInput.value, 10);
+    if (!want || want < min) {
+      customPrice.textContent = '';
+      customNote.textContent = customInput.value ? 'Enter ' + min + ' or more.' : '';
+      if (customActive) {
+        // The custom amount that was driving the summary just became invalid
+        // (cleared, or typed below the minimum) - fall back to a pack button
+        // if one is available, rather than leave the summary stale.
+        customActive = false;
+        var panel = root.querySelector('[data-config-panel="' + currentMode + '"]');
+        var fallbackBtn = panel ? panel.querySelector('[data-config-qty]') : null;
+        if (fallbackBtn) { activateQty(fallbackBtn); } else { renderIdleSummary(); }
+      }
+      return;
+    }
+
+    var quote = quoteCustom(want);
+    customPrice.textContent = moneyCents(quote.cents);
+    customNote.textContent = quote.note;
+
+    // A valid custom amount takes over as the purchase intent - only one can
+    // be active, so deselect any pack button in this panel.
+    customActive = true;
+    currentQtyBtn = null;
+    var activePanel = root.querySelector('[data-config-panel="' + currentMode + '"]');
+    if (activePanel) {
+      [].slice.call(activePanel.querySelectorAll('[data-config-qty]')).forEach(function (b) { b.classList.remove('is-active'); });
+    }
+
+    renderCustomSummary(want, quote);
+  }
+
+  function addToCart(items, fallbackHref) {
+    return fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ items: items })
+    }).then(function (r) {
+      if (!r.ok) { throw new Error('add failed'); }
+      window.location.href = '/cart';
+    }).catch(function () {
+      window.location.href = fallbackHref;
+    });
+  }
+
+  if (customInput) { customInput.addEventListener('input', updateCustom); }
+
+  // ---------------------------------------------------------------------
+
+  function updateWristbandEstimate() {
+    if (!currentQtyBtn) { return; }
+    var label = currentQtyBtn.getAttribute('data-label');
+    priceEl.textContent = currentQtyBtn.getAttribute('data-price');
+    if (qrTotal) { qrTotal.hidden = true; }
+    cta.textContent = 'Get ' + label + ' - ' + currentQtyBtn.getAttribute('data-price');
+    cta.href = currentQtyBtn.getAttribute('data-link');
+  }
+
+  function updateQrEstimate() {
+    if (currentMode === 'wristband') { updateWristbandEstimate(); return; }
+    if (!currentQtyBtn) { return; }
+    var label = currentQtyBtn.getAttribute('data-label');
+    var price = numberFromText(currentQtyBtn.getAttribute('data-price'));
+    var qty = qtyFromLabel(label);
+    var rate = currentMode === 'bulk' ? numberFromText(qrRates.bulk) : numberFromText(qrRates.counter);
+    var qrCost = qty * rate;
+    var rateText = currentMode === 'bulk'
+      ? {{ section.settings.qr_bulk_text | default: '+$1 per mini card - not required, just an optional backup' | json }}
+      : {{ section.settings.qr_counter_text | default: '+$5 per main card - not required, just an optional backup' | json }};
+
+    if (qrHelp) { qrHelp.textContent = rateText; }
+    if (qrInput && qrInput.checked) {
+      priceEl.textContent = money(price + qrCost);
+      if (qrTotal) {
+        qrTotal.hidden = false;
+        qrTotal.textContent = 'Includes QR add-on: +' + money(qrCost);
+      }
+      cta.textContent = 'Get ' + label + ' with QR - ' + money(price + qrCost);
+    } else {
+      priceEl.textContent = currentQtyBtn.getAttribute('data-price');
+      if (qrTotal) { qrTotal.hidden = true; }
+      cta.textContent = 'Get ' + label + ' - ' + currentQtyBtn.getAttribute('data-price');
+    }
+    var baseLink = currentQtyBtn.getAttribute('data-link');
+    if (qrInput && qrInput.checked) { baseLink += (baseLink.indexOf('?') === -1 ? '?' : '&') + 'qr=1'; }
+    cta.href = baseLink;
+  }
+
+  // Single entry point for "something that affects price changed" (a pack
+  // click, a QR toggle). Recomputes whichever side is actually driving the
+  // summary right now, instead of the old code path that only refreshed the
+  // pack-mode summary and left a typed custom amount stale.
+  function refreshSummary() {
+    if (customActive) { updateCustom(); } else { updateQrEstimate(); }
+  }
 
   function activateQty(btn) {
     var panel = btn.closest('[data-config-panel]');
     [].slice.call(panel.querySelectorAll('[data-config-qty]')).forEach(function (b) { b.classList.remove('is-active'); });
     btn.classList.add('is-active');
-    priceEl.textContent = btn.getAttribute('data-price');
-    var link = btn.getAttribute('data-link');
-    var variantId = btn.getAttribute('data-variant-id');
-    cta.href = link;
-    // If a real variant ID is set, the shared cart handler adds it to the cart.
-    // Otherwise the button stays a normal link to the product page.
-    if (variantId) {
-      cta.setAttribute('data-add-variant', variantId);
-      cta.setAttribute('data-fallback', link);
-    } else {
-      cta.removeAttribute('data-add-variant');
-    }
-    cta.textContent = variantId
-      ? ('Add ' + btn.getAttribute('data-label') + ' — ' + btn.getAttribute('data-price'))
-      : ('Get ' + btn.getAttribute('data-label') + ' — ' + btn.getAttribute('data-price'));
+    currentQtyBtn = btn;
+    customActive = false;
+    if (customInput) { customInput.value = ''; customPrice.textContent = ''; customNote.textContent = ''; }
+    updateQrEstimate();
   }
 
   function setMode(mode) {
+    currentMode = mode;
     modeBtns.forEach(function (b) { b.classList.toggle('is-active', b.getAttribute('data-config-mode') === mode); });
     panels.forEach(function (p) { p.hidden = p.getAttribute('data-config-panel') !== mode; });
     document.dispatchEvent(new CustomEvent('optiq:mode-change', { detail: { mode: mode } }));
+
+    // Wristband has no QR option and no custom-quantity model - hide both
+    // rows entirely (not just disable them) so there is no control left that
+    // could add a QR code or an arbitrary quantity while in this mode.
+    // Force-unchecking QR here, not just hiding it, means a QR selection made
+    // in Counter/Bulk mode cannot silently carry over if the shopper switches
+    // to Wristband and back.
+    var isWristband = mode === 'wristband';
+    if (qrRow) { qrRow.hidden = isWristband; }
+    if (qrInput && isWristband) { qrInput.checked = false; }
+    if (customRow) { customRow.hidden = isWristband; }
+
+    customActive = false;
+    if (customInput) { customInput.value = ''; customPrice.textContent = ''; customNote.textContent = ''; }
     var panel = root.querySelector('[data-config-panel="' + mode + '"]');
-    if (!panel) { return; }
+    if (!panel) { updateCustom(); return; }
     var activeBtn = panel.querySelector('[data-config-qty].is-active') || panel.querySelector('[data-config-qty]');
-    if (activeBtn) { activateQty(activeBtn); }
+    if (activeBtn) { activateQty(activeBtn); } else { renderIdleSummary(); updateCustom(); }
   }
 
   modeBtns.forEach(function (b) {
@@ -109,22 +515,39 @@
     b.addEventListener('click', function () { activateQty(b); });
   });
 
-  var customInput = root.querySelector('[data-config-custom-input]');
-  var customCta = root.querySelector('[data-config-custom-cta]');
-  if (customInput && customCta) {
-    var baseMailto = customCta.getAttribute('href');
-    var updateCustomLink = function () {
-      var qty = customInput.value || 'a custom number of';
-      var activeMode = root.querySelector('[data-config-mode].is-active');
-      var modeLabel = activeMode ? activeMode.textContent.trim() : 'cards';
-      var subject = encodeURIComponent('Custom card quantity quote');
-      var body = encodeURIComponent('Hi, I would like a quote for ' + qty + ' ' + modeLabel + '.');
-      customCta.setAttribute('href', baseMailto + '?subject=' + subject + '&body=' + body);
-    };
-    customInput.addEventListener('input', updateCustomLink);
-    modeBtns.forEach(function (b) { b.addEventListener('click', updateCustomLink); });
-    updateCustomLink();
-  }
+  if (qrInput) { qrInput.addEventListener('change', refreshSummary); }
+
+  // Colour can change after the shopper clicks a different showcase card.
+  document.addEventListener('click', function (e) {
+    if (e.target.closest && e.target.closest('[data-showcase-option]')) { setTimeout(refreshSummary, 0); }
+  });
+
+  // THE BUY BUTTON: add whichever is currently active - a custom amount or a
+  // resolved pack variant - to the cart, then go to the cart page. Never
+  // calls preventDefault() unless it can actually act, so a broken state
+  // always still falls back to plain navigation to the product page rather
+  // than a dead button.
+  cta.addEventListener('click', function (e) {
+    if (cta.getAttribute('aria-busy') === 'true') { e.preventDefault(); return; }
+
+    if (customActive) {
+      var want = parseInt(customInput.value, 10);
+      var quote = (want && want >= customMin()) ? quoteCustom(want) : null;
+      if (!quote || !quote.items.length || !quote.items[0].id) { return; }
+      e.preventDefault();
+      cta.setAttribute('aria-busy', 'true');
+      cta.textContent = 'Adding...';
+      addToCart(quote.items, cta.getAttribute('href'));
+      return;
+    }
+
+    var variantId = resolveVariant();
+    if (!variantId) { return; } // fall back to the href (product page) if no match
+    e.preventDefault();
+    cta.setAttribute('aria-busy', 'true');
+    cta.textContent = 'Adding...';
+    addToCart([{ id: variantId, quantity: 1 }], cta.getAttribute('href'));
+  });
 
   setMode('counter');
 })();

@@ -191,6 +191,61 @@
             "variant_id": "",
             "link": "/products/bulk-review-cards"
           }
+        },
+        "w1": {
+          "type": "card",
+          "settings": {
+            "mode": "wristband",
+            "name": "Google Review Wristband - Black",
+            "note": "Premium silicone wristband, programmed with your Google review link. Waterproof and comfortable for all-day wear.",
+            "image": "shopify://shop_images/google-review-nfc-wristband-black.png",
+            "tag": "Premium silicone construction",
+            "badge": "New"
+          }
+        },
+        "w2": {
+          "type": "card",
+          "settings": {
+            "mode": "wristband",
+            "name": "Google Review Wristband - White",
+            "note": "Same one-tap wristband in clean white silicone.",
+            "image": "shopify://shop_images/google-review-nfc-wristband-white.png",
+            "tag": "Premium silicone construction",
+            "badge": ""
+          }
+        },
+        "wq1": {
+          "type": "qty",
+          "settings": {
+            "mode": "wristband",
+            "qty_label": "1 Wristband",
+            "price": "$39.99",
+            "featured": true,
+            "variant_id": "48855927161064",
+            "link": "/products/google-review-nfc-wristband"
+          }
+        },
+        "wq2": {
+          "type": "qty",
+          "settings": {
+            "mode": "wristband",
+            "qty_label": "2 Wristbands",
+            "price": "$69.99",
+            "featured": false,
+            "variant_id": "48855927193832",
+            "link": "/products/google-review-nfc-wristband"
+          }
+        },
+        "wq3": {
+          "type": "qty",
+          "settings": {
+            "mode": "wristband",
+            "qty_label": "3 Wristbands",
+            "price": "$99.99",
+            "featured": false,
+            "variant_id": "48855927226600",
+            "link": "/products/google-review-nfc-wristband"
+          }
         }
       },
       "block_order": [
@@ -204,7 +259,12 @@
         "q4",
         "q5",
         "q6",
-        "q7"
+        "q7",
+        "w1",
+        "w2",
+        "wq1",
+        "wq2",
+        "wq3"
       ],
       "settings": {
         "kicker": "Choose your setup",
@@ -213,7 +273,8 @@
         "counter_mode_label": "Main Counter Card",
         "bulk_mode_label": "Mini Bulk Cards",
         "membership_label": "See full plan details",
-        "membership_link": "/pages/membership"
+        "membership_link": "/pages/membership",
+        "wristband_mode_label": "Wristband"
       }
     },
     "wristbandspotlight": {
