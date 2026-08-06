@@ -8,6 +8,8 @@
     {%- assign product_gallery_image = section.settings.main_counter_card_product_image -%}
   {%- when 'review-growth-plan' -%}
     {%- assign product_gallery_image = section.settings.review_growth_plan_product_image -%}
+  {%- when 'google-review-nfc-wristband' -%}
+    {%- assign product_gallery_image = section.settings.wristband_product_image -%}
 {%- endcase -%}
 
 {%- comment -%}
@@ -341,6 +343,11 @@
       "type": "image_picker",
       "id": "review_growth_plan_product_image",
       "label": "Review Growth Plan product page image"
+    },
+    {
+      "type": "image_picker",
+      "id": "wristband_product_image",
+      "label": "Google Review Wristband product page image"
     },
     {
       "type": "text",
