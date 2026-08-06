@@ -196,22 +196,11 @@
           "type": "card",
           "settings": {
             "mode": "wristband",
-            "name": "Google Review Wristband - Black",
+            "name": "Google Review Wristband",
             "note": "Premium silicone wristband, programmed with your Google review link. Waterproof and comfortable for all-day wear.",
-            "image": "shopify://shop_images/google-review-nfc-wristband-black.png",
+            "image": "",
             "tag": "Premium silicone construction",
             "badge": "New"
-          }
-        },
-        "w2": {
-          "type": "card",
-          "settings": {
-            "mode": "wristband",
-            "name": "Google Review Wristband - White",
-            "note": "Same one-tap wristband in clean white silicone.",
-            "image": "shopify://shop_images/google-review-nfc-wristband-white.png",
-            "tag": "Premium silicone construction",
-            "badge": ""
           }
         },
         "wq1": {
@@ -261,7 +250,6 @@
         "q6",
         "q7",
         "w1",
-        "w2",
         "wq1",
         "wq2",
         "wq3"

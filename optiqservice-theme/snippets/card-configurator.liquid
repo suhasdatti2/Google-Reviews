@@ -495,7 +495,12 @@
     // in Counter/Bulk mode cannot silently carry over if the shopper switches
     // to Wristband and back.
     var isWristband = mode === 'wristband';
-    if (qrRow) { qrRow.hidden = isWristband; }
+    // .configurator__qr sets its own `display: flex` in base.css, which beats
+    // the browser's default `[hidden] { display: none }` rule (author CSS
+    // always outranks the UA stylesheet) - so the `hidden` attribute alone
+    // does not actually hide it. Setting inline `display` directly wins over
+    // that class rule via specificity, which is what actually hides it.
+    if (qrRow) { qrRow.hidden = isWristband; qrRow.style.display = isWristband ? 'none' : ''; }
     if (qrInput && isWristband) { qrInput.checked = false; }
     if (customRow) { customRow.hidden = isWristband; }
 
