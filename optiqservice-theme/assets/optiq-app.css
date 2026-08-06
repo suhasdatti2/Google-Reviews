@@ -829,13 +829,59 @@ body:has(.oqauth) .o-footer { display: none !important; }
 .oqauth-actions,
 .oqauth-fallback { display: flex; flex-direction: column; gap: 10px; }
 
-/* The component paints the inline sheet using these. Match the auth card. */
-shopify-account.oqauth-account {
+/* The sheet the component opens is not a descendant of <shopify-account> in
+   the DOM - the browser portals it elsewhere (that is also why Shopify does
+   not expose a way to move it horizontally: see the note below). CSS custom
+   properties only inherit down the real DOM tree, so setting them scoped to
+   `shopify-account.oqauth-account` never reached the portaled sheet - it was
+   rendering with zero theming, hence the plain white Shopify-branded look.
+   Declaring them on :root instead means the sheet inherits them no matter
+   where in the document it actually lands. This is also why the same
+   declaration only needs to happen once even though nothing else on the
+   site currently uses <shopify-account>. */
+:root {
   --shopify-account-color-background: var(--oq-surface);
   --shopify-account-color-text: var(--oq-ink);
   --shopify-account-color-accent: var(--oq-accent);
   --shopify-account-font-body: var(--oq-font);
-  --shopify-account-dialog-position-top: 12vh;
+  --shopify-account-font-heading: var(--oq-font-display);
+  --shopify-account-radius-base: 14px;
+  --shopify-account-dialog-position-top: 14vh;
+
+  /* Derived tokens: overridden individually so every surface inside the
+     sheet (cards, inputs, borders, shadow) actually matches the dark
+     Optiq palette instead of the defaults auto-derived from the four
+     base colours above, which stayed light. */
+  --shopify-account-color-background-subdued: var(--oq-surface-2);
+  --shopify-account-color-border: var(--oq-line-2);
+  --shopify-account-color-card-background: var(--oq-surface-2);
+  --shopify-account-color-card-text: var(--oq-ink);
+  --shopify-account-color-control-background: var(--oq-surface-3);
+  --shopify-account-color-control-text: var(--oq-ink);
+  --shopify-account-color-shadow: rgba(0, 0, 0, 0.6);
+  --shopify-account-color-text-subdued: var(--oq-ink-2);
+  --shopify-account-color-accent-text: var(--oq-accent-ink);
+  --shopify-account-radius-dialog: var(--oq-r-xl);
+  --shopify-account-radius-button: var(--oq-r);
+  --shopify-account-radius-button-small: var(--oq-r-sm);
+  --shopify-account-radius-input: var(--oq-r);
+}
+
+/* Platform limit, not a bug we can style around: Shopify documents a
+   top-offset variable (above) but no left/right/horizontal one, because the
+   sheet is a fixed, viewport-anchored overlay rather than something popped
+   open relative to the button that triggered it. There is no supported way
+   to centre it or attach it under the Optiq sign-in card - only Shopify's
+   own component code controls that axis. */
+
+/* Standard CSS, not a shadow-DOM override: if the sheet is backed by a
+   native <dialog>, this dims the rest of the page behind it the same way a
+   modal would, instead of it reading as a stray corner popup. Harmless if
+   nothing on the site uses <dialog> yet. */
+dialog::backdrop {
+  background: rgba(4, 4, 8, 0.66);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 /* Secondary "Create account" button: outlined, not filled. */
