@@ -31,11 +31,15 @@
     at all: the price shown is literally the sum of real variant prices, so it
     cannot disagree with what checkout charges.
 
-  WRISTBAND is neither: it is a single product, no colour, no QR option, and
-  only three real bundle variants (1/2/3). There is nothing to compute - pack
-  buttons map straight to a variant ID - so it skips the custom-quantity row
-  and the QR row entirely rather than running either kind of pricing math
-  against a catalogue shape that does not exist for this product.
+    WRISTBAND: same shape as bulk - no single-unit variant smaller than the
+    1-bundle, and three bundle sizes (1/2/3) with different per-unit rates.
+    A custom wristband amount is solved the same cheapest-combination way as
+    bulk, just over the three wristband bundles instead of the four card
+    packs.
+
+  WRISTBAND has no QR option at all (no QR variant exists for it), so that
+  row alone stays hidden and force-cleared in wristband mode - unlike Counter
+  and Bulk, where it is a real, purchasable variant.
 {%- endcomment -%}
 <div class="configurator" data-configurator>
   <div class="configurator__modes" role="tablist">
@@ -191,8 +195,9 @@
     no: PRICES.counter['3'].no / 3,
     qr: PRICES.counter['3'].qr / 3
   };
-  var COUNTER_CUSTOM_MIN = 4; // 1-3 are the pack buttons above
-  var BULK_CUSTOM_MIN = 10;   // no bulk variant smaller than a 10-pack exists
+  var COUNTER_CUSTOM_MIN = 4;   // 1-3 are the pack buttons above
+  var BULK_CUSTOM_MIN = 10;     // no bulk variant smaller than a 10-pack exists
+  var WRISTBAND_CUSTOM_MIN = 4; // 1-3 are the pack buttons above
 
   var modeBtns = [].slice.call(root.querySelectorAll('[data-config-mode]'));
   var panels = [].slice.call(root.querySelectorAll('[data-config-panel]'));
@@ -202,7 +207,6 @@
   var qrInput = root.querySelector('[data-config-qr]');
   var qrHelp = root.querySelector('[data-config-qr-help]');
   var qrTotal = root.querySelector('[data-config-qr-total]');
-  var customRow = root.querySelector('[data-config-custom]');
   var customInput = root.querySelector('[data-config-custom-input]');
   var customPrice = root.querySelector('[data-config-custom-price]');
   var customNote = root.querySelector('[data-config-custom-note]');
@@ -266,8 +270,7 @@
   }
 
   // ---------------------------------------------------------------------
-  // Custom quantity (Counter / Bulk only - Wristband has no custom-quantity
-  // pricing model, and the row is hidden for it in setMode() below).
+  // Custom quantity (all three modes)
   // ---------------------------------------------------------------------
 
   // Cheapest set of real bulk packs that covers at least `want` cards.
@@ -305,6 +308,38 @@
     return { cents: best[want], counts: counts, cards: cards };
   }
 
+  // Same idea as cheapestBulkCombo, over the three wristband bundles instead
+  // of the four card packs - no colour, no QR key, since neither exists for
+  // this product.
+  function cheapestWristbandCombo(want) {
+    var sizes = Object.keys(WRISTBAND_PRICES).map(Number).sort(function (a, b) { return a - b; });
+    var best = [0];
+    var pick = [null];
+
+    for (var q = 1; q <= want; q++) {
+      best[q] = Infinity;
+      pick[q] = null;
+      for (var s = 0; s < sizes.length; s++) {
+        var size = sizes[s];
+        var prev = Math.max(0, q - size);
+        var cost = best[prev] + WRISTBAND_PRICES[String(size)];
+        if (cost < best[q]) { best[q] = cost; pick[q] = size; }
+      }
+    }
+
+    var counts = {};
+    var units = 0;
+    var at = want;
+    while (at > 0 && pick[at]) {
+      var used = pick[at];
+      counts[used] = (counts[used] || 0) + 1;
+      units += used;
+      at = Math.max(0, at - used);
+    }
+
+    return { cents: best[want], counts: counts, cards: units };
+  }
+
   // What a custom quantity costs, and the exact cart lines that produce it.
   function quoteCustom(want) {
     var color = currentColor();
@@ -318,6 +353,23 @@
         items: [{ id: VARIANTS.counter[color]['1'][key], quantity: want }],
         note: want + ' cards at ' + moneyCents(COUNTER_VOLUME_RATE[key]) + ' each - the same volume rate as the 3-pack.'
       };
+    }
+
+    if (currentMode === 'wristband') {
+      var wCombo = cheapestWristbandCombo(want);
+      var wItems = [];
+      var wParts = [];
+      Object.keys(wCombo.counts).sort(function (a, b) { return b - a; }).forEach(function (size) {
+        wItems.push({ id: WRISTBAND_VARIANTS[size], quantity: wCombo.counts[size] });
+        wParts.push(wCombo.counts[size] + ' x ' + size + '-pack');
+      });
+
+      var wNote = wParts.join(' + ');
+      if (wCombo.cards > want) {
+        wNote += ' - that is ' + wCombo.cards + ' wristbands, because it works out cheaper than buying exactly ' + want + '.';
+      }
+
+      return { cents: wCombo.cents, cards: wCombo.cards, items: wItems, note: wNote };
     }
 
     var combo = cheapestBulkCombo(want);
@@ -337,7 +389,13 @@
   }
 
   function customMin() {
-    return currentMode === 'counter' ? COUNTER_CUSTOM_MIN : BULK_CUSTOM_MIN;
+    if (currentMode === 'counter') { return COUNTER_CUSTOM_MIN; }
+    if (currentMode === 'wristband') { return WRISTBAND_CUSTOM_MIN; }
+    return BULK_CUSTOM_MIN;
+  }
+
+  function itemNoun() {
+    return currentMode === 'wristband' ? 'Wristbands' : 'Cards';
   }
 
   // Renders the bottom summary/buy button from a custom quote.
@@ -345,10 +403,11 @@
     priceEl.textContent = moneyCents(quote.cents);
     // Custom quotes already bake the QR surcharge into one all-in number
     // (see quoteCustom), so there is no separate "+QR" line to show here -
-    // that is what the pack-mode qrTotal element is for.
+    // that is what the pack-mode qrTotal element is for. Wristband has no
+    // QR option at all, so qrInput.checked is never true in that mode.
     if (qrTotal) { qrTotal.hidden = true; }
     var qrSuffix = qrInput && qrInput.checked ? ' with QR' : '';
-    cta.textContent = 'Get ' + want + ' Cards' + qrSuffix + ' - ' + moneyCents(quote.cents);
+    cta.textContent = 'Get ' + want + ' ' + itemNoun() + qrSuffix + ' - ' + moneyCents(quote.cents);
     cta.href = productHref();
   }
 
@@ -362,18 +421,16 @@
   // Recomputes the custom row's own preview, and - whenever a valid custom
   // amount is what is actually active - drives the shared summary button
   // below from it too. Called on every keystroke in the input AND whenever
-  // QR is toggled, so both stay correct no matter which changed. Wristband
-  // never reaches here with a meaningful state: its custom row is hidden and
-  // its input cannot be focused, so this only ever runs for Counter/Bulk.
+  // QR is toggled, so both stay correct no matter which changed.
   function updateCustom() {
-    if (!customInput || currentMode === 'wristband') { return; }
+    if (!customInput) { return; }
     var min = customMin();
     customInput.min = min;
-    customInput.placeholder = currentMode === 'counter' ? 'e.g. 12' : 'e.g. 40';
+    customInput.placeholder = currentMode === 'bulk' ? 'e.g. 40' : (currentMode === 'wristband' ? 'e.g. 6' : 'e.g. 12');
     if (customLabel) {
-      customLabel.textContent = currentMode === 'counter'
-        ? 'Need more than 3? Type any amount'
-        : 'Need a different amount? Type it in';
+      customLabel.textContent = currentMode === 'bulk'
+        ? 'Need a different amount? Type it in'
+        : 'Need more than 3? Type any amount';
     }
 
     var want = parseInt(customInput.value, 10);
@@ -488,12 +545,11 @@
     panels.forEach(function (p) { p.hidden = p.getAttribute('data-config-panel') !== mode; });
     document.dispatchEvent(new CustomEvent('optiq:mode-change', { detail: { mode: mode } }));
 
-    // Wristband has no QR option and no custom-quantity model - hide both
-    // rows entirely (not just disable them) so there is no control left that
-    // could add a QR code or an arbitrary quantity while in this mode.
-    // Force-unchecking QR here, not just hiding it, means a QR selection made
-    // in Counter/Bulk mode cannot silently carry over if the shopper switches
-    // to Wristband and back.
+    // Wristband has no QR option at all (no QR variant exists for it) - hide
+    // that row entirely (not just disable it) so there is no control left
+    // that could add one in this mode. Force-unchecking here, not just
+    // hiding, means a QR selection made in Counter/Bulk mode cannot silently
+    // carry over if the shopper switches to Wristband and back.
     var isWristband = mode === 'wristband';
     // .configurator__qr sets its own `display: flex` in base.css, which beats
     // the browser's default `[hidden] { display: none }` rule (author CSS
@@ -502,7 +558,6 @@
     // that class rule via specificity, which is what actually hides it.
     if (qrRow) { qrRow.hidden = isWristband; qrRow.style.display = isWristband ? 'none' : ''; }
     if (qrInput && isWristband) { qrInput.checked = false; }
-    if (customRow) { customRow.hidden = isWristband; }
 
     customActive = false;
     if (customInput) { customInput.value = ''; customPrice.textContent = ''; customNote.textContent = ''; }

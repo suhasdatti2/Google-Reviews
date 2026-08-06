@@ -25,7 +25,9 @@
       {%- if card -%}
       <a class="wristband-compare__item" href="{{ card.url }}">
         <div class="wristband-compare__media">
-          {%- if card.featured_image != blank -%}
+          {%- if section.settings.card_image != blank -%}
+            {{ section.settings.card_image | image_url: width: 700 | image_tag: alt: card.title }}
+          {%- elsif card.featured_image != blank -%}
             {{ card.featured_image | image_url: width: 700 | image_tag: alt: card.featured_image.alt }}
           {%- else -%}
             {% render 'image-placeholder', square: true %}
@@ -42,7 +44,9 @@
 
       <a class="wristband-compare__item wristband-compare__item--featured" href="{{ wristband.url }}">
         <div class="wristband-compare__media">
-          {%- if wristband.featured_image != blank -%}
+          {%- if section.settings.wristband_image != blank -%}
+            {{ section.settings.wristband_image | image_url: width: 700 | image_tag: alt: wristband.title }}
+          {%- elsif wristband.featured_image != blank -%}
             {{ wristband.featured_image | image_url: width: 700 | image_tag: alt: wristband.featured_image.alt }}
           {%- else -%}
             {% render 'image-placeholder', square: true %}
@@ -162,8 +166,10 @@
     },
     { "type": "text", "id": "card_handle", "label": "Card product handle", "default": "google-review-nfc-card" },
     { "type": "text", "id": "card_label", "label": "Card eyebrow label", "default": "Also available" },
+    { "type": "image_picker", "id": "card_image", "label": "Card photo", "info": "Optional. Leave blank to use the card product's own photo." },
     { "type": "text", "id": "wristband_handle", "label": "Wristband product handle", "default": "google-review-nfc-wristband" },
     { "type": "text", "id": "wristband_label", "label": "Wristband eyebrow label", "default": "New" },
+    { "type": "image_picker", "id": "wristband_image", "label": "Wristband photo", "info": "Optional. Leave blank to use the wristband product's own photo." },
     {
       "type": "text",
       "id": "badges",
