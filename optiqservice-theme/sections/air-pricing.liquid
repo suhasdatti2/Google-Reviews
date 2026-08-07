@@ -1,0 +1,314 @@
+{%- comment -%}
+  Pricing. Two tiers (Standard / Premium), each a single combined purchase -
+  the one-time setup fee and the first month are added to the cart TOGETHER
+  by one link and paid in one Shopify Checkout, rather than two separate
+  buttons sending the buyer through two separate checkouts.
+
+  Mechanism: Shopify cart permalinks accept more than one variant, comma-
+  separated - /cart/{setup_id}:1,{monthly_id}:1 - which builds the cart
+  server-side with BOTH line items and lands the buyer straight in
+  Checkout, same as the single-variant permalinks this section used before.
+  No JavaScript needed, and Shop Pay / Apple Pay / Google Pay / card all
+  still appear in that one Checkout exactly as normal.
+
+  The AI Receptionist product carries two options - "Plan" (One-Time Setup /
+  Monthly) and "Tier" (Standard / Premium) - so there are 4 variants total.
+  Variants are matched by option1/option2 at render time, never hardcoded,
+  so recreating a variant cannot leave a card pointing at a dead ID.
+
+  Second path added alongside the permalink: an "Add to Cart" button using
+  the theme's existing AJAX cart (window.optiqAddToCart, assets/optiq-cart.js)
+  and cart drawer (sections/cart-drawer.liquid). Shopify's actual hosted
+  Checkout has no supported way to add/remove line items once you're in it -
+  that only works on the cart step - so this button adds both variants via
+  /cart/add.js and opens the drawer, where the setup fee and the monthly
+  plan are two independent lines the buyer can already adjust or remove
+  with the drawer's existing quantity/remove controls, before going on to
+  Checkout.
+{%- endcomment -%}
+
+{%- liquid
+  assign air_product = section.settings.product
+  if air_product == blank
+    assign air_product = product
+  endif
+  if air_product == blank
+    assign air_product = all_products['ai-receptionist']
+  endif
+
+  assign standard_setup = blank
+  assign standard_monthly = blank
+  assign premium_setup = blank
+  assign premium_monthly = blank
+  for v in air_product.variants
+    if v.option1 == 'One-Time Setup' and v.option2 == 'Standard'
+      assign standard_setup = v
+    elsif v.option1 == 'Monthly' and v.option2 == 'Standard'
+      assign standard_monthly = v
+    elsif v.option1 == 'One-Time Setup' and v.option2 == 'Premium'
+      assign premium_setup = v
+    elsif v.option1 == 'Monthly' and v.option2 == 'Premium'
+      assign premium_monthly = v
+    endif
+  endfor
+
+  assign standard_plan_id = blank
+  for alloc in standard_monthly.selling_plan_allocations
+    if standard_plan_id == blank
+      assign standard_plan_id = alloc.selling_plan.id
+    endif
+  endfor
+  assign premium_plan_id = blank
+  for alloc in premium_monthly.selling_plan_allocations
+    if premium_plan_id == blank
+      assign premium_plan_id = alloc.selling_plan.id
+    endif
+  endfor
+
+  assign standard_ready = false
+  if standard_setup != blank and standard_monthly != blank and standard_setup.available and standard_monthly.available
+    assign standard_ready = true
+  endif
+  assign premium_ready = false
+  if premium_setup != blank and premium_monthly != blank and premium_setup.available and premium_monthly.available
+    assign premium_ready = true
+  endif
+
+  capture standard_href
+    echo routes.cart_url | append: '/' | append: standard_setup.id | append: ':1,' | append: standard_monthly.id | append: ':1'
+    if standard_plan_id != blank
+      echo '?selling_plan=' | append: standard_plan_id
+    endif
+  endcapture
+  capture premium_href
+    echo routes.cart_url | append: '/' | append: premium_setup.id | append: ':1,' | append: premium_monthly.id | append: ':1'
+    if premium_plan_id != blank
+      echo '?selling_plan=' | append: premium_plan_id
+    endif
+  endcapture
+-%}
+
+<section class="air" {{ section.shopify_attributes }}>
+  <div class="o-section o-wrap" id="air-pricing">
+
+    <div class="o-head o-head--center">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="o-eyebrow o-eyebrow--bare" data-o-reveal="fade">{{ section.settings.eyebrow | escape }}</span>
+      {%- endif -%}
+      <h2 class="o-h2" data-o-reveal>{{ section.settings.heading | escape }}</h2>
+      {%- if section.settings.sub != blank -%}
+        <p class="o-lede" data-o-reveal style="--o-reveal-delay:80ms">{{ section.settings.sub | escape }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="air-price__grid" data-o-reveal="fade" data-o-reveal-group>
+
+      {%- comment -%} ---- Standard ---- {%- endcomment -%}
+      <article class="air-price__card" data-o-reveal>
+        {%- if section.settings.standard_tag != blank -%}
+          <span class="air-price__tag">{{ section.settings.standard_tag | escape }}</span>
+        {%- endif -%}
+
+        <h3 class="air-price__name">{{ section.settings.standard_name | escape }}</h3>
+        <p class="air-price__note">{{ section.settings.standard_note | escape }}</p>
+
+        <div class="air-price__amount">
+          <span class="air-price__figure">
+            {%- if standard_setup != blank -%}{{ standard_setup.price | money_without_trailing_zeros }}{%- else -%}$699{%- endif -%}
+          </span>
+          <span class="air-price__per">{{ section.settings.standard_down_label | escape }}</span>
+        </div>
+        <span class="air-price__billing">
+          {{ section.settings.standard_then_prefix | escape }}
+          {%- if standard_monthly != blank -%}{{ standard_monthly.price | money_without_trailing_zeros }}{%- else -%}$299{%- endif -%}{{ section.settings.standard_monthly_suffix | escape }}
+          &middot; {{ section.settings.standard_billing_note | escape }}
+        </span>
+
+        <ul class="air-price__list">
+          {%- assign standard_items = section.settings.standard_features | newline_to_br | split: '<br />' -%}
+          {%- for item in standard_items -%}
+            {%- assign line = item | strip -%}
+            {%- if line != blank -%}
+              <li><span class="air-price__tick">{% render 'icon-air', name: 'check-mini', size: 11 %}</span>{{ line }}</li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+
+        {%- if standard_ready -%}
+          <div class="air-price__form">
+            <a class="o-btn o-btn--primary o-btn--lg o-btn--full air-cta" href="{{ standard_href }}">
+              {{ section.settings.standard_cta | escape }}
+            </a>
+            <div class="air-price__or">{{ section.settings.or_label | default: 'or' }}</div>
+            <div class="air-price__express">
+              <button
+                type="button"
+                class="o-btn o-btn--ghost o-btn--lg o-btn--full"
+                data-air-add-cart
+                data-setup-id="{{ standard_setup.id }}"
+                data-monthly-id="{{ standard_monthly.id }}"
+                data-selling-plan="{{ standard_plan_id }}"
+              >
+                {{ section.settings.add_to_cart_label | default: 'Add to Cart' }}
+              </button>
+            </div>
+          </div>
+        {%- else -%}
+          <p class="air-price__safe">Currently unavailable.</p>
+        {%- endif -%}
+
+        <p class="air-price__safe">{{ section.settings.trust_note | escape }}</p>
+      </article>
+
+      {%- comment -%} ---- Premium ---- {%- endcomment -%}
+      <article class="air-price__card air-price__card--featured" data-o-reveal>
+        {%- if section.settings.premium_tag != blank -%}
+          <span class="air-price__tag">{{ section.settings.premium_tag | escape }}</span>
+        {%- endif -%}
+
+        <h3 class="air-price__name">{{ section.settings.premium_name | escape }}</h3>
+        <p class="air-price__note">{{ section.settings.premium_note | escape }}</p>
+
+        <div class="air-price__amount">
+          <span class="air-price__figure">
+            {%- if premium_setup != blank -%}{{ premium_setup.price | money_without_trailing_zeros }}{%- else -%}$1,499{%- endif -%}
+          </span>
+          <span class="air-price__per">{{ section.settings.premium_down_label | escape }}</span>
+        </div>
+        <span class="air-price__billing">
+          {{ section.settings.premium_then_prefix | escape }}
+          {%- if premium_monthly != blank -%}{{ premium_monthly.price | money_without_trailing_zeros }}{%- else -%}$599{%- endif -%}{{ section.settings.premium_monthly_suffix | escape }}
+          &middot; {{ section.settings.premium_billing_note | escape }}
+        </span>
+
+        <ul class="air-price__list">
+          {%- assign premium_items = section.settings.premium_features | newline_to_br | split: '<br />' -%}
+          {%- for item in premium_items -%}
+            {%- assign line = item | strip -%}
+            {%- if line != blank -%}
+              <li><span class="air-price__tick">{% render 'icon-air', name: 'check-mini', size: 11 %}</span>{{ line }}</li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+
+        {%- if premium_ready -%}
+          <div class="air-price__form">
+            <a class="o-btn o-btn--primary o-btn--lg o-btn--full air-cta" href="{{ premium_href }}">
+              {{ section.settings.premium_cta | escape }}
+            </a>
+            <div class="air-price__or">{{ section.settings.or_label | default: 'or' }}</div>
+            <div class="air-price__express">
+              <button
+                type="button"
+                class="o-btn o-btn--ghost o-btn--lg o-btn--full"
+                data-air-add-cart
+                data-setup-id="{{ premium_setup.id }}"
+                data-monthly-id="{{ premium_monthly.id }}"
+                data-selling-plan="{{ premium_plan_id }}"
+              >
+                {{ section.settings.add_to_cart_label | default: 'Add to Cart' }}
+              </button>
+            </div>
+          </div>
+        {%- else -%}
+          <p class="air-price__safe">Currently unavailable.</p>
+        {%- endif -%}
+
+        <p class="air-price__safe">{{ section.settings.trust_note | escape }}</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var buttons = [].slice.call(document.querySelectorAll('[data-air-add-cart]'));
+  if (!buttons.length) { return; }
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (!window.optiqAddToCart || btn.getAttribute('data-loading') === 'true') { return; }
+
+      var setupId = btn.getAttribute('data-setup-id');
+      var monthlyId = btn.getAttribute('data-monthly-id');
+      if (!setupId || !monthlyId) { return; }
+
+      var items = [
+        { id: setupId, quantity: 1 },
+        { id: monthlyId, quantity: 1 }
+      ];
+      var sellingPlan = btn.getAttribute('data-selling-plan');
+      if (sellingPlan) { items[1].selling_plan = sellingPlan; }
+
+      btn.setAttribute('data-loading', 'true');
+      window.optiqAddToCart(items, { trigger: btn })
+        .catch(function () {})
+        .then(function () { btn.removeAttribute('data-loading'); });
+    });
+  });
+})();
+</script>
+
+{%- comment -%} Product structured data, built from the real variants. {%- endcomment -%}
+{%- if air_product != blank -%}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": {{ air_product.title | json }},
+    "description": {{ air_product.description | strip_html | truncate: 300 | json }},
+    "brand": { "@type": "Brand", "name": {{ shop.name | json }} },
+    "url": {{ air_product.url | prepend: shop.url | json }},
+    "offers": [
+      {%- for v in air_product.variants -%}
+        {
+          "@type": "Offer",
+          "name": {{ v.title | json }},
+          "price": {{ v.price | divided_by: 100.0 | json }},
+          "priceCurrency": {{ shop.currency | json }},
+          "availability": {% if v.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %},
+          "url": {{ v.url | prepend: shop.url | json }}
+        }{%- unless forloop.last -%},{%- endunless -%}
+      {%- endfor -%}
+    ]
+  }
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "AI Receptionist pricing",
+  "tag": "section",
+  "settings": [
+    { "type": "product", "id": "product", "label": "AI Receptionist product", "info": "Leave empty on the product template." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Pricing" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "One plan. One checkout. Always answering." },
+    { "type": "textarea", "id": "sub", "label": "Subheading", "default": "Setup and your first month go through together, in a single checkout." },
+    { "type": "text", "id": "trust_note", "label": "Reassurance line", "default": "Secure Shopify checkout. Cancel the monthly plan anytime." },
+    { "type": "text", "id": "or_label", "label": "Divider label between the two buttons", "default": "or" },
+    { "type": "text", "id": "add_to_cart_label", "label": "Add to Cart button label", "default": "Add to Cart", "info": "Adds both the setup fee and the first month to your cart without leaving the page, so you can adjust or remove either one in the cart drawer before checking out." },
+    { "type": "header", "content": "Standard card" },
+    { "type": "text", "id": "standard_tag", "label": "Badge", "default": "Most popular" },
+    { "type": "text", "id": "standard_name", "label": "Name", "default": "AI Receptionist" },
+    { "type": "text", "id": "standard_note", "label": "Note", "default": "Everything needed to get your AI answering live, then keep improving every month." },
+    { "type": "text", "id": "standard_down_label", "label": "Label under the down-payment figure", "default": "down today" },
+    { "type": "text", "id": "standard_then_prefix", "label": "Billing line prefix", "default": "then" },
+    { "type": "text", "id": "standard_monthly_suffix", "label": "Billing line suffix after the monthly price", "default": "/month" },
+    { "type": "text", "id": "standard_billing_note", "label": "Billing line note", "default": "billed monthly, cancel anytime" },
+    { "type": "textarea", "id": "standard_features", "label": "Includes (one per line)", "default": "Full AI setup & configuration\nCustom voice & greeting\nBusiness knowledge upload\nAppointment booking integration\nUnlimited calls answered\nContinuous updates & improvements\nCall analytics dashboard" },
+    { "type": "text", "id": "standard_cta", "label": "Button", "default": "Get Started" },
+    { "type": "header", "content": "Premium card" },
+    { "type": "text", "id": "premium_tag", "label": "Badge", "default": "Full service" },
+    { "type": "text", "id": "premium_name", "label": "Name", "default": "AI Receptionist Premium" },
+    { "type": "text", "id": "premium_note", "label": "Note", "default": "For businesses that want the whole front desk handled, in every language." },
+    { "type": "text", "id": "premium_down_label", "label": "Label under the down-payment figure", "default": "down today" },
+    { "type": "text", "id": "premium_then_prefix", "label": "Billing line prefix", "default": "then" },
+    { "type": "text", "id": "premium_monthly_suffix", "label": "Billing line suffix after the monthly price", "default": "/month" },
+    { "type": "text", "id": "premium_billing_note", "label": "Billing line note", "default": "billed monthly, cancel anytime" },
+    { "type": "textarea", "id": "premium_features", "label": "Includes (one per line)", "default": "Everything in AI Receptionist, plus:\nMulti-language call handling\nCRM & calendar integrations\nSMS + email follow-up automation\nCustom voice cloning\nCall recording & QA review\nDedicated onboarding specialist\nSame-day priority support\nMonthly strategy review" },
+    { "type": "text", "id": "premium_cta", "label": "Button", "default": "Get Premium" }
+  ],
+  "presets": [{ "name": "AI Receptionist pricing" }]
+}
+{% endschema %}
