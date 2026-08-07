@@ -413,6 +413,21 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white)
   padding: clamp(28px, 4vw, 56px);
 }
 
+/* Was unstyled - the placeholder's own 260px min-height was all that kept
+   it from collapsing, so it read as a thin strip. Given real size and
+   object-fit: cover so an uploaded finish photo actually fills it. */
+.sig-config__preview {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  margin-bottom: 36px;
+  overflow: hidden;
+}
+.sig-config__preview [data-sig-preview] { position: absolute; inset: 0; }
+.sig-config__preview img,
+.sig-config__preview .sig-placeholder { width: 100%; height: 100%; }
+.sig-config__preview img { object-fit: cover; display: block; }
+
 .sig-config__row { display: grid; gap: 16px; padding-block: 30px; border-top: 1px solid var(--sig-line); }
 .sig-config__row:first-child { border-top: 0; padding-top: 0; }
 .sig-config__label {
