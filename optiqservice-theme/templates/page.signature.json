@@ -10,32 +10,34 @@
 {
   "sections": {
     "sighero": {
-      "type": "signature-hero"
+      "type": "signature-hero",
+      "settings": {}
     },
     "sigmaterial": {
-      "type": "signature-material"
+      "type": "signature-material",
+      "settings": {}
     },
     "sigengineering": {
-      "type": "signature-engineering"
-    },
-    "sigshowcase": {
-      "type": "signature-showcase"
+      "type": "signature-engineering",
+      "settings": {}
     },
     "sigconfigurator": {
-      "type": "signature-configurator"
+      "type": "signature-configurator",
+      "settings": {}
     },
     "sigpackaging": {
-      "type": "signature-packaging"
+      "type": "signature-packaging",
+      "settings": {}
     },
     "sigpurchase": {
-      "type": "signature-purchase"
+      "type": "signature-purchase",
+      "settings": {}
     }
   },
   "order": [
     "sighero",
     "sigmaterial",
     "sigengineering",
-    "sigshowcase",
     "sigconfigurator",
     "sigpackaging",
     "sigpurchase"
