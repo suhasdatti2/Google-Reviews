@@ -16,9 +16,10 @@
   engine (data-o-reveal, assets/optiq-motion.js) rather than new JS.
 
   Photo fills the whole hero, edge to edge, inset only by .sig-hero's own
-  padding (the "thick white border"). Text sits on top of the photo behind
-  a soft white scrim rather than in its own block above it - the scrim
-  protects legibility without knowing in advance what photo gets uploaded.
+  padding (the "thick white border"). Text sits directly on top of the
+  photo - no scrim, so heading contrast depends on the uploaded photo
+  itself; keep the top third reasonably dark/uncluttered for the heading
+  to read clearly.
 {%- endcomment -%}
 
 {{ 'optiq-signature.css' | asset_url | stylesheet_tag }}
@@ -33,7 +34,6 @@
     <div class="sig-hero__media" data-o-reveal="fade">
       {% render 'sig-media', image: section.settings.hero_image, label: 'Add hero background photo', alt: section.settings.heading %}
     </div>
-    <div class="sig-hero__scrim" aria-hidden="true"></div>
 
     <div class="sig-hero__overlay">
       <div class="sig-hero__text" data-o-reveal-group>
@@ -46,11 +46,6 @@
         <a class="sig-cta sig-cta--solid" href="{{ section.settings.cta_link | default: '#sig-configurator' }}">{{ section.settings.cta_label | default: 'Explore Signature' }}</a>
       </div>
     </div>
-  </div>
-
-  <div class="sig-hero__scroll" aria-hidden="true">
-    <span>Scroll</span>
-    <span class="sig-hero__scroll-line"></span>
   </div>
 </section>
 

@@ -98,9 +98,7 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white)
   text-transform: uppercase;
   color: var(--sig-ink-3);
 }
-.sig-eyebrow::before { content: ""; width: 22px; height: 1px; background: var(--sig-line-2); }
 .sig-section--black .sig-eyebrow { color: var(--sig-on-black-2); }
-.sig-section--black .sig-eyebrow::before { background: rgba(243, 241, 236, 0.22); }
 
 .sig-h1, .sig-h2, .sig-h3 {
   font-family: var(--sig-font-display);
@@ -271,16 +269,6 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white)
 .sig-hero__media .sig-placeholder { width: 100%; height: 100%; }
 .sig-hero__media img { object-fit: cover; display: block; }
 
-/* Protects text legibility against whatever photo actually gets uploaded,
-   without knowing its content in advance - strongest where the text sits,
-   fading out by the lower half so most of the photo stays untouched. */
-.sig-hero__scrim {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.62) 0%, rgba(255, 255, 255, 0.22) 34%, rgba(255, 255, 255, 0) 58%);
-  pointer-events: none;
-}
-
 .sig-hero__overlay {
   position: relative;
   z-index: 2;
@@ -299,40 +287,9 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white)
 
 .sig-hero__actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
 
-.sig-hero__scroll {
-  position: absolute;
-  left: 50%;
-  bottom: 10px;
-  transform: translateX(-50%);
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  color: var(--sig-ink-3);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-.sig-hero__scroll-line { width: 1px; height: 34px; background: var(--sig-line-2); overflow: hidden; }
-.sig-hero__scroll-line::after {
-  content: "";
-  display: block;
-  width: 100%; height: 40%;
-  background: var(--sig-ink-3);
-  animation: sig-scroll-run 2.1s var(--sig-ease) infinite;
-}
-@keyframes sig-scroll-run {
-  0% { transform: translateY(-100%); }
-  60%, 100% { transform: translateY(250%); }
-}
-@media (prefers-reduced-motion: reduce) { .sig-hero__scroll-line::after { animation: none; } }
-
 @media (max-width: 640px) {
   .sig-hero { padding-top: 92px; min-height: auto; }
   .sig-hero__frame { min-height: 70vh; }
-  .sig-hero__scroll { display: none; }
 }
 
 /* ==========================================================================
