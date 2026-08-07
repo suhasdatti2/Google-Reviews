@@ -266,15 +266,21 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white)
 .sig-hero__text { display: grid; justify-items: center; gap: 20px; max-width: 720px; }
 .sig-hero__sub { font-size: clamp(1.05rem, 0.98rem + 0.35vw, 1.3rem); color: var(--sig-ink-2); max-width: 46ch; }
 
+/* A large image panel acting as the hero's visual centerpiece rather than
+   a small framed photo - but not full-bleed: the padding below is the
+   "thick white border" that keeps it reading as a mounted photograph
+   rather than a background image, and gives an uploaded photo of any
+   aspect ratio somewhere consistent to sit regardless of its own shape. */
 .sig-hero__media {
   width: 100%;
-  max-width: 620px;
-  aspect-ratio: 16 / 11;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  aspect-ratio: 16 / 9;
+  padding: clamp(18px, 2.6vw, 40px);
+  background: var(--sig-white);
+  border: 1px solid var(--sig-line);
 }
-.sig-hero__media img { width: 100%; height: 100%; object-fit: contain; }
+.sig-hero__media img,
+.sig-hero__media .sig-placeholder { width: 100%; height: 100%; }
+.sig-hero__media img { object-fit: cover; }
 
 .sig-hero__actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-top: 4px; }
 
