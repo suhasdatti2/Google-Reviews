@@ -1,0 +1,550 @@
+/* ==========================================================================
+   OPTIQ SIGNATURE — flagship luxury micro-experience
+   --------------------------------------------------------------------------
+   A deliberately separate design system from the rest of the store. Every
+   class here is under the sig- prefix, only ever used by the 7 sections of
+   templates/page.signature.json, so nothing here can leak onto (or be
+   affected by) the marketing theme's dark system. Reuses the parent
+   theme's fonts (--o-font-display/body,
+   already loaded site-wide) and its scroll-reveal engine
+   ([data-o-reveal], driven by assets/optiq-motion.js) rather than shipping
+   a second copy of either - the only new things this file defines are
+   colour, spacing, and the components specific to this page.
+
+   Palette: white / warm paper / soft marble, near-black ink, one dark
+   "packaging" beat for contrast. No purple, no cheap gradients, minimal
+   rounding. Restraint is the luxury cue, not ornament.
+   ========================================================================== */
+
+/* Tokens live on :root, not scoped to a wrapper element. Each of the 7
+   Signature sections renders as its own independent top-level sibling under
+   <main> (separate section files in templates/page.signature.json), so none
+   of them are DOM descendants of one another - a `.sig-page { --sig-x: ... }`
+   block would only have been visible inside whichever single section
+   happened to contain that element, exactly the bug already found and fixed
+   once this session in the shopify-account sign-in sheet (custom properties
+   only inherit down the real DOM tree). Global :root, uniquely prefixed, is
+   what actually guarantees every section sees the same values. */
+:root {
+  --sig-white: #ffffff;
+  --sig-paper: #fbfaf8;
+  --sig-marble: #f3f1ec;
+  --sig-marble-2: #eae7e0;
+  --sig-ink: #111110;
+  --sig-ink-2: #5c5b56;
+  --sig-ink-3: #9a988f;
+  --sig-line: rgba(17, 17, 16, 0.1);
+  --sig-line-2: rgba(17, 17, 16, 0.17);
+  --sig-black: #0b0b0a;
+  --sig-black-2: #171615;
+  --sig-on-black: #f3f1ec;
+  --sig-on-black-2: #9a988f;
+  --sig-accent: var(--o-accent, #b68a3f);
+  --sig-accent-ink: var(--o-accent-ink, #14100a);
+
+  --sig-font-display: var(--o-font-display, "Space Grotesk", ui-sans-serif, system-ui, sans-serif);
+  --sig-font-body: var(--o-font-body, "DM Sans", ui-sans-serif, system-ui, sans-serif);
+
+  --sig-maxw: 1180px;
+  --sig-section: clamp(88px, 11vw, 176px);
+  --sig-section-tight: clamp(56px, 7vw, 108px);
+  --sig-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --sig-dur: 420ms;
+}
+
+/* Base reset (box-sizing, img sizing) is already global from optiq-core.css,
+   so it is not repeated here - only what is specific to this page's look. */
+.sig-hero, .sig-section {
+  background: var(--sig-white);
+  color: var(--sig-ink);
+  font-family: var(--sig-font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Full immersion: this page replaces the marketing chrome rather than
+   sitting inside it, the same technique already used for the auth screen
+   and dashboard (assets/optiq-app.css). The dock's own stylesheet reserves
+   body padding for itself unconditionally, so that has to be cancelled
+   here too or this page keeps a blank strip at the bottom for a dock that
+   is no longer there. `.sig-page` here is just a presence marker on the
+   hero section's root (the only section that needs one) - :has() only
+   needs it to exist once anywhere in the document, not to wrap anything. */
+body:has(.sig-page) .o-header,
+body:has(.sig-page) .o-announce,
+body:has(.sig-page) .o-footer,
+body:has(.sig-page) .optiq-dock,
+body:has(.sig-page) .oqa { display: none !important; }
+body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white); }
+
+/* ==========================================================================
+   Type + layout primitives
+   ========================================================================== */
+
+.sig-wrap {
+  width: 100%;
+  max-width: calc(var(--sig-maxw) + 48px);
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+@media (min-width: 700px) { .sig-wrap { padding-inline: 40px; } }
+
+.sig-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sig-ink-3);
+}
+.sig-eyebrow::before { content: ""; width: 22px; height: 1px; background: var(--sig-line-2); }
+.sig-section--black .sig-eyebrow { color: var(--sig-on-black-2); }
+.sig-section--black .sig-eyebrow::before { background: rgba(243, 241, 236, 0.22); }
+
+.sig-h1, .sig-h2, .sig-h3 {
+  font-family: var(--sig-font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: var(--sig-ink);
+  text-wrap: balance;
+}
+.sig-section--black .sig-h1,
+.sig-section--black .sig-h2,
+.sig-section--black .sig-h3 { color: var(--sig-on-black); }
+
+.sig-h1 { font-size: clamp(2.6rem, 1.7rem + 4.2vw, 5.4rem); }
+.sig-h2 { font-size: clamp(2rem, 1.5rem + 2.4vw, 3.4rem); }
+.sig-h3 { font-size: clamp(1.3rem, 1.1rem + 0.9vw, 1.85rem); letter-spacing: -0.01em; }
+
+.sig-lede {
+  font-size: clamp(1.02rem, 0.95rem + 0.3vw, 1.2rem);
+  line-height: 1.6;
+  color: var(--sig-ink-2);
+  max-width: 46ch;
+}
+.sig-section--black .sig-lede { color: var(--sig-on-black-2); }
+
+.sig-body { font-size: 0.98rem; line-height: 1.7; color: var(--sig-ink-2); max-width: 44ch; }
+.sig-section--black .sig-body { color: var(--sig-on-black-2); }
+
+/* Centred head block used at the top of most sections */
+.sig-head { display: grid; gap: 18px; max-width: 640px; }
+.sig-head--center { justify-items: center; text-align: center; margin-inline: auto; }
+
+/* ==========================================================================
+   Buttons + links — restrained, no ecommerce chrome
+   ========================================================================== */
+
+.sig-cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 54px;
+  padding: 0 38px;
+  border: 1px solid var(--sig-ink);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--sig-ink);
+  font-family: var(--sig-font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background var(--sig-dur, 420ms) var(--sig-ease), color var(--sig-dur, 420ms) var(--sig-ease), transform 220ms var(--sig-ease);
+}
+.sig-cta:hover { background: var(--sig-ink); color: var(--sig-white); transform: translateY(-1px); }
+.sig-cta:active { transform: translateY(0); }
+.sig-cta[disabled], .sig-cta[aria-disabled="true"] { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+.sig-cta--solid { background: var(--sig-ink); color: var(--sig-white); }
+.sig-cta--solid:hover { background: var(--sig-ink-2); }
+
+.sig-cta--on-black { border-color: rgba(243, 241, 236, 0.5); color: var(--sig-on-black); }
+.sig-cta--on-black:hover { background: var(--sig-on-black); color: var(--sig-black); }
+
+.sig-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--sig-ink);
+  padding-bottom: 3px;
+}
+.sig-link::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 100%; height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 320ms var(--sig-ease);
+}
+.sig-link:hover::after { transform: scaleX(1); }
+.sig-link svg { width: 13px; height: 13px; transition: transform 320ms var(--sig-ease); }
+.sig-link:hover svg { transform: translateX(3px); }
+
+/* ==========================================================================
+   Sections
+   ========================================================================== */
+
+.sig-section { padding-block: var(--sig-section); background: var(--sig-white); position: relative; }
+.sig-section--tight { padding-block: var(--sig-section-tight); }
+.sig-section--paper { background: var(--sig-paper); }
+.sig-section--marble {
+  background:
+    radial-gradient(1200px 500px at 15% -10%, rgba(255, 255, 255, 0.7), transparent 60%),
+    radial-gradient(900px 480px at 100% 110%, rgba(0, 0, 0, 0.03), transparent 60%),
+    linear-gradient(180deg, var(--sig-marble), var(--sig-marble-2));
+}
+.sig-section--black { background: var(--sig-black); color: var(--sig-on-black); }
+.sig-section--ruled { border-top: 1px solid var(--sig-line); }
+.sig-section--black.sig-section--ruled { border-top-color: rgba(243, 241, 236, 0.1); }
+
+/* ==========================================================================
+   Minimal top identity bar — not a header, just a way back
+   ========================================================================== */
+
+.sig-topbar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px clamp(24px, 4vw, 48px) 0;
+}
+.sig-topbar__mark {
+  font-family: var(--sig-font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--sig-ink);
+}
+.sig-topbar__mark span { color: var(--sig-ink-3); font-weight: 500; }
+.sig-topbar__back {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sig-ink-2);
+  transition: color 200ms var(--sig-ease);
+}
+.sig-topbar__back:hover { color: var(--sig-ink); }
+
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+
+.sig-hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding: 140px 0 80px;
+  background: var(--sig-white);
+  overflow: hidden;
+}
+
+.sig-hero__inner {
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 40px;
+}
+
+.sig-hero__text { display: grid; justify-items: center; gap: 20px; max-width: 720px; }
+.sig-hero__sub { font-size: clamp(1.05rem, 0.98rem + 0.35vw, 1.3rem); color: var(--sig-ink-2); max-width: 46ch; }
+
+.sig-hero__media {
+  width: 100%;
+  max-width: 620px;
+  aspect-ratio: 16 / 11;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sig-hero__media img { width: 100%; height: 100%; object-fit: contain; }
+
+.sig-hero__actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-top: 4px; }
+
+.sig-hero__scroll {
+  position: absolute;
+  left: 50%;
+  bottom: 34px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--sig-ink-3);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.sig-hero__scroll-line { width: 1px; height: 34px; background: var(--sig-line-2); overflow: hidden; }
+.sig-hero__scroll-line::after {
+  content: "";
+  display: block;
+  width: 100%; height: 40%;
+  background: var(--sig-ink-3);
+  animation: sig-scroll-run 2.1s var(--sig-ease) infinite;
+}
+@keyframes sig-scroll-run {
+  0% { transform: translateY(-100%); }
+  60%, 100% { transform: translateY(250%); }
+}
+@media (prefers-reduced-motion: reduce) { .sig-hero__scroll-line::after { animation: none; } }
+
+@media (max-width: 640px) {
+  .sig-hero { padding-top: 120px; min-height: auto; }
+  .sig-hero__scroll { display: none; }
+}
+
+/* ==========================================================================
+   Placeholder media (light-mode, for this page only — replaces the dark
+   theme's dashed-stripe placeholder, which would clash badly here)
+   ========================================================================== */
+
+.sig-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+  border: 1px solid var(--sig-line-2);
+  background: var(--sig-paper);
+  color: var(--sig-ink-3);
+  text-align: center;
+  padding: 32px;
+}
+.sig-placeholder svg { width: 30px; height: 30px; opacity: 0.55; }
+.sig-placeholder span { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; max-width: 24ch; }
+.sig-section--black .sig-placeholder {
+  border-color: rgba(243, 241, 236, 0.16);
+  background: var(--sig-black-2);
+  color: var(--sig-on-black-2);
+}
+
+/* ==========================================================================
+   Split layout (Material section)
+   ========================================================================== */
+
+.sig-split {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: clamp(40px, 6vw, 96px);
+  align-items: center;
+}
+.sig-split--reverse { grid-template-columns: 1fr 1.15fr; }
+.sig-split--reverse .sig-split__media { order: 2; }
+.sig-split--reverse .sig-split__text { order: 1; }
+
+.sig-split__media { aspect-ratio: 5 / 4; overflow: hidden; }
+.sig-split__media img { width: 100%; height: 100%; object-fit: cover; }
+.sig-split__text { display: grid; gap: 22px; }
+
+@media (max-width: 880px) {
+  .sig-split, .sig-split--reverse { grid-template-columns: 1fr; gap: 32px; }
+  .sig-split--reverse .sig-split__media,
+  .sig-split--reverse .sig-split__text { order: initial; }
+}
+
+/* ==========================================================================
+   Engineering diagram
+   ========================================================================== */
+
+.sig-diagram {
+  display: grid;
+  justify-items: center;
+  gap: 0;
+  max-width: 360px;
+  margin: 64px auto 0;
+}
+.sig-diagram__plate {
+  width: 100%;
+  padding: 26px 28px;
+  border: 1px solid var(--sig-line-2);
+  background: var(--sig-white);
+  text-align: center;
+  box-shadow: 0 22px 44px -30px rgba(17, 17, 16, 0.35);
+}
+.sig-diagram__plate strong { display: block; font-family: var(--sig-font-display); font-size: 15.5px; letter-spacing: -0.005em; margin-bottom: 4px; }
+.sig-diagram__plate span { font-size: 12.5px; color: var(--sig-ink-2); }
+.sig-diagram__plate--core { background: var(--sig-marble); border-style: dashed; }
+
+.sig-diagram__link {
+  width: 1px;
+  height: 34px;
+  background: var(--sig-line-2);
+  position: relative;
+}
+.sig-diagram__link::after {
+  content: "";
+  position: absolute;
+  left: 50%; bottom: -1px;
+  width: 6px; height: 6px;
+  transform: translateX(-50%) rotate(45deg);
+  border-right: 1px solid var(--sig-line-2);
+  border-bottom: 1px solid var(--sig-line-2);
+}
+
+/* ==========================================================================
+   Marble showroom detail grid
+   ========================================================================== */
+
+.sig-showroom {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 56px;
+}
+.sig-showroom__item { aspect-ratio: 4 / 5; overflow: hidden; }
+.sig-showroom__item img { width: 100%; height: 100%; object-fit: cover; }
+.sig-showroom__item:first-child { grid-row: span 2; aspect-ratio: 4 / 9; }
+
+@media (max-width: 780px) {
+  .sig-showroom { grid-template-columns: 1fr 1fr; }
+  .sig-showroom__item:first-child { grid-column: span 2; aspect-ratio: 16 / 10; grid-row: auto; }
+}
+
+/* ==========================================================================
+   Configurator — Porsche-style selection, not a Shopify variant <select>
+   ========================================================================== */
+
+.sig-configurator {
+  margin-top: 64px;
+  border: 1px solid var(--sig-line-2);
+  background: var(--sig-white);
+  padding: clamp(28px, 4vw, 56px);
+}
+
+.sig-config__row { display: grid; gap: 16px; padding-block: 30px; border-top: 1px solid var(--sig-line); }
+.sig-config__row:first-child { border-top: 0; padding-top: 0; }
+.sig-config__label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sig-ink-3);
+}
+.sig-config__label b { color: var(--sig-ink); font-weight: 700; letter-spacing: 0; text-transform: none; font-size: 13px; }
+
+/* Finish swatches */
+.sig-swatches { display: flex; gap: 18px; flex-wrap: wrap; }
+.sig-swatch { display: grid; justify-items: center; gap: 10px; background: none; border: 0; cursor: pointer; padding: 4px; }
+.sig-swatch__dot {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--sig-line-2);
+  box-shadow: inset 0 0 0 3px var(--sig-white);
+  transition: box-shadow 200ms var(--sig-ease), transform 200ms var(--sig-ease);
+}
+.sig-swatch[data-finish="titanium-gray"] .sig-swatch__dot { background: linear-gradient(135deg, #a6a6a0, #77766e); }
+.sig-swatch[data-finish="matte-black"] .sig-swatch__dot { background: linear-gradient(135deg, #2c2c2a, #121211); }
+.sig-swatch[data-finish="brushed-silver"] .sig-swatch__dot { background: linear-gradient(135deg, #ececea, #c9c8c2); }
+.sig-swatch span { font-size: 12.5px; font-weight: 600; color: var(--sig-ink-2); }
+.sig-swatch:hover .sig-swatch__dot { transform: translateY(-2px); }
+.sig-swatch.is-active .sig-swatch__dot { box-shadow: inset 0 0 0 3px var(--sig-white), 0 0 0 2px var(--sig-ink); }
+.sig-swatch.is-active span { color: var(--sig-ink); }
+
+/* Quantity + generic pill choices */
+.sig-pills { display: inline-flex; gap: 8px; padding: 4px; border: 1px solid var(--sig-line-2); border-radius: 999px; }
+.sig-pill {
+  border: 0;
+  background: transparent;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sig-ink-2);
+  cursor: pointer;
+  transition: background 200ms var(--sig-ease), color 200ms var(--sig-ease);
+}
+.sig-pill.is-active { background: var(--sig-ink); color: var(--sig-white); }
+
+/* Engraving + programming fields — thin underline inputs, not boxed */
+.sig-fields { display: grid; gap: 22px; grid-template-columns: 1fr 1fr; }
+.sig-fields--single { grid-template-columns: 1fr; }
+.sig-field { display: grid; gap: 8px; }
+.sig-field label {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sig-ink-3);
+}
+.sig-field input {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--sig-line-2);
+  background: transparent;
+  padding: 10px 2px;
+  font-family: var(--sig-font-body);
+  font-size: 14.5px;
+  color: var(--sig-ink);
+  transition: border-color 200ms var(--sig-ease);
+}
+.sig-field input::placeholder { color: var(--sig-ink-3); }
+.sig-field input:focus { outline: none; border-color: var(--sig-ink); }
+.sig-field--optional label span { color: var(--sig-ink-3); font-weight: 500; text-transform: none; letter-spacing: 0; }
+.sig-field-hint { font-size: 12px; color: var(--sig-ink-3); line-height: 1.5; }
+
+@media (max-width: 620px) { .sig-fields { grid-template-columns: 1fr; } }
+
+/* Summary + buy */
+.sig-config__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 34px;
+  padding-top: 30px;
+  border-top: 1px solid var(--sig-line);
+}
+.sig-config__price { font-family: var(--sig-font-display); font-size: 26px; font-weight: 600; letter-spacing: -0.01em; }
+.sig-config__price small { display: block; font-family: var(--sig-font-body); font-size: 11.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sig-ink-3); margin-bottom: 4px; }
+.sig-config__note { font-size: 12.5px; color: var(--sig-ink-3); margin-top: 10px; }
+
+/* ==========================================================================
+   Packaging — the one deliberate dark beat, for contrast/pacing
+   ========================================================================== */
+
+.sig-packaging__stage {
+  margin-top: 56px;
+  max-width: 460px;
+  margin-inline: auto;
+  aspect-ratio: 1;
+}
+
+/* ==========================================================================
+   Final purchase
+   ========================================================================== */
+
+.sig-purchase { text-align: center; }
+.sig-purchase__media { max-width: 420px; margin: 48px auto 0; aspect-ratio: 4 / 3; }
+.sig-purchase__price { margin: 28px 0 8px; font-family: var(--sig-font-display); font-size: 20px; }
+.sig-purchase__price b { font-size: 30px; }
+
+/* Motion: every reveal on this page uses the parent theme's existing
+   data-o-reveal engine (assets/optiq-motion.js) and its default timing -
+   no separate motion system to keep in sync with it. */

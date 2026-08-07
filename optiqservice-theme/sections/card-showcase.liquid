@@ -62,6 +62,15 @@
       <li><span class="showcase__trust-ic" aria-hidden="true"></span>Ships ready to use</li>
     </ul>
     <p class="showcase__compat">Works with compatible NFC-enabled iPhone &amp; Android phones. Questions? Email <a href="mailto:{{ settings.contact_email | default: 'sales@optiqservice.com' }}">{{ settings.contact_email | default: 'sales@optiqservice.com' }}</a>.</p>
+
+    {%- if section.settings.show_signature_link -%}
+      <p class="showcase__signature-teaser">
+        <a class="showcase__signature-link" href="{{ section.settings.signature_link | default: '/pages/signature' }}">
+          {{ section.settings.signature_label | default: 'Looking for something more refined? Discover Optiq Signature' }}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </p>
+    {%- endif -%}
   </div>
 </section>
 
@@ -144,6 +153,23 @@
   line-height: 1.5;
 }
 .showcase__compat a { color: rgba(255, 255, 255, 0.78); }
+.showcase__signature-teaser {
+  margin: 22px 0 0;
+  padding-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+.showcase__signature-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.94rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #e8c07a;
+  transition: opacity 0.15s ease, gap 0.15s ease;
+}
+.showcase__signature-link:hover { opacity: 0.82; gap: 11px; }
+.showcase__signature-link svg { width: 15px; height: 15px; flex-shrink: 0; }
 @media (max-width: 760px) {
   .showcase__trust {
     grid-template-columns: 1fr 1fr;
@@ -170,7 +196,11 @@
     { "type": "text", "id": "bulk_mode_label", "label": "Bulk mode label", "default": "Bulk Cards" },
     { "type": "text", "id": "wristband_mode_label", "label": "Wristband mode label", "default": "Wristband" },
     { "type": "text", "id": "membership_label", "label": "Membership button text", "default": "+ Add Membership (optional)" },
-    { "type": "url", "id": "membership_link", "label": "Membership link" }
+    { "type": "url", "id": "membership_link", "label": "Membership link" },
+    { "type": "header", "content": "Optiq Signature link" },
+    { "type": "checkbox", "id": "show_signature_link", "label": "Show Optiq Signature link", "default": true },
+    { "type": "text", "id": "signature_label", "label": "Link text", "default": "Looking for something more refined? Discover Optiq Signature" },
+    { "type": "url", "id": "signature_link", "label": "Link URL", "info": "Defaults to /pages/signature" }
   ],
   "blocks": [
     {

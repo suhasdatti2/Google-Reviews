@@ -1,0 +1,20 @@
+{%- comment -%}
+  Signature page media slot. Same honesty rule as snippets/image-placeholder:
+  never fabricates product photography, only ever shows a real upload or an
+  elegant "add photo" placeholder styled for this page's light palette
+  (the dark-theme .img-placeholder would clash badly on a white page).
+
+  Usage: {% render 'sig-media', image: section.settings.some_image, label: 'Add material close-up' %}
+{%- endcomment -%}
+{%- if image != blank -%}
+  {{ image | image_url: width: 1400 | image_tag: alt: alt | default: label, loading: loading | default: 'lazy' }}
+{%- else -%}
+  <div class="sig-placeholder">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="3" y="5" width="18" height="14" rx="1"/>
+      <circle cx="9" cy="10.5" r="1.5"/>
+      <path d="M21 16l-5.5-5.5a1.5 1.5 0 0 0-2.1 0L5 19"/>
+    </svg>
+    <span>{{ label | default: 'Add photo in theme editor' }}</span>
+  </div>
+{%- endif -%}

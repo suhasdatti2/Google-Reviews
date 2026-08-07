@@ -1,0 +1,65 @@
+{%- comment -%}
+  Optiq Signature - hero. First section on /pages/signature. Carries the
+  sig-page marker class (design-system chrome-hiding rules keyed off
+  body:has(.sig-page), see assets/optiq-signature.css) and the page's only
+  nav element: a small identity bar rather than the marketing header, which
+  is hidden on this page entirely. Every other Signature section is a
+  sibling of this one, not a descendant - Shopify renders each JSON
+  template section as its own top-level block under <main> - so sig-page is
+  a presence marker only, not a wrapper: :has() just needs it to exist
+  once, anywhere, which this single section guarantees.
+
+  The cinematic entrance itself is the site's existing full-page preloader
+  (layout/theme.liquid) - it already runs on every non-home page, so this
+  section does not duplicate it. What it adds on top is the reveal-on-load
+  for the hero's own text stack, using the theme's existing scroll-reveal
+  engine (data-o-reveal, assets/optiq-motion.js) rather than new JS.
+{%- endcomment -%}
+
+{{ 'optiq-signature.css' | asset_url | stylesheet_tag }}
+
+<section class="sig-hero sig-page" {{ section.shopify_attributes }}>
+  <div class="sig-topbar">
+    <a class="sig-topbar__mark" href="{{ routes.root_url }}">OPTIQ <span>Signature</span></a>
+    <a class="sig-topbar__back" href="{{ section.settings.back_link | default: '/pages/google-review-cards' }}">{{ section.settings.back_label | default: '← Back to Optiq' }}</a>
+  </div>
+
+  <div class="sig-wrap sig-hero__inner">
+    <div class="sig-hero__text" data-o-reveal-group>
+      <span class="sig-eyebrow" data-o-reveal="fade">{{ section.settings.eyebrow | default: 'Introducing' }}</span>
+      <h1 class="sig-h1" data-o-reveal="fade">{{ section.settings.heading | default: 'OPTIQ Signature' }}</h1>
+      <p class="sig-hero__sub" data-o-reveal="fade">{{ section.settings.subheading | default: "The world's most refined NFC experience." }}</p>
+    </div>
+
+    <div class="sig-hero__media" data-o-reveal="fade">
+      {% render 'sig-media', image: section.settings.hero_image, label: 'Add hero product photo', alt: section.settings.heading %}
+    </div>
+
+    <div class="sig-hero__actions" data-o-reveal="fade">
+      <a class="sig-cta sig-cta--solid" href="{{ section.settings.cta_link | default: '#sig-configurator' }}">{{ section.settings.cta_label | default: 'Explore Signature' }}</a>
+    </div>
+  </div>
+
+  <div class="sig-hero__scroll" aria-hidden="true">
+    <span>Scroll</span>
+    <span class="sig-hero__scroll-line"></span>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Signature hero",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Introducing" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "OPTIQ Signature" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "The world's most refined NFC experience." },
+    { "type": "image_picker", "id": "hero_image", "label": "Hero product photo" },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Explore Signature" },
+    { "type": "url", "id": "cta_link", "label": "Button link", "info": "Defaults to #sig-configurator, which scrolls to the configurator section on this page." },
+    { "type": "header", "content": "Top bar" },
+    { "type": "text", "id": "back_label", "label": "Back link label", "default": "← Back to Optiq" },
+    { "type": "url", "id": "back_link", "label": "Back link URL", "info": "Defaults to /pages/google-review-cards" }
+  ],
+  "presets": [{ "name": "Signature hero" }]
+}
+{% endschema %}

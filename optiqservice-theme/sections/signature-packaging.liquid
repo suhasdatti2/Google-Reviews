@@ -1,0 +1,38 @@
+{%- comment -%}
+  Optiq Signature - packaging. The one deliberate dark beat in an otherwise
+  white page, for contrast and pacing (Apple's own product pages do the
+  same for their "in the box" moment). .sig-section--black + .sig-placeholder
+  already carry a light-on-dark variant, defined once in optiq-signature.css.
+{%- endcomment -%}
+
+<section class="sig-section sig-section--black" {{ section.shopify_attributes }}>
+  <div class="sig-wrap">
+    <div class="sig-head sig-head--center">
+      <span class="sig-eyebrow" data-o-reveal="fade">{{ section.settings.eyebrow | default: 'The presentation' }}</span>
+      <h2 class="sig-h2" data-o-reveal="fade">{{ section.settings.heading | default: 'Arrives the way it should.' }}</h2>
+      <p class="sig-lede" data-o-reveal="fade">{{ section.settings.subheading | default: 'A solid black box, opened once and kept. The card sits inside exactly as it left our hands.' }}</p>
+    </div>
+
+    <div class="sig-packaging__stage" data-o-reveal="fade">
+      {% render 'sig-media', image: section.settings.image, label: 'Add packaging photo' %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Signature packaging",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The presentation" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Arrives the way it should." },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "A solid black box, opened once and kept. The card sits inside exactly as it left our hands."
+    },
+    { "type": "image_picker", "id": "image", "label": "Packaging photo" }
+  ],
+  "presets": [{ "name": "Signature packaging" }]
+}
+{% endschema %}

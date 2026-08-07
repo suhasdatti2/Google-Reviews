@@ -1,0 +1,238 @@
+{%- comment -%}
+  Optiq Signature - configurator. The one section on this page with real
+  state and a real checkout write, so it is the single source of truth for
+  what gets bought: the final Purchase section further down the page does
+  NOT run its own competing add-to-cart logic - it only links back here.
+  (Two independent buy paths that could disagree is exactly the bug already
+  found and removed once from card-configurator.liquid.)
+
+  Real Shopify variant IDs for the Optiq Signature product (Finish x
+  Quantity, 3 x 2 = 6 variants) - hardcoded rather than theme settings,
+  same reasoning as snippets/card-configurator.liquid: a merchant mistyping
+  a variant ID in a text field would silently break checkout with no
+  validation, whereas these are fixed facts about a specific real product.
+
+  Wrapped in a real <form> so the three "program my card" fields get free
+  native required-field validation (focus + browser tooltip) on submit,
+  rather than hand-rolled validation - the finish/quantity controls are
+  type="button" so they cannot trigger a submit by themselves.
+{%- endcomment -%}
+
+<section class="sig-section sig-section--ruled" id="sig-configurator" {{ section.shopify_attributes }}>
+  <div class="sig-wrap">
+    <div class="sig-head sig-head--center">
+      <span class="sig-eyebrow" data-o-reveal="fade">{{ section.settings.eyebrow | default: 'Configure yours' }}</span>
+      <h2 class="sig-h2" data-o-reveal="fade">{{ section.settings.heading | default: 'Make it yours.' }}</h2>
+    </div>
+
+    <form class="sig-configurator" data-sig-configurator data-o-reveal="fade">
+
+      <div class="sig-config__preview">
+        <div data-sig-preview="titanium-gray">
+          {% render 'sig-media', image: section.settings.finish_image_titanium, label: 'Add Titanium Gray photo' %}
+        </div>
+        <div data-sig-preview="matte-black" hidden>
+          {% render 'sig-media', image: section.settings.finish_image_black, label: 'Add Matte Black Metal photo' %}
+        </div>
+        <div data-sig-preview="brushed-silver" hidden>
+          {% render 'sig-media', image: section.settings.finish_image_silver, label: 'Add Brushed Silver photo' %}
+        </div>
+      </div>
+
+      <div class="sig-config__row">
+        <div class="sig-config__label"><b>Finish</b></div>
+        <div class="sig-swatches" role="group" aria-label="Finish">
+          <button type="button" class="sig-swatch is-active" data-sig-finish="titanium-gray" aria-pressed="true">
+            <span class="sig-swatch__dot" aria-hidden="true"></span><span>Titanium Gray</span>
+          </button>
+          <button type="button" class="sig-swatch" data-sig-finish="matte-black" aria-pressed="false">
+            <span class="sig-swatch__dot" aria-hidden="true"></span><span>Matte Black Metal</span>
+          </button>
+          <button type="button" class="sig-swatch" data-sig-finish="brushed-silver" aria-pressed="false">
+            <span class="sig-swatch__dot" aria-hidden="true"></span><span>Brushed Silver</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="sig-config__row">
+        <div class="sig-config__label"><b>Quantity</b></div>
+        <div class="sig-pills" role="group" aria-label="Quantity">
+          <button type="button" class="sig-pill is-active" data-sig-qty="single" aria-pressed="true">Single Card</button>
+          <button type="button" class="sig-pill" data-sig-qty="three" aria-pressed="false">Set of Three</button>
+        </div>
+      </div>
+
+      <div class="sig-config__row">
+        <div class="sig-config__label"><b>Program your card</b></div>
+        <div class="sig-fields">
+          <div class="sig-field">
+            <label for="sig-business">Business name</label>
+            <input type="text" id="sig-business" data-sig-field="Business name" placeholder="e.g. Fresh Fades Barbershop" required>
+          </div>
+          <div class="sig-field">
+            <label for="sig-contact">Best email or phone</label>
+            <input type="text" id="sig-contact" data-sig-field="Contact email or phone" placeholder="you@business.com" required>
+          </div>
+        </div>
+        <div class="sig-fields sig-fields--single">
+          <div class="sig-field">
+            <label for="sig-link">Google review link</label>
+            <input type="text" id="sig-link" data-sig-field="Google review link" placeholder="Review link, website, or business name" required>
+          </div>
+        </div>
+        <p class="sig-field-hint">
+          {%- if section.settings.programming_hint != blank -%}
+            {{ section.settings.programming_hint }}
+          {%- else -%}
+            Anything works here - your review link, your website, or just your business name and city. Prefer to send it later? Order now and email it to {{ settings.contact_email | default: 'sales@optiqservice.com' }}.
+          {%- endif -%}
+        </p>
+      </div>
+
+      <div class="sig-config__row">
+        <div class="sig-config__label"><b>Engraving</b> <span>Optional</span></div>
+        <div class="sig-fields">
+          <div class="sig-field sig-field--optional">
+            <label for="sig-logo"><span>Business logo</span></label>
+            <input type="text" id="sig-logo" data-sig-field="Business logo engraving" placeholder="Describe it, or email the file after ordering">
+          </div>
+          <div class="sig-field sig-field--optional">
+            <label for="sig-engrave"><span>Custom text</span></label>
+            <input type="text" id="sig-engrave" data-sig-field="Custom text engraving" placeholder="e.g. Est. 2019">
+          </div>
+        </div>
+      </div>
+
+      <div class="sig-config__summary">
+        <span class="sig-config__price" data-sig-price><small>Total</small>$99.99</span>
+        <button type="submit" class="sig-cta sig-cta--solid" data-sig-cta>{{ section.settings.cta_label | default: 'Add to Cart' }}</button>
+      </div>
+      <p class="sig-config__note" data-sig-note hidden></p>
+    </form>
+  </div>
+</section>
+
+<script>
+(function () {
+  var root = document.querySelector('[data-sig-configurator]');
+  if (!root) { return; }
+
+  var SIG_VARIANTS = {
+    'titanium-gray':  { single: '48860232089832', three: '48860232122600' },
+    'matte-black':    { single: '48860232155368', three: '48860232188136' },
+    'brushed-silver': { single: '48860232220904', three: '48860232253672' }
+  };
+  var SIG_PRICES = { single: 9999, three: 26999 };
+
+  var currentFinish = 'titanium-gray';
+  var currentQty = 'single';
+
+  var finishBtns = [].slice.call(root.querySelectorAll('[data-sig-finish]'));
+  var qtyBtns = [].slice.call(root.querySelectorAll('[data-sig-qty]'));
+  var previews = [].slice.call(root.querySelectorAll('[data-sig-preview]'));
+  var priceEl = root.querySelector('[data-sig-price]');
+  var cta = root.querySelector('[data-sig-cta]');
+  var note = root.querySelector('[data-sig-note]');
+
+  function moneyCents(cents) { return '$' + (cents / 100).toFixed(2); }
+
+  function updatePreview() {
+    previews.forEach(function (p) { p.hidden = p.getAttribute('data-sig-preview') !== currentFinish; });
+  }
+
+  function refreshSummary() {
+    priceEl.innerHTML = '<small>Total</small>' + moneyCents(SIG_PRICES[currentQty]);
+  }
+
+  function finishLabel(key) {
+    var btn = root.querySelector('[data-sig-finish="' + key + '"] span:last-child');
+    return btn ? btn.textContent : key;
+  }
+
+  finishBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      finishBtns.forEach(function (x) { x.classList.remove('is-active'); x.setAttribute('aria-pressed', 'false'); });
+      b.classList.add('is-active');
+      b.setAttribute('aria-pressed', 'true');
+      currentFinish = b.getAttribute('data-sig-finish');
+      updatePreview();
+    });
+  });
+
+  qtyBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      qtyBtns.forEach(function (x) { x.classList.remove('is-active'); x.setAttribute('aria-pressed', 'false'); });
+      b.classList.add('is-active');
+      b.setAttribute('aria-pressed', 'true');
+      currentQty = b.getAttribute('data-sig-qty');
+      refreshSummary();
+    });
+  });
+
+  function showNote(msg) {
+    if (!note) { return; }
+    note.textContent = msg;
+    note.hidden = false;
+  }
+
+  function addToCart(items, fallbackHref) {
+    return fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ items: items })
+    }).then(function (r) {
+      if (!r.ok) { throw new Error('add failed'); }
+      window.location.href = '/cart';
+    }).catch(function () {
+      cta.removeAttribute('aria-busy');
+      cta.textContent = {{ section.settings.cta_label | default: 'Add to Cart' | json }};
+      showNote('Something went wrong adding this to your cart - please try again.');
+      window.location.href = fallbackHref;
+    });
+  }
+
+  root.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (cta.getAttribute('aria-busy') === 'true') { return; }
+
+    var variantId = SIG_VARIANTS[currentFinish][currentQty];
+    if (!variantId) { return; }
+
+    var properties = { Finish: finishLabel(currentFinish) };
+    [].slice.call(root.querySelectorAll('[data-sig-field]')).forEach(function (f) {
+      var v = f.value.trim();
+      if (v) { properties[f.getAttribute('data-sig-field')] = v; }
+    });
+
+    if (note) { note.hidden = true; }
+    cta.setAttribute('aria-busy', 'true');
+    cta.textContent = 'Adding...';
+    addToCart([{ id: variantId, quantity: 1, properties: properties }], '/products/optiq-signature');
+  });
+
+  refreshSummary();
+  updatePreview();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Signature configurator",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Configure yours" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Make it yours." },
+    { "type": "text", "id": "cta_label", "label": "Buy button label", "default": "Add to Cart" },
+    {
+      "type": "text",
+      "id": "programming_hint",
+      "label": "Programming hint",
+      "info": "Leave blank to use the default text, which already includes the store's contact email."
+    },
+    { "type": "header", "content": "Finish preview photos" },
+    { "type": "image_picker", "id": "finish_image_titanium", "label": "Titanium Gray photo" },
+    { "type": "image_picker", "id": "finish_image_black", "label": "Matte Black Metal photo" },
+    { "type": "image_picker", "id": "finish_image_silver", "label": "Brushed Silver photo" }
+  ],
+  "presets": [{ "name": "Signature configurator" }]
+}
+{% endschema %}
