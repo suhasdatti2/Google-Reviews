@@ -14,6 +14,11 @@
   section does not duplicate it. What it adds on top is the reveal-on-load
   for the hero's own text stack, using the theme's existing scroll-reveal
   engine (data-o-reveal, assets/optiq-motion.js) rather than new JS.
+
+  Photo fills the whole hero, edge to edge, inset only by .sig-hero's own
+  padding (the "thick white border"). Text sits on top of the photo behind
+  a soft white scrim rather than in its own block above it - the scrim
+  protects legibility without knowing in advance what photo gets uploaded.
 {%- endcomment -%}
 
 {{ 'optiq-signature.css' | asset_url | stylesheet_tag }}
@@ -24,19 +29,22 @@
     <a class="sig-topbar__back" href="{{ section.settings.back_link | default: '/pages/google-review-cards' }}">{{ section.settings.back_label | default: '← Back to Optiq' }}</a>
   </div>
 
-  <div class="sig-wrap sig-hero__inner">
-    <div class="sig-hero__text" data-o-reveal-group>
-      <span class="sig-eyebrow" data-o-reveal="fade">{{ section.settings.eyebrow | default: 'Introducing' }}</span>
-      <h1 class="sig-h1" data-o-reveal="fade">{{ section.settings.heading | default: 'OPTIQ Signature' }}</h1>
-      <p class="sig-hero__sub" data-o-reveal="fade">{{ section.settings.subheading | default: "The world's most refined NFC experience." }}</p>
-    </div>
-
+  <div class="sig-hero__frame">
     <div class="sig-hero__media" data-o-reveal="fade">
-      {% render 'sig-media', image: section.settings.hero_image, label: 'Add hero product photo', alt: section.settings.heading %}
+      {% render 'sig-media', image: section.settings.hero_image, label: 'Add hero background photo', alt: section.settings.heading %}
     </div>
+    <div class="sig-hero__scrim" aria-hidden="true"></div>
 
-    <div class="sig-hero__actions" data-o-reveal="fade">
-      <a class="sig-cta sig-cta--solid" href="{{ section.settings.cta_link | default: '#sig-configurator' }}">{{ section.settings.cta_label | default: 'Explore Signature' }}</a>
+    <div class="sig-hero__overlay">
+      <div class="sig-hero__text" data-o-reveal-group>
+        <span class="sig-eyebrow" data-o-reveal="fade">{{ section.settings.eyebrow | default: 'Introducing' }}</span>
+        <h1 class="sig-h1" data-o-reveal="fade">{{ section.settings.heading | default: 'OPTIQ Signature' }}</h1>
+        <p class="sig-hero__sub" data-o-reveal="fade">{{ section.settings.subheading | default: "The world's most refined NFC experience." }}</p>
+      </div>
+
+      <div class="sig-hero__actions" data-o-reveal="fade">
+        <a class="sig-cta sig-cta--solid" href="{{ section.settings.cta_link | default: '#sig-configurator' }}">{{ section.settings.cta_label | default: 'Explore Signature' }}</a>
+      </div>
     </div>
   </div>
 

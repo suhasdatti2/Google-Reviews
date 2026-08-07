@@ -245,50 +245,66 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white)
    Hero
    ========================================================================== */
 
+/* The whole hero IS the photo, edge to edge - .sig-hero's own padding is
+   the "thick white border" around it (top padding is taller to clear the
+   topbar, which sits over the white zone, not the photo). .sig-hero__frame
+   fills whatever space that padding leaves. */
 .sig-hero {
   position: relative;
   min-height: 100svh;
   display: flex;
-  align-items: center;
-  padding: 140px 0 80px;
+  flex-direction: column;
+  padding: 108px clamp(20px, 4.5vw, 72px) clamp(20px, 4.5vw, 72px);
   background: var(--sig-white);
   overflow: hidden;
 }
 
-.sig-hero__inner {
-  width: 100%;
-  display: grid;
-  justify-items: center;
+.sig-hero__frame {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.sig-hero__media { position: absolute; inset: 0; }
+.sig-hero__media img,
+.sig-hero__media .sig-placeholder { width: 100%; height: 100%; }
+.sig-hero__media img { object-fit: cover; display: block; }
+
+/* Protects text legibility against whatever photo actually gets uploaded,
+   without knowing its content in advance - strongest where the text sits,
+   fading out by the lower half so most of the photo stays untouched. */
+.sig-hero__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.62) 0%, rgba(255, 255, 255, 0.22) 34%, rgba(255, 255, 255, 0) 58%);
+  pointer-events: none;
+}
+
+.sig-hero__overlay {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   text-align: center;
-  gap: 40px;
+  gap: 32px;
+  padding: clamp(40px, 6vh, 88px) 24px 0;
 }
 
 .sig-hero__text { display: grid; justify-items: center; gap: 20px; max-width: 720px; }
 .sig-hero__sub { font-size: clamp(1.05rem, 0.98rem + 0.35vw, 1.3rem); color: var(--sig-ink-2); max-width: 46ch; }
 
-/* A large image panel acting as the hero's visual centerpiece rather than
-   a small framed photo - but not full-bleed: the padding below is the
-   "thick white border" that keeps it reading as a mounted photograph
-   rather than a background image, and gives an uploaded photo of any
-   aspect ratio somewhere consistent to sit regardless of its own shape. */
-.sig-hero__media {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  padding: clamp(18px, 2.6vw, 40px);
-  background: var(--sig-white);
-  border: 1px solid var(--sig-line);
-}
-.sig-hero__media img,
-.sig-hero__media .sig-placeholder { width: 100%; height: 100%; }
-.sig-hero__media img { object-fit: cover; }
-
-.sig-hero__actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-top: 4px; }
+.sig-hero__actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
 
 .sig-hero__scroll {
   position: absolute;
   left: 50%;
-  bottom: 34px;
+  bottom: 10px;
   transform: translateX(-50%);
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -314,7 +330,8 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white)
 @media (prefers-reduced-motion: reduce) { .sig-hero__scroll-line::after { animation: none; } }
 
 @media (max-width: 640px) {
-  .sig-hero { padding-top: 120px; min-height: auto; }
+  .sig-hero { padding-top: 92px; min-height: auto; }
+  .sig-hero__frame { min-height: 70vh; }
   .sig-hero__scroll { display: none; }
 }
 
