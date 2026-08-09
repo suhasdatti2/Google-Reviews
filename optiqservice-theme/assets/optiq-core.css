@@ -106,6 +106,21 @@ html {
 .lenis.lenis-stopped { overflow: hidden; }
 .lenis.lenis-scrolling iframe { pointer-events: none; }
 
+/* Marble backdrop for the Google Review Cards page, rendered by
+   layout/theme.liquid right where the animated flow-field canvas used to
+   sit. A fixed, viewport-sized layer rather than a body background - sizing
+   "cover" against body would scale against the full scrollable page height
+   instead of the viewport, forcing a large upscale on long pages and
+   softening the texture. Fixed to the viewport, it never scales past the
+   image's native resolution, so it stays sharp and correctly framed. */
+.reviews-marble-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: #0a0a0b url("https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260809_192606_005854c0-cbaa-4744-be9f-8ae401bcb834.png?v=1786305432") center / cover no-repeat;
+  pointer-events: none;
+}
+
 body {
   margin: 0;
   background: radial-gradient(130% 110% at 50% -12%, #1c160e 0%, #0d0b07 40%, var(--o-bg) 100%) fixed;
