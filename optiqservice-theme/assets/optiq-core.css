@@ -1,0 +1,526 @@
+/* ==========================================================================
+   OPTIQ — Core design system
+   Tokens, reset, typography, layout, controls, accessibility, motion.
+   ========================================================================== */
+
+:root {
+  /* ---- Surface ramp (near-black, never pure #000) ---- */
+  --o-bg:            #070605;
+  --o-surface-1:     #0f0d0a;
+  --o-surface-2:     #17130f;
+  --o-surface-3:     #1f1a15;
+  --o-hairline:      rgba(255,255,255,0.07);
+  --o-hairline-2:    rgba(255,255,255,0.12);
+  --o-hairline-3:    rgba(255,255,255,0.20);
+
+  /* ---- Ink ---- */
+  --o-ink:           #f4f4f2;
+  --o-ink-2:         #b6b7bd;
+  --o-ink-3:         #83848c;
+  --o-ink-4:         #5d5e66;
+
+  /* ---- Accent: warm signal amber (reads premium on near-black,
+         avoids the purple/blue AI-gradient cliche) ---- */
+  --o-accent:        #e8c07a;
+  --o-accent-ink:    #14100a;
+  --o-accent-soft:   rgba(232,192,122,0.14);
+  --o-accent-line:   rgba(232,192,122,0.34);
+
+  --o-positive:      #7fbf8f;
+  --o-critical:      #e08376;
+
+  /* ---- Layout ---- */
+  --o-max:           1240px;
+  --o-max-wide:      1560px;
+  --o-max-text:      68ch;
+  --o-gutter:        20px;
+  --o-radius-xs:     6px;
+  --o-radius-sm:     10px;
+  --o-radius:        16px;
+  --o-radius-lg:     24px;
+
+  /* ---- Section rhythm (fluid) ---- */
+  --o-section:       clamp(72px, 9vw, 132px);
+  --o-section-tight: clamp(48px, 6vw, 84px);
+
+  /* ---- Elevation: tight contact shadow + broad ambient ---- */
+  --o-shadow-sm: 0 1px 2px rgba(0,0,0,.5);
+  --o-shadow:    0 2px 4px rgba(0,0,0,.4), 0 12px 32px -12px rgba(0,0,0,.7);
+  --o-shadow-lg: 0 4px 8px rgba(0,0,0,.4), 0 32px 64px -24px rgba(0,0,0,.8);
+
+  /* ---- Motion ---- */
+  --o-ease:      cubic-bezier(0.22, 1, 0.36, 1);
+  --o-ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+  --o-ease-io:   cubic-bezier(0.65, 0, 0.35, 1);
+  --o-dur-fast:  160ms;
+  --o-dur:       280ms;
+  --o-dur-slow:  560ms;
+
+  /* ---- Z-scale ---- */
+  --o-z-base: 1;
+  --o-z-sticky: 40;
+  --o-z-header: 60;
+  --o-z-overlay: 80;
+  --o-z-drawer: 90;
+  --o-z-toast: 100;
+
+  /* ---- Type families (set by theme settings, with fallbacks) ---- */
+  --o-font-display: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --o-font-body: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* ---- Type scale (fluid, clamped) ---- */
+  --o-t-hero:    clamp(2.5rem, 1.55rem + 4.2vw, 5rem);
+  --o-t-h1:      clamp(2.1rem, 1.45rem + 2.9vw, 3.75rem);
+  --o-t-h2:      clamp(1.75rem, 1.3rem + 2vw, 2.75rem);
+  --o-t-h3:      clamp(1.3rem, 1.12rem + 0.8vw, 1.75rem);
+  --o-t-h4:      clamp(1.08rem, 1rem + 0.35vw, 1.25rem);
+  --o-t-body-lg: clamp(1.02rem, 0.97rem + 0.25vw, 1.18rem);
+  --o-t-body:    1rem;
+  --o-t-sm:      0.9375rem;
+  --o-t-xs:      0.8125rem;
+  --o-t-eyebrow: 0.75rem;
+}
+
+/* ==========================================================================
+   Reset
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* ---- Lenis (assets/optiq-scroll.js) ----
+   Lenis tags <html> with these classes itself once it initialises. The
+   `lenis-smooth` override below is what stops the native CSS
+   `scroll-behavior: smooth` above from fighting Lenis's own easing on
+   anchor-link jumps. If Lenis never loads (CDN down, JS disabled), none of
+   these classes appear and the native smooth-scroll rule above is the only
+   one active - the intended no-JS fallback. */
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-scrolling iframe { pointer-events: none; }
+
+body {
+  margin: 0;
+  background: radial-gradient(130% 110% at 50% -12%, #1c160e 0%, #0d0b07 40%, var(--o-bg) 100%) fixed;
+  color: var(--o-ink);
+  font-family: var(--o-font-body);
+  font-size: var(--o-t-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+body.o-scroll-locked {
+  overflow: hidden;
+  /* preserves scroll position without a jump when a drawer opens */
+  position: fixed;
+  width: 100%;
+}
+
+h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd { margin: 0; }
+ul[class], ol[class] { list-style: none; margin: 0; padding: 0; }
+
+img, svg, video, canvas { display: block; max-width: 100%; }
+img, video { height: auto; }
+
+a { color: inherit; text-decoration: none; }
+
+button, input, select, textarea { font: inherit; color: inherit; }
+button { background: none; border: 0; padding: 0; cursor: pointer; }
+
+:target { scroll-margin-top: calc(var(--o-header-h, 68px) + 24px); }
+
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+
+.o-display, h1, h2, h3 {
+  font-family: var(--o-font-display);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.06;
+  text-wrap: balance;
+}
+
+h4, h5, h6 {
+  font-family: var(--o-font-display);
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  line-height: 1.25;
+}
+
+.o-hero-title { font-size: var(--o-t-hero); }
+.o-h1 { font-size: var(--o-t-h1); }
+.o-h2 { font-size: var(--o-t-h2); }
+.o-h3 { font-size: var(--o-t-h3); line-height: 1.2; }
+.o-h4 { font-size: var(--o-t-h4); }
+
+.o-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--o-font-body);
+  font-size: var(--o-t-eyebrow);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--o-ink-3);
+}
+.o-eyebrow::before {
+  content: "";
+  width: 18px;
+  height: 1px;
+  background: var(--o-accent-line);
+}
+.o-eyebrow--bare::before { display: none; }
+
+.o-lede {
+  font-size: var(--o-t-body-lg);
+  line-height: 1.55;
+  color: var(--o-ink-2);
+  max-width: 54ch;
+  text-wrap: pretty;
+}
+
+.o-body { color: var(--o-ink-2); text-wrap: pretty; }
+.o-sm { font-size: var(--o-t-sm); }
+.o-xs { font-size: var(--o-t-xs); }
+.o-muted { color: var(--o-ink-3); }
+
+/* Tabular, slightly tightened numerals for prices and specs */
+.o-num, .o-price {
+  font-family: var(--o-font-display);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.o-rte > * + * { margin-top: 1em; }
+.o-rte a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--o-hairline-3); }
+.o-rte a:hover { text-decoration-color: var(--o-accent); }
+.o-rte ul { list-style: none; padding: 0; display: grid; gap: 10px; }
+.o-rte ul li { position: relative; padding-left: 22px; color: var(--o-ink-2); }
+.o-rte ul li::before {
+  content: "";
+  position: absolute;
+  left: 2px; top: 0.62em;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--o-accent);
+  opacity: 0.85;
+}
+.o-rte ol { padding-left: 1.15em; display: grid; gap: 10px; color: var(--o-ink-2); }
+.o-rte strong { color: var(--o-ink); font-weight: 600; }
+.o-rte h2, .o-rte h3, .o-rte h4 { color: var(--o-ink); margin-top: 1.4em; }
+
+/* ==========================================================================
+   Layout
+   ========================================================================== */
+
+.o-wrap {
+  width: 100%;
+  max-width: calc(var(--o-max) + var(--o-gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--o-gutter);
+}
+.o-wrap--wide { max-width: calc(var(--o-max-wide) + var(--o-gutter) * 2); }
+.o-wrap--text { max-width: calc(var(--o-max-text) + var(--o-gutter) * 2); }
+
+@media (min-width: 700px)  { :root { --o-gutter: 32px; } }
+@media (min-width: 1100px) { :root { --o-gutter: 48px; } }
+
+.o-section { padding-block: var(--o-section); }
+.o-section--tight { padding-block: var(--o-section-tight); }
+.o-section--flush-top { padding-top: 0; }
+.o-section--flush-bottom { padding-bottom: 0; }
+
+/* A single hairline between stacked sections keeps the page feeling
+   engineered rather than a stack of floating cards. */
+.o-section--ruled { border-top: 1px solid var(--o-hairline); }
+
+.o-stack { display: grid; gap: 16px; }
+.o-stack--sm { gap: 10px; }
+.o-stack--lg { gap: 28px; }
+
+.o-head { display: grid; gap: 16px; max-width: 62ch; }
+.o-head--center { justify-items: center; text-align: center; margin-inline: auto; }
+
+/* ==========================================================================
+   Controls
+   ========================================================================== */
+
+.o-btn {
+  --_bg: transparent;
+  --_fg: var(--o-ink);
+  --_bd: var(--o-hairline-2);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 13px 26px;
+  border: 1px solid var(--_bd);
+  border-radius: 999px;
+  background: var(--_bg);
+  color: var(--_fg);
+  font-family: var(--o-font-body);
+  font-size: var(--o-t-sm);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background var(--o-dur-fast) var(--o-ease),
+    border-color var(--o-dur-fast) var(--o-ease),
+    color var(--o-dur-fast) var(--o-ease),
+    transform var(--o-dur-fast) var(--o-ease);
+}
+.o-btn:hover { transform: translateY(-1px); }
+.o-btn:active { transform: translateY(0); }
+
+.o-btn--primary {
+  --_bg: var(--o-accent);
+  --_fg: var(--o-accent-ink);
+  --_bd: var(--o-accent);
+  font-weight: 650;
+}
+.o-btn--primary:hover { --_bg: #f0cd90; --_bd: #f0cd90; }
+
+.o-btn--solid {
+  --_bg: var(--o-ink);
+  --_fg: var(--o-bg);
+  --_bd: var(--o-ink);
+}
+.o-btn--solid:hover { --_bg: #fff; --_bd: #fff; }
+
+.o-btn--ghost:hover { --_bd: var(--o-hairline-3); --_bg: rgba(255,255,255,0.03); }
+
+.o-btn--lg { min-height: 56px; padding: 16px 34px; font-size: var(--o-t-body); }
+.o-btn--full { display: flex; width: 100%; }
+
+.o-btn[disabled], .o-btn[aria-disabled="true"] {
+  opacity: 0.42;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Loading state: label stays put, spinner overlays — no layout shift */
+.o-btn[data-loading="true"] { color: transparent; pointer-events: none; }
+.o-btn[data-loading="true"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 18px; height: 18px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  color: var(--_fg);
+  animation: o-spin 620ms linear infinite;
+}
+@keyframes o-spin { to { transform: rotate(360deg); } }
+
+/* Text link with an underline that grows from the left */
+.o-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--o-t-sm);
+  font-weight: 500;
+  color: var(--o-ink);
+  padding-bottom: 2px;
+}
+.o-link::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 100%; height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--o-dur) var(--o-ease);
+}
+.o-link:hover::after { transform: scaleX(1); }
+.o-link svg { transition: transform var(--o-dur) var(--o-ease); }
+.o-link:hover svg { transform: translateX(3px); }
+
+/* ---- Magnetic hover (assets/optiq-scroll.js) ----
+   Transform is written every frame by JS, so no CSS transition here - one
+   would fight the JS lerp every tick and lag/stutter against it. */
+.magnetic { will-change: transform; }
+
+/* ---- Form fields ---- */
+
+.o-field { display: grid; gap: 8px; }
+.o-label {
+  font-size: var(--o-t-xs);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--o-ink-3);
+}
+.o-input, .o-select, .o-textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 13px 16px;
+  background: var(--o-surface-2);
+  border: 1px solid var(--o-hairline-2);
+  border-radius: var(--o-radius-sm);
+  color: var(--o-ink);
+  transition: border-color var(--o-dur-fast) var(--o-ease), background var(--o-dur-fast) var(--o-ease);
+}
+.o-input::placeholder, .o-textarea::placeholder { color: var(--o-ink-4); }
+.o-input:hover, .o-select:hover, .o-textarea:hover { border-color: var(--o-hairline-3); }
+.o-input:focus, .o-select:focus, .o-textarea:focus {
+  outline: none;
+  border-color: var(--o-accent-line);
+  background: var(--o-surface-3);
+}
+.o-textarea { min-height: 128px; resize: vertical; }
+.o-field-error { font-size: var(--o-t-xs); color: var(--o-critical); }
+.o-input[aria-invalid="true"] { border-color: var(--o-critical); }
+
+/* ==========================================================================
+   Accessibility
+   ========================================================================== */
+
+.o-visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Never remove the outline without replacing it. */
+:focus-visible {
+  outline: 2px solid var(--o-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+:focus:not(:focus-visible) { outline: none; }
+
+.o-skip {
+  position: absolute;
+  top: 0; left: 0;
+  z-index: var(--o-z-toast);
+  transform: translateY(-120%);
+  margin: 10px;
+  padding: 12px 20px;
+  background: var(--o-ink);
+  color: var(--o-bg);
+  border-radius: var(--o-radius-xs);
+  font-weight: 600;
+  transition: transform var(--o-dur) var(--o-ease);
+}
+.o-skip:focus { transform: translateY(0); }
+
+/* ==========================================================================
+   Motion primitives
+   Reveals are opt-in per element and only ever animate transform/opacity.
+   ========================================================================== */
+
+[data-o-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition:
+    opacity var(--o-dur-slow) var(--o-ease-out),
+    transform var(--o-dur-slow) var(--o-ease-out);
+  transition-delay: var(--o-reveal-delay, 0ms);
+  will-change: transform, opacity;
+}
+[data-o-reveal="fade"] { transform: none; }
+[data-o-reveal="line"] {
+  opacity: 1;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--o-dur-slow) var(--o-ease-io);
+}
+[data-o-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+[data-o-reveal="line"].is-revealed { transform: scaleX(1); }
+
+/* Heading mask reveal — the line slides up from behind a clipped edge. */
+.o-mask { display: block; overflow: hidden; }
+.o-mask > span {
+  display: block;
+  transform: translate3d(0, 105%, 0);
+  transition: transform 760ms var(--o-ease-out);
+  transition-delay: var(--o-reveal-delay, 0ms);
+}
+.o-mask.is-revealed > span { transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-o-reveal], .o-mask > span {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .o-btn:hover { transform: none; }
+}
+
+/* ==========================================================================
+   Small shared pieces
+   ========================================================================== */
+
+.o-rule { height: 1px; background: var(--o-hairline); border: 0; margin: 0; }
+
+.o-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border: 1px solid var(--o-hairline-2);
+  border-radius: 999px;
+  font-size: var(--o-t-xs);
+  font-weight: 500;
+  color: var(--o-ink-2);
+  background: var(--o-surface-1);
+}
+.o-tag--accent {
+  border-color: var(--o-accent-line);
+  background: var(--o-accent-soft);
+  color: var(--o-accent);
+}
+
+.o-media {
+  position: relative;
+  overflow: hidden;
+  background: var(--o-surface-2);
+}
+.o-media img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Placeholder shown when a merchant has not set an image yet. */
+.o-placeholder {
+  display: grid;
+  place-items: center;
+  min-height: 200px;
+  background:
+    repeating-linear-gradient(45deg,
+      var(--o-surface-2) 0 10px,
+      var(--o-surface-1) 10px 20px);
+  color: var(--o-ink-4);
+  font-size: var(--o-t-xs);
+  text-align: center;
+  padding: 20px;
+}

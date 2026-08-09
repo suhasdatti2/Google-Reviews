@@ -1,40 +1,322 @@
 <!doctype html>
-<html lang="{{ request.locale.iso_code }}">
+<html class="no-js" lang="{{ request.locale.iso_code }}">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b0b0c">
-  <title>
-    {{- page_title -}}
-    {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
-  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="{{ settings.color_background | default: '#070605' }}">
+  <link rel="canonical" href="{{ canonical_url }}">
+
+  {%- if settings.favicon != blank -%}
+    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 48, height: 48 }}">
+    <link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180, height: 180 }}">
+  {%- endif -%}
+
+  <title>{{ page_title }}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}</title>
   {%- if page_description -%}
     <meta name="description" content="{{ page_description | escape }}">
   {%- endif -%}
-  <link rel="canonical" href="{{ canonical_url }}">
+
+  {%- comment -%} Social sharing metadata {%- endcomment -%}
+  <meta property="og:site_name" content="{{ shop.name }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:title" content="{{ page_title | escape }}">
+  <meta property="og:type" content="{% if request.page_type == 'product' %}product{% elsif request.page_type == 'article' %}article{% else %}website{% endif %}">
+  {%- if page_description -%}
+    <meta property="og:description" content="{{ page_description | escape }}">
+  {%- endif -%}
+  {%- liquid
+    assign og_image = nil
+    if request.page_type == 'product' and product.featured_media
+      assign og_image = product.featured_media.preview_image
+    elsif settings.share_image != blank
+      assign og_image = settings.share_image
+    endif
+  -%}
+  {%- if og_image -%}
+    <meta property="og:image" content="http:{{ og_image | image_url: width: 1200 }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="{{ 1200 | divided_by: og_image.aspect_ratio | round }}">
+    <meta name="twitter:card" content="summary_large_image">
+  {%- endif -%}
+
+  {%- comment -%}
+    Fonts. Preconnect first so the stylesheet request does not pay for a
+    fresh DNS + TLS handshake, and swap so text is never invisible.
+  {%- endcomment -%}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+
   {{ content_for_header }}
+
+  {{ 'optiq-core.css' | asset_url | stylesheet_tag }}
+  {{ 'optiq-components.css' | asset_url | stylesheet_tag }}
+  {{ 'optiq-sections.css' | asset_url | stylesheet_tag }}
+
+  {%- comment -%}
+    Retained so templates still running the previous section set keep their
+    styling while they are migrated. Safe to remove once every template has
+    been rebuilt on the new system.
+  {%- endcomment -%}
   {{ 'base.css' | asset_url | stylesheet_tag }}
+  {{ 'configurator-quote-patch.css' | asset_url | stylesheet_tag }}
+
+  <style>
+    :root {
+      {%- if settings.color_background != blank %}--o-bg: {{ settings.color_background }};{% endif -%}
+      {%- if settings.color_accent != blank %}--o-accent: {{ settings.color_accent }};{% endif -%}
+      {%- if settings.color_accent_ink != blank %}--o-accent-ink: {{ settings.color_accent_ink }};{% endif -%}
+      {%- if settings.page_width != blank %}--o-max: {{ settings.page_width }}px;{% endif -%}
+      --o-logo-h: {{ settings.logo_height | default: 30 }}px;
+    }
+  </style>
+
+  {%- comment -%}
+    Flow-field background. Originally homepage-only; also turned on for the
+    /pages/google-review-cards page (templates/page.reviews.json), which is
+    the same hero content that used to BE the homepage before the services
+    splash replaced it - it should keep looking like the live site always
+    has. The flow field is a fixed canvas at z-index -1, so the page
+    background it sits over must stay opaque and dark for it to read
+    correctly.
+  {%- endcomment -%}
+  {%- assign show_flow_bg = false -%}
+  {%- if template == 'index' or template.suffix == 'reviews' -%}
+    {%- assign show_flow_bg = true -%}
+  {%- endif -%}
+  {%- if show_flow_bg -%}
+    <style>body.is-home, body.o-flow-page { background: #0a0a0b; }</style>
+  {%- endif -%}
+
+  {%- comment -%}
+    AI Receptionist page: same fixed-canvas flow-field technique as above,
+    recoloured green instead of grayscale (snippets/air-flow-global.liquid).
+    Every section on this page renders its own <section class="air">, so
+    optiq-air.css makes them transparent under body.o-air-flow and lets this
+    single canvas show through all of them as one continuous animated
+    backdrop, instead of each section painting its own flat colour.
+  {%- endcomment -%}
+  {%- assign show_air_flow_bg = false -%}
+  {%- if template.suffix == 'ai-receptionist' -%}
+    {%- assign show_air_flow_bg = true -%}
+  {%- endif -%}
+  {%- if show_air_flow_bg -%}
+    <style>body.o-air-flow { background: #081a13; }</style>
+  {%- endif -%}
+
   <script>
-    // Globals used by cart.js / product-form.js
-    window.Shopify = window.Shopify || {};
-    Shopify.routes = Shopify.routes || {};
-    Shopify.routes.root = {{ routes.root_url | json }};
-    window.OptiqSettings = {
-      moneyFormat: {{ shop.money_format | json }},
-      membershipVariantId: {{ settings.membership_variant_id | json }},
-      membershipSellingPlanId: {{ settings.membership_selling_plan_id | json }}
+    // Swap the no-js flag before paint so CSS can rely on it without a flash.
+    document.documentElement.classList.remove('no-js');
+    window.optiqStrings = {
+      cartAdded: {{ 'cart.added' | t | json }},
+      cartUpdated: {{ 'cart.updated' | t | json }},
+      cartRemoved: {{ 'cart.removed' | t | json }},
+      cartError: {{ 'cart.error' | t | json }}
     };
   </script>
-  <script src="{{ 'cart.js' | asset_url }}" defer></script>
-  <script src="{{ 'product-form.js' | asset_url }}" defer></script>
+
+  <script src="{{ 'optiq-ui.js' | asset_url }}" defer></script>
+  <script src="{{ 'optiq-motion.js' | asset_url }}" defer></script>
+  <script src="{{ 'optiq-cart.js' | asset_url }}" defer></script>
+
+  {%- comment -%}
+    Smooth inertia scroll. Lenis is not a bundled dependency in this theme
+    (no build step / package.json), so it loads from a CDN build - both tags
+    are `defer`, which execute in this document order regardless of download
+    timing, so window.Lenis is guaranteed to exist before optiq-scroll.js
+    runs. See assets/optiq-scroll.js for the actual setup + the magnetic
+    hover effect for `.magnetic` elements.
+  {%- endcomment -%}
+  <script src="https://unpkg.com/lenis@1.3.25/dist/lenis.min.js" defer></script>
+  <script src="{{ 'optiq-scroll.js' | asset_url }}" defer></script>
+
+  {%- comment -%}
+    Entrance loader styles. The markup and the counter below are skipped on
+    the homepage - that screen is the services splash, which is its own
+    entrance animation, and stacking the 0-100 curtain in front of it just
+    delays the thing people came to look at. Every other page still gets it,
+    including /pages/google-review-cards.
+  {%- endcomment -%}
+<style>
+  :root {
+    --optiq-bg: #0a1410;             /* pitch-at-night background — swap for your brand color */
+    --optiq-line: #d4af6a;           /* warm gold accent — swap for your brand accent */
+    --optiq-track: rgba(212, 175, 106, 0.15);
+    --optiq-text: #e8e4d8;           /* warm off-white, not pure white */
+    --optiq-dim: rgba(232, 228, 216, 0.45);
+  }
+  #optiq-preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: var(--optiq-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1);
+  }
+  #optiq-preloader.is-done {
+    transform: translateY(-100%);
+  }
+  #optiq-preloader__mark {
+    font-family: 'Arial Narrow', Arial, sans-serif; /* swap for real brand font */
+    font-weight: 700;
+    font-size: clamp(1.75rem, 5vw, 2.75rem);
+    letter-spacing: 0.4em;
+    color: var(--optiq-text);
+    margin-bottom: 2rem;
+  }
+  #optiq-preloader__track {
+    width: min(240px, 60vw);
+    height: 2px;
+    background: var(--optiq-track);
+    overflow: hidden;
+    border-radius: 1px;
+  }
+  #optiq-preloader__fill {
+    height: 100%;
+    width: 0%;
+    background: var(--optiq-line);
+    box-shadow: 0 0 8px var(--optiq-line);
+  }
+  #optiq-preloader__count {
+    margin-top: 1rem;
+    font-family: 'Courier New', monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    color: var(--optiq-dim);
+  }
+  body.optiq-loading {
+    overflow: hidden;
+  }
+</style>
 </head>
-<body>
-  <a class="skip-link" href="#main">Skip to content</a>
+
+<body class="template-{{ request.page_type | handle }}{% if template == 'index' %} is-home{% endif %}{% if template.suffix == 'reviews' %} o-flow-page{% endif %}{% if show_air_flow_bg %} o-air-flow{% endif %}">
+{%- unless template == 'index' -%}
+<div id="optiq-preloader">
+  <div id="optiq-preloader__mark">OPTIQ</div>
+  <div id="optiq-preloader__track">
+    <div id="optiq-preloader__fill"></div>
+  </div>
+  <div id="optiq-preloader__count">0%</div>
+</div>
+{%- endunless -%}
+
+  {%- comment -%}
+    Thin top-of-viewport bar for internal link navigation - deliberately NOT
+    a replay of the full-screen curtain above. See the snippet for why.
+  {%- endcomment -%}
+  {% render 'optiq-nav-progress' %}
+
+  <a class="o-skip" href="#main-content">{{ 'accessibility.skip_to_content' | t }}</a>
+
+  {%- comment -%}
+    Grayscale WebGL flow-field background, carried over from the live theme.
+    Same show_flow_bg gate as the background-colour style above, so this
+    canvas and its backdrop colour always turn on and off together.
+  {%- endcomment -%}
+  {%- if show_flow_bg -%}
+    {% render 'noir-flow-global' %}
+  {%- endif -%}
+
+  {%- comment -%}
+    Green WebGL flow-field background for the AI Receptionist page. See
+    snippets/air-flow-global.liquid.
+  {%- endcomment -%}
+  {%- if show_air_flow_bg -%}
+    {% render 'air-flow-global' %}
+  {%- endif -%}
+
+  <div class="o-live" data-o-live role="status" aria-live="polite" aria-atomic="true"></div>
+
+  {% section 'announcement-bar' %}
   {% section 'header' %}
-  <main id="main">
+
+  <main id="main-content" role="main" tabindex="-1">
     {{ content_for_layout }}
   </main>
+
   {% section 'footer' %}
-  {% render 'cart-drawer' %}
+
+  <div class="o-overlay" data-o-overlay hidden-until-open aria-hidden="true"></div>
+  {% section 'cart-drawer' %}
+
+  {%- comment -%}
+    Fixed bottom-centre dock. Rendered after the cart drawer so its markup
+    sits with the other viewport-anchored UI; stacking is handled by
+    z-index in the snippet, not by DOM order.
+  {%- endcomment -%}
+  {% render 'optiq-dock' %}
+
+  {%- comment -%}
+    Optiq AI storefront assistant. Rendered here so it is present on every
+    storefront page. It ships with its own live knowledge payload
+    (snippets/optiq-ai-knowledge.liquid), regenerated by Liquid on each page
+    load, so the answers always reflect current products, prices, stock and
+    pages. Its CSS hides it on the authenticated dashboard and sign-in
+    screens, which take over the whole viewport.
+  {%- endcomment -%}
+  {% render 'optiq-ai' %}
+
+  {%- comment -%} Organisation schema. Only fields we can state factually. {%- endcomment -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": {{ shop.name | json }},
+      "url": {{ shop.url | json }}{% if settings.logo %},
+      "logo": {{ settings.logo | image_url: width: 512 | prepend: 'https:' | json }}{% endif %}
+    }
+  </script>
+
+{%- unless template == 'index' -%}
+<script>
+  (function () {
+    var loader = document.getElementById('optiq-preloader');
+    if (!loader) return;
+
+    // Plays on EVERY page load except the homepage - the reload button, the
+    // logo, and any other full navigation. The sessionStorage gate that used
+    // to live here (and the matching setItem in reveal()) has been removed
+    // entirely, which is what the original snippet's comment described as the
+    // way to make this run every time. Removing it also drops the last
+    // sessionStorage call in the theme, so a browser with storage blocked can
+    // no longer throw here and strand the curtain on screen.
+    document.body.classList.add('optiq-loading');
+    var fill = document.getElementById('optiq-preloader__fill');
+    var count = document.getElementById('optiq-preloader__count');
+    var progress = 0;
+
+    // Milliseconds per integer. Still ticks every number 0-100 in order -
+    // this only shortens the gap between them, so nothing is skipped.
+    // 100 ticks x 9ms = ~0.9s to count, vs ~1.4s at the previous 14ms.
+    // Raise for a slower count, lower for a quicker one; below about 4ms
+    // browsers clamp nested timers and the count stops getting faster.
+    var STEP_MS = 9;
+
+    var tick = setInterval(function () {
+      progress += 1; // hits every integer 0-100, in order, no skipped numbers
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(tick);
+        setTimeout(reveal, 300); // brief hold at 100% before the reveal
+      }
+      fill.style.width = progress + '%';
+      count.textContent = progress + '%';
+    }, STEP_MS);
+
+    function reveal() {
+      loader.classList.add('is-done');
+      document.body.classList.remove('optiq-loading');
+      setTimeout(function () {
+        loader.remove();
+      }, 900); // matches the CSS transition duration above
+    }
+  })();
+</script>
+{%- endunless -%}
 </body>
 </html>

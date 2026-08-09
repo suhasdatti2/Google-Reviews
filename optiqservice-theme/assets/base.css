@@ -3,16 +3,16 @@
    ========================================================================== */
 
 :root {
-  --bg: #0b0b0c;            /* matte black */
-  --bg-raised: #121214;     /* panels / cards */
-  --bg-raised-2: #17171a;
-  --border: #232327;
-  --border-strong: #35353b;
+  --bg: #0a0908;            /* matte black */
+  --bg-raised: #151210;     /* panels / cards */
+  --bg-raised-2: #1c1815;
+  --border: #2a2521;
+  --border-strong: #3d362f;
   --ink: #fafafa;           /* primary text */
   --ink-muted: #a1a1aa;     /* secondary text */
   --ink-faint: #6b6b74;
   --white: #ffffff;
-  --black: #0b0b0c;
+  --black: #0a0908;
   --radius: 14px;
   --radius-sm: 8px;
   --maxw: 1120px;
@@ -104,7 +104,7 @@ h1, h2, h3, h4 { font-weight: 650; letter-spacing: -0.02em; line-height: 1.15; }
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(11, 11, 12, 0.88);
+  background: rgba(10, 9, 8, 0.88);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
 }
@@ -834,7 +834,7 @@ h1, h2, h3, h4 { font-weight: 650; letter-spacing: -0.02em; line-height: 1.15; }
   height: 42px;
   border-radius: 50%;
   border: 1px solid var(--border-strong);
-  background: rgba(11, 11, 12, 0.55);
+  background: rgba(10, 9, 8, 0.55);
   backdrop-filter: blur(6px);
   color: var(--ink);
   font-size: 22px;
