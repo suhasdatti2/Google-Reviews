@@ -27,6 +27,7 @@
    what actually guarantees every section sees the same values. */
 :root {
   --sig-white: #ffffff;
+  --sig-white-bg: var(--sig-white) url("https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260809_192606_005854c0-cbaa-4744-be9f-8ae401bcb834.png?v=1786305432") center / cover no-repeat;
   --sig-paper: #fbfaf8;
   --sig-marble: #f3f1ec;
   --sig-marble-2: #eae7e0;
@@ -74,7 +75,7 @@ body:has(.sig-page) .o-announce,
 body:has(.sig-page) .o-footer,
 body:has(.sig-page) .optiq-dock,
 body:has(.sig-page) .oqa { display: none !important; }
-body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white); }
+body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-bg); }
 
 /* ==========================================================================
    Type + layout primitives
@@ -194,7 +195,7 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white)
    Sections
    ========================================================================== */
 
-.sig-section { padding-block: var(--sig-section); background: var(--sig-white); position: relative; }
+.sig-section { padding-block: var(--sig-section); background: var(--sig-white-bg); position: relative; }
 .sig-section--tight { padding-block: var(--sig-section-tight); }
 .sig-section--paper { background: var(--sig-paper); }
 .sig-section--marble {
@@ -253,7 +254,7 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white)
   display: flex;
   flex-direction: column;
   padding: 108px clamp(20px, 4.5vw, 72px) clamp(20px, 4.5vw, 72px);
-  background: var(--sig-white);
+  background: var(--sig-white-bg);
   overflow: hidden;
 }
 
@@ -369,7 +370,7 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white)
   width: 100%;
   padding: 26px 28px;
   border: 1px solid var(--sig-line-2);
-  background: var(--sig-white);
+  background: var(--sig-white-bg);
   text-align: center;
   box-shadow: 0 22px 44px -30px rgba(17, 17, 16, 0.35);
 }
@@ -426,7 +427,7 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white)
   --sig-config-pad: clamp(28px, 4vw, 56px);
   margin-top: 64px;
   border: 1px solid var(--sig-line-2);
-  background: var(--sig-white);
+  background: var(--sig-white-bg);
   padding: var(--sig-config-pad);
 }
 
