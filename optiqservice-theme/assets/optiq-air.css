@@ -71,6 +71,22 @@ body.o-air-flow .air {
   background-image: none;
 }
 
+/* Marble backdrop, rendered by layout/theme.liquid right where the green
+   animated canvas used to sit. Same texture used on the Google Review
+   Cards page, colour-inverted here via filter rather than a second
+   uploaded image - grayscale first so the invert lands on true black/white
+   regardless of the source's warm tone, giving black with white veins. A
+   fixed layer (not filtering .air content itself) so only the backdrop
+   inverts, nothing rendered on top of it. */
+.air-marble-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: #050505 url("https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260809_192606_005854c0-cbaa-4744-be9f-8ae401bcb834.png?v=1786305432") center / cover no-repeat;
+  filter: grayscale(1) invert(1) contrast(1.05);
+  pointer-events: none;
+}
+
 /* Ambient lighting - page furniture, not a box, left lime on purpose so the
    black boxes have something to catch light from. */
 .air__ambient {

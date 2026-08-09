@@ -72,36 +72,43 @@
   </style>
 
   {%- comment -%}
-    Flow-field background. Originally homepage-only; also turned on for the
-    /pages/google-review-cards page (templates/page.reviews.json), which is
-    the same hero content that used to BE the homepage before the services
-    splash replaced it - it should keep looking like the live site always
-    has. The flow field is a fixed canvas at z-index -1, so the page
-    background it sits over must stay opaque and dark for it to read
-    correctly.
+    Flow-field background: homepage keeps the animated grayscale canvas.
   {%- endcomment -%}
   {%- assign show_flow_bg = false -%}
-  {%- if template == 'index' or template.suffix == 'reviews' -%}
+  {%- if template == 'index' -%}
     {%- assign show_flow_bg = true -%}
   {%- endif -%}
   {%- if show_flow_bg -%}
-    <style>body.is-home, body.o-flow-page { background: #0a0a0b; }</style>
+    <style>body.is-home { background: #0a0a0b; }</style>
   {%- endif -%}
 
   {%- comment -%}
-    AI Receptionist page: same fixed-canvas flow-field technique as above,
-    recoloured green instead of grayscale (snippets/air-flow-global.liquid).
-    Every section on this page renders its own <section class="air">, so
-    optiq-air.css makes them transparent under body.o-air-flow and lets this
-    single canvas show through all of them as one continuous animated
-    backdrop, instead of each section painting its own flat colour.
+    Google Review Cards page: static marble background (same texture used
+    on the Optiq Signature page) instead of the animated flow field - a
+    calmer, more premium backdrop for this page specifically.
+  {%- endcomment -%}
+  {%- assign show_reviews_bg = false -%}
+  {%- if template.suffix == 'reviews' -%}
+    {%- assign show_reviews_bg = true -%}
+  {%- endif -%}
+  {%- if show_reviews_bg -%}
+    <style>body.o-flow-page { background: #0a0a0b url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260809_192606_005854c0-cbaa-4744-be9f-8ae401bcb834.png?v=1786305432') center / cover no-repeat; }</style>
+  {%- endif -%}
+
+  {%- comment -%}
+    AI Receptionist page: the same marble texture as the Google Review
+    Cards page, colour-inverted to black-with-white-veins via a CSS
+    filter on a dedicated fixed layer (.air-marble-bg, assets/optiq-air.css)
+    rather than a second image or the old green WebGL canvas. .air
+    sections already render transparent under body.o-air-flow, so this
+    layer shows through them exactly like the canvas it replaces did.
   {%- endcomment -%}
   {%- assign show_air_flow_bg = false -%}
   {%- if template.suffix == 'ai-receptionist' -%}
     {%- assign show_air_flow_bg = true -%}
   {%- endif -%}
   {%- if show_air_flow_bg -%}
-    <style>body.o-air-flow { background: #081a13; }</style>
+    <style>body.o-air-flow { background: #050505; }</style>
   {%- endif -%}
 
   <script>
@@ -223,11 +230,12 @@
   {%- endif -%}
 
   {%- comment -%}
-    Green WebGL flow-field background for the AI Receptionist page. See
-    snippets/air-flow-global.liquid.
+    Marble backdrop for the AI Receptionist page - inverted colour layer
+    (assets/optiq-air.css, .air-marble-bg), rendered exactly where the
+    green animated canvas used to sit.
   {%- endcomment -%}
   {%- if show_air_flow_bg -%}
-    {% render 'air-flow-global' %}
+    <div class="air-marble-bg" aria-hidden="true"></div>
   {%- endif -%}
 
   <div class="o-live" data-o-live role="status" aria-live="polite" aria-atomic="true"></div>
