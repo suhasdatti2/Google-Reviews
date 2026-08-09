@@ -285,6 +285,13 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white)
 .sig-hero__text { display: grid; justify-items: center; gap: 20px; max-width: 720px; }
 .sig-hero__sub { font-size: clamp(1.05rem, 0.98rem + 0.35vw, 1.3rem); color: var(--sig-ink-2); max-width: 46ch; }
 
+/* Text sits directly on the uploaded photo, which reads dark - override the
+   base ink colours (tuned for the white page background) to white here so
+   the heading stays legible regardless of source image. */
+.sig-hero__overlay .sig-eyebrow { color: rgba(255, 255, 255, 0.75); }
+.sig-hero__overlay .sig-h1 { color: var(--sig-white); }
+.sig-hero__overlay .sig-hero__sub { color: rgba(255, 255, 255, 0.82); }
+
 .sig-hero__actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
 
 @media (max-width: 640px) {
