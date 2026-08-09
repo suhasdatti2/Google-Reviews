@@ -416,6 +416,12 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white)
    Configurator — Porsche-style selection, not a Shopify variant <select>
    ========================================================================== */
 
+/* Widened just for this section - the shared .sig-wrap cap (~1228px) left a
+   lot of unused page width on either side of the "choose your product"
+   card. Scoped to #sig-configurator's own wrap only, so every other
+   section on the page keeps the standard content width. */
+#sig-configurator > .sig-wrap { max-width: 1520px; }
+
 .sig-configurator {
   --sig-config-pad: clamp(28px, 4vw, 56px);
   margin-top: 64px;
