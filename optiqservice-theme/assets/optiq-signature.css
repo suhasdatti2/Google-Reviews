@@ -441,7 +441,7 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white)
   position: relative;
   width: calc(100% + var(--sig-config-pad) * 2);
   margin: calc(var(--sig-config-pad) * -1) calc(var(--sig-config-pad) * -1) 36px;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 3 / 2;
   overflow: hidden;
 }
 .sig-config__preview [data-sig-preview] { position: absolute; inset: 0; }
