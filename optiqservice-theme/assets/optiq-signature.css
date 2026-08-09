@@ -417,22 +417,24 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white)
    ========================================================================== */
 
 .sig-configurator {
+  --sig-config-pad: clamp(28px, 4vw, 56px);
   margin-top: 64px;
   border: 1px solid var(--sig-line-2);
   background: var(--sig-white);
-  padding: clamp(28px, 4vw, 56px);
+  padding: var(--sig-config-pad);
 }
 
 /* Was unstyled - the placeholder's own 260px min-height was all that kept
    it from collapsing, so it read as a thin strip. Given real size and
    object-fit: cover so an uploaded finish photo actually fills it edge to
-   edge, no letterboxing. Square/cube-shaped and small, not a second hero -
-   sized to match a square finish photo. */
+   edge, no letterboxing. Full-bleed to the configurator card's own border -
+   negative margins matching the card's own padding pull it out past the
+   padding on all sides so the photo touches the border, not just fills a
+   box floating inside it. */
 .sig-config__preview {
   position: relative;
-  width: 100%;
-  max-width: 300px;
-  margin: 0 auto 36px;
+  width: calc(100% + var(--sig-config-pad) * 2);
+  margin: calc(var(--sig-config-pad) * -1) calc(var(--sig-config-pad) * -1) 36px;
   aspect-ratio: 1 / 1;
   overflow: hidden;
 }
