@@ -425,15 +425,15 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white)
 
 /* Was unstyled - the placeholder's own 260px min-height was all that kept
    it from collapsing, so it read as a thin strip. Given real size and
-   object-fit: cover so an uploaded finish photo actually fills it. Capped
-   to a sensible max-width and centred - full configurator width made it
-   read as a second hero rather than a compact preview. */
+   object-fit: cover so an uploaded finish photo actually fills it edge to
+   edge, no letterboxing. Square/cube-shaped and small, not a second hero -
+   sized to match a square finish photo. */
 .sig-config__preview {
   position: relative;
   width: 100%;
-  max-width: 460px;
+  max-width: 300px;
   margin: 0 auto 36px;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
 }
 .sig-config__preview [data-sig-preview] { position: absolute; inset: 0; }
