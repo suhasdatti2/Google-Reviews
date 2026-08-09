@@ -441,13 +441,16 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white)
   position: relative;
   width: calc(100% + var(--sig-config-pad) * 2);
   margin: calc(var(--sig-config-pad) * -1) calc(var(--sig-config-pad) * -1) 36px;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 2 / 1;
   overflow: hidden;
 }
 .sig-config__preview [data-sig-preview] { position: absolute; inset: 0; }
 .sig-config__preview img,
 .sig-config__preview .sig-placeholder { width: 100%; height: 100%; }
-.sig-config__preview img { object-fit: cover; display: block; }
+/* object-position: top crops the extra height off the bottom (empty
+   velvet) rather than equally off both edges, so the card itself stays
+   fully in frame as the box gets shorter. */
+.sig-config__preview img { object-fit: cover; object-position: center top; display: block; }
 
 .sig-config__row { display: grid; gap: 16px; padding-block: 30px; border-top: 1px solid var(--sig-line); }
 .sig-config__row:first-child { border-top: 0; padding-top: 0; }
