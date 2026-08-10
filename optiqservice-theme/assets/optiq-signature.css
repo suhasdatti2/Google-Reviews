@@ -27,7 +27,7 @@
    what actually guarantees every section sees the same values. */
 :root {
   --sig-white: #ffffff;
-  --sig-white-bg: var(--sig-white) url("https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260809_192606_005854c0-cbaa-4744-be9f-8ae401bcb834.png?v=1786305432") center / cover no-repeat;
+  --sig-white-bg: var(--sig-white);
   --sig-paper: #fbfaf8;
   --sig-marble: #f3f1ec;
   --sig-marble-2: #eae7e0;
@@ -198,12 +198,7 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 .sig-section { padding-block: var(--sig-section); background: var(--sig-white-bg); position: relative; }
 .sig-section--tight { padding-block: var(--sig-section-tight); }
 .sig-section--paper { background: var(--sig-paper); }
-.sig-section--marble {
-  background:
-    radial-gradient(1200px 500px at 15% -10%, rgba(255, 255, 255, 0.7), transparent 60%),
-    radial-gradient(900px 480px at 100% 110%, rgba(0, 0, 0, 0.03), transparent 60%),
-    linear-gradient(180deg, var(--sig-marble), var(--sig-marble-2));
-}
+.sig-section--marble { background: var(--sig-white); }
 .sig-section--black { background: var(--sig-black); color: var(--sig-on-black); }
 .sig-section--ruled { border-top: 1px solid var(--sig-line); }
 .sig-section--black.sig-section--ruled { border-top-color: rgba(243, 241, 236, 0.1); }
