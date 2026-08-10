@@ -1,0 +1,116 @@
+{{ 'optiq-hero.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'optiq-hero.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign row1_url = section.settings.row1_url | default: '/pages/ai-receptionist'
+  assign row2_url = section.settings.row2_url | default: '/pages/google-review-cards'
+  assign row3_url = section.settings.row3_url | default: '/pages/other-services'
+  assign splash = ''
+  if section.settings.splash
+    assign splash = ' opsh--splash'
+  endif
+-%}
+
+{%- if section.settings.splash -%}
+  {%- comment -%}
+    Splash mode owns the whole screen: no header, no announcement bar, no
+    footer, no page scroll. Emitted from Liquid rather than from a
+    `body:has()` rule in the stylesheet so it does not depend on :has()
+    support - a browser that missed the selector would otherwise show the
+    header underneath a section that is already pinned to the top.
+    The bottom dock is deliberately left visible: with the header gone it is
+    the only way to reach search, account and cart from this screen.
+  {%- endcomment -%}
+  <style>
+    #shopify-section-header,
+    #shopify-section-announcement-bar,
+    #shopify-section-footer { display: none !important; }
+    body { overflow: hidden; padding-bottom: 0 !important; }
+  </style>
+{%- endif -%}
+
+{%- comment -%}
+  A short, editorial directory rather than photo panels: three rows on the
+  left (each a plain <a>, so the whole row is the click target and works
+  without JavaScript), a large wordmark on the right. The confirmation
+  overlay in optiq-hero.js is a decoration on top of links that already
+  navigate correctly on their own.
+{%- endcomment -%}
+
+<section class="opsh{{ splash }}" data-optiq-services-hero aria-label="{{ section.settings.aria_label | escape }}">
+  <span class="opsh__divider" aria-hidden="true"></span>
+
+  <div class="opsh__grid">
+    <nav class="opsh__list" aria-label="{{ section.settings.aria_label | escape }}">
+      <a
+        class="opsh__row"
+        href="{{ row1_url }}"
+        data-opsh-choose="row1"
+        data-opsh-name="{{ section.settings.row1_label | escape }}"
+        style="--opsh-delay: 140ms;"
+      >
+        <span class="opsh__row-label">{{ section.settings.row1_label | escape }}</span>
+        <svg class="opsh__row-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a
+        class="opsh__row"
+        href="{{ row2_url }}"
+        data-opsh-choose="row2"
+        data-opsh-name="{{ section.settings.row2_label | escape }}"
+        style="--opsh-delay: 260ms;"
+      >
+        <span class="opsh__row-label">{{ section.settings.row2_label | escape }}</span>
+        <svg class="opsh__row-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a
+        class="opsh__row"
+        href="{{ row3_url }}"
+        data-opsh-choose="row3"
+        data-opsh-name="{{ section.settings.row3_label | escape }}"
+        style="--opsh-delay: 380ms;"
+      >
+        <span class="opsh__row-label">{{ section.settings.row3_label | escape }}</span>
+        <svg class="opsh__row-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </nav>
+
+    <div class="opsh__mark" aria-hidden="true" style="--opsh-delay: 480ms;">{{ section.settings.wordmark | escape }}</div>
+  </div>
+
+  {%- comment -%} Which row was chosen, held briefly before the page changes. {%- endcomment -%}
+  <div class="opsh__confirm" role="status" aria-live="polite">
+    <div class="opsh__confirmbox">
+      <span class="opsh__confirmtick">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      </span>
+      <span class="opsh__confirmtext">
+        <em data-opsh-confirm-title></em>
+        {{ section.settings.confirm_note | escape }}
+      </span>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Services splash",
+  "tag": "section",
+  "class": "optiq-services-hero-section",
+  "settings": [
+    { "type": "checkbox", "id": "splash", "label": "Fill the screen, hide header and footer", "default": true, "info": "Turn off to use this as a normal section with the header, footer and the rest of the page." },
+    { "type": "text", "id": "aria_label", "label": "Section label (screen readers)", "default": "Choose a service" },
+    { "type": "text", "id": "confirm_note", "label": "Confirmation subtext", "default": "Taking you there" },
+    { "type": "text", "id": "wordmark", "label": "Wordmark", "default": "Optiq" },
+    { "type": "header", "content": "Row 1" },
+    { "type": "text", "id": "row1_label", "label": "Label", "default": "AI Receptionist" },
+    { "type": "url", "id": "row1_url", "label": "Link", "info": "Defaults to /pages/ai-receptionist" },
+    { "type": "header", "content": "Row 2" },
+    { "type": "text", "id": "row2_label", "label": "Label", "default": "Cards" },
+    { "type": "url", "id": "row2_url", "label": "Link", "info": "Defaults to /pages/google-review-cards" },
+    { "type": "header", "content": "Row 3" },
+    { "type": "text", "id": "row3_label", "label": "Label", "default": "Other Services" },
+    { "type": "url", "id": "row3_url", "label": "Link", "info": "Defaults to /pages/other-services" }
+  ],
+  "presets": [{ "name": "Services splash" }]
+}
+{% endschema %}

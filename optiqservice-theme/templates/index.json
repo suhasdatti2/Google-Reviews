@@ -1,355 +1,228 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
+    "serviceshero": {
+      "type": "optiq-services-hero",
+      "settings": {
+        "splash": true,
+        "aria_label": "Choose a service",
+        "confirm_note": "Taking you there",
+        "wordmark": "Optiq",
+        "row1_label": "AI Receptionist",
+        "row1_url": "/pages/ai-receptionist",
+        "row2_label": "Cards",
+        "row2_url": "/pages/google-review-cards",
+        "row3_label": "Other Services",
+        "row3_url": "/pages/other-services"
+      }
+    },
     "hero": {
       "type": "hero",
+      "disabled": true,
       "settings": {
         "kicker": "NFC review cards for local businesses",
-        "heading": "Get More Google Reviews With One Tap",
-        "subheading": "A premium NFC card programmed with your Google review link. Happy customers tap it with their phone and your review page opens instantly — no app, no monthly fee.",
+        "heading": "Get More Google Reviews With One Simple Tap",
+        "subheading": "Your customers tap their phone on the card, and your Google review page opens instantly. No app. No QR code needed. No monthly fee.",
         "button_label": "Get My Review Card",
+        "button_link": "",
         "secondary_label": "See How It Works",
-        "trust_line": "Works with iPhone & Android · No app needed · One-time purchase"
+        "trust_line": "Works with iPhone & Android · No app to download · One-time purchase",
+        "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_40_03_PM_4.png"
+      }
+    },
+    "optiqcinematic": {
+      "type": "optiq-cinematic-scroll-card",
+      "disabled": true,
+      "settings": {
+        "front_image": "shopify://shop_images/ChatGPT_Image_Jul_23_2026_05_24_48_PM.png",
+        "back_logo": "shopify://shop_images/Black_Optiq_Logo.png",
+        "intro_eyebrow": "OPTIQ TAP-TO-REVIEW",
+        "intro_heading": "One card. One tap. Your review page.",
+        "intro_desc": "Scroll to see the card from every angle.",
+        "g1_eyebrow": "ONE SIMPLE TAP",
+        "g1_heading": "Make leaving a review effortless.",
+        "g1_desc": "Customers tap the card with their phone and instantly reach your Google review page.",
+        "g2_eyebrow": "NO APP REQUIRED",
+        "g2_heading": "Works with the phone they already use.",
+        "g2_desc": "It opens your review page instantly - no app to download.",
+        "g3_eyebrow": "BUILT FOR YOUR COUNTER",
+        "g3_heading": "Keep your review link within reach.",
+        "g3_desc": "Keep it on your counter, front desk, or service area.",
+        "g4_eyebrow": "YOUR BUSINESS. YOUR LINK.",
+        "g4_heading": "Connected directly to your review page.",
+        "g4_desc": "Programmed with your Google or Yelp review link before it ships.",
+        "g5_eyebrow": "CLEAN, PREMIUM DESIGN",
+        "g5_heading": "Designed to look professional anywhere.",
+        "g5_desc": "A clean matte black finish that looks right on any counter.",
+        "g6_eyebrow": "BETTER CUSTOMER EXPERIENCE",
+        "g6_heading": "Remove unnecessary steps.",
+        "g6_desc": "No searching, no typing - just one tap to your review page.",
+        "final_eyebrow": "OPTIQ TAP-TO-REVIEW",
+        "final_heading": "Make every customer interaction count.",
+        "final_desc": "Give customers a faster way to reach your Google review page.",
+        "show_button": true,
+        "button_text": "Get Your Review Card",
+        "button_link": "",
+        "section_height": 600,
+        "card_size_desktop": 33,
+        "card_size_mobile": 76,
+        "card_thickness": 4,
+        "animation_intensity": 100,
+        "reduce_mobile": true,
+        "glow_strength": 100,
+        "background_glow": 60,
+        "color_blue": "#5a5f6b",
+        "color_cyan": "#828892",
+        "color_purple": "#3c3f47",
+        "color_magenta": "#565059"
       }
     },
     "showcase": {
       "type": "card-showcase",
-      "settings": {
-        "kicker": "Pick your card",
-        "heading": "See exactly what you're getting",
-        "subheading": "Tap a card to preview it, then choose how many below. Every card is programmed with your Google review link before it ships.",
-        "counter_mode_label": "Counter Cards",
-        "bulk_mode_label": "Bulk Cards",
-        "membership_label": "+ Add Membership (optional)",
-        "membership_link": "/pages/membership"
-      },
       "blocks": {
-        "c1": {
-          "type": "card",
-          "settings": {
-            "mode": "counter",
-            "name": "Counter Card — Black",
-            "note": "Our premium counter card in classic matte black.",
-            "tag": "Premium high-quality material",
-            "badge": "Bestseller"
-          }
-        },
-        "c2": {
-          "type": "card",
-          "settings": {
-            "mode": "counter",
-            "name": "Counter Card — Navy",
-            "note": "Deep navy with the same clean white print.",
-            "tag": "Premium high-quality material"
-          }
-        },
-        "c3": {
-          "type": "card",
-          "settings": {
-            "mode": "counter",
-            "name": "Counter Card — Graphite",
-            "note": "A softer gunmetal grey for a modern look.",
-            "tag": "Premium high-quality material"
-          }
-        },
-        "c4": {
-          "type": "card",
-          "settings": {
-            "mode": "counter",
-            "name": "Counter Card — White",
-            "note": "Clean white card with black print — bright on any counter.",
-            "tag": "Premium high-quality material"
-          }
-        },
-        "c5": {
-          "type": "card",
-          "settings": {
-            "mode": "bulk",
-            "name": "Bulk Handout Card — Black",
-            "note": "Smaller, simpler card made to hand out with bills, receipts, and bags.",
-            "tag": "Made to give away"
-          }
-        },
-        "c6": {
-          "type": "card",
-          "settings": {
-            "mode": "bulk",
-            "name": "Bulk Handout Card — White",
-            "note": "Same handout card in clean white, if you'd rather match a lighter brand.",
-            "tag": "Made to give away"
-          }
-        },
-        "q1": {
-          "type": "qty",
-          "settings": {
-            "mode": "counter",
-            "qty_label": "1 Card",
-            "price": "$29.99",
-            "featured": true,
-            "link": "/products/google-review-nfc-card"
-          }
-        },
-        "q2": {
-          "type": "qty",
-          "settings": {
-            "mode": "counter",
-            "qty_label": "2 Cards",
-            "price": "$49.99",
-            "featured": false,
-            "link": "/products/google-review-nfc-card"
-          }
-        },
-        "q3": {
-          "type": "qty",
-          "settings": {
-            "mode": "counter",
-            "qty_label": "3 Cards",
-            "price": "$64.99",
-            "featured": false,
-            "link": "/products/google-review-nfc-card"
-          }
-        },
-        "q4": {
-          "type": "qty",
-          "settings": {
-            "mode": "bulk",
-            "qty_label": "10 Cards",
-            "price": "$49.99",
-            "featured": true,
-            "link": "/products/bulk-review-cards"
-          }
-        },
-        "q5": {
-          "type": "qty",
-          "settings": {
-            "mode": "bulk",
-            "qty_label": "25 Cards",
-            "price": "$99.99",
-            "featured": false,
-            "link": "/products/bulk-review-cards"
-          }
-        },
-        "q6": {
-          "type": "qty",
-          "settings": {
-            "mode": "bulk",
-            "qty_label": "50 Cards",
-            "price": "$174.99",
-            "featured": false,
-            "link": "/products/bulk-review-cards"
-          }
-        },
-        "q7": {
-          "type": "qty",
-          "settings": {
-            "mode": "bulk",
-            "qty_label": "100 Cards",
-            "price": "$299.99",
-            "featured": false,
-            "link": "/products/bulk-review-cards"
-          }
-        }
+        "c1": { "type": "card", "settings": { "mode": "counter", "name": "Counter Card - Black", "note": "Our premium counter card in classic matte black.", "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_41_02_PM_3.png", "tag": "Premium high-quality material", "badge": "Bestseller" } },
+        "c4": { "type": "card", "settings": { "mode": "counter", "name": "Counter Card - White", "note": "Clean white card with black print - bright on any counter.", "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_40_15_PM_4.png", "tag": "Premium high-quality material", "badge": "" } },
+        "c5": { "type": "card", "settings": { "mode": "bulk", "name": "Mini Bulk Card - Black", "note": "Smaller, simpler card made to hand out with bills, receipts, and takeout bags.", "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_58_27_PM_4.png", "tag": "Made to hand out", "badge": "" } },
+        "c6": { "type": "card", "settings": { "mode": "bulk", "name": "Mini Bulk Card - White", "note": "Same hand-out card in clean white, if you'd rather match a lighter brand.", "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_08_02_25_PM_3.png", "tag": "Made to hand out", "badge": "" } },
+        "q1": { "type": "qty", "settings": { "mode": "counter", "qty_label": "1 Card", "price": "$29.99", "featured": true, "variant_id": "", "link": "/products/google-review-nfc-card" } },
+        "q2": { "type": "qty", "settings": { "mode": "counter", "qty_label": "2 Cards", "price": "$49.99", "featured": false, "variant_id": "", "link": "/products/google-review-nfc-card" } },
+        "q3": { "type": "qty", "settings": { "mode": "counter", "qty_label": "3 Cards", "price": "$64.99", "featured": false, "variant_id": "", "link": "/products/google-review-nfc-card" } },
+        "q4": { "type": "qty", "settings": { "mode": "bulk", "qty_label": "10 Cards", "price": "$49.99", "featured": true, "variant_id": "", "link": "/products/bulk-review-cards" } },
+        "q5": { "type": "qty", "settings": { "mode": "bulk", "qty_label": "25 Cards", "price": "$99.99", "featured": false, "variant_id": "", "link": "/products/bulk-review-cards" } },
+        "q6": { "type": "qty", "settings": { "mode": "bulk", "qty_label": "50 Cards", "price": "$174.99", "featured": false, "variant_id": "", "link": "/products/bulk-review-cards" } },
+        "q7": { "type": "qty", "settings": { "mode": "bulk", "qty_label": "100 Cards", "price": "$299.99", "featured": false, "variant_id": "", "link": "/products/bulk-review-cards" } }
       },
-      "block_order": ["c1", "c2", "c3", "c4", "c5", "c6", "q1", "q2", "q3", "q4", "q5", "q6", "q7"]
+      "block_order": [ "c1", "c4", "c5", "c6", "q1", "q2", "q3", "q4", "q5", "q6", "q7" ],
+      "disabled": true,
+      "settings": {
+        "kicker": "Choose your setup",
+        "heading": "Which Card Is Right for Your Business?",
+        "subheading": "The Main Counter Card sits on your counter for years. Mini Bulk Cards go home with every customer. Most businesses use both.",
+        "counter_mode_label": "Main Counter Card",
+        "bulk_mode_label": "Mini Bulk Cards",
+        "membership_label": "See full plan details",
+        "membership_link": "/pages/membership"
+      }
     },
     "highlight": {
       "type": "product-highlight",
+      "blocks": {
+        "spec1": { "type": "spec", "settings": { "title": "Credit-card size", "text": "Fits the counter, the till, or the front desk - built to stay there." } },
+        "spec2": { "type": "spec", "settings": { "title": "NFC chip inside", "text": "Programmed with your review link before it ships. One tap and your review page opens." } },
+        "spec3": { "type": "spec", "settings": { "title": "No batteries, no QR code", "text": "Powered by the customer's phone. Nothing to charge, nothing to scan, nothing to break." } }
+      },
+      "block_order": [ "spec1", "spec2", "spec3" ],
+      "disabled": true,
       "settings": {
         "kicker": "The card",
-        "heading": "Designed to sit on your counter. Built to get tapped.",
-        "subheading": "A glossy black card with a clean matte white design. It says exactly what it does: Tap to Review."
-      },
-      "blocks": {
-        "spec1": {
-          "type": "spec",
-          "settings": {
-            "title": "Credit-card size",
-            "text": "Fits the counter, the till, a lanyard, or your hand at the end of a great haircut."
-          }
-        },
-        "spec2": {
-          "type": "spec",
-          "settings": {
-            "title": "NFC chip inside",
-            "text": "Programmed with your Google review link before it ships. Tap it — your review page opens."
-          }
-        },
-        "spec3": {
-          "type": "spec",
-          "settings": {
-            "title": "No batteries, no charging",
-            "text": "NFC is powered by the customer's phone. The card just works, day after day."
-          }
-        }
-      },
-      "block_order": ["spec1", "spec2", "spec3"]
+        "heading": "Designed to Sit on Your Counter. Built to Get Tapped.",
+        "subheading": "A glossy card with a clean matte design that says exactly what it does: tap to review."
+      }
     },
     "how": {
       "type": "how-it-works",
+      "blocks": {
+        "step1": { "type": "step", "settings": { "title": "Choose Your Card", "text": "Pick the Main Counter Card, Mini Bulk Cards, or both. One-time price - no subscription required." } },
+        "step2": { "type": "step", "settings": { "title": "Send Your Review Link", "text": "Enter your business name and Google or Yelp review link at checkout. Don't have it handy? We'll help you find it." } },
+        "step3": { "type": "step", "settings": { "title": "We Program It for You", "text": "Every card is loaded with your review link and tap-tested on iPhone and Android before it ships." } },
+        "step4": { "type": "step", "settings": { "title": "Customers Tap, Your Page Opens", "text": "One tap opens your review page on their phone - no app, no typing, no QR code needed." } }
+      },
+      "block_order": [ "step1", "step2", "step3", "step4" ],
+      "disabled": true,
       "settings": {
         "kicker": "How it works",
-        "heading": "From order to first review in four steps",
-        "subheading": "We handle the setup. You just put the card where customers can tap it."
-      },
-      "blocks": {
-        "step1": {
-          "type": "step",
-          "settings": {
-            "title": "Order your card",
-            "text": "Pick 1, 2, or 3 cards. One-time price — no subscription, ever."
-          }
-        },
-        "step2": {
-          "type": "step",
-          "settings": {
-            "title": "Send your review link",
-            "text": "Enter your business name and Google review link at checkout. Not sure where to find it? We'll help."
-          }
-        },
-        "step3": {
-          "type": "step",
-          "settings": {
-            "title": "We program your card",
-            "text": "Every card is programmed with your link and tap-tested before it ships."
-          }
-        },
-        "step4": {
-          "type": "step",
-          "settings": {
-            "title": "Customers tap & review",
-            "text": "They tap the card with their phone, your review page opens, and leaving a review takes seconds."
-          }
-        }
-      },
-      "block_order": ["step1", "step2", "step3", "step4"]
+        "heading": "From Order to First Tap in Four Steps",
+        "subheading": "We handle the programming. You just put the card where customers can tap it."
+      }
+    },
+    "demo": {
+      "type": "video-demo",
+      "disabled": true,
+      "settings": {
+        "kicker": "See it in action",
+        "heading": "Watch One Tap Open a Review Page",
+        "subheading": "Here's the card doing exactly what it does on your counter: a customer taps their phone, and your review page opens on the spot.",
+        "video_url": "https://cdn.shopify.com/s/files/1/0797/5554/2760/files/optiqservice-demo-v2.mp4?v=1783916790",
+        "poster_url": "https://cdn.shopify.com/s/files/1/0797/5554/2760/files/ChatGPT_Image_Jul_7_2026_07_41_03_PM_4_27f6dcc0-502f-45db-a375-277ecfd74a23.png?v=1783638921",
+        "autoplay": true,
+        "caption": "Muted by default. Tap the video for sound.",
+        "side_heading": "Google or Yelp. Your Choice.",
+        "side_text": "Tell us which review page you want your card to open. We program it before it ships, so a single tap takes customers straight there.",
+        "google_label": "Google review page",
+        "yelp_label": "Yelp review page",
+        "side_note": "One tap opens whichever you pick. No app, no QR code needed."
+      }
     },
     "who": {
       "type": "who-its-for",
+      "blocks": {
+        "aud1": { "type": "audience", "settings": { "title": "Barbershops", "text": "Hand it over while they check out the fresh cut in the mirror." } },
+        "aud2": { "type": "audience", "settings": { "title": "Restaurants & cafes", "text": "Drop it with the check, or tuck a mini card into every takeout bag." } },
+        "aud3": { "type": "audience", "settings": { "title": "Salons & spas", "text": "Catch clients at their best - right after the appointment." } },
+        "aud4": { "type": "audience", "settings": { "title": "Auto detailers", "text": "They just saw their car transformed. Make the review as easy as the tap." } },
+        "aud5": { "type": "audience", "settings": { "title": "Gyms & studios", "text": "Keep it at the front desk for members who love the place." } },
+        "aud6": { "type": "audience", "settings": { "title": "Local shops", "text": "Turn friendly counter chat into reviews new customers can find." } }
+      },
+      "block_order": [ "aud1", "aud2", "aud3", "aud4", "aud5", "aud6" ],
+      "disabled": true,
       "settings": {
         "kicker": "Who it's for",
-        "heading": "Made for businesses that live on reviews",
+        "heading": "Made for Businesses That Live on Reviews",
         "subheading": "If your customers walk out happy, give them the easiest possible way to say so."
-      },
-      "blocks": {
-        "aud1": {
-          "type": "audience",
-          "settings": {
-            "title": "Barbershops",
-            "text": "Hand it over while they check out the fresh cut in the mirror."
-          }
-        },
-        "aud2": {
-          "type": "audience",
-          "settings": {
-            "title": "Restaurants & cafés",
-            "text": "Drop it with the check — the tap takes less time than signing the receipt."
-          }
-        },
-        "aud3": {
-          "type": "audience",
-          "settings": {
-            "title": "Salons & spas",
-            "text": "Catch clients at their best — right after the appointment."
-          }
-        },
-        "aud4": {
-          "type": "audience",
-          "settings": {
-            "title": "Auto detailers",
-            "text": "They just saw their car transformed. Make the review as easy as the tap."
-          }
-        },
-        "aud5": {
-          "type": "audience",
-          "settings": {
-            "title": "Gyms & studios",
-            "text": "Keep it at the front desk for members who love the place."
-          }
-        },
-        "aud6": {
-          "type": "audience",
-          "settings": {
-            "title": "Local shops",
-            "text": "Turn friendly counter chat into reviews new customers can find."
-          }
-        }
-      },
-      "block_order": ["aud1", "aud2", "aud3", "aud4", "aud5", "aud6"]
+      }
     },
     "faq": {
       "type": "faq",
+      "blocks": {
+        "q1": { "type": "question", "settings": { "question": "How does the card work?", "answer": "Each card has an NFC chip inside, programmed with your review link. When a customer holds their phone near the card, their phone opens your review page automatically - the same tap technology used for contactless payments." } },
+        "q2": { "type": "question", "settings": { "question": "Do my customers need an app or a QR code?", "answer": "No. NFC tap works with the phone's built-in settings on nearly all modern iPhones and Androids - nothing to download, nothing to scan. A printed QR code can be added as an optional backup if you want one." } },
+        "q3": { "type": "question", "settings": { "question": "How do you program my review link?", "answer": "At checkout, enter your business name and your Google or Yelp review link. We program your card, test it on iPhone and Android, and ship it ready to use - nothing for you to set up." } },
+        "q11": { "type": "question", "settings": { "question": "What comes with my order?", "answer": "You get your NFC review card (or cards), already programmed with your Google or Yelp review link and tested on iPhone and Android. Nothing to set up - just place it where customers can tap it." } },
+        "q9": { "type": "question", "settings": { "question": "How fast will my card ship?", "answer": "Every card is programmed with your review link and tap-tested before it ships. Most orders are prepared within a few business days, and you'll get a tracking email as soon as yours is on the way." } },
+        "q10": { "type": "question", "settings": { "question": "What if my card arrives faulty?", "answer": "If a card ever arrives damaged or doesn't tap correctly, email sales@optiqservice.com and we'll sort out a replacement. Because each card is custom-programmed with your review link, we can't take back correctly working cards - but if something isn't right, we're happy to help." } },
+        "q4": { "type": "question", "settings": { "question": "What's the difference between the Main Counter Card and Mini Bulk Cards?", "answer": "The Main Counter Card is bigger and built to stay on your counter for years - it costs more because it's made to last and be seen every day. Mini Bulk Cards are smaller and cheaper per card, made to hand out with bills, receipts, and takeout orders. Both open the same review page with one tap." } },
+        "q5": { "type": "question", "settings": { "question": "What if I don't know my review link?", "answer": "Order anyway. Email us at sales@optiqservice.com and we'll send you a quick guide to finding it, or find it for you if you share your business name and city." } },
+        "q6": { "type": "question", "settings": { "question": "Is there a monthly fee?", "answer": "No. Every card is a one-time purchase. The Review Growth Plan is a separate, optional membership - you never need it for your card to work." } },
+        "q7": { "type": "question", "settings": { "question": "Which phones does this work with?", "answer": "Almost all iPhones and Android phones released in the last several years support NFC tap by default. Customers with older phones can still search for your business the usual way." } },
+        "q8": { "type": "question", "settings": { "question": "Does this guarantee good reviews?", "answer": "No - and we wouldn't trust anyone who claims it does. What the card does is remove the friction: instead of searching for your business and finding the review button, customers get there in one tap. What they write is entirely up to them." } }
+      },
+      "block_order": [ "q1", "q2", "q3", "q11", "q9", "q10", "q4", "q5", "q6", "q7", "q8" ],
+      "disabled": true,
       "settings": {
         "kicker": "FAQ",
-        "heading": "Questions, answered",
-        "subheading": "Anything else? Email sales@optiqservice.com — we reply within one business day."
-      },
-      "blocks": {
-        "q1": {
-          "type": "question",
-          "settings": {
-            "question": "How does the card work?",
-            "answer": "There's an NFC chip inside the card, programmed with your Google review link. When a customer holds their phone near the card, their phone reads the chip and opens your Google review page — the same technology as tap-to-pay."
-          }
-        },
-        "q2": {
-          "type": "question",
-          "settings": {
-            "question": "Do my customers need an app?",
-            "answer": "No. NFC reading is built into modern iPhones and Android phones. Customers just unlock their phone and hold it near the card — no app, no QR code, no typing."
-          }
-        },
-        "q3": {
-          "type": "question",
-          "settings": {
-            "question": "How do you program my review link?",
-            "answer": "At checkout you'll enter your business name and Google review link. We program the chip, tap-test it on both iPhone and Android, and ship it ready to use. Nothing to set up on your end."
-          }
-        },
-        "q4": {
-          "type": "question",
-          "settings": {
-            "question": "What's the difference between Counter and Bulk cards?",
-            "answer": "Counter Cards are the bigger, premium card built to live on your counter or station. Bulk Cards are smaller and simpler, priced to hand out with bills, receipts, and takeout bags. Both are programmed with the same Google review link."
-          }
-        },
-        "q5": {
-          "type": "question",
-          "settings": {
-            "question": "What if I don't know my Google review link?",
-            "answer": "No problem. Order anyway and email us at sales@optiqservice.com — we'll send you a 2-minute guide to finding it, or find it for you if you share your business name and city."
-          }
-        },
-        "q6": {
-          "type": "question",
-          "settings": {
-            "question": "Are there any monthly fees?",
-            "answer": "No. Cards are a one-time purchase. Membership is a separate, optional add-on for businesses that want free replacements and monthly restocks — you never need it to use your card."
-          }
-        },
-        "q7": {
-          "type": "question",
-          "settings": {
-            "question": "Which phones does it work with?",
-            "answer": "Virtually all iPhones and Android phones from the last several years support tap-to-read NFC out of the box. If a customer has a much older phone, they can still find you on Google the usual way."
-          }
-        },
-        "q8": {
-          "type": "question",
-          "settings": {
-            "question": "Does it guarantee 5-star reviews?",
-            "answer": "No — and nothing legitimately can. What the card does is remove the friction: instead of asking customers to search for your business and find the review button, one tap takes them straight there. What they write is entirely up to them."
-          }
-        }
-      },
-      "block_order": ["q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8"]
+        "heading": "Questions, Answered",
+        "subheading": "Anything else? Email sales@optiqservice.com - we reply within one business day."
+      }
     },
     "cta": {
       "type": "cta-banner",
+      "disabled": true,
       "settings": {
-        "heading": "Your next great review is one tap away",
+        "heading": "Make Leaving a Review One Tap Away",
         "subheading": "Order today, send us your review link, and your card arrives programmed and ready to use.",
-        "button_label": "Start Getting Reviews"
+        "button_label": "Get Your Review Card",
+        "button_link": ""
       }
     }
   },
-  "order": ["hero", "showcase", "highlight", "how", "who", "faq", "cta"]
+  "order": [
+    "serviceshero",
+    "hero",
+    "optiqcinematic",
+    "showcase",
+    "highlight",
+    "how",
+    "demo",
+    "who",
+    "faq",
+    "cta"
+  ]
 }
