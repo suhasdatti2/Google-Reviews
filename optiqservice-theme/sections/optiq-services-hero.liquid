@@ -74,7 +74,125 @@
       </a>
     </nav>
 
-    <div class="opsh__mark" aria-hidden="true" style="--opsh-delay: 480ms;">{{ section.settings.wordmark | escape }}</div>
+    <div class="opsh__right">
+      <div class="opsh__logo" aria-hidden="true" style="--opsh-delay: 480ms;">{{ section.settings.wordmark | escape }}</div>
+
+      {%- comment -%}
+        Scroll-driven product showcase. The splash section is fixed with
+        body scroll locked (see the comment above), so there is no real
+        page-scroll to drive - instead assets/optiq-hero.js captures wheel/
+        touch gestures scoped to this element only and turns them into an
+        eased horizontal progress value, giving the same "scroll moves the
+        products" feel without unlocking page scroll or touching the
+        3-option chooser beside it. Every image and all copy/prices below
+        are the theme's real products - nothing invented.
+      {%- endcomment -%}
+      <div class="opsh__showcase" data-opsh-showcase tabindex="0" role="region" aria-roledescription="carousel" aria-label="Optiq products" style="--opsh-delay: 560ms;">
+        <div class="opsh__showcase-viewport">
+          <div data-showcase-track>
+
+            <a class="opsh__showcase-item" href="/products/optiq-signature" data-showcase-item>
+              <span class="opsh__showcase-media">
+                <img src="https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260807_032922_b8902637-8c24-4a47-8c13-39b2ad594145.png?v=1786077834" alt="Optiq Signature, a luxury metal NFC review card" loading="eager">
+              </span>
+              <span class="opsh__showcase-copy">
+                <span class="opsh__showcase-eyebrow">01 &mdash; Metal Card</span>
+                <span class="opsh__showcase-name">Optiq Signature</span>
+                <span class="opsh__showcase-text">A luxury metal NFC card, engineered from precision metal and finished by hand.</span>
+                <span class="opsh__showcase-link">
+                  View Signature
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </span>
+              </span>
+            </a>
+
+            <a class="opsh__showcase-item" href="/products/google-review-nfc-wristband" data-showcase-item>
+              <span class="opsh__showcase-media">
+                <img src="https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260806_033730_20d5efb0-b13a-424c-825a-55494fe86de1.png?v=1785987702" alt="Google Review NFC silicone wristband" loading="lazy">
+              </span>
+              <span class="opsh__showcase-copy">
+                <span class="opsh__showcase-eyebrow">02 &mdash; Silicone Band</span>
+                <span class="opsh__showcase-name">NFC Wristband</span>
+                <span class="opsh__showcase-text">The same one-tap technology as the card, worn instead of displayed &mdash; waterproof, built for all-day wear.</span>
+                <span class="opsh__showcase-link">
+                  Shop the wristband
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </span>
+              </span>
+            </a>
+
+            {%- comment -%} TODO: swap in the confirmed ring product image URL once uploaded to Shopify Files. {%- endcomment -%}
+            <a class="opsh__showcase-item" href="/pages/other-services" data-showcase-item>
+              <span class="opsh__showcase-media">
+                <img src="" alt="Optiq NFC ring" loading="lazy">
+              </span>
+              <span class="opsh__showcase-copy">
+                <span class="opsh__showcase-eyebrow">03 &mdash; NFC Ring</span>
+                <span class="opsh__showcase-name">Optiq Ring</span>
+                <span class="opsh__showcase-text">The one-tap technology worn as a ring &mdash; always on hand, nothing to carry or display.</span>
+                <span class="opsh__showcase-link">
+                  Learn more
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </span>
+              </span>
+            </a>
+
+            <a class="opsh__showcase-item" href="/products/google-review-nfc-card" data-showcase-item>
+              <span class="opsh__showcase-media">
+                <img src="https://cdn.shopify.com/s/files/1/0797/5554/2760/files/ChatGPT_Image_Jul_7_2026_07_41_03_PM_4_27f6dcc0-502f-45db-a375-277ecfd74a23.png?v=1783638921" alt="Main Counter Card, the plastic Google review NFC card" loading="lazy">
+              </span>
+              <span class="opsh__showcase-copy">
+                <span class="opsh__showcase-eyebrow">04 &mdash; Counter Card</span>
+                <span class="opsh__showcase-name">Main Counter Card</span>
+                <span class="opsh__showcase-text">The premium, credit-card-size NFC card built to live on your counter, front desk or register.</span>
+                <span class="opsh__showcase-link">
+                  Shop the card
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </span>
+              </span>
+            </a>
+
+            <a class="opsh__showcase-item" href="/pages/ai-receptionist" data-showcase-item>
+              <span class="opsh__showcase-media" aria-hidden="true">
+                <span class="opsh__device">
+                  <span class="opsh__device-wave">
+                    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                  </span>
+                  <span class="opsh__device-stat"><b>482</b> calls answered</span>
+                  <span class="opsh__device-stat opsh__device-stat--muted"><b>0.6s</b> avg. response</span>
+                </span>
+              </span>
+              <span class="opsh__showcase-copy">
+                <span class="opsh__showcase-eyebrow">05 &mdash; AI Service</span>
+                <span class="opsh__showcase-name">AI Receptionist</span>
+                <span class="opsh__showcase-text">Answers calls 24/7, books appointments and qualifies leads &mdash; so nothing goes to voicemail.</span>
+                <span class="opsh__showcase-link">
+                  Meet the AI Receptionist
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </span>
+              </span>
+            </a>
+
+          </div>
+        </div>
+
+        <div class="opsh__showcase-controls">
+          <button type="button" class="opsh__showcase-arrow" data-showcase-prev aria-label="Previous product">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+          </button>
+          <div class="opsh__showcase-dots" data-showcase-dots>
+            <button type="button" class="opsh__showcase-dot is-active" data-showcase-dot="0" aria-label="Optiq Signature"></button>
+            <button type="button" class="opsh__showcase-dot" data-showcase-dot="1" aria-label="NFC Wristband"></button>
+            <button type="button" class="opsh__showcase-dot" data-showcase-dot="2" aria-label="Optiq Ring"></button>
+            <button type="button" class="opsh__showcase-dot" data-showcase-dot="3" aria-label="Main Counter Card"></button>
+            <button type="button" class="opsh__showcase-dot" data-showcase-dot="4" aria-label="AI Receptionist"></button>
+          </div>
+          <button type="button" class="opsh__showcase-arrow" data-showcase-next aria-label="Next product">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   {%- comment -%} Which row was chosen, held briefly before the page changes. {%- endcomment -%}
