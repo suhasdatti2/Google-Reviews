@@ -4,49 +4,52 @@
    ========================================================================== */
 
 :root {
-  /* ---- Surface ramp (near-black, never pure #000) ---- */
-  --o-bg:            #070605;
-  --o-surface-1:     #0f0d0a;
-  --o-surface-2:     #17130f;
-  --o-surface-3:     #1f1a15;
-  --o-hairline:      rgba(255,255,255,0.07);
-  --o-hairline-2:    rgba(255,255,255,0.12);
-  --o-hairline-3:    rgba(255,255,255,0.20);
+  /* ---- Surface ramp: premium white / paper / soft marble, unified with
+         the Signature page's palette (assets/optiq-signature.css) rather
+         than a separate system - one brand, one set of surfaces. ---- */
+  --o-bg:            #ffffff;
+  --o-surface-1:     #fbfaf8;
+  --o-surface-2:     #f3f1ec;
+  --o-surface-3:     #eae7e0;
+  --o-hairline:      rgba(17,17,16,0.08);
+  --o-hairline-2:    rgba(17,17,16,0.14);
+  --o-hairline-3:    rgba(17,17,16,0.24);
 
   /* ---- Ink ---- */
-  --o-ink:           #f4f4f2;
-  --o-ink-2:         #b6b7bd;
-  --o-ink-3:         #83848c;
-  --o-ink-4:         #5d5e66;
+  --o-ink:           #111110;
+  --o-ink-2:         #5c5b56;
+  --o-ink-3:         #9a988f;
+  --o-ink-4:         #c7c4ba;
 
-  /* ---- Accent: warm signal amber (reads premium on near-black,
-         avoids the purple/blue AI-gradient cliche) ---- */
-  --o-accent:        #e8c07a;
+  /* ---- Accent: restrained metallic gold - used sparingly (nav underline,
+         tags, focus ring, cart badge), never as a primary button fill. ---- */
+  --o-accent:        #b68a3f;
   --o-accent-ink:    #14100a;
-  --o-accent-soft:   rgba(232,192,122,0.14);
-  --o-accent-line:   rgba(232,192,122,0.34);
+  --o-accent-soft:   rgba(182,138,63,0.12);
+  --o-accent-line:   rgba(182,138,63,0.34);
 
-  --o-positive:      #7fbf8f;
-  --o-critical:      #e08376;
+  --o-positive:      #4f8f63;
+  --o-critical:      #b1483a;
 
   /* ---- Layout ---- */
   --o-max:           1240px;
   --o-max-wide:      1560px;
   --o-max-text:      68ch;
   --o-gutter:        20px;
-  --o-radius-xs:     6px;
-  --o-radius-sm:     10px;
-  --o-radius:        16px;
-  --o-radius-lg:     24px;
+  --o-radius-xs:     3px;
+  --o-radius-sm:     2px;
+  --o-radius:        0px;
+  --o-radius-lg:     0px;
 
   /* ---- Section rhythm (fluid) ---- */
   --o-section:       clamp(72px, 9vw, 132px);
   --o-section-tight: clamp(48px, 6vw, 84px);
 
-  /* ---- Elevation: tight contact shadow + broad ambient ---- */
-  --o-shadow-sm: 0 1px 2px rgba(0,0,0,.5);
-  --o-shadow:    0 2px 4px rgba(0,0,0,.4), 0 12px 32px -12px rgba(0,0,0,.7);
-  --o-shadow-lg: 0 4px 8px rgba(0,0,0,.4), 0 32px 64px -24px rgba(0,0,0,.8);
+  /* ---- Elevation: crisp, restrained shadows for a light surface -
+         no heavy black glows. ---- */
+  --o-shadow-sm: 0 1px 2px rgba(17,17,16,.06);
+  --o-shadow:    0 2px 4px rgba(17,17,16,.05), 0 20px 44px -24px rgba(17,17,16,.16);
+  --o-shadow-lg: 0 4px 10px rgba(17,17,16,.06), 0 40px 90px -36px rgba(17,17,16,.2);
 
   /* ---- Motion ---- */
   --o-ease:      cubic-bezier(0.22, 1, 0.36, 1);
@@ -123,7 +126,7 @@ html {
 
 body {
   margin: 0;
-  background: radial-gradient(130% 110% at 50% -12%, #1c160e 0%, #0d0b07 40%, var(--o-bg) 100%) fixed;
+  background: var(--o-bg);
   color: var(--o-ink);
   font-family: var(--o-font-body);
   font-size: var(--o-t-body);
@@ -271,25 +274,32 @@ h4, h5, h6 {
    Controls
    ========================================================================== */
 
+/* Restrained, editorial button language carried over from the Signature
+   page (.sig-cta / assets/optiq-signature.css): a thin ink outline by
+   default, inverting to a solid ink fill on hover; the "primary" variant
+   starts already filled. Uppercase + tracked, not a filled accent colour -
+   the gold accent is reserved for small details (nav underline, tags,
+   badges), never a full button fill. */
 .o-btn {
   --_bg: transparent;
   --_fg: var(--o-ink);
-  --_bd: var(--o-hairline-2);
+  --_bd: var(--o-ink);
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  min-height: 48px;
-  padding: 13px 26px;
+  min-height: 52px;
+  padding: 0 30px;
   border: 1px solid var(--_bd);
   border-radius: 999px;
   background: var(--_bg);
   color: var(--_fg);
   font-family: var(--o-font-body);
-  font-size: var(--o-t-sm);
+  font-size: 13px;
   font-weight: 600;
-  letter-spacing: -0.005em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   text-align: center;
   cursor: pointer;
   transition:
@@ -298,27 +308,22 @@ h4, h5, h6 {
     color var(--o-dur-fast) var(--o-ease),
     transform var(--o-dur-fast) var(--o-ease);
 }
-.o-btn:hover { transform: translateY(-1px); }
+.o-btn:hover { --_bg: var(--o-ink); --_fg: var(--o-bg); transform: translateY(-1px); }
 .o-btn:active { transform: translateY(0); }
 
-.o-btn--primary {
-  --_bg: var(--o-accent);
-  --_fg: var(--o-accent-ink);
-  --_bd: var(--o-accent);
-  font-weight: 650;
-}
-.o-btn--primary:hover { --_bg: #f0cd90; --_bd: #f0cd90; }
-
+.o-btn--primary,
 .o-btn--solid {
   --_bg: var(--o-ink);
   --_fg: var(--o-bg);
   --_bd: var(--o-ink);
 }
-.o-btn--solid:hover { --_bg: #fff; --_bd: #fff; }
+.o-btn--primary:hover,
+.o-btn--solid:hover { --_bg: var(--o-ink-2); --_fg: var(--o-bg); --_bd: var(--o-ink-2); }
 
-.o-btn--ghost:hover { --_bd: var(--o-hairline-3); --_bg: rgba(255,255,255,0.03); }
+.o-btn--ghost { --_bd: var(--o-hairline-2); }
+.o-btn--ghost:hover { --_bd: var(--o-ink); --_bg: rgba(17,17,16,0.05); --_fg: var(--o-ink); }
 
-.o-btn--lg { min-height: 56px; padding: 16px 34px; font-size: var(--o-t-body); }
+.o-btn--lg { min-height: 58px; padding: 0 38px; font-size: 13.5px; }
 .o-btn--full { display: flex; width: 100%; }
 
 .o-btn[disabled], .o-btn[aria-disabled="true"] {

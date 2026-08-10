@@ -71,7 +71,7 @@
 /* Condensed state is driven by a scroll flag on <html>, not by a
    per-frame scroll handler. */
 .o-header.is-condensed {
-  background: rgba(7, 6, 5, 0.84);
+  background: rgba(255, 255, 255, 0.86);
   backdrop-filter: saturate(150%) blur(14px);
   -webkit-backdrop-filter: saturate(150%) blur(14px);
   border-bottom-color: var(--o-hairline);
@@ -149,7 +149,7 @@
   color: var(--o-ink-2);
   transition: color var(--o-dur-fast) var(--o-ease), background var(--o-dur-fast) var(--o-ease);
 }
-.o-icon-btn:hover { color: var(--o-ink); background: rgba(255,255,255,0.05); }
+.o-icon-btn:hover { color: var(--o-ink); background: rgba(17,17,16,0.05); }
 .o-icon-btn svg { width: 20px; height: 20px; }
 
 .o-cart-count {
