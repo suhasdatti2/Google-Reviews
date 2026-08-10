@@ -83,38 +83,28 @@
   {%- endif -%}
 
   {%- comment -%}
-    Google Review Cards page: static marble background (same texture used
-    on the Optiq Signature page) instead of the animated flow field - a
-    calmer, more premium backdrop for this page specifically. Rendered as
-    a fixed-position layer (.reviews-marble-bg, assets/optiq-core.css)
-    sized to the viewport, not as a body background - a body background
-    sizes "cover" against the full scrollable page height, which on a
-    long page is far taller than the viewport and forces a big upscale,
-    softening the texture. A viewport-sized fixed layer never upscales
-    past native resolution, so it stays crisp regardless of page length.
+    Google Review Cards page: plain premium white, same as every other page
+    - no marble texture, no dark backdrop.
   {%- endcomment -%}
   {%- assign show_reviews_bg = false -%}
   {%- if template.suffix == 'reviews' -%}
     {%- assign show_reviews_bg = true -%}
   {%- endif -%}
   {%- if show_reviews_bg -%}
-    <style>body.o-flow-page { background: #0a0a0b; }</style>
+    <style>body.o-flow-page { background: #ffffff; }</style>
   {%- endif -%}
 
   {%- comment -%}
-    AI Receptionist page: the same marble texture as the Google Review
-    Cards page, colour-inverted to black-with-white-veins via a CSS
-    filter on a dedicated fixed layer (.air-marble-bg, assets/optiq-air.css)
-    rather than a second image or the old green WebGL canvas. .air
-    sections already render transparent under body.o-air-flow, so this
-    layer shows through them exactly like the canvas it replaces did.
+    AI Receptionist page: plain premium white too, matching the rest of the
+    site - no marble texture, no dark backdrop. The page's own boxes
+    (assets/optiq-air.css) are white cards with ink borders now, not black.
   {%- endcomment -%}
   {%- assign show_air_flow_bg = false -%}
   {%- if template.suffix == 'ai-receptionist' -%}
     {%- assign show_air_flow_bg = true -%}
   {%- endif -%}
   {%- if show_air_flow_bg -%}
-    <style>body.o-air-flow { background: #050505; }</style>
+    <style>body.o-air-flow { background: #ffffff; }</style>
   {%- endif -%}
 
   <script>
@@ -233,24 +223,6 @@
   {%- endcomment -%}
   {%- if show_flow_bg -%}
     {% render 'noir-flow-global' %}
-  {%- endif -%}
-
-  {%- comment -%}
-    Marble backdrop for the Google Review Cards page - fixed layer, sized
-    to the viewport so "cover" never has to upscale past native
-    resolution (see comment above, in <head>).
-  {%- endcomment -%}
-  {%- if show_reviews_bg -%}
-    <div class="reviews-marble-bg" aria-hidden="true"></div>
-  {%- endif -%}
-
-  {%- comment -%}
-    Marble backdrop for the AI Receptionist page - inverted colour layer
-    (assets/optiq-air.css, .air-marble-bg), rendered exactly where the
-    green animated canvas used to sit.
-  {%- endcomment -%}
-  {%- if show_air_flow_bg -%}
-    <div class="air-marble-bg" aria-hidden="true"></div>
   {%- endif -%}
 
   <div class="o-live" data-o-live role="status" aria-live="polite" aria-atomic="true"></div>

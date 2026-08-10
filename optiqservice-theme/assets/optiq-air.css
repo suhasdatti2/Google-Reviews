@@ -2,93 +2,29 @@
    OPTIQ - AI Receptionist page
 
    Layered on top of optiq-core.css, not a replacement for it. Reuses the
-   existing ink ramp, fluid type scale, section rhythm (--o-section) and
-   .o-wrap container, so the page keeps the store's spacing philosophy and
-   typographic hierarchy.
+   shared --o-* tokens (ink ramp, fluid type scale, section rhythm,
+   .o-wrap container) directly rather than overriding them with a separate
+   green palette, so this page reads as the same premium white/black brand
+   as the Signature page and the rest of the site - not a themed sub-app.
 
    PAGE BACKGROUND
-     The animated green WebGL flow field (snippets/air-flow-global.liquid,
-     rendered once from layout/theme.liquid) - unchanged by this pass.
+     Plain white (body.o-air-flow, layout/theme.liquid), same as every
+     other page. The old animated green WebGL canvas and marble-texture
+     backdrop are both gone.
 
    BOXES (dashboard console, panels, notes, transcript bubbles, loss-step
    cards, feature cards, pricing cards, step discs)
-     Solid black fill, with every label, value, icon and the waveform inside
-     them white - no lime tint left inside a box. Lime survives only where
-     it started as page furniture rather than box content: the ambient glow
-     pools drifting behind the boxes (.air__pool) and the primary CTA button
-     (.air-cta / "Get Started"), neither of which is a box.
+     White fill with a thin ink hairline border, ink text - the same card
+     language as .sig-* on the Signature page, instead of the previous
+     solid-black boxes with white text.
    ========================================================================== */
 
 .air {
-  --air-teal:        #022E21;
-  --air-lime:        #1FAF6E;
-  --air-lime-deep:   #148F5A;
-
-  /* Accent -> premium emerald, swapped in for the previous neon lime so the
-     page reads as a luxury jewel-tone rather than a gamer-green. Ink on top
-     stays the deep teal-black used before, which still contrasts cleanly
-     against the richer emerald. Still used by the CTA button - buttons
-     are not "boxes" for the purposes of this page and were left alone. */
-  --o-accent:        #1FAF6E;
-  --o-accent-ink:    #022E21;
-  --o-accent-soft:   rgba(31, 175, 110, 0.11);
-  --o-accent-line:   rgba(31, 175, 110, 0.32);
-
-  --o-surface-1:     #073A28;
-  --o-surface-2:     #0B4433;
-  --o-surface-3:     #10523F;
-
-  --o-hairline:      rgba(31, 175, 110, 0.09);
-  --o-hairline-2:    rgba(31, 175, 110, 0.15);
-  --o-hairline-3:    rgba(31, 175, 110, 0.24);
-
-  --air-glow:        rgba(31, 175, 110, 0.20);
-  --air-glow-soft:   rgba(31, 175, 110, 0.10);
-  --air-edge:        rgba(31, 175, 110, 0.22);
-
-  --air-glass:       rgba(6, 42, 32, 0.62);
-  --air-glass-line:  rgba(31, 175, 110, 0.1);
-
-  /* Page background: Eerie Black by default, or a static image from Theme
-     settings -> AI Receptionist page (--air-bg-image, set once on <body> by
-     layout/theme.liquid and inherited here). Neither applies while the
-     animated flow field is on - see the body.o-air-flow override just below
-     this rule, which is what actually wins in the current setup. */
-  --air-bg:          #081912;
-
   position: relative;
   isolation: isolate;
-  background-color: var(--air-bg);
-  background-image: var(--air-bg-image, none);
-  background-repeat: no-repeat;
-  background-position: center top;
-  background-size: cover;
-  background-attachment: fixed;
+  background: var(--o-bg);
 }
 
-body.o-air-flow .air {
-  background-color: transparent;
-  background-image: none;
-}
-
-/* Marble backdrop, rendered by layout/theme.liquid right where the green
-   animated canvas used to sit. Same texture used on the Google Review
-   Cards page, colour-inverted here via filter rather than a second
-   uploaded image - grayscale first so the invert lands on true black/white
-   regardless of the source's warm tone, giving black with white veins. A
-   fixed layer (not filtering .air content itself) so only the backdrop
-   inverts, nothing rendered on top of it. */
-.air-marble-bg {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background: #050505 url("https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260809_192606_005854c0-cbaa-4744-be9f-8ae401bcb834.png?v=1786305432") center / cover no-repeat;
-  filter: grayscale(1) invert(1) contrast(1.05);
-  pointer-events: none;
-}
-
-/* Ambient lighting - page furniture, not a box, left lime on purpose so the
-   black boxes have something to catch light from. */
 .air__ambient {
   position: absolute;
   inset: 0;
@@ -96,10 +32,13 @@ body.o-air-flow .air {
   pointer-events: none;
   z-index: 0;
 }
+/* Ambient light pools - page furniture, not a box. Kept very restrained
+   (a faint warm-gold wash, not a loud colour glow) so it reads as premium
+   ambience rather than a "cheap gradient" effect. */
 .air__pool {
   position: absolute;
   border-radius: 50%;
-  mix-blend-mode: screen;
+  mix-blend-mode: multiply;
   filter: blur(120px);
   will-change: transform;
 }
@@ -110,7 +49,7 @@ body.o-air-flow .air {
   height: 46vw;
   max-width: 660px;
   max-height: 660px;
-  background: radial-gradient(circle at 50% 50%, var(--air-glow) 0%, rgba(31, 175, 110, 0) 70%);
+  background: radial-gradient(circle at 50% 50%, rgba(182, 138, 63, 0.07) 0%, rgba(182, 138, 63, 0) 70%);
   animation: air-drift-a 34s ease-in-out infinite;
 }
 .air__pool--b {
@@ -120,7 +59,7 @@ body.o-air-flow .air {
   height: 40vw;
   max-width: 560px;
   max-height: 560px;
-  background: radial-gradient(circle at 50% 50%, rgba(21, 143, 90, 0.16) 0%, rgba(21, 143, 90, 0) 70%);
+  background: radial-gradient(circle at 50% 50%, rgba(17, 17, 16, 0.04) 0%, rgba(17, 17, 16, 0) 70%);
   animation: air-drift-b 42s ease-in-out infinite;
 }
 @keyframes air-drift-a {
@@ -140,8 +79,8 @@ body.o-air-flow .air {
   margin: 0;
   background: linear-gradient(90deg,
     transparent,
-    var(--air-edge) 18%,
-    var(--air-edge) 82%,
+    var(--o-hairline-3) 18%,
+    var(--o-hairline-3) 82%,
     transparent);
 }
 
@@ -193,54 +132,22 @@ body.o-air-flow .air {
 .air-hero__trust li { display: inline-flex; align-items: center; gap: 8px; }
 .air-hero__trust svg { color: var(--o-accent); flex-shrink: 0; }
 
-/* Primary CTA button - not a box, left as the lime accent it always was. */
+/* Primary CTA - the same ink-filled button as everywhere else on the site
+   (.o-btn--primary), just with a softer contact shadow since it usually
+   sits on plain white here. */
 .air-cta {
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.28) inset,
-              0 10px 30px -12px rgba(31, 175, 110, 0.4);
-  transition: transform var(--o-dur) var(--o-ease),
-              box-shadow var(--o-dur) var(--o-ease),
-              background var(--o-dur-fast) var(--o-ease);
+  box-shadow: 0 10px 30px -14px rgba(17, 17, 16, 0.35);
 }
 .air-cta:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.36) inset,
-              0 18px 46px -14px rgba(31, 175, 110, 0.6),
-              0 0 0 1px rgba(31, 175, 110, 0.45);
+  box-shadow: 0 16px 40px -16px rgba(17, 17, 16, 0.45);
 }
-.air-cta:active { transform: translateY(0); }
-.air-cta::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -40%;
-  width: 40%;
-  height: 100%;
-  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-  transform: skewX(-18deg);
-  opacity: 0;
-  transition: none;
-}
-.air-cta:hover::after {
-  animation: air-sweep 900ms var(--o-ease-out) forwards;
-}
-@keyframes air-sweep {
-  0%   { left: -40%; opacity: 0; }
-  18%  { opacity: 1; }
-  100% { left: 115%; opacity: 0; }
-}
-
-.air .o-btn--ghost { border-color: var(--o-hairline-2); }
-.air .o-btn--ghost:hover { border-color: var(--o-hairline-3); background: rgba(31, 175, 110, 0.06); }
 
 /* ==========================================================================
-   Section 2 - Why businesses lose customers (boxes: black)
+   Section 2 - Why businesses lose customers (boxes: white)
 
-   The "signal draining across four steps" device is kept, just recoloured -
-   white fading to transparent instead of lime fading to transparent, so the
-   card border, number and connector stay white/object-white rather than
-   green while still telling the same story.
+   The "signal draining across four steps" device is kept - the card
+   border, number and connector fade from full ink to transparent, so the
+   story still reads (strongest signal on step one, weakest by step four).
    ========================================================================== */
 
 .air-loss__grid {
@@ -258,14 +165,13 @@ body.o-air-flow .air {
   gap: 10px;
   align-content: start;
   padding: 30px 26px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--o-radius);
-  background: #000;
+  border: 1px solid var(--o-hairline-2);
+  background: var(--o-bg);
   transition: border-color var(--o-dur) var(--o-ease),
               transform var(--o-dur) var(--o-ease);
 }
 .air-loss__step:hover {
-  border-color: rgba(255, 255, 255, 0.32);
+  border-color: var(--o-hairline-3);
   transform: translateY(-3px);
 }
 /* --_life: how much signal is left by this stage. */
@@ -278,28 +184,27 @@ body.o-air-flow .air {
   position: absolute;
   inset: 0 auto 0 0;
   width: 2px;
-  border-radius: 2px 0 0 2px;
   background: linear-gradient(180deg,
-    rgba(255, 255, 255, var(--_life)),
-    rgba(255, 255, 255, 0));
+    rgba(17, 17, 16, var(--_life)),
+    rgba(17, 17, 16, 0));
 }
 .air-loss__num {
   font-family: var(--o-font-display);
   font-size: var(--o-t-xs);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.16em;
-  color: rgba(255, 255, 255, calc(0.35 + var(--_life) * 0.65));
+  color: rgba(17, 17, 16, calc(0.35 + var(--_life) * 0.65));
 }
-.air-loss__title { font-size: var(--o-t-h4); font-weight: 600; color: #fff; }
-.air-loss__text { font-size: var(--o-t-sm); color: rgba(255, 255, 255, 0.72); line-height: 1.55; }
+.air-loss__title { font-size: var(--o-t-h4); font-weight: 600; color: var(--o-ink); }
+.air-loss__text { font-size: var(--o-t-sm); color: var(--o-ink-2); line-height: 1.55; }
 
 .air-loss__step:not(:last-child)::after {
   content: "";
   position: absolute;
   width: 7px;
   height: 7px;
-  border-right: 1.5px solid rgba(255, 255, 255, 0.3);
-  border-bottom: 1.5px solid rgba(255, 255, 255, 0.3);
+  border-right: 1.5px solid var(--o-hairline-3);
+  border-bottom: 1.5px solid var(--o-hairline-3);
   left: 50%;
   bottom: -11px;
   transform: translateX(-50%) rotate(45deg);
@@ -315,17 +220,14 @@ body.o-air-flow .air {
 }
 
 /* ==========================================================================
-   Section 3 - Dashboard mockup ("the OPTIQ Console" - boxes: black)
+   Section 3 - Dashboard mockup ("the OPTIQ Console" - boxes: white)
    ========================================================================== */
 
 .air-dash__frame {
   margin-top: clamp(40px, 5vw, 64px);
-  border-radius: var(--o-radius-lg);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: #000;
-  box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.85),
-              0 0 0 1px rgba(255, 255, 255, 0.05),
-              0 0 80px -30px rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--o-hairline-2);
+  background: var(--o-bg);
+  box-shadow: var(--o-shadow-lg);
   overflow: hidden;
 }
 
@@ -334,21 +236,21 @@ body.o-air-flow .air {
   align-items: center;
   gap: 12px;
   padding: 14px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--o-hairline);
+  background: var(--o-surface-1);
 }
 .air-dash__dot {
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--o-hairline-3);
 }
 .air-dash__name {
   margin-left: 6px;
   font-size: var(--o-t-xs);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--o-ink);
 }
 
 .air-live {
@@ -358,35 +260,35 @@ body.o-air-flow .air {
   gap: 8px;
   padding: 5px 11px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--o-hairline-3);
+  background: var(--o-bg);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--o-ink);
 }
 .air-live__pip {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #fff;
+  background: var(--o-accent);
   animation: air-pulse 2s ease-in-out infinite;
 }
 @keyframes air-pulse {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.45); }
-  50%      { opacity: 0.6; box-shadow: 0 0 0 6px rgba(255, 255, 255, 0); }
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(182, 138, 63, 0.45); }
+  50%      { opacity: 0.6; box-shadow: 0 0 0 6px rgba(182, 138, 63, 0); }
 }
 
 .air-dash__grid {
   display: grid;
   gap: 1px;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--o-hairline);
 }
 @media (min-width: 900px) {
   .air-dash__grid { grid-template-columns: 1.35fr 1fr; }
 }
-.air-dash__panel { padding: clamp(20px, 3vw, 30px); background: #000; }
+.air-dash__panel { padding: clamp(20px, 3vw, 30px); background: var(--o-bg); }
 .air-dash__panel + .air-dash__panel { display: grid; gap: 16px; align-content: start; }
 
 .air-dash__label {
@@ -394,13 +296,13 @@ body.o-air-flow .air {
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--o-ink);
   margin-bottom: 14px;
 }
 
 /* Waveform: bars are generated in Liquid; each gets its own delay and a
    height driven by --h so the shape reads as speech rather than a uniform
-   equaliser. White per "make the motion bar white". */
+   equaliser. */
 .air-wave {
   display: flex;
   align-items: center;
@@ -412,7 +314,7 @@ body.o-air-flow .air {
   flex: 1;
   min-width: 2px;
   border-radius: 2px;
-  background: linear-gradient(180deg, #ffffff, rgba(255, 255, 255, 0.5));
+  background: linear-gradient(180deg, var(--o-ink), var(--o-ink-3));
   height: calc(var(--h) * 1%);
   transform-origin: center;
   animation: air-wave 1.4s ease-in-out infinite;
@@ -425,11 +327,11 @@ body.o-air-flow .air {
 }
 
 .air-caller { display: grid; gap: 4px; margin-bottom: 20px; }
-.air-caller__name { font-size: var(--o-t-h4); font-weight: 600; color: #fff; }
-.air-caller__meta { font-size: var(--o-t-xs); color: rgba(255, 255, 255, 0.65); font-variant-numeric: tabular-nums; }
+.air-caller__name { font-size: var(--o-t-h4); font-weight: 600; color: var(--o-ink); }
+.air-caller__meta { font-size: var(--o-t-xs); color: var(--o-ink-3); font-variant-numeric: tabular-nums; }
 
-/* Transcript bubbles are boxes too - both turns are now solid black,
-   distinguished by border weight instead of a lime tint on the AI turn. */
+/* Transcript bubbles are boxes too - both turns are white, distinguished
+   by border weight instead of a colour tint on the AI turn. */
 .air-txt { display: grid; gap: 12px; }
 .air-txt__line { display: grid; gap: 3px; }
 .air-txt__who {
@@ -437,22 +339,21 @@ body.o-air-flow .air {
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--o-ink-3);
 }
-.air-txt__line--ai .air-txt__who { color: #fff; }
+.air-txt__line--ai .air-txt__who { color: var(--o-ink); }
 .air-txt__body {
   font-size: var(--o-t-sm);
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--o-ink-2);
   padding: 11px 14px;
-  border-radius: 12px;
-  background: #000;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--o-bg);
+  border: 1px solid var(--o-hairline-2);
 }
 .air-txt__line--ai .air-txt__body {
-  background: #000;
-  border-color: rgba(255, 255, 255, 0.32);
-  color: #fff;
+  background: var(--o-bg);
+  border-color: var(--o-hairline-3);
+  color: var(--o-ink);
 }
 
 /* Side cards */
@@ -460,11 +361,10 @@ body.o-air-flow .air {
   display: grid;
   gap: 8px;
   padding: 16px 18px;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: #000;
+  border: 1px solid var(--o-hairline-2);
+  background: var(--o-bg);
 }
-.air-note--accent { border-color: rgba(255, 255, 255, 0.35); background: #000; }
+.air-note--accent { border-color: var(--o-hairline-3); background: var(--o-bg); }
 .air-note__top {
   display: flex;
   align-items: center;
@@ -473,12 +373,12 @@ body.o-air-flow .air {
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--o-ink-3);
 }
-.air-note--accent .air-note__top { color: #fff; }
+.air-note--accent .air-note__top { color: var(--o-ink); }
 .air-note__top svg { color: currentColor; }
-.air-note__title { font-size: var(--o-t-sm); font-weight: 600; color: #fff; }
-.air-note__meta { font-size: var(--o-t-xs); color: rgba(255, 255, 255, 0.6); font-variant-numeric: tabular-nums; }
+.air-note__title { font-size: var(--o-t-sm); font-weight: 600; color: var(--o-ink); }
+.air-note__meta { font-size: var(--o-t-xs); color: var(--o-ink-3); font-variant-numeric: tabular-nums; }
 
 .air-stat { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
 .air-stat__v {
@@ -487,12 +387,12 @@ body.o-air-flow .air {
   font-weight: 650;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
-  color: #fff;
+  color: var(--o-ink);
 }
-.air-stat__k { font-size: var(--o-t-xs); color: rgba(255, 255, 255, 0.6); }
+.air-stat__k { font-size: var(--o-t-xs); color: var(--o-ink-3); }
 
 /* ==========================================================================
-   Section 4 - Features (boxes: black)
+   Section 4 - Features (boxes: white)
    ========================================================================== */
 
 .air-feat__grid {
@@ -509,34 +409,18 @@ body.o-air-flow .air {
   gap: 11px;
   align-content: start;
   padding: 24px 22px 26px;
-  border-radius: var(--o-radius);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: #000;
+  border: 1px solid var(--o-hairline-2);
+  background: var(--o-bg);
   overflow: hidden;
   transition: transform var(--o-dur) var(--o-ease),
               border-color var(--o-dur) var(--o-ease),
               box-shadow var(--o-dur) var(--o-ease);
 }
-.air-feat__card::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: -60%;
-  width: 150%;
-  height: 120%;
-  transform: translateX(-50%);
-  background: radial-gradient(ellipse at 50% 100%, rgba(255, 255, 255, 0.08), transparent 65%);
-  opacity: 0;
-  transition: opacity var(--o-dur) var(--o-ease);
-  pointer-events: none;
-}
 .air-feat__card:hover {
   transform: translateY(-4px);
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 20px 44px -22px rgba(0, 0, 0, 0.85),
-              0 0 34px -14px rgba(255, 255, 255, 0.22);
+  border-color: var(--o-hairline-3);
+  box-shadow: var(--o-shadow);
 }
-.air-feat__card:hover::before { opacity: 1; }
 
 .air-feat__icon {
   display: inline-flex;
@@ -544,15 +428,13 @@ body.o-air-flow .air {
   justify-content: center;
   width: 38px;
   height: 38px;
-  border-radius: 11px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  border: 1px solid var(--o-hairline-3);
+  color: var(--o-ink);
   transition: color var(--o-dur) var(--o-ease), border-color var(--o-dur) var(--o-ease);
 }
-.air-feat__card:hover .air-feat__icon { color: #fff; border-color: rgba(255, 255, 255, 0.5); }
-.air-feat__title { font-size: var(--o-t-body); font-weight: 600; letter-spacing: -0.01em; color: #fff; }
-.air-feat__text { font-size: var(--o-t-sm); color: rgba(255, 255, 255, 0.72); line-height: 1.5; }
+.air-feat__card:hover .air-feat__icon { border-color: var(--o-ink); }
+.air-feat__title { font-size: var(--o-t-body); font-weight: 600; letter-spacing: -0.01em; color: var(--o-ink); }
+.air-feat__text { font-size: var(--o-t-sm); color: var(--o-ink-2); line-height: 1.5; }
 
 /* ==========================================================================
    Section 5 - How it works (the numbered discs are the "boxes" here)
@@ -573,7 +455,7 @@ body.o-air-flow .air {
     left: 12%;
     right: 12%;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+    background: linear-gradient(90deg, transparent, var(--o-hairline-3), transparent);
   }
 }
 
@@ -585,20 +467,19 @@ body.o-air-flow .air {
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: #000;
-  box-shadow: 0 0 24px -8px rgba(255, 255, 255, 0.35);
+  border: 1px solid var(--o-hairline-3);
+  background: var(--o-bg);
   font-family: var(--o-font-display);
   font-size: var(--o-t-body);
   font-weight: 650;
   font-variant-numeric: tabular-nums;
-  color: #fff;
+  color: var(--o-ink);
 }
-.air-step__title { font-size: var(--o-t-h4); font-weight: 600; color: #fff; }
-.air-step__text { font-size: var(--o-t-sm); color: rgba(255, 255, 255, 0.72); line-height: 1.55; max-width: 34ch; }
+.air-step__title { font-size: var(--o-t-h4); font-weight: 600; color: var(--o-ink); }
+.air-step__text { font-size: var(--o-t-sm); color: var(--o-ink-2); line-height: 1.55; max-width: 34ch; }
 
 /* ==========================================================================
-   Section 6 - Pricing (boxes: black)
+   Section 6 - Pricing (boxes: white)
    ========================================================================== */
 
 .air-price__grid {
@@ -616,16 +497,14 @@ body.o-air-flow .air {
   display: flex;
   flex-direction: column;
   padding: clamp(30px, 3.4vw, 44px);
-  border-radius: var(--o-radius-lg);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: #000;
+  border: 1px solid var(--o-hairline-2);
+  background: var(--o-bg);
   transition: border-color var(--o-dur) var(--o-ease), box-shadow var(--o-dur) var(--o-ease);
 }
-.air-price__card:hover { border-color: rgba(255, 255, 255, 0.3); }
+.air-price__card:hover { border-color: var(--o-hairline-3); }
 .air-price__card--featured {
-  border-color: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.14),
-              0 30px 80px -40px rgba(255, 255, 255, 0.22);
+  border-color: var(--o-ink);
+  box-shadow: var(--o-shadow);
 }
 
 .air-price__tag {
@@ -634,22 +513,21 @@ body.o-air-flow .air {
   right: 22px;
   padding: 5px 12px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--o-ink);
   font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--o-bg);
 }
 
 .air-price__name {
   font-size: var(--o-t-h3);
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: #fff;
+  color: var(--o-ink);
 }
-.air-price__note { margin-top: 8px; font-size: var(--o-t-sm); color: rgba(255, 255, 255, 0.68); }
+.air-price__note { margin-top: 8px; font-size: var(--o-t-sm); color: var(--o-ink-2); }
 
 .air-price__amount {
   display: flex;
@@ -660,16 +538,16 @@ body.o-air-flow .air {
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.045em;
 }
-.air-price__figure { font-size: clamp(3rem, 1.9rem + 3.4vw, 4.25rem); font-weight: 650; line-height: 1; color: #fff; }
-.air-price__per { font-size: var(--o-t-body); font-weight: 500; color: rgba(255, 255, 255, 0.68); letter-spacing: 0; }
-.air-price__billing { font-size: var(--o-t-xs); color: rgba(255, 255, 255, 0.55); }
+.air-price__figure { font-size: clamp(3rem, 1.9rem + 3.4vw, 4.25rem); font-weight: 650; line-height: 1; color: var(--o-ink); }
+.air-price__per { font-size: var(--o-t-body); font-weight: 500; color: var(--o-ink-2); letter-spacing: 0; }
+.air-price__billing { font-size: var(--o-t-xs); color: var(--o-ink-3); }
 
 .air-price__list {
   display: grid;
   gap: 13px;
   margin: 30px 0;
   padding-top: 28px;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid var(--o-hairline);
   flex-grow: 1;
 }
 .air-price__list li {
@@ -677,7 +555,7 @@ body.o-air-flow .air {
   align-items: flex-start;
   gap: 12px;
   font-size: var(--o-t-sm);
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--o-ink-2);
   line-height: 1.45;
 }
 .air-price__tick {
@@ -688,9 +566,8 @@ body.o-air-flow .air {
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #fff;
+  background: var(--o-ink);
+  color: var(--o-bg);
 }
 
 .air-price__form { display: grid; gap: 12px; }
@@ -700,26 +577,25 @@ body.o-air-flow .air {
   align-items: center;
   gap: 12px;
   font-size: var(--o-t-xs);
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--o-ink-3);
 }
 .air-price__or::before,
 .air-price__or::after {
   content: "";
   flex: 1;
   height: 1px;
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--o-hairline);
 }
 .air-price__safe {
   margin-top: 14px;
   font-size: var(--o-t-xs);
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--o-ink-3);
   text-align: center;
 }
 
 /* ==========================================================================
    Section 7 - FAQ  (reuses the .o-acc component from optiq-components.css -
-   a shared component used on other pages too, so left untouched here; ask
-   if you want the FAQ accordion boxes recoloured the same way.)
+   a shared component used on other pages too, so left untouched here.)
    ========================================================================== */
 
 .air-faq__grid { display: grid; gap: clamp(28px, 4vw, 56px); }
@@ -753,7 +629,7 @@ body.o-air-flow .air {
   width: min(880px, 120vw);
   aspect-ratio: 2 / 1;
   transform: translateX(-50%);
-  background: radial-gradient(ellipse at 50% 50%, rgba(31, 175, 110, 0.14), transparent 62%);
+  background: radial-gradient(ellipse at 50% 50%, rgba(182, 138, 63, 0.08), transparent 62%);
   pointer-events: none;
 }
 
@@ -767,8 +643,6 @@ body.o-air-flow .air {
   .air-wave__bar,
   .air-live__pip { animation: none !important; }
   .air-wave__bar { transform: scaleY(0.7); }
-  .air-cta:hover::after { animation: none; }
-  .air-cta:hover,
   .air-feat__card:hover,
   .air-loss__step:hover { transform: none; }
 }
