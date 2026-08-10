@@ -34,18 +34,21 @@ document.addEventListener('shopify:section:load', optiqServicesHeroInit);
 /* ==========================================================================
    Product showcase (right column of the services splash)
 
-   The splash section is fixed with body scroll locked, so there is no real
-   page scroll to drive a scroll-linked animation off - instead this listens
-   for wheel/touch gestures scoped to the showcase element itself and turns
-   them into an eased horizontal "virtual scroll" position, giving the same
-   scroll-driven feel the rest of the site would get from real page scroll,
-   without unlocking scrolling on a screen that is deliberately a fixed
-   full-viewport chooser.
+   Autoplay drives the showcase on its own, advancing one product at a time
+   on a fixed interval - wheel, touch drag, arrows, dots and keyboard all
+   still work and simply take over the same position for a few seconds
+   before autoplay quietly resumes. The splash section is fixed with body
+   scroll locked, so there is no real page scroll for manual input to hook
+   into either way; wheel/touch gestures are scoped to the showcase element
+   itself rather than the page.
 
-   A single continuous position (0..count-1) drives every slide's transform/
-   opacity/blur every animation frame - one interpolated value, not five
-   separate per-product animations, so the transition between any two
-   products always looks the same regardless of how far the gesture jumps.
+   A single continuous position drives every slide's transform/opacity/blur
+   every animation frame - one interpolated value, not five separate
+   per-product animations, so the transition between any two products always
+   looks the same. The position is unbounded (not clamped to the slide
+   count) and wrapped visually via circularDelta(), so autoplay can drift
+   forward forever without ever snapping backwards at the loop point from
+   the last product back to the first.
    ========================================================================== */
 function optiqShowcaseInit() {
   var root = document.querySelector('[data-opsh-showcase]');
@@ -67,6 +70,24 @@ function optiqShowcaseInit() {
 
   function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
 
+  /* Shortest signed distance between two positions on a looping n-item ring,
+     so autoplay can drift forward forever - current/target just keep
+     growing - without ever snapping backwards at the wrap from the last
+     product back to the first. */
+  function circularDelta(pos, index) {
+    var raw = (pos - index) % count;
+    if (raw > count / 2) raw -= count;
+    if (raw < -count / 2) raw += count;
+    return raw;
+  }
+
+  /* Nearest absolute target equivalent to a given slide index, so jumping to
+     a dot always takes the shortest path around the ring instead of
+     rewinding through every slide in between. */
+  function nearestEquivalent(index) {
+    return Math.round((target - index) / count) * count + index;
+  }
+
   function setActiveDot(index) {
     for (var i = 0; i < dots.length; i++) {
       var active = i === index;
@@ -79,10 +100,10 @@ function optiqShowcaseInit() {
      opacity; each step away shrinks, fades and softly blurs, so a product
      leaving frame reads as receding rather than sliding off unchanged. */
   function render() {
-    var activeIndex = Math.round(current);
+    var activeIndex = ((Math.round(current) % count) + count) % count;
     for (var i = 0; i < count; i++) {
       var el = items[i];
-      var delta = current - i;
+      var delta = circularDelta(current, i);
       var abs = Math.abs(delta);
       var inFocus = abs < 0.5;
       el.style.transform = 'translate3d(' + (delta * 108) + '%, 0, 0) scale(' + clamp(1 - abs * 0.22, 0.72, 1) + ')';
@@ -99,7 +120,7 @@ function optiqShowcaseInit() {
   /* Reduced-motion path: a plain instant swap between exactly one visible
      slide at a time, no continuous transform/opacity animation. */
   function renderStatic() {
-    var index = Math.round(target);
+    var index = ((Math.round(target) % count) + count) % count;
     for (var i = 0; i < count; i++) {
       var el = items[i];
       el.style.transform = '';
@@ -124,8 +145,12 @@ function optiqShowcaseInit() {
     rafId = requestAnimationFrame(tick);
   }
 
+  /* current/target are unbounded (not clamped to 0..count-1) - the ring
+     wraps visually via circularDelta() above, so target can just keep
+     growing forever and autoplay never has to snap backwards at the loop
+     point from the last product back to the first. */
   function go(newTarget) {
-    target = clamp(newTarget, 0, count - 1);
+    target = newTarget;
     if (reduced.matches) {
       current = target;
       renderStatic();
@@ -140,11 +165,45 @@ function optiqShowcaseInit() {
     render();
   }
 
+  /* ---- autoplay: the showcase drives itself, no gesture required ----
+     Advances one product at a time on a fixed interval and lets the same
+     eased tick() loop glide to it, so autoplay motion looks identical to a
+     manual advance. Pauses on any manual interaction and quietly resumes a
+     few seconds later, and never runs at all under reduced motion. */
+  var AUTOPLAY_MS = 4200;
+  var AUTOPLAY_RESUME_MS = 5000;
+  var autoplayTimer = null;
+  var resumeTimer = null;
+
+  function stopAutoplay() {
+    if (autoplayTimer) { window.clearInterval(autoplayTimer); autoplayTimer = null; }
+  }
+  function startAutoplay() {
+    if (reduced.matches || document.hidden) return;
+    stopAutoplay();
+    autoplayTimer = window.setInterval(function () { go(target + 1); }, AUTOPLAY_MS);
+  }
+  function pauseThenResumeAutoplay() {
+    stopAutoplay();
+    if (resumeTimer) window.clearTimeout(resumeTimer);
+    resumeTimer = window.setTimeout(startAutoplay, AUTOPLAY_RESUME_MS);
+  }
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) stopAutoplay();
+    else startAutoplay();
+  });
+  root.addEventListener('mouseenter', stopAutoplay);
+  root.addEventListener('mouseleave', startAutoplay);
+
+  startAutoplay();
+
   /* ---- wheel: scroll-driven progress, scoped to this element only ---- */
   var WHEEL_SENSITIVITY = 0.0022;
   root.addEventListener('wheel', function (e) {
     if (reduced.matches) return;
     e.preventDefault();
+    pauseThenResumeAutoplay();
     go(target + e.deltaY * WHEEL_SENSITIVITY);
   }, { passive: false });
 
@@ -152,6 +211,7 @@ function optiqShowcaseInit() {
   var touchStartX = null;
   var touchStartTarget = 0;
   root.addEventListener('touchstart', function (e) {
+    stopAutoplay();
     touchStartX = e.touches[0].clientX;
     touchStartTarget = target;
   }, { passive: true });
@@ -165,17 +225,18 @@ function optiqShowcaseInit() {
     if (touchStartX === null) return;
     touchStartX = null;
     go(Math.round(target)); // settle on the nearest product on release
+    pauseThenResumeAutoplay();
   });
 
   /* ---- controls: arrows, dots, keyboard ---- */
-  if (prevBtn) prevBtn.addEventListener('click', function () { go(Math.round(target) - 1); });
-  if (nextBtn) nextBtn.addEventListener('click', function () { go(Math.round(target) + 1); });
+  if (prevBtn) prevBtn.addEventListener('click', function () { pauseThenResumeAutoplay(); go(Math.round(target) - 1); });
+  if (nextBtn) nextBtn.addEventListener('click', function () { pauseThenResumeAutoplay(); go(Math.round(target) + 1); });
   dots.forEach(function (dot, i) {
-    dot.addEventListener('click', function () { go(i); });
+    dot.addEventListener('click', function () { pauseThenResumeAutoplay(); go(nearestEquivalent(i)); });
   });
   root.addEventListener('keydown', function (e) {
-    if (e.key === 'ArrowRight') { e.preventDefault(); go(Math.round(target) + 1); }
-    if (e.key === 'ArrowLeft')  { e.preventDefault(); go(Math.round(target) - 1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); pauseThenResumeAutoplay(); go(Math.round(target) + 1); }
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); pauseThenResumeAutoplay(); go(Math.round(target) - 1); }
   });
 }
 
