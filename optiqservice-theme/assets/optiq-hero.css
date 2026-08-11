@@ -38,9 +38,15 @@
   inset: 0;
   z-index: 0;
 }
+/* Each slide carries both a 16:9 desktop crop (--opsh-bg-d) and a proper
+   9:16 portrait crop (--opsh-bg-m), set inline per slide in the Liquid
+   markup. Which one actually renders is picked below by viewport width -
+   "cover" on a 16:9 photo inside a tall phone screen crops far too much
+   to read; a dedicated portrait photo needs no such compromise. */
 .opsh__bg-slide {
   position: absolute;
   inset: 0;
+  background-image: var(--opsh-bg-d);
   background-size: cover;
   background-position: center;
   opacity: 0;
@@ -243,6 +249,7 @@
   .opsh__logo { font-size: clamp(3.4rem, 20vw, 6rem); }
   .opsh__bgnav { padding: 0 12px; }
   .opsh__bgarrow { width: 40px; height: 40px; }
+  .opsh__bg-slide { background-image: var(--opsh-bg-m); }
 }
 
 /* ---------------- reduced motion ---------------- */
