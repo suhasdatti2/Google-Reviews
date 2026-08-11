@@ -243,6 +243,17 @@
   .opsh__logo { font-size: clamp(3.4rem, 20vw, 6rem); }
   .opsh__bgnav { padding: 0 12px; }
   .opsh__bgarrow { width: 40px; height: 40px; }
+
+  /* The source photos are wide landscape product shots (some framing two
+     units side by side); on a tall phone screen "cover" zooms in hard
+     enough to crop the composition into an illegible, overlapping mess.
+     "contain" keeps the whole photo intact, letterboxed against the
+     section's own dark background instead. */
+  .opsh__bg-slide {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
 }
 
 /* ---------------- reduced motion ---------------- */
