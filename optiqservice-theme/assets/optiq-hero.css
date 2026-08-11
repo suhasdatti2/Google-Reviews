@@ -44,10 +44,60 @@
   background-size: cover;
   background-position: center;
   opacity: 0;
-  transition: opacity 1800ms cubic-bezier(.4, 0, .2, 1);
-  will-change: opacity;
+  transform: scale(1);
+  transition: opacity 2200ms cubic-bezier(.22, .61, .36, 1), transform 7000ms cubic-bezier(.22, .61, .36, 1);
+  will-change: opacity, transform;
 }
-.opsh__bg-slide.is-active { opacity: 1; }
+/* Slow, continuous Ken Burns drift while a slide is showing - the zoom
+   keeps easing toward 1.06 for as long as the slide stays active, so a
+   longer dwell (e.g. paused on arrow interaction) still reads as one
+   smooth, unhurried motion rather than a static cut. */
+.opsh__bg-slide.is-active { opacity: 1; transform: scale(1.06); }
+
+/* ---------------- prev/next arrows ---------------- */
+
+.opsh__bgnav {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(14px, 2.6vw, 36px);
+  pointer-events: none;
+}
+
+.opsh__bgarrow {
+  pointer-events: auto;
+  display: grid;
+  place-items: center;
+  width: clamp(38px, 3.6vw, 50px);
+  height: clamp(38px, 3.6vw, 50px);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, .32);
+  background: rgba(10, 9, 8, .22);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
+  cursor: pointer;
+  opacity: 0;
+  animation: opsh-up 900ms cubic-bezier(.16, 1, .3, 1) forwards;
+  animation-delay: 640ms;
+  transition: background-color 260ms ease, border-color 260ms ease, transform 320ms cubic-bezier(.16, 1, .3, 1);
+}
+.opsh__bgarrow svg { transition: transform 260ms cubic-bezier(.16, 1, .3, 1); }
+.opsh__bgarrow:hover,
+.opsh__bgarrow:focus-visible {
+  background: rgba(255, 255, 255, .14);
+  border-color: rgba(255, 255, 255, .75);
+  transform: scale(1.08);
+}
+.opsh__bgarrow--prev:hover svg,
+.opsh__bgarrow--prev:focus-visible svg { transform: translateX(-2px); }
+.opsh__bgarrow--next:hover svg,
+.opsh__bgarrow--next:focus-visible svg { transform: translateX(2px); }
+.opsh__bgarrow:active { transform: scale(0.96); }
+.opsh__bgarrow:focus-visible { outline: none; }
 
 /* Scrim so the white overlay text stays legible over whichever photo is
    currently showing, whatever its own tone happens to be - strongest in
@@ -191,15 +241,20 @@
 @media (max-width: 780px) {
   .opsh__overlay { padding: clamp(20px, 5vh, 32px) clamp(18px, 6vw, 28px); }
   .opsh__logo { font-size: clamp(3.4rem, 20vw, 6rem); }
+  .opsh__bgnav { padding: 0 12px; }
+  .opsh__bgarrow { width: 40px; height: 40px; }
 }
 
 /* ---------------- reduced motion ---------------- */
 
 @media (prefers-reduced-motion: reduce) {
-  .opsh__row, .opsh__logo {
+  .opsh__row, .opsh__logo, .opsh__bgarrow {
     animation-duration: 1ms !important;
     animation-delay: 0ms !important;
   }
   .opsh__row-label { transition: none !important; }
-  .opsh__bg-slide { transition-duration: 1ms !important; }
+  .opsh__bg-slide { transition-duration: 1ms !important; transform: none !important; }
+  .opsh__bg-slide.is-active { transform: none !important; }
+  .opsh__bgarrow, .opsh__bgarrow svg { transition: none !important; }
+  .opsh__bgarrow:hover, .opsh__bgarrow:focus-visible, .opsh__bgarrow:active { transform: none !important; }
 }

@@ -46,6 +46,15 @@
   </div>
   <div class="opsh__scrim" aria-hidden="true"></div>
 
+  <div class="opsh__bgnav">
+    <button type="button" class="opsh__bgarrow opsh__bgarrow--prev" data-opsh-bg-prev aria-label="Previous photo">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
+    <button type="button" class="opsh__bgarrow opsh__bgarrow--next" data-opsh-bg-next aria-label="Next photo">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+
   <div class="opsh__overlay">
     <nav class="opsh__list" aria-label="{{ section.settings.aria_label | escape }}">
       <a
