@@ -298,6 +298,14 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
   .sig-hero__frame { min-height: 70vh; }
 }
 
+/* Embedded mode (signature-hero.liquid, full_page_takeover off): no topbar
+   is rendered, so the extra top padding reserved to clear it is not
+   needed - matches the section's own side/bottom padding instead. */
+.sig-hero--embedded { padding-top: clamp(20px, 4.5vw, 72px); }
+@media (max-width: 640px) {
+  .sig-hero--embedded { padding-top: clamp(20px, 4.5vw, 72px); }
+}
+
 /* ==========================================================================
    Placeholder media (light-mode, for this page only — replaces the dark
    theme's dashed-stripe placeholder, which would clash badly here)

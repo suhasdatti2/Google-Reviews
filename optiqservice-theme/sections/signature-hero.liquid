@@ -24,11 +24,28 @@
 
 {{ 'optiq-signature.css' | asset_url | stylesheet_tag }}
 
-<section class="sig-hero sig-page" {{ section.shopify_attributes }}>
-  <div class="sig-topbar">
-    <a class="sig-topbar__mark" href="{{ routes.root_url }}">OPTIQ <span>Signature</span></a>
-    <a class="sig-topbar__back" href="{{ section.settings.back_link | default: '/pages/google-review-cards' }}">{{ section.settings.back_label | default: '← Back to Optiq' }}</a>
-  </div>
+{%- comment -%}
+  full_page_takeover (default true) is what /pages/signature uses: the
+  sig-page marker hides the site's normal header/footer/dock/AI-chat via
+  body:has(.sig-page) in optiq-signature.css, and this section shows its
+  own minimal "back to Optiq" topbar instead, since there is no other nav
+  on that page. When this same section is embedded mid-page elsewhere (the
+  Google Review Cards page also runs its own real header/footer around it),
+  that takeover would wrongly hide that page's chrome too - so it is turned
+  off there, and the topbar (redundant next to a real header) is skipped.
+{%- endcomment -%}
+{%- assign sig_full_page = true -%}
+{%- if section.settings.full_page_takeover == false -%}
+  {%- assign sig_full_page = false -%}
+{%- endif -%}
+
+<section class="sig-hero{% if sig_full_page %} sig-page{% else %} sig-hero--embedded{% endif %}" id="sig-hero" {{ section.shopify_attributes }}>
+  {%- if sig_full_page -%}
+    <div class="sig-topbar">
+      <a class="sig-topbar__mark" href="{{ routes.root_url }}">OPTIQ <span>Signature</span></a>
+      <a class="sig-topbar__back" href="{{ section.settings.back_link | default: '/pages/google-review-cards' }}">{{ section.settings.back_label | default: '← Back to Optiq' }}</a>
+    </div>
+  {%- endif -%}
 
   <div class="sig-hero__frame">
     <div class="sig-hero__media" data-o-reveal="fade">
@@ -59,7 +76,14 @@
     { "type": "image_picker", "id": "hero_image", "label": "Hero product photo" },
     { "type": "text", "id": "cta_label", "label": "Button label", "default": "Explore Signature" },
     { "type": "url", "id": "cta_link", "label": "Button link", "info": "Defaults to #sig-configurator, which scrolls to the configurator section on this page." },
-    { "type": "header", "content": "Top bar" },
+    {
+      "type": "checkbox",
+      "id": "full_page_takeover",
+      "label": "Take over the whole page",
+      "default": true,
+      "info": "On: hides the site header, footer, and dock, and shows this section's own back-to-Optiq bar - use this on a dedicated Signature page. Off: renders inline alongside the normal site header/footer - use this when embedding Signature within another page."
+    },
+    { "type": "header", "content": "Top bar (only shown when this section takes over the page)" },
     { "type": "text", "id": "back_label", "label": "Back link label", "default": "← Back to Optiq" },
     { "type": "url", "id": "back_link", "label": "Back link URL", "info": "Defaults to /pages/google-review-cards" }
   ],

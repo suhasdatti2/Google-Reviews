@@ -216,7 +216,8 @@
         "bulk_mode_label": "Mini Bulk Cards",
         "wristband_mode_label": "Wristband",
         "membership_label": "See full plan details",
-        "membership_link": "/pages/membership"
+        "membership_link": "/pages/membership",
+        "signature_link": "#sig-hero"
       }
     },
     "wristbandspotlight": {
@@ -391,6 +392,67 @@
         "subheading": "If your customers walk out happy, give them the easiest possible way to say so."
       }
     },
+    "sighero": {
+      "type": "signature-hero",
+      "settings": {
+        "eyebrow": "Introducing",
+        "heading": "OPTIQ Signature",
+        "subheading": "The world's most refined NFC experience.",
+        "hero_image": "shopify://shop_images/hf_20260807_032922_b8902637-8c24-4a47-8c13-39b2ad594145.png",
+        "cta_label": "Explore Signature",
+        "cta_link": "",
+        "full_page_takeover": false
+      }
+    },
+    "sigmaterial": {
+      "type": "signature-material",
+      "settings": {
+        "eyebrow": "Material",
+        "heading": "Engineered from precision metal.",
+        "body": "A solid metal body, finished by hand and machined to a tolerance most cards never see. The NFC layer sits invisibly inside - nothing about the surface hints at the technology underneath until the moment it's tapped.",
+        "image": "shopify://shop_images/Screenshot_2026-08-06_231543.png"
+      }
+    },
+    "sigengineering": {
+      "type": "signature-engineering",
+      "settings": {
+        "eyebrow": "Construction",
+        "heading": "Precision in every layer.",
+        "layer_1_title": "Front metal plate",
+        "layer_1_text": "Machined and finished by hand",
+        "layer_2_title": "NFC technology layer",
+        "layer_2_text": "Programmed with your review link",
+        "layer_3_title": "Back metal plate",
+        "layer_3_text": "Sealed for a lifetime of use"
+      }
+    },
+    "sigconfigurator": {
+      "type": "signature-configurator",
+      "settings": {
+        "eyebrow": "Configure yours",
+        "heading": "Make it yours.",
+        "cta_label": "Add to Cart",
+        "programming_hint": "",
+        "finish_image_titanium": "shopify://shop_images/hf_20260809_191808_46f7dcda-4f86-45f5-b0e4-96c9812eab25.png"
+      }
+    },
+    "sigpackaging": {
+      "type": "signature-packaging",
+      "settings": {
+        "eyebrow": "The presentation",
+        "heading": "Arrives the way it should.",
+        "subheading": "A solid black box, opened once and kept. The card sits inside exactly as it left our hands."
+      }
+    },
+    "sigpurchase": {
+      "type": "signature-purchase",
+      "settings": {
+        "eyebrow": "Optiq Signature",
+        "heading": "Own the Signature experience.",
+        "subheading": "Finished in your choice of metal, programmed with your review link, engraved if you like. One card, built to last.",
+        "cta_label": "Configure Yours"
+      }
+    },
     "faq": {
       "type": "faq",
       "blocks": {
@@ -509,6 +571,12 @@
     "how",
     "demo",
     "who",
+    "sighero",
+    "sigmaterial",
+    "sigengineering",
+    "sigconfigurator",
+    "sigpackaging",
+    "sigpurchase",
     "faq",
     "cta"
   ]
