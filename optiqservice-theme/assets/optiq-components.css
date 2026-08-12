@@ -510,19 +510,20 @@
 .o-footer {
   border-top: 1px solid var(--o-hairline);
   background: var(--o-surface-1);
-  padding-top: clamp(56px, 6vw, 84px);
-  padding-bottom: 32px;
+  padding-top: clamp(64px, 7vw, 96px);
+  padding-bottom: 36px;
 }
+/* Two content blocks (Explore, Support) sit beside the brand column, so the
+   grid never needs more than three tracks - a fourth, mostly-empty track
+   was left over from a layout built for more columns than the section
+   ever actually renders. */
 .o-footer__grid {
   display: grid;
-  gap: 44px;
+  gap: 40px;
   grid-template-columns: 1fr;
 }
 @media (min-width: 700px) {
-  .o-footer__grid { grid-template-columns: 1.4fr 1fr 1fr; gap: 40px; }
-}
-@media (min-width: 1000px) {
-  .o-footer__grid { grid-template-columns: 1.6fr 1fr 1fr 1.2fr; }
+  .o-footer__grid { grid-template-columns: 1.8fr 1fr 1fr; gap: 56px; }
 }
 
 .o-footer__brand { display: grid; gap: 16px; align-content: start; max-width: 34ch; }

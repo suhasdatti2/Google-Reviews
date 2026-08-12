@@ -1,10 +1,23 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": {
     "contact_email": "sales@optiqservice.com",
-    "tagline": "Tap-to-review NFC cards for local businesses. No app. No monthly fee.",
-    "membership_variant_id": "48712385888488",
-    "membership_selling_plan_id": "",
-    "membership_name": "Review Growth Plan",
-    "membership_price": "$14.99"
+    "tagline": "Tap-to-review NFC cards for local businesses. No app, no QR code needed, no monthly fee.",
+    "content_for_index": [],
+    "blocks": {
+      "4644077978495408606": {
+        "type": "shopify://apps/appstle-memberships/blocks/appstle-membership-helper/76528d70-5fbe-48f8-8e19-590d109aa2b7",
+        "disabled": false,
+        "settings": {}
+      }
+    }
   }
 }
