@@ -126,32 +126,18 @@
     <a class="btn btn--primary btn--lg" data-config-cta href="/products/google-review-nfc-card">Select an option</a>
   </div>
 
-  <div class="configurator__memberships" aria-label="Optional membership plan">
-    <div class="configurator__memberships-intro">
-      <span class="configurator__memberships-kicker">{{ section.settings.membership_kicker | default: 'Optional add-on' }}</span>
-      <h3>{{ section.settings.membership_heading | default: 'Add the Review Growth Plan' }}</h3>
-      <p>{{ section.settings.membership_intro | default: 'This optional plan just adds a bit of ongoing help growing your reviews.' }}</p>
-    </div>
-
-    <article class="configurator__membership-card configurator__membership-card--featured configurator__membership-card--solo">
-      <div class="configurator__membership-head">
-        <span>{{ section.settings.growth_plan_name | default: 'Review Growth Plan' }}</span>
-        <strong>{{ section.settings.growth_plan_price | default: '$14.99/mo' }}</strong>
-      </div>
-      <ul>
-        {%- assign growth_benefits = section.settings.growth_plan_benefits | default: 'Free link updates if it ever changes|Monthly review check-ins|Ready-to-use review request templates|Priority support|Discounts on future cards' | split: '|' -%}
-        {%- for benefit in growth_benefits -%}
-          {%- assign clean_benefit = benefit | strip -%}
-          {%- if clean_benefit != blank -%}<li>{{ clean_benefit }}</li>{%- endif -%}
-        {%- endfor -%}
-      </ul>
-      <a class="btn btn--primary btn--full" href="{{ section.settings.growth_plan_link | default: '/products/review-growth-plan' }}">{{ section.settings.growth_plan_button | default: 'Add Review Growth Plan' }}</a>
-    </article>
-
-    <a class="configurator__membership-learn" href="{{ section.settings.membership_link | default: '/pages/membership' }}">
-      {{ section.settings.membership_label | default: 'See full plan details' }}
-    </a>
-  </div>
+  {%- comment -%}
+    A single understated link to the full membership page, not a second
+    purchase card competing with the summary button above it - this widget
+    already has exactly one buy action, and a second one here disagreed with
+    it as often as it agreed. Reuses .configurator__membership, the same
+    class the single-plan version of this section always used, rather than
+    introducing a new "membership card" component to this already-decided,
+    already-minimal purchase flow.
+  {%- endcomment -%}
+  <a class="configurator__membership" href="{{ section.settings.membership_link | default: '/pages/membership' }}">
+    {{ section.settings.membership_label | default: 'See full plan details' }}
+  </a>
 </div>
 
 <script>

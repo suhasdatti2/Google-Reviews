@@ -22,52 +22,6 @@
         "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_40_03_PM_4.png"
       }
     },
-    "optiqcinematic": {
-      "type": "optiq-cinematic-scroll-card",
-      "settings": {
-        "front_image": "shopify://shop_images/ChatGPT_Image_Jul_23_2026_05_24_48_PM.png",
-        "back_logo": "shopify://shop_images/Black_Optiq_Logo.png",
-        "intro_eyebrow": "OPTIQ TAP-TO-REVIEW",
-        "intro_heading": "One card. One tap. Your review page.",
-        "intro_desc": "Scroll to see the card from every angle.",
-        "g1_eyebrow": "ONE SIMPLE TAP",
-        "g1_heading": "Make leaving a review effortless.",
-        "g1_desc": "Customers tap the card with their phone and instantly reach your Google review page.",
-        "g2_eyebrow": "NO APP REQUIRED",
-        "g2_heading": "Works with the phone they already use.",
-        "g2_desc": "It opens your review page instantly - no app to download.",
-        "g3_eyebrow": "BUILT FOR YOUR COUNTER",
-        "g3_heading": "Keep your review link within reach.",
-        "g3_desc": "Keep it on your counter, front desk, or service area.",
-        "g4_eyebrow": "YOUR BUSINESS. YOUR LINK.",
-        "g4_heading": "Connected directly to your review page.",
-        "g4_desc": "Programmed with your Google or Yelp review link before it ships.",
-        "g5_eyebrow": "CLEAN, PREMIUM DESIGN",
-        "g5_heading": "Designed to look professional anywhere.",
-        "g5_desc": "A clean matte black finish that looks right on any counter.",
-        "g6_eyebrow": "BETTER CUSTOMER EXPERIENCE",
-        "g6_heading": "Remove unnecessary steps.",
-        "g6_desc": "No searching, no typing - just one tap to your review page.",
-        "final_eyebrow": "OPTIQ TAP-TO-REVIEW",
-        "final_heading": "Make every customer interaction count.",
-        "final_desc": "Give customers a faster way to reach your Google review page.",
-        "show_button": true,
-        "button_text": "Get Your Review Card",
-        "button_link": "",
-        "section_height": 600,
-        "card_size_desktop": 33,
-        "card_size_mobile": 76,
-        "card_thickness": 4,
-        "animation_intensity": 100,
-        "reduce_mobile": true,
-        "glow_strength": 100,
-        "background_glow": 60,
-        "color_blue": "#5a5f6b",
-        "color_cyan": "#828892",
-        "color_purple": "#3c3f47",
-        "color_magenta": "#565059"
-      }
-    },
     "showcase": {
       "type": "card-showcase",
       "blocks": {
@@ -198,7 +152,7 @@
             "mode": "wristband",
             "name": "Google Review Wristband",
             "note": "Premium silicone wristband, programmed with your Google review link. Waterproof and comfortable for all-day wear.",
-            "image": "",
+            "image": "shopify://shop_images/hf_20260806_033730_5b6406a1-139f-44fb-a473-d16c69042b7b.png",
             "tag": "Premium silicone construction",
             "badge": "New"
           }
@@ -260,9 +214,9 @@
         "subheading": "The Main Counter Card sits on your counter for years. Mini Bulk Cards go home with every customer. Most businesses use both.",
         "counter_mode_label": "Main Counter Card",
         "bulk_mode_label": "Mini Bulk Cards",
+        "wristband_mode_label": "Wristband",
         "membership_label": "See full plan details",
-        "membership_link": "/pages/membership",
-        "wristband_mode_label": "Wristband"
+        "membership_link": "/pages/membership"
       }
     },
     "wristbandspotlight": {
@@ -275,6 +229,7 @@
         "card_label": "Also available",
         "wristband_handle": "google-review-nfc-wristband",
         "wristband_label": "New",
+        "wristband_image": "shopify://shop_images/hf_20260806_033730_5b6406a1-139f-44fb-a473-d16c69042b7b.png",
         "badges": "NFC Enabled, Waterproof, Works with iPhone & Android, No App Required",
         "button_label": "Shop the Wristband"
       }
@@ -357,6 +312,23 @@
         "kicker": "How it works",
         "heading": "From Order to First Tap in Four Steps",
         "subheading": "We handle the programming. You just put the card where customers can tap it."
+      }
+    },
+    "demo": {
+      "type": "video-demo",
+      "settings": {
+        "kicker": "See it in action",
+        "heading": "Watch One Tap Open a Review Page",
+        "subheading": "Here's the card doing exactly what it does on your counter: a customer taps their phone, and your review page opens on the spot.",
+        "video_url": "https://cdn.shopify.com/s/files/1/0797/5554/2760/files/optiqservice-demo-v2.mp4?v=1783916790",
+        "poster_url": "https://cdn.shopify.com/s/files/1/0797/5554/2760/files/ChatGPT_Image_Jul_7_2026_07_41_03_PM_4_27f6dcc0-502f-45db-a375-277ecfd74a23.png?v=1783638921",
+        "autoplay": true,
+        "caption": "Muted by default. Tap the video for sound.",
+        "side_heading": "Google or Yelp. Your Choice.",
+        "side_text": "Tell us which review page you want your card to open. We program it before it ships, so a single tap takes customers straight there.",
+        "google_label": "Google review page",
+        "yelp_label": "Yelp review page",
+        "side_note": "One tap opens whichever you pick. No app, no QR code needed."
       }
     },
     "who": {
@@ -519,23 +491,6 @@
         "subheading": "Anything else? Email sales@optiqservice.com - we reply within one business day."
       }
     },
-    "demo": {
-      "type": "video-demo",
-      "settings": {
-        "kicker": "See it in action",
-        "heading": "Watch One Tap Open a Review Page",
-        "subheading": "Here's the card doing exactly what it does on your counter: a customer taps their phone, and your review page opens on the spot.",
-        "video_url": "https://cdn.shopify.com/s/files/1/0797/5554/2760/files/optiqservice-demo-v2.mp4?v=1783916790",
-        "poster_url": "https://cdn.shopify.com/s/files/1/0797/5554/2760/files/ChatGPT_Image_Jul_7_2026_07_41_03_PM_4_27f6dcc0-502f-45db-a375-277ecfd74a23.png?v=1783638921",
-        "autoplay": true,
-        "caption": "Muted by default. Tap the video for sound.",
-        "side_heading": "Google or Yelp. Your Choice.",
-        "side_text": "Tell us which review page you want your card to open. We program it before it ships, so a single tap takes customers straight there.",
-        "google_label": "Google review page",
-        "yelp_label": "Yelp review page",
-        "side_note": "One tap opens whichever you pick. No app, no QR code needed."
-      }
-    },
     "cta": {
       "type": "cta-banner",
       "settings": {
@@ -548,7 +503,6 @@
   },
   "order": [
     "hero",
-    "optiqcinematic",
     "showcase",
     "wristbandspotlight",
     "highlight",

@@ -130,6 +130,14 @@
   justify-content: space-between;
   align-items: flex-end;
   padding: clamp(24px, 4vh, 48px) clamp(24px, 5vw, 72px);
+  /* snippets/optiq-dock.liquid is a fixed bottom-centre bar at z-index:70,
+     above this overlay's z-index:2, rendered on every page including this
+     one. Without this, the dock sits on top of the wordmark instead of
+     beside it. --optiq-dock-h is published by the dock itself precisely so
+     other bottom-anchored content can reserve the same space; its own
+     bottom offset is duplicated here since that space belongs to the dock
+     too, not just its height. */
+  padding-bottom: calc(clamp(24px, 4vh, 48px) + var(--optiq-dock-h, 76px) + max(18px, env(safe-area-inset-bottom, 0px)) + 14px);
 }
 
 .opsh__list {
@@ -245,7 +253,10 @@
 /* ---------------- mobile ---------------- */
 
 @media (max-width: 780px) {
-  .opsh__overlay { padding: clamp(20px, 5vh, 32px) clamp(18px, 6vw, 28px); }
+  .opsh__overlay {
+    padding: clamp(20px, 5vh, 32px) clamp(18px, 6vw, 28px);
+    padding-bottom: calc(clamp(20px, 5vh, 32px) + var(--optiq-dock-h, 68px) + max(18px, env(safe-area-inset-bottom, 0px)) + 14px);
+  }
   .opsh__logo { font-size: clamp(3.4rem, 20vw, 6rem); }
   .opsh__bgnav { padding: 0 12px; }
   .opsh__bgarrow { width: 40px; height: 40px; }

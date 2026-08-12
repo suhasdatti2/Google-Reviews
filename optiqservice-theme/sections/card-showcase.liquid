@@ -113,7 +113,7 @@
   list-style: none;
   margin: 28px 0 0;
   padding: 20px 0 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  border-top: 1px solid var(--border);
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 14px 22px;
@@ -124,7 +124,7 @@
   gap: 10px;
   font-size: 0.95rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--ink-muted);
   line-height: 1.3;
 }
 .showcase__trust-ic {
@@ -132,31 +132,32 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--bg-raised-2);
+  border: 1px solid var(--border);
   position: relative;
 }
 .showcase__trust-ic::after {
   content: "";
   position: absolute;
-  left: 7px;
+  left: 6px;
   top: 4px;
   width: 4px;
   height: 8px;
-  border: solid rgba(255, 255, 255, 0.9);
+  border: solid var(--ink);
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }
 .showcase__compat {
   margin: 16px 0 0;
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--ink-faint);
   line-height: 1.5;
 }
-.showcase__compat a { color: rgba(255, 255, 255, 0.78); }
+.showcase__compat a { color: var(--ink-muted); text-decoration: underline; }
 .showcase__signature-teaser {
   margin: 22px 0 0;
   padding-top: 22px;
-  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  border-top: 1px solid var(--border);
 }
 .showcase__signature-link {
   display: inline-flex;
@@ -165,10 +166,10 @@
   font-size: 0.94rem;
   font-weight: 600;
   letter-spacing: 0.01em;
-  color: #e8c07a;
+  color: var(--ink);
   transition: opacity 0.15s ease, gap 0.15s ease;
 }
-.showcase__signature-link:hover { opacity: 0.82; gap: 11px; }
+.showcase__signature-link:hover { opacity: 0.7; gap: 11px; }
 .showcase__signature-link svg { width: 15px; height: 15px; flex-shrink: 0; }
 @media (max-width: 760px) {
   .showcase__trust {
