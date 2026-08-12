@@ -1,0 +1,383 @@
+{%- comment -%}
+  Signature catalog - the single purchase surface for the whole Google
+  Review Cards page, built in the Signature design system (sig- classes,
+  assets/optiq-signature.css) rather than the old configurator's dark-era
+  markup. Replaces card-showcase.liquid + snippets/card-configurator.liquid
+  (Main Counter Card / Mini Bulk Cards / Wristband) AND
+  signature-configurator.liquid (Optiq Signature) with one product picker,
+  so a shopper chooses which line to buy first, then sees only the options
+  that are real for it - colour + QR for Counter/Bulk, nothing extra for
+  Wristband, finish + engraving for Signature.
+
+  Real Shopify variant IDs, hardcoded rather than theme settings - same
+  reasoning as the sections this replaces: a merchant mistyping a variant ID
+  in a text field would silently break checkout with no validation, whereas
+  these are fixed facts about specific real products, confirmed live via
+  the Admin API before writing this file.
+
+  Exactly one buy action (the summary button), matching every other
+  configurator in this theme - no second competing add-to-cart path.
+{%- endcomment -%}
+
+<section class="sig-section sig-section--ruled" id="sig-configurator" {{ section.shopify_attributes }}>
+  <div class="sig-wrap">
+    <div class="sig-head sig-head--center">
+      <span class="sig-eyebrow" data-o-reveal="fade">{{ section.settings.eyebrow | default: 'Choose your product' }}</span>
+      <h2 class="sig-h2" data-o-reveal="fade">{{ section.settings.heading | default: 'Make it yours.' }}</h2>
+    </div>
+
+    <form class="sig-configurator" data-sig-catalog data-o-reveal="fade">
+
+      <div class="sig-config__row">
+        <div class="sig-config__label"><b>Product</b></div>
+        <div class="sig-pills" role="group" aria-label="Product">
+          <button type="button" class="sig-pill is-active" data-sig-product="counter" aria-pressed="true">Main Counter Card</button>
+          <button type="button" class="sig-pill" data-sig-product="bulk" aria-pressed="false">Mini Bulk Cards</button>
+          <button type="button" class="sig-pill" data-sig-product="wristband" aria-pressed="false">Wristband</button>
+          <button type="button" class="sig-pill" data-sig-product="signature" aria-pressed="false">Optiq Signature</button>
+        </div>
+      </div>
+
+      <div class="sig-config__preview">
+        <div data-sig-preview="counter:black">
+          {% render 'sig-media', image: section.settings.counter_image_black, label: 'Add Main Counter Card - Black photo' %}
+        </div>
+        <div data-sig-preview="counter:white" hidden>
+          {% render 'sig-media', image: section.settings.counter_image_white, label: 'Add Main Counter Card - White photo' %}
+        </div>
+        <div data-sig-preview="bulk:black" hidden>
+          {% render 'sig-media', image: section.settings.bulk_image_black, label: 'Add Mini Bulk Card - Black photo' %}
+        </div>
+        <div data-sig-preview="bulk:white" hidden>
+          {% render 'sig-media', image: section.settings.bulk_image_white, label: 'Add Mini Bulk Card - White photo' %}
+        </div>
+        <div data-sig-preview="wristband:_" hidden>
+          {% render 'sig-media', image: section.settings.wristband_image, label: 'Add Wristband photo' %}
+        </div>
+        <div data-sig-preview="signature:titanium-gray" hidden>
+          {% render 'sig-media', image: section.settings.finish_image_titanium, label: 'Add Titanium Gray photo' %}
+        </div>
+        <div data-sig-preview="signature:matte-black" hidden>
+          {% render 'sig-media', image: section.settings.finish_image_black, label: 'Add Matte Black Metal photo' %}
+        </div>
+        <div data-sig-preview="signature:brushed-silver" hidden>
+          {% render 'sig-media', image: section.settings.finish_image_silver, label: 'Add Brushed Silver photo' %}
+        </div>
+      </div>
+
+      <div class="sig-config__row" data-sig-row="color">
+        <div class="sig-config__label"><b>Colour</b></div>
+        <div class="sig-swatches" role="group" aria-label="Colour">
+          <button type="button" class="sig-swatch is-active" data-sig-color="black" aria-pressed="true">
+            <span class="sig-swatch__dot" style="background:linear-gradient(135deg,#3a3a38,#111110)" aria-hidden="true"></span><span>Black</span>
+          </button>
+          <button type="button" class="sig-swatch" data-sig-color="white" aria-pressed="false">
+            <span class="sig-swatch__dot" style="background:linear-gradient(135deg,#fbfaf8,#e7e5df); box-shadow: inset 0 0 0 1px var(--sig-line-2)" aria-hidden="true"></span><span>White</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="sig-config__row" data-sig-row="finish" hidden>
+        <div class="sig-config__label"><b>Finish</b></div>
+        <div class="sig-swatches" role="group" aria-label="Finish">
+          <button type="button" class="sig-swatch is-active" data-sig-finish="titanium-gray" aria-pressed="true">
+            <span class="sig-swatch__dot" aria-hidden="true"></span><span>Titanium Gray</span>
+          </button>
+          <button type="button" class="sig-swatch" data-sig-finish="matte-black" aria-pressed="false">
+            <span class="sig-swatch__dot" aria-hidden="true"></span><span>Matte Black Metal</span>
+          </button>
+          <button type="button" class="sig-swatch" data-sig-finish="brushed-silver" aria-pressed="false">
+            <span class="sig-swatch__dot" aria-hidden="true"></span><span>Brushed Silver</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="sig-config__row">
+        <div class="sig-config__label"><b>Quantity</b></div>
+        <div class="sig-pills" role="group" aria-label="Quantity" data-sig-qty-group="counter">
+          <button type="button" class="sig-pill is-active" data-sig-qty="1" aria-pressed="true">1 Card</button>
+          <button type="button" class="sig-pill" data-sig-qty="2" aria-pressed="false">2 Cards</button>
+          <button type="button" class="sig-pill" data-sig-qty="3" aria-pressed="false">3 Cards</button>
+        </div>
+        <div class="sig-pills" role="group" aria-label="Quantity" data-sig-qty-group="bulk" hidden>
+          <button type="button" class="sig-pill is-active" data-sig-qty="10" aria-pressed="true">10 Cards</button>
+          <button type="button" class="sig-pill" data-sig-qty="25" aria-pressed="false">25 Cards</button>
+          <button type="button" class="sig-pill" data-sig-qty="50" aria-pressed="false">50 Cards</button>
+          <button type="button" class="sig-pill" data-sig-qty="100" aria-pressed="false">100 Cards</button>
+        </div>
+        <div class="sig-pills" role="group" aria-label="Quantity" data-sig-qty-group="wristband" hidden>
+          <button type="button" class="sig-pill is-active" data-sig-qty="1" aria-pressed="true">1 Wristband</button>
+          <button type="button" class="sig-pill" data-sig-qty="2" aria-pressed="false">2 Wristbands</button>
+          <button type="button" class="sig-pill" data-sig-qty="3" aria-pressed="false">3 Wristbands</button>
+        </div>
+        <div class="sig-pills" role="group" aria-label="Quantity" data-sig-qty-group="signature" hidden>
+          <button type="button" class="sig-pill is-active" data-sig-qty="single" aria-pressed="true">Single Card</button>
+          <button type="button" class="sig-pill" data-sig-qty="three" aria-pressed="false">Set of Three</button>
+        </div>
+      </div>
+
+      <div class="sig-config__row" data-sig-row="qr">
+        <div class="sig-config__label"><b>QR code backup</b> <span data-sig-qr-help>Optional - +$5.00 per card</span></div>
+        <div class="sig-pills">
+          <button type="button" class="sig-pill" data-sig-qr-toggle aria-pressed="false">Add QR code backup</button>
+        </div>
+      </div>
+
+      <div class="sig-config__row">
+        <div class="sig-config__label"><b>Program your <span data-sig-noun>card</span></b></div>
+        <div class="sig-fields">
+          <div class="sig-field">
+            <label for="sigcat-business">Business name</label>
+            <input type="text" id="sigcat-business" data-sig-field="Business name" placeholder="e.g. Fresh Fades Barbershop" required>
+          </div>
+          <div class="sig-field">
+            <label for="sigcat-contact">Best email or phone</label>
+            <input type="text" id="sigcat-contact" data-sig-field="Contact email or phone" placeholder="you@business.com" required>
+          </div>
+        </div>
+        <div class="sig-fields sig-fields--single">
+          <div class="sig-field">
+            <label for="sigcat-link">Google review link</label>
+            <input type="text" id="sigcat-link" data-sig-field="Google review link" placeholder="Review link, website, or business name" required>
+          </div>
+        </div>
+        <p class="sig-field-hint">Anything works here - your review link, your website, or just your business name and city. Prefer to send it later? Order now and email it to {{ settings.contact_email | default: 'sales@optiqservice.com' }}.</p>
+      </div>
+
+      <div class="sig-config__row" data-sig-row="engraving" hidden>
+        <div class="sig-config__label"><b>Engraving</b> <span>Optional</span></div>
+        <div class="sig-fields">
+          <div class="sig-field sig-field--optional">
+            <label for="sigcat-logo"><span>Business logo</span></label>
+            <input type="text" id="sigcat-logo" data-sig-field="Business logo engraving" placeholder="Describe it, or email the file after ordering">
+          </div>
+          <div class="sig-field sig-field--optional">
+            <label for="sigcat-engrave"><span>Custom text</span></label>
+            <input type="text" id="sigcat-engrave" data-sig-field="Custom text engraving" placeholder="e.g. Est. 2019">
+          </div>
+        </div>
+      </div>
+
+      <div class="sig-config__summary">
+        <span class="sig-config__price" data-sig-price><small>Total</small>$29.99</span>
+        <button type="submit" class="sig-cta sig-cta--solid" data-sig-cta>{{ section.settings.cta_label | default: 'Add to Cart' }}</button>
+      </div>
+      <p class="sig-config__note" data-sig-note hidden></p>
+    </form>
+  </div>
+</section>
+
+<script>
+(function () {
+  var root = document.querySelector('[data-sig-catalog]');
+  if (!root) { return; }
+
+  var COUNTER_VARIANTS = {
+    black: { '1': { no: '48712380186856', qr: '48712380219624' }, '2': { no: '48712380252392', qr: '48712380285160' }, '3': { no: '48712380317928', qr: '48712380350696' } },
+    white: { '1': { no: '48712380383464', qr: '48712380416232' }, '2': { no: '48712380449000', qr: '48712380481768' }, '3': { no: '48712380514536', qr: '48712380547304' } }
+  };
+  var COUNTER_PRICES = { '1': { no: 2999, qr: 3499 }, '2': { no: 4999, qr: 5999 }, '3': { no: 6499, qr: 7999 } };
+
+  var BULK_VARIANTS = {
+    black: { '10': { no: '48712381759720', qr: '48712381792488' }, '25': { no: '48712381825256', qr: '48712381858024' }, '50': { no: '48712381890792', qr: '48712381923560' }, '100': { no: '48712381956328', qr: '48712381989096' } },
+    white: { '10': { no: '48712382021864', qr: '48712382054632' }, '25': { no: '48712382087400', qr: '48712382120168' }, '50': { no: '48712382152936', qr: '48712382185704' }, '100': { no: '48712382218472', qr: '48712382251240' } }
+  };
+  var BULK_PRICES = { '10': { no: 4999, qr: 5999 }, '25': { no: 9999, qr: 12499 }, '50': { no: 17499, qr: 22499 }, '100': { no: 29999, qr: 39999 } };
+
+  var WRISTBAND_VARIANTS = { '1': '48855927161064', '2': '48855927193832', '3': '48855927226600' };
+  var WRISTBAND_PRICES = { '1': 3999, '2': 6999, '3': 9999 };
+
+  var SIGNATURE_VARIANTS = {
+    'titanium-gray': { single: '48860232089832', three: '48860232122600' },
+    'matte-black': { single: '48860232155368', three: '48860232188136' },
+    'brushed-silver': { single: '48860232220904', three: '48860232253672' }
+  };
+  var SIGNATURE_PRICES = { single: 9999, three: 26999 };
+
+  var QR_HELP = { counter: 'Optional - +$5.00 per card', bulk: 'Optional - +$1.00 per card' };
+
+  var state = { product: 'counter', color: 'black', finish: 'titanium-gray', qty: { counter: '1', bulk: '10', wristband: '1', signature: 'single' }, qr: false };
+
+  var productBtns = [].slice.call(root.querySelectorAll('[data-sig-product]'));
+  var colorBtns = [].slice.call(root.querySelectorAll('[data-sig-color]'));
+  var finishBtns = [].slice.call(root.querySelectorAll('[data-sig-finish]'));
+  var qtyGroups = [].slice.call(root.querySelectorAll('[data-sig-qty-group]'));
+  var previews = [].slice.call(root.querySelectorAll('[data-sig-preview]'));
+  var qrToggle = root.querySelector('[data-sig-qr-toggle]');
+  var qrHelp = root.querySelector('[data-sig-qr-help]');
+  var noun = root.querySelector('[data-sig-noun]');
+  var priceEl = root.querySelector('[data-sig-price]');
+  var cta = root.querySelector('[data-sig-cta]');
+  var note = root.querySelector('[data-sig-note]');
+  var rowColor = root.querySelector('[data-sig-row="color"]');
+  var rowFinish = root.querySelector('[data-sig-row="finish"]');
+  var rowQr = root.querySelector('[data-sig-row="qr"]');
+  var rowEngraving = root.querySelector('[data-sig-row="engraving"]');
+
+  function moneyCents(cents) { return '$' + (cents / 100).toFixed(2); }
+
+  function resolve() {
+    var qty = state.qty[state.product];
+    if (state.product === 'counter') {
+      var v = COUNTER_VARIANTS[state.color][qty];
+      return { id: v[state.qr ? 'qr' : 'no'], cents: COUNTER_PRICES[qty][state.qr ? 'qr' : 'no'] };
+    }
+    if (state.product === 'bulk') {
+      var v2 = BULK_VARIANTS[state.color][qty];
+      return { id: v2[state.qr ? 'qr' : 'no'], cents: BULK_PRICES[qty][state.qr ? 'qr' : 'no'] };
+    }
+    if (state.product === 'wristband') {
+      return { id: WRISTBAND_VARIANTS[qty], cents: WRISTBAND_PRICES[qty] };
+    }
+    return { id: SIGNATURE_VARIANTS[state.finish][qty], cents: SIGNATURE_PRICES[qty] };
+  }
+
+  function updatePreview() {
+    var key = state.product + ':' + (state.product === 'counter' || state.product === 'bulk' ? state.color : state.product === 'signature' ? state.finish : '_');
+    previews.forEach(function (p) { p.hidden = p.getAttribute('data-sig-preview') !== key; });
+  }
+
+  function refreshSummary() {
+    var resolved = resolve();
+    priceEl.innerHTML = '<small>Total</small>' + moneyCents(resolved.cents);
+  }
+
+  function updateVisibility() {
+    var isCard = state.product === 'counter' || state.product === 'bulk';
+    var isSignature = state.product === 'signature';
+    rowColor.hidden = !isCard;
+    rowFinish.hidden = !isSignature;
+    rowQr.hidden = !isCard;
+    rowEngraving.hidden = !isSignature;
+    if (qrHelp && QR_HELP[state.product]) { qrHelp.textContent = QR_HELP[state.product]; }
+    if (!isCard) { state.qr = false; if (qrToggle) { qrToggle.classList.remove('is-active'); qrToggle.setAttribute('aria-pressed', 'false'); } }
+    qtyGroups.forEach(function (g) { g.hidden = g.getAttribute('data-sig-qty-group') !== state.product; });
+    if (noun) { noun.textContent = state.product === 'wristband' ? 'wristband' : 'card'; }
+  }
+
+  function setProduct(p) {
+    state.product = p;
+    productBtns.forEach(function (b) { var on = b.getAttribute('data-sig-product') === p; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+    updateVisibility();
+    updatePreview();
+    refreshSummary();
+  }
+
+  productBtns.forEach(function (b) { b.addEventListener('click', function () { setProduct(b.getAttribute('data-sig-product')); }); });
+
+  colorBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      colorBtns.forEach(function (x) { x.classList.remove('is-active'); x.setAttribute('aria-pressed', 'false'); });
+      b.classList.add('is-active'); b.setAttribute('aria-pressed', 'true');
+      state.color = b.getAttribute('data-sig-color');
+      updatePreview(); refreshSummary();
+    });
+  });
+
+  finishBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      finishBtns.forEach(function (x) { x.classList.remove('is-active'); x.setAttribute('aria-pressed', 'false'); });
+      b.classList.add('is-active'); b.setAttribute('aria-pressed', 'true');
+      state.finish = b.getAttribute('data-sig-finish');
+      updatePreview(); refreshSummary();
+    });
+  });
+
+  qtyGroups.forEach(function (group) {
+    [].slice.call(group.querySelectorAll('[data-sig-qty]')).forEach(function (b) {
+      b.addEventListener('click', function () {
+        [].slice.call(group.querySelectorAll('[data-sig-qty]')).forEach(function (x) { x.classList.remove('is-active'); x.setAttribute('aria-pressed', 'false'); });
+        b.classList.add('is-active'); b.setAttribute('aria-pressed', 'true');
+        state.qty[state.product] = b.getAttribute('data-sig-qty');
+        refreshSummary();
+      });
+    });
+  });
+
+  if (qrToggle) {
+    qrToggle.addEventListener('click', function () {
+      state.qr = !state.qr;
+      qrToggle.classList.toggle('is-active', state.qr);
+      qrToggle.setAttribute('aria-pressed', state.qr ? 'true' : 'false');
+      refreshSummary();
+    });
+  }
+
+  function showNote(msg) { if (!note) { return; } note.textContent = msg; note.hidden = false; }
+
+  function addToCart(items, fallbackHref) {
+    return fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ items: items })
+    }).then(function (r) {
+      if (!r.ok) { throw new Error('add failed'); }
+      window.location.href = '/cart';
+    }).catch(function () {
+      cta.removeAttribute('aria-busy');
+      cta.textContent = {{ section.settings.cta_label | default: 'Add to Cart' | json }};
+      showNote('Something went wrong adding this to your cart - please try again.');
+      window.location.href = fallbackHref;
+    });
+  }
+
+  root.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (cta.getAttribute('aria-busy') === 'true') { return; }
+
+    var resolved = resolve();
+    if (!resolved.id) { return; }
+
+    var properties = {};
+    if (state.product === 'counter' || state.product === 'bulk') { properties.Colour = state.color === 'black' ? 'Black' : 'White'; }
+    if (state.product === 'signature') {
+      var finishLabelEl = root.querySelector('[data-sig-finish="' + state.finish + '"] span:last-child');
+      properties.Finish = finishLabelEl ? finishLabelEl.textContent : state.finish;
+    }
+    [].slice.call(root.querySelectorAll('[data-sig-field]')).forEach(function (f) {
+      if (f.closest('[hidden]')) { return; }
+      var v = f.value.trim();
+      if (v) { properties[f.getAttribute('data-sig-field')] = v; }
+    });
+
+    if (note) { note.hidden = true; }
+    cta.setAttribute('aria-busy', 'true');
+    cta.textContent = 'Adding...';
+
+    var fallback = state.product === 'counter' ? '/products/google-review-nfc-card'
+      : state.product === 'bulk' ? '/products/bulk-review-cards'
+      : state.product === 'wristband' ? '/products/google-review-nfc-wristband'
+      : '/products/optiq-signature';
+
+    addToCart([{ id: resolved.id, quantity: 1, properties: properties }], fallback);
+  });
+
+  updateVisibility();
+  updatePreview();
+  refreshSummary();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Signature catalog",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Choose your product" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Make it yours." },
+    { "type": "text", "id": "cta_label", "label": "Buy button label", "default": "Add to Cart" },
+    { "type": "header", "content": "Main Counter Card photos" },
+    { "type": "image_picker", "id": "counter_image_black", "label": "Black photo" },
+    { "type": "image_picker", "id": "counter_image_white", "label": "White photo" },
+    { "type": "header", "content": "Mini Bulk Cards photos" },
+    { "type": "image_picker", "id": "bulk_image_black", "label": "Black photo" },
+    { "type": "image_picker", "id": "bulk_image_white", "label": "White photo" },
+    { "type": "header", "content": "Wristband photo" },
+    { "type": "image_picker", "id": "wristband_image", "label": "Wristband photo" },
+    { "type": "header", "content": "Optiq Signature finish photos" },
+    { "type": "image_picker", "id": "finish_image_titanium", "label": "Titanium Gray photo" },
+    { "type": "image_picker", "id": "finish_image_black", "label": "Matte Black Metal photo" },
+    { "type": "image_picker", "id": "finish_image_silver", "label": "Brushed Silver photo" }
+  ],
+  "presets": [{ "name": "Signature catalog" }]
+}
+{% endschema %}
