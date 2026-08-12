@@ -43,17 +43,213 @@
         "layer_3_text": "Sealed for a lifetime of use"
       }
     },
-    "sigcatalog": {
-      "type": "signature-catalog",
+    "showcase": {
+      "type": "card-showcase",
+      "blocks": {
+        "c1": {
+          "type": "card",
+          "settings": {
+            "mode": "counter",
+            "name": "Counter Card - Black",
+            "note": "Our premium counter card in classic matte black.",
+            "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_41_02_PM_3.png",
+            "tag": "Premium high-quality material",
+            "badge": "Bestseller"
+          }
+        },
+        "c4": {
+          "type": "card",
+          "settings": {
+            "mode": "counter",
+            "name": "Counter Card - White",
+            "note": "Clean white card with black print - bright on any counter.",
+            "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_40_15_PM_4.png",
+            "tag": "Premium high-quality material",
+            "badge": ""
+          }
+        },
+        "c5": {
+          "type": "card",
+          "settings": {
+            "mode": "bulk",
+            "name": "Mini Bulk Card - Black",
+            "note": "Smaller, simpler card made to hand out with bills, receipts, and takeout bags.",
+            "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_58_27_PM_4.png",
+            "tag": "Made to hand out",
+            "badge": ""
+          }
+        },
+        "c6": {
+          "type": "card",
+          "settings": {
+            "mode": "bulk",
+            "name": "Mini Bulk Card - White",
+            "note": "Same hand-out card in clean white, if you'd rather match a lighter brand.",
+            "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_08_02_25_PM_3.png",
+            "tag": "Made to hand out",
+            "badge": ""
+          }
+        },
+        "q1": {
+          "type": "qty",
+          "settings": {
+            "mode": "counter",
+            "qty_label": "1 Card",
+            "price": "$29.99",
+            "featured": true,
+            "variant_id": "",
+            "link": "/products/google-review-nfc-card"
+          }
+        },
+        "q2": {
+          "type": "qty",
+          "settings": {
+            "mode": "counter",
+            "qty_label": "2 Cards",
+            "price": "$49.99",
+            "featured": false,
+            "variant_id": "",
+            "link": "/products/google-review-nfc-card"
+          }
+        },
+        "q3": {
+          "type": "qty",
+          "settings": {
+            "mode": "counter",
+            "qty_label": "3 Cards",
+            "price": "$64.99",
+            "featured": false,
+            "variant_id": "",
+            "link": "/products/google-review-nfc-card"
+          }
+        },
+        "q4": {
+          "type": "qty",
+          "settings": {
+            "mode": "bulk",
+            "qty_label": "10 Cards",
+            "price": "$49.99",
+            "featured": true,
+            "variant_id": "",
+            "link": "/products/bulk-review-cards"
+          }
+        },
+        "q5": {
+          "type": "qty",
+          "settings": {
+            "mode": "bulk",
+            "qty_label": "25 Cards",
+            "price": "$99.99",
+            "featured": false,
+            "variant_id": "",
+            "link": "/products/bulk-review-cards"
+          }
+        },
+        "q6": {
+          "type": "qty",
+          "settings": {
+            "mode": "bulk",
+            "qty_label": "50 Cards",
+            "price": "$174.99",
+            "featured": false,
+            "variant_id": "",
+            "link": "/products/bulk-review-cards"
+          }
+        },
+        "q7": {
+          "type": "qty",
+          "settings": {
+            "mode": "bulk",
+            "qty_label": "100 Cards",
+            "price": "$299.99",
+            "featured": false,
+            "variant_id": "",
+            "link": "/products/bulk-review-cards"
+          }
+        },
+        "w1": {
+          "type": "card",
+          "settings": {
+            "mode": "wristband",
+            "name": "Google Review Wristband",
+            "note": "Premium silicone wristband, programmed with your Google review link. Waterproof and comfortable for all-day wear.",
+            "image": "shopify://shop_images/hf_20260806_033730_5b6406a1-139f-44fb-a473-d16c69042b7b.png",
+            "tag": "Premium silicone construction",
+            "badge": "New"
+          }
+        },
+        "wq1": {
+          "type": "qty",
+          "settings": {
+            "mode": "wristband",
+            "qty_label": "1 Wristband",
+            "price": "$39.99",
+            "featured": true,
+            "variant_id": "48855927161064",
+            "link": "/products/google-review-nfc-wristband"
+          }
+        },
+        "wq2": {
+          "type": "qty",
+          "settings": {
+            "mode": "wristband",
+            "qty_label": "2 Wristbands",
+            "price": "$69.99",
+            "featured": false,
+            "variant_id": "48855927193832",
+            "link": "/products/google-review-nfc-wristband"
+          }
+        },
+        "wq3": {
+          "type": "qty",
+          "settings": {
+            "mode": "wristband",
+            "qty_label": "3 Wristbands",
+            "price": "$99.99",
+            "featured": false,
+            "variant_id": "48855927226600",
+            "link": "/products/google-review-nfc-wristband"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c4",
+        "c5",
+        "c6",
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q7",
+        "w1",
+        "wq1",
+        "wq2",
+        "wq3"
+      ],
       "settings": {
-        "eyebrow": "Choose your product",
+        "kicker": "Choose your setup",
+        "heading": "Which Card Is Right for Your Business?",
+        "subheading": "The Main Counter Card sits on your counter for years. Mini Bulk Cards go home with every customer. Most businesses use both.",
+        "counter_mode_label": "Main Counter Card",
+        "bulk_mode_label": "Mini Bulk Cards",
+        "wristband_mode_label": "Wristband",
+        "membership_label": "See full plan details",
+        "membership_link": "/pages/membership",
+        "show_signature_link": true,
+        "signature_label": "Looking for something more refined? Discover Optiq Signature",
+        "signature_link": "#sig-configurator"
+      }
+    },
+    "sigconfigurator": {
+      "type": "signature-configurator",
+      "settings": {
+        "eyebrow": "Configure yours",
         "heading": "Make it yours.",
         "cta_label": "Add to Cart",
-        "counter_image_black": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_41_02_PM_3.png",
-        "counter_image_white": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_40_15_PM_4.png",
-        "bulk_image_black": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_58_27_PM_4.png",
-        "bulk_image_white": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_08_02_25_PM_3.png",
-        "wristband_image": "shopify://shop_images/hf_20260806_033730_5b6406a1-139f-44fb-a473-d16c69042b7b.png",
+        "programming_hint": "",
         "finish_image_titanium": "shopify://shop_images/hf_20260809_191808_46f7dcda-4f86-45f5-b0e4-96c9812eab25.png"
       }
     },
@@ -188,7 +384,8 @@
     "sighero",
     "sigmaterial",
     "sigengineering",
-    "sigcatalog",
+    "showcase",
+    "sigconfigurator",
     "sigpackaging",
     "sigpurchase",
     "faq",
