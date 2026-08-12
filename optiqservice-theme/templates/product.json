@@ -1,25 +1,22 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
       "type": "main-product",
-      "settings": {
-        "tagline": "Programmed with your Google review link. No app. No monthly fee.",
-        "buy_label": "Add to Cart — Get More Reviews",
-        "bulk_restaurant_pack_product_image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_11_43_27_PM_1.png",
-        "bulk_square_handout_cards_product_image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_11_43_27_PM_2.png",
-        "main_counter_card_product_image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_41_03_PM_4.png",
-        "review_growth_plan_product_image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_11_43_28_PM_4.png",
-        "card_image_counter_black": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_41_02_PM_3.png",
-        "card_image_counter_white": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_40_15_PM_4.png",
-        "card_image_bulk_black": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_58_27_PM_4.png",
-        "card_image_bulk_white": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_08_02_25_PM_3.png"
-      },
       "blocks": {
         "b1": {
           "type": "benefit",
           "settings": {
             "title": "One tap, no typing",
-            "text": "customers tap the card and your Google review page opens instantly, while the great experience is still fresh."
+            "text": "customers tap the card and your Google review page opens instantly, while the good experience is still fresh."
           }
         },
         "b2": {
@@ -32,34 +29,57 @@
         "b3": {
           "type": "benefit",
           "settings": {
-            "title": "No app, no monthly fee",
-            "text": "one-time purchase. Works with modern iPhones and Androids — nothing for you or your customers to install."
+            "title": "No app, no QR code required",
+            "text": "one-time purchase, works with modern iPhones and Androids. Nothing to install, nothing to scan."
           }
         },
         "b4": {
           "type": "benefit",
           "settings": {
-            "title": "Premium matte-black design",
-            "text": "glossy black card, clean matte white print. It looks like it belongs on a nice counter, because it does."
+            "title": "Built to stay on your counter",
+            "text": "a heavier, premium card designed for daily use for years - not something you hand out once."
           }
         },
         "b5": {
           "type": "benefit",
           "settings": {
             "title": "Built for everyday use",
-            "text": "no batteries, no charging, no wear-out — the chip is powered by the customer's phone every tap."
+            "text": "no batteries, no charging, no wear-out - the chip is powered by the customer's phone every tap."
           }
         }
       },
-      "block_order": ["b1", "b2", "b3", "b4", "b5"]
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5"
+      ],
+      "settings": {
+        "bulk_restaurant_pack_product_image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_11_43_27_PM_1.png",
+        "bulk_square_handout_cards_product_image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_11_43_27_PM_2.png",
+        "main_counter_card_product_image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_41_03_PM_4.png",
+        "review_growth_plan_product_image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_11_43_28_PM_4.png",
+        "tagline": "Programmed with your Google review link. One tap, no app, no QR code needed.",
+        "buy_label": "Add to Cart",
+        "variant_label": "Choose your pack",
+        "show_qr_addon": true,
+        "qr_label": "Add a printed QR code (optional)",
+        "qr_pricing_note": "Not required - just an optional backup. +$5 per main card or +$1 per mini card.",
+        "show_membership_upsell": true,
+        "membership_title": "Add the Review Growth Plan",
+        "membership_price": "$14.99",
+        "membership_period": "/mo",
+        "membership_description": "Optional monthly plan. Get free link updates, monthly review check-ins, ready-to-use review request templates, priority support, and discounts on future cards.",
+        "membership_benefits": "Free link updates if it ever changes\nMonthly review check-ins\nReady-to-use review request templates\nPriority support\nDiscounts on future cards",
+        "membership_button_label": "Add Review Growth Plan",
+        "membership_product_link": "/products/review-growth-plan",
+        "membership_link": "/pages/membership",
+        "membership_note": "Your card works with no monthly plan. Membership is only for ongoing help - it's always optional."
+      }
     },
     "faq": {
       "type": "faq",
-      "settings": {
-        "kicker": "FAQ",
-        "heading": "Before you order",
-        "subheading": "Anything else? Email sales@optiqservice.com — we reply within one business day."
-      },
       "blocks": {
         "q1": {
           "type": "question",
@@ -72,34 +92,63 @@
           "type": "question",
           "settings": {
             "question": "What if I don't know my Google review link?",
-            "answer": "Order anyway — we'll email you a 2-minute guide to finding it, or find it for you if you share your business name and city."
+            "answer": "Order anyway - we'll email you a quick guide to finding it, or find it for you if you share your business name and city."
           }
         },
         "q3": {
           "type": "question",
           "settings": {
-            "question": "Do my customers need an app?",
-            "answer": "No. NFC reading is built into modern iPhones and Android phones. Customers just hold their phone near the card."
+            "question": "Do my customers need an app or a QR code?",
+            "answer": "No. NFC reading is built into modern iPhones and Android phones. Customers just hold their phone near the card and their review page opens. A printed QR code is available as an optional backup, but it's never required."
           }
         },
         "q4": {
           "type": "question",
           "settings": {
             "question": "Does it guarantee 5-star reviews?",
-            "answer": "No — nothing legitimately can. The card makes leaving a review dramatically easier; what customers write is up to them. Great service does the rest."
+            "answer": "No - nothing legitimately can. The card makes leaving a review much easier; what customers write is always up to them. Great service does the rest."
           }
         }
       },
-      "block_order": ["q1", "q2", "q3", "q4"]
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4"
+      ],
+      "settings": {
+        "kicker": "FAQ",
+        "heading": "Before You Order",
+        "subheading": "Anything else? Email sales@optiqservice.com - we reply within one business day."
+      }
     },
     "cta": {
       "type": "cta-banner",
       "settings": {
-        "heading": "Put it on the counter. Let the taps do the asking.",
+        "heading": "Put It on the Counter. Let the Taps Do the Asking.",
         "subheading": "One-time price. Programmed before it ships. Ready to use on arrival.",
-        "button_label": "Get My Review Card"
+        "button_label": "Get My Review Card",
+        "button_link": ""
       }
+    },
+    "17849212515ccb6a18": {
+      "type": "apps",
+      "blocks": {
+        "appstle_memberships_appstle_membership_product_page_widget_fffttd": {
+          "type": "shopify://apps/appstle-memberships/blocks/appstle-membership-product-page-widget/76528d70-5fbe-48f8-8e19-590d109aa2b7",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "appstle_memberships_appstle_membership_product_page_widget_fffttd"
+      ],
+      "settings": {}
     }
   },
-  "order": ["main", "faq", "cta"]
+  "order": [
+    "main",
+    "faq",
+    "cta",
+    "17849212515ccb6a18"
+  ]
 }

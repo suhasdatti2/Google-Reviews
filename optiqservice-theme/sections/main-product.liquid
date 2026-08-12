@@ -27,12 +27,30 @@
 <section class="product-page">
   <div class="page-width product-grid">
 
-    <div class="product-media{% if product.handle == 'google-review-nfc-wristband' %} product-media--flush{% endif %}">
+    <div class="product-media">
       {% render 'product-gallery', product: product, override_image: product_gallery_image %}
     </div>
 
     <div class="product-info">
       <h1>{{ product.title }}</h1>
+
+      {%- comment -%}
+        Product -> Benefit -> Price -> Purchase: the real benefit copy
+        already configured on this section's blocks (see the schema below)
+        was never rendered anywhere on this page. Placed here, between the
+        title and the price, so a shopper knows what the card actually does
+        before seeing what it costs.
+      {%- endcomment -%}
+      {%- if section.blocks.size > 0 -%}
+        <ul class="product-benefits">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'benefit' -%}
+              <li {{ block.shopify_attributes }}><strong>{{ block.settings.title }}</strong> &mdash; {{ block.settings.text }}</li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
       <p class="product-info__price" data-vpick-price>{{ product.selected_or_first_available_variant.price | money }}</p>
       <p class="product-info__tagline">{{ section.settings.tagline }}</p>
 
@@ -118,12 +136,13 @@
       {%- endform -%}
 
       {%- comment -%}
-        The membership upsell box, the benefit checklist, and the long product
-        description used to render here. Removed deliberately: this is a buying
-        page, and three screens of prose under the button gave the shopper more
-        to read rather than more reason to buy. None of that copy is lost - the
-        description still lives on the product in Shopify admin, and the benefit
-        and membership content still runs on the homepage.
+        The membership upsell box and the long product description used to
+        render here too. Still deliberately left out: this is a buying page,
+        and prose under the button gave the shopper more to read rather than
+        more reason to buy. None of that copy is lost - the description still
+        lives on the product in Shopify admin, and the membership content
+        still runs on the homepage and on this template's own FAQ/CTA/app
+        sections below.
       {%- endcomment -%}
     </div>
 
@@ -278,19 +297,19 @@
   justify-items: start;
   min-width: 108px;
   padding: 12px 16px;
-  border: 1px solid var(--border, #2a2a30);
+  border: 1px solid var(--border, #e5e3dc);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-raised, #fbfaf8);
   color: inherit;
   font: inherit;
   text-align: left;
   transition: border-color 0.15s ease, background-color 0.15s ease;
 }
-.vpick__btn:hover:not(:disabled) { border-color: rgba(255, 255, 255, 0.3); }
+.vpick__btn:hover:not(:disabled) { border-color: var(--border-strong, #d8d5cb); }
 .vpick__btn:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
 .vpick__btn.is-active {
-  border-color: rgba(255, 255, 255, 0.85);
-  background: rgba(255, 255, 255, 0.07);
+  border-color: var(--fill, #111110);
+  background: var(--bg-raised-2, #f3f1ec);
 }
 .vpick__btn:disabled { opacity: 0.35; cursor: not-allowed; }
 .vpick__btn-name { font-size: 15px; font-weight: 600; line-height: 1.2; }
@@ -309,19 +328,6 @@
 }
 @media (max-width: 540px) {
   .vpick__btn { min-width: 0; flex: 1 1 calc(50% - 5px); }
-}
-
-/* Wristband only: base.css's .product-media padding/border leaves a visible
-   dark gap around a photo that already has its own dark background, reading
-   as a double frame. Scoped to this one product rather than changed in
-   base.css, which every other product page's gallery also uses. */
-.product-media--flush {
-  padding: 0;
-  border: none;
-  overflow: hidden;
-}
-.product-media--flush .product-gallery__viewport {
-  border-radius: 0;
 }
 {% endstylesheet %}
 
@@ -385,7 +391,7 @@
   "blocks": [
     {
       "type": "benefit",
-      "name": "Benefit (unused)",
+      "name": "Benefit",
       "settings": [
         { "type": "text", "id": "title", "label": "Title" },
         { "type": "textarea", "id": "text", "label": "Text" }

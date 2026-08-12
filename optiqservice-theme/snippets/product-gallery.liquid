@@ -1,12 +1,23 @@
 {%- assign imgs = product.images -%}
+{%- assign has_override_image = false -%}
+{%- if override_image != blank -%}
+  {%- assign has_override_image = true -%}
+{%- endif -%}
+
 <div class="product-gallery" data-gallery>
   <div class="product-gallery__stage">
-    {%- if imgs.size > 1 -%}
-      <button class="pg-arrow pg-arrow--prev" type="button" data-pg-prev aria-label="Previous image">&#8249;</button>
-      <button class="pg-arrow pg-arrow--next" type="button" data-pg-next aria-label="Next image">&#8250;</button>
+    {%- if has_override_image == false -%}
+      {%- if imgs.size > 1 -%}
+        <button class="pg-arrow pg-arrow--prev" type="button" data-pg-prev aria-label="Previous image">&#8249;</button>
+        <button class="pg-arrow pg-arrow--next" type="button" data-pg-next aria-label="Next image">&#8250;</button>
+      {%- endif -%}
     {%- endif -%}
     <div class="product-gallery__viewport" data-pg-viewport>
-      {%- if imgs.size > 0 -%}
+      {%- if has_override_image -%}
+        <div class="product-gallery__slide is-active" data-pg-slide>
+          {{ override_image | image_url: width: 1100 | image_tag: alt: product.title, loading: 'eager' }}
+        </div>
+      {%- elsif imgs.size > 0 -%}
         {%- for image in imgs -%}
           <div class="product-gallery__slide{% if forloop.first %} is-active{% endif %}" data-pg-slide data-media-id="{{ image.id }}">
             {%- if forloop.first -%}
@@ -18,20 +29,22 @@
         {%- endfor -%}
       {%- else -%}
         <div class="product-gallery__slide is-active" data-pg-slide>
-          {% render 'image-placeholder', label: 'Add product photos in Shopify admin' %}
+          {% render 'image-placeholder', label: 'Add product page photo in theme editor' %}
         </div>
       {%- endif -%}
     </div>
   </div>
 
-  {%- if imgs.size > 1 -%}
-    <div class="product-gallery__thumbs" data-pg-thumbs>
-      {%- for image in imgs -%}
-        <button class="product-gallery__thumb{% if forloop.first %} is-active{% endif %}" type="button" data-pg-thumb data-index="{{ forloop.index0 }}" data-media-id="{{ image.id }}" aria-label="View image {{ forloop.index }}">
-          {{ image | image_url: width: 220 | image_tag: alt: image.alt, loading: 'lazy' }}
-        </button>
-      {%- endfor -%}
-    </div>
+  {%- if has_override_image == false -%}
+    {%- if imgs.size > 1 -%}
+      <div class="product-gallery__thumbs" data-pg-thumbs>
+        {%- for image in imgs -%}
+          <button class="product-gallery__thumb{% if forloop.first %} is-active{% endif %}" type="button" data-pg-thumb data-index="{{ forloop.index0 }}" data-media-id="{{ image.id }}" aria-label="View image {{ forloop.index }}">
+            {{ image | image_url: width: 220 | image_tag: alt: image.alt, loading: 'lazy' }}
+          </button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
   {%- endif -%}
 </div>
 
@@ -68,7 +81,6 @@
     })(thumbs[t]);
   }
 
-  // When a customer picks a color/variant that has its own image, jump to it.
   var select = document.getElementById('variant-select');
   if (select) {
     select.addEventListener('change', function () {
@@ -78,7 +90,6 @@
     });
   }
 
-  // Swipe on touch devices.
   var viewport = root.querySelector('[data-pg-viewport]');
   var startX = null;
   if (viewport) {

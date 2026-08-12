@@ -886,11 +886,12 @@ h1, h2, h3, h4 { font-weight: 650; letter-spacing: -0.02em; line-height: 1.15; }
 
 @media (max-width: 880px) { .product-grid { grid-template-columns: 1fr; gap: 40px; } }
 
+/* No outer card/border here - the photo itself is the presentation. The
+   gallery viewport underneath (.product-gallery__viewport) still carries
+   its own light backdrop, so a product photo with a transparent edge never
+   sits directly on the page background. */
 .product-media {
-  background: var(--bg-raised);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 40px 24px;
+  padding: 0;
 }
 
 .product-media img { border-radius: var(--radius-sm); margin: 0 auto; }
