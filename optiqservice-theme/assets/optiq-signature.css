@@ -221,6 +221,24 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 .sig-hero__media .sig-placeholder { width: 100%; height: 100%; }
 .sig-hero__media img { object-fit: cover; object-position: center top; display: block; }
 
+/* Scrim: the overlaid heading/subheading/button need to stay legible no
+   matter what's underneath - a busy product photo, a light background,
+   whatever gets uploaded here - rather than depending on the photo itself
+   being dark and uncluttered exactly where the text sits. Darkest at the
+   top (eyebrow/heading) and bottom (button), lighter through the middle so
+   the photo still reads as a photo. */
+.sig-hero__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    rgba(9, 9, 8, 0.68) 0%,
+    rgba(9, 9, 8, 0.36) 20%,
+    rgba(9, 9, 8, 0.32) 46%,
+    rgba(9, 9, 8, 0.54) 72%,
+    rgba(9, 9, 8, 0.8) 100%);
+}
+
 .sig-hero__overlay {
   position: relative;
   z-index: 2;
@@ -237,15 +255,18 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 .sig-hero__text { display: grid; justify-items: center; gap: 20px; max-width: 720px; }
 .sig-hero__sub { font-size: clamp(1.05rem, 0.98rem + 0.35vw, 1.3rem); color: var(--sig-ink-2); max-width: 46ch; }
 
-.sig-hero__overlay .sig-eyebrow { color: rgba(255, 255, 255, 0.75); }
-.sig-hero__overlay .sig-h1 { color: var(--sig-white); }
-.sig-hero__overlay .sig-hero__sub { color: rgba(255, 255, 255, 0.82); }
+.sig-hero__overlay .sig-eyebrow { color: rgba(255, 255, 255, 0.8); text-shadow: 0 1px 10px rgba(0, 0, 0, 0.35); }
+.sig-hero__overlay .sig-h1 { color: var(--sig-white); text-shadow: 0 4px 28px rgba(0, 0, 0, 0.45); }
+.sig-hero__overlay .sig-hero__sub { color: rgba(255, 255, 255, 0.92); text-shadow: 0 2px 16px rgba(0, 0, 0, 0.4); }
 
 .sig-hero__actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
 
 @media (max-width: 640px) {
   .sig-hero { padding-top: 92px; min-height: auto; }
   .sig-hero__frame { min-height: 70vh; }
+  .sig-hero__overlay { gap: 22px; padding-top: 44px; }
+  .sig-hero__text { gap: 12px; max-width: 480px; }
+  .sig-hero__sub { font-size: 0.96rem; max-width: 38ch; }
 }
 
 .sig-hero--embedded { padding-top: clamp(20px, 4.5vw, 72px); }
