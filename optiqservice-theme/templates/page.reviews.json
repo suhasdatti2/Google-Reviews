@@ -9,38 +9,17 @@
  */
 {
   "sections": {
-    "sighero": {
-      "type": "signature-hero",
+    "hero": {
+      "type": "hero",
       "settings": {
-        "eyebrow": "Introducing",
-        "heading": "OPTIQ Signature",
-        "subheading": "The world's most refined NFC experience.",
-        "hero_image": "shopify://shop_images/hf_20260807_032922_b8902637-8c24-4a47-8c13-39b2ad594145.png",
-        "cta_label": "Explore Signature",
-        "cta_link": "",
-        "full_page_takeover": false
-      }
-    },
-    "sigmaterial": {
-      "type": "signature-material",
-      "settings": {
-        "eyebrow": "Material",
-        "heading": "Engineered from precision metal.",
-        "body": "A solid metal body, finished by hand and machined to a tolerance most cards never see. The NFC layer sits invisibly inside - nothing about the surface hints at the technology underneath until the moment it's tapped.",
-        "image": "shopify://shop_images/Screenshot_2026-08-06_231543.png"
-      }
-    },
-    "sigengineering": {
-      "type": "signature-engineering",
-      "settings": {
-        "eyebrow": "Construction",
-        "heading": "Precision in every layer.",
-        "layer_1_title": "Front metal plate",
-        "layer_1_text": "Machined and finished by hand",
-        "layer_2_title": "NFC technology layer",
-        "layer_2_text": "Programmed with your review link",
-        "layer_3_title": "Back metal plate",
-        "layer_3_text": "Sealed for a lifetime of use"
+        "kicker": "NFC review cards for local businesses",
+        "heading": "Get More Google Reviews With One Simple Tap",
+        "subheading": "Your customers tap their phone on the card, and your Google review page opens instantly. No app. No QR code needed. No monthly fee.",
+        "button_label": "Get My Review Card",
+        "button_link": "",
+        "secondary_label": "See How It Works",
+        "trust_line": "Works with iPhone & Android · No app to download · One-time purchase",
+        "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_40_03_PM_4.png"
       }
     },
     "showcase": {
@@ -237,37 +216,179 @@
         "bulk_mode_label": "Mini Bulk Cards",
         "wristband_mode_label": "Wristband",
         "membership_label": "See full plan details",
-        "membership_link": "/pages/membership",
-        "show_signature_link": true,
-        "signature_label": "Looking for something more refined? Discover Optiq Signature",
-        "signature_link": "#sig-configurator"
+        "membership_link": "/pages/membership"
       }
     },
-    "sigconfigurator": {
-      "type": "signature-configurator",
+    "wristbandspotlight": {
+      "type": "wristband-spotlight",
       "settings": {
-        "eyebrow": "Configure yours",
-        "heading": "Make it yours.",
-        "cta_label": "Add to Cart",
-        "programming_hint": "",
-        "finish_image_titanium": "shopify://shop_images/hf_20260809_191808_46f7dcda-4f86-45f5-b0e4-96c9812eab25.png"
+        "kicker": "New",
+        "heading": "Now Available: The Google Review Wristband",
+        "subheading": "Same one-tap technology as the card, worn instead of displayed - built for anyone on their feet interacting with customers all day.",
+        "card_handle": "google-review-nfc-card",
+        "card_label": "Also available",
+        "wristband_handle": "google-review-nfc-wristband",
+        "wristband_label": "New",
+        "wristband_image": "shopify://shop_images/hf_20260806_033730_5b6406a1-139f-44fb-a473-d16c69042b7b.png",
+        "badges": "NFC Enabled, Waterproof, Works with iPhone & Android, No App Required",
+        "button_label": "Shop the Wristband"
       }
     },
-    "sigpackaging": {
-      "type": "signature-packaging",
+    "highlight": {
+      "type": "product-highlight",
+      "blocks": {
+        "spec1": {
+          "type": "spec",
+          "settings": {
+            "title": "Credit-card size",
+            "text": "Fits the counter, the till, or the front desk - built to stay there."
+          }
+        },
+        "spec2": {
+          "type": "spec",
+          "settings": {
+            "title": "NFC chip inside",
+            "text": "Programmed with your review link before it ships. One tap and your review page opens."
+          }
+        },
+        "spec3": {
+          "type": "spec",
+          "settings": {
+            "title": "No batteries, no QR code",
+            "text": "Powered by the customer's phone. Nothing to charge, nothing to scan, nothing to break."
+          }
+        }
+      },
+      "block_order": [
+        "spec1",
+        "spec2",
+        "spec3"
+      ],
       "settings": {
-        "eyebrow": "The presentation",
-        "heading": "Arrives the way it should.",
-        "subheading": "Every order ships programmed, tap-tested, and packaged with care - the metal Signature card in its own solid black box, kept exactly as it left our hands."
+        "kicker": "The card",
+        "heading": "Designed to Sit on Your Counter. Built to Get Tapped.",
+        "subheading": "A glossy card with a clean matte design that says exactly what it does: tap to review."
       }
     },
-    "sigpurchase": {
-      "type": "signature-purchase",
+    "how": {
+      "type": "how-it-works",
+      "blocks": {
+        "step1": {
+          "type": "step",
+          "settings": {
+            "title": "Choose Your Card",
+            "text": "Pick the Main Counter Card, Mini Bulk Cards, or both. One-time price - no subscription required."
+          }
+        },
+        "step2": {
+          "type": "step",
+          "settings": {
+            "title": "Send Your Review Link",
+            "text": "Enter your business name and Google or Yelp review link at checkout. Don't have it handy? We'll help you find it."
+          }
+        },
+        "step3": {
+          "type": "step",
+          "settings": {
+            "title": "We Program It for You",
+            "text": "Every card is loaded with your review link and tap-tested on iPhone and Android before it ships."
+          }
+        },
+        "step4": {
+          "type": "step",
+          "settings": {
+            "title": "Customers Tap, Your Page Opens",
+            "text": "One tap opens your review page on their phone - no app, no typing, no QR code needed."
+          }
+        }
+      },
+      "block_order": [
+        "step1",
+        "step2",
+        "step3",
+        "step4"
+      ],
       "settings": {
-        "eyebrow": "Optiq",
-        "heading": "Own the Optiq experience.",
-        "subheading": "Main Counter Card, Mini Bulk Cards, Wristband, or our Signature metal card - programmed with your review link, tested, and ready to use.",
-        "cta_label": "Configure Yours"
+        "kicker": "How it works",
+        "heading": "From Order to First Tap in Four Steps",
+        "subheading": "We handle the programming. You just put the card where customers can tap it."
+      }
+    },
+    "demo": {
+      "type": "video-demo",
+      "settings": {
+        "kicker": "See it in action",
+        "heading": "Watch One Tap Open a Review Page",
+        "subheading": "Here's the card doing exactly what it does on your counter: a customer taps their phone, and your review page opens on the spot.",
+        "video_url": "https://cdn.shopify.com/s/files/1/0797/5554/2760/files/optiqservice-demo-v2.mp4?v=1783916790",
+        "poster_url": "https://cdn.shopify.com/s/files/1/0797/5554/2760/files/ChatGPT_Image_Jul_7_2026_07_41_03_PM_4_27f6dcc0-502f-45db-a375-277ecfd74a23.png?v=1783638921",
+        "autoplay": true,
+        "caption": "Muted by default. Tap the video for sound.",
+        "side_heading": "Google or Yelp. Your Choice.",
+        "side_text": "Tell us which review page you want your card to open. We program it before it ships, so a single tap takes customers straight there.",
+        "google_label": "Google review page",
+        "yelp_label": "Yelp review page",
+        "side_note": "One tap opens whichever you pick. No app, no QR code needed."
+      }
+    },
+    "who": {
+      "type": "who-its-for",
+      "blocks": {
+        "aud1": {
+          "type": "audience",
+          "settings": {
+            "title": "Barbershops",
+            "text": "Hand it over while they check out the fresh cut in the mirror."
+          }
+        },
+        "aud2": {
+          "type": "audience",
+          "settings": {
+            "title": "Restaurants & cafes",
+            "text": "Drop it with the check, or tuck a mini card into every takeout bag."
+          }
+        },
+        "aud3": {
+          "type": "audience",
+          "settings": {
+            "title": "Salons & spas",
+            "text": "Catch clients at their best - right after the appointment."
+          }
+        },
+        "aud4": {
+          "type": "audience",
+          "settings": {
+            "title": "Auto detailers",
+            "text": "They just saw their car transformed. Make the review as easy as the tap."
+          }
+        },
+        "aud5": {
+          "type": "audience",
+          "settings": {
+            "title": "Gyms & studios",
+            "text": "Keep it at the front desk for members who love the place."
+          }
+        },
+        "aud6": {
+          "type": "audience",
+          "settings": {
+            "title": "Local shops",
+            "text": "Turn friendly counter chat into reviews new customers can find."
+          }
+        }
+      },
+      "block_order": [
+        "aud1",
+        "aud2",
+        "aud3",
+        "aud4",
+        "aud5",
+        "aud6"
+      ],
+      "settings": {
+        "kicker": "Who it's for",
+        "heading": "Made for Businesses That Live on Reviews",
+        "subheading": "If your customers walk out happy, give them the easiest possible way to say so."
       }
     },
     "faq": {
@@ -381,13 +502,13 @@
     }
   },
   "order": [
-    "sighero",
-    "sigmaterial",
-    "sigengineering",
+    "hero",
     "showcase",
-    "sigconfigurator",
-    "sigpackaging",
-    "sigpurchase",
+    "wristbandspotlight",
+    "highlight",
+    "how",
+    "demo",
+    "who",
     "faq",
     "cta"
   ]
