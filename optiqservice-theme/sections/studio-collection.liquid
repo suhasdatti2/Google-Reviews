@@ -1,0 +1,147 @@
+{%- comment -%}
+  Collection grid - the shopping surface reached by scrolling the homepage.
+
+  Each card is bound to a real Shopify product through a product picker, so
+  the link, the price, the compare-at price and the availability all come
+  from Shopify and stay correct when they change in admin. Nothing about a
+  product is retyped into theme settings, where it would silently go stale.
+
+  The card image is an optional override for merchant-supplied art direction;
+  with none set it falls back to the product's own featured image, and only
+  when there is neither does it render the labelled empty slot.
+{%- endcomment -%}
+
+{%- liquid
+  assign cards = section.blocks | where: 'type', 'product'
+-%}
+
+<section class="stu-page stu-collection" id="{{ section.settings.anchor | default: 'collection' }}" {{ section.shopify_attributes }}>
+  <div class="stu-wrap">
+    <div class="stu-collection__head">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="stu-eyebrow" data-o-reveal="fade">{{ section.settings.eyebrow | escape }}</span>
+        {%- endif -%}
+        <h2 class="stu-h2" data-o-reveal="fade">{{ section.settings.heading | default: 'Collection' | escape }}</h2>
+        {%- if section.settings.subheading != blank -%}
+          <p class="stu-body" data-o-reveal="fade">{{ section.settings.subheading | escape }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- if cards.size > 0 -%}
+      <div class="stu-grid" data-o-reveal-group>
+        {%- for block in cards -%}
+          {%- liquid
+            assign p = block.settings.product
+            assign card_title = block.settings.title_override | default: p.title
+            assign card_url = p.url | default: block.settings.fallback_link
+          -%}
+
+          <a
+            class="stu-card"
+            href="{{ card_url | default: '#' }}"
+            data-o-reveal="fade"
+            {{ block.shopify_attributes }}
+          >
+            <div class="stu-card__media">
+              {%- if block.settings.image != blank -%}
+                {{ block.settings.image
+                   | image_url: width: 1200
+                   | image_tag:
+                       loading: 'lazy',
+                       sizes: '(max-width: 560px) 92vw, (max-width: 1000px) 46vw, 31vw',
+                       widths: '340, 520, 760, 1000, 1200',
+                       alt: card_title }}
+              {%- elsif p != blank and p.featured_image != blank -%}
+                {{ p.featured_image
+                   | image_url: width: 1200
+                   | image_tag:
+                       loading: 'lazy',
+                       sizes: '(max-width: 560px) 92vw, (max-width: 1000px) 46vw, 31vw',
+                       widths: '340, 520, 760, 1000, 1200',
+                       alt: card_title }}
+              {%- else -%}
+                {% render 'stu-slot', label: card_title | append: ' photo goes here' %}
+              {%- endif -%}
+
+              {%- if block.settings.tag != blank -%}
+                <span class="stu-card__tag">{{ block.settings.tag | escape }}</span>
+              {%- endif -%}
+            </div>
+
+            <div class="stu-card__foot">
+              <span class="stu-card__name">{{ card_title | escape }}</span>
+
+              {%- if p != blank -%}
+                <span class="stu-card__price">
+                  {%- if p.available == false -%}
+                    <span class="stu-card__sold">Sold out</span>
+                  {%- elsif p.price_varies -%}
+                    From {{ p.price_min | money }}
+                  {%- else -%}
+                    {{ p.price | money }}
+                  {%- endif -%}
+                </span>
+              {%- endif -%}
+            </div>
+          </a>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <p class="stu-body">Add product blocks to this section to build the grid.</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Studio collection",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Collection" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading" },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Anchor id",
+      "default": "collection",
+      "info": "The hero button links to #collection by default. Change both if you rename this."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Price, link and availability are read from Shopify - no need to type them here."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Card image",
+          "info": "Optional. Falls back to the product's own featured image."
+        },
+        { "type": "text", "id": "title_override", "label": "Title override", "info": "Leave empty to use the product title." },
+        { "type": "text", "id": "tag", "label": "Corner tag", "info": "Short label shown top-right, e.g. NEW." },
+        { "type": "url", "id": "fallback_link", "label": "Fallback link", "info": "Only used if no product is selected above." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Studio collection",
+      "blocks": [
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,116 @@
+{%- comment -%}
+  Studio hero - the full-bleed opening frame of the homepage.
+
+  The visual is supplied by the merchant (image_picker, or an uploaded video
+  for a moving frame). Nothing is shipped in its place: with both empty this
+  renders a labelled empty slot at the exact final proportions, so the layout
+  can be judged before the asset exists and dropping the real asset in later
+  changes nothing but the pixels.
+
+  Carries the .stu-page marker that switches the document to the studio
+  palette (see assets/optiq-studio.css) - it is a presence marker only, since
+  Shopify renders each JSON template section as a top-level sibling under
+  <main> rather than nesting them.
+{%- endcomment -%}
+
+{%- liquid
+  assign has_video = false
+  if section.settings.video != blank
+    assign has_video = true
+  endif
+
+  case section.settings.height
+    when 'small'
+      assign min_h = 'clamp(380px, 62svh, 620px)'
+    when 'large'
+      assign min_h = 'clamp(520px, 94svh, 980px)'
+    else
+      assign min_h = 'clamp(460px, 86svh, 880px)'
+  endcase
+-%}
+
+<section
+  class="stu-page stu-hero{% unless section.settings.show_veil %} stu-hero--no-veil{% endunless %}"
+  style="min-height: {{ min_h }};"
+  {{ section.shopify_attributes }}
+>
+  <div class="stu-hero__media">
+    {%- if has_video -%}
+      {{ section.settings.video
+         | video_tag: autoplay: true, loop: true, muted: true, controls: false, playsinline: true, image_size: '1920x' }}
+    {%- elsif section.settings.image != blank -%}
+      {{ section.settings.image
+         | image_url: width: 2400
+         | image_tag:
+             loading: 'eager',
+             fetchpriority: 'high',
+             sizes: '100vw',
+             widths: '600, 900, 1200, 1600, 2000, 2400',
+             alt: section.settings.heading | default: shop.name }}
+    {%- else -%}
+      {% render 'stu-slot', label: 'Homepage hero image or video goes here' %}
+    {%- endif -%}
+  </div>
+
+  <div class="stu-hero__veil" aria-hidden="true"></div>
+
+  <div class="stu-wrap stu-hero__content" data-o-reveal-group>
+    {%- if section.settings.eyebrow != blank -%}
+      <span class="stu-eyebrow stu-hero__eyebrow" data-o-reveal="fade">{{ section.settings.eyebrow | escape }}</span>
+    {%- endif -%}
+
+    {%- if section.settings.heading != blank -%}
+      <h1 class="stu-hero__title" data-o-reveal="fade">{{ section.settings.heading | escape }}</h1>
+    {%- endif -%}
+
+    {%- if section.settings.subheading != blank -%}
+      <p class="stu-hero__sub" data-o-reveal="fade">{{ section.settings.subheading | escape }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.cta_label != blank -%}
+      <a class="stu-btn" href="{{ section.settings.cta_link | default: '#collection' }}" data-o-reveal="fade">
+        {{ section.settings.cta_label | escape }}
+      </a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Studio hero",
+  "settings": [
+    { "type": "header", "content": "Visual" },
+    {
+      "type": "paragraph",
+      "content": "Upload your own hero image or video. Until one is added, a labelled empty frame is shown at the final size."
+    },
+    { "type": "image_picker", "id": "image", "label": "Hero image" },
+    { "type": "video", "id": "video", "label": "Hero video", "info": "Optional. If set, it plays muted on loop and takes priority over the image." },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Height",
+      "default": "medium",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large (near full screen)" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_veil",
+      "label": "Darken behind the text",
+      "default": true,
+      "info": "Keeps the headline readable over a bright image. Turn off if your image is already dark at the bottom."
+    },
+    { "type": "header", "content": "Text" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "New Drop Out Now" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading" },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Shop Now" },
+    { "type": "url", "id": "cta_link", "label": "Button link", "info": "Defaults to #collection, which scrolls to the products below." }
+  ],
+  "presets": [{ "name": "Studio hero" }]
+}
+{% endschema %}

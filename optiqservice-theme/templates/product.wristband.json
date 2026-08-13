@@ -10,78 +10,72 @@
 {
   "sections": {
     "main": {
-      "type": "main-product",
-      "settings": {
-        "tagline": "Programmed with your Google review link. Waterproof silicone, one tap, no app needed.",
-        "buy_label": "Add to Cart",
-        "show_qr_addon": false
-      }
-    },
-    "faq": {
-      "type": "faq",
+      "type": "studio-product",
       "blocks": {
-        "q1": {
-          "type": "question",
+        "b1": {
+          "type": "benefit",
           "settings": {
-            "question": "Is the wristband actually waterproof?",
-            "answer": "Yes. It's built from premium silicone, so handwashing, sweat, and everyday wear won't affect it or the NFC chip inside."
+            "title": "Worn, not displayed",
+            "text": "Built for people on their feet all day — barbers, stylists, servers, mechanics — rather than a card sitting on a counter."
           }
         },
-        "q2": {
-          "type": "question",
+        "b2": {
+          "type": "benefit",
           "settings": {
-            "question": "What's the difference between the wristband and the NFC cards?",
-            "answer": "Same one-tap technology and the same programmed review link - the wristband is worn instead of displayed. It's built for people who are on their feet all day interacting directly with customers, like barbers, stylists, servers, and mechanics, rather than a card sitting on a counter."
+            "title": "Waterproof silicone",
+            "text": "Handwashing, sweat, and everyday wear won't affect the band or the NFC chip inside."
           }
         },
-        "q3": {
-          "type": "question",
+        "b3": {
+          "type": "benefit",
           "settings": {
-            "question": "Will it fit me?",
-            "answer": "The silicone band is designed to fit comfortably for all-day wear on most adult wrist sizes."
+            "title": "Programmed for you",
+            "text": "Send us your review link at checkout and it arrives set up, tap-tested, and ready to wear."
           }
         },
-        "q4": {
-          "type": "question",
+        "b4": {
+          "type": "benefit",
           "settings": {
-            "question": "How do you program my review link?",
-            "answer": "At checkout you'll enter your business name and Google review link. We program the chip, tap-test it, and ship it ready to wear. If you'd rather send the link later, just email it to sales@optiqservice.com with your order number."
+            "title": "One tap, no app needed",
+            "text": "Customers hold their phone near the band and your Google review page opens."
           }
         },
-        "q5": {
-          "type": "question",
+        "a1": {
+          "type": "accordion",
           "settings": {
-            "question": "Do my customers need an app?",
-            "answer": "No. NFC reading is built into modern iPhones and Android phones. Customers just hold their phone near the wristband and their review page opens."
+            "heading": "Fit & materials",
+            "content": "<p>The silicone band is designed to fit comfortably for all-day wear on most adult wrist sizes. Premium silicone throughout, with the NFC chip sealed inside.</p>"
+          }
+        },
+        "a2": {
+          "type": "accordion",
+          "settings": {
+            "heading": "How programming works",
+            "content": "<p>At checkout you'll enter your business name and Google review link. We program the chip, tap-test it, and ship it ready to wear. If you'd rather send the link later, email it to sales@optiqservice.com with your order number.</p>"
+          }
+        },
+        "a3": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Shipping & returns",
+            "content": "<p>Every wristband is programmed with your review link and tap-tested before it ships. Most orders are prepared within a few business days, and you'll get a tracking email as soon as yours is on the way.</p><p>If one arrives damaged or doesn't tap correctly, email sales@optiqservice.com and we'll sort out a replacement. Because each band is custom-programmed, we can't take back correctly working ones.</p>"
           }
         }
       },
-      "block_order": [
-        "q1",
-        "q2",
-        "q3",
-        "q4",
-        "q5"
-      ],
+      "block_order": ["b1", "b2", "b3", "b4", "a1", "a2", "a3"],
       "settings": {
-        "kicker": "FAQ",
-        "heading": "Wristband, Answered",
-        "subheading": "Anything else? Email sales@optiqservice.com - we reply within one business day."
-      }
-    },
-    "cta": {
-      "type": "cta-banner",
-      "settings": {
-        "heading": "Wear It. Let the Taps Do the Asking.",
-        "subheading": "One-time price. Programmed before it ships. Ready to wear on arrival.",
-        "button_label": "Get My Wristband",
-        "button_link": "/products/google-review-nfc-wristband"
+        "tagline": "Programmed with your Google review link. Waterproof silicone, one tap, no app needed.",
+        "buy_label": "Add to Cart",
+        "show_payment_button": true,
+        "show_personalise": true,
+        "show_delivery": true,
+        "ship_min_days": 3,
+        "ship_max_days": 7,
+        "show_description": false,
+        "wristband_product_image": "shopify://shop_images/hf_20260806_033730_20d5efb0-b13a-424c-825a-55494fe86de1.png",
+        "main_counter_card_product_image": "shopify://shop_images/hf_20260806_033730_5b6406a1-139f-44fb-a473-d16c69042b7b.png"
       }
     }
   },
-  "order": [
-    "main",
-    "faq",
-    "cta"
-  ]
+  "order": ["main"]
 }

@@ -1,38 +1,172 @@
-<header class="site-header">
-  <div class="page-width site-header__inner">
-    <a class="site-header__logo" href="{{ routes.root_url }}">
-      Optiq<span>Service</span>
-    </a>
+{%- comment -%}
+  Header - three-column: navigation left, wordmark centred, actions right.
 
-    <nav class="site-nav" aria-label="Main navigation">
-      {%- if section.settings.menu != blank -%}
-        {%- for link in section.settings.menu.links -%}
-          <a href="{{ link.url }}">{{ link.title }}</a>
+  The wordmark is centred on the viewport rather than sitting beside the nav,
+  which is what makes the layout read as a storefront rather than an app bar.
+  That needs the two flanking columns to be equal-width (1fr auto 1fr in
+  assets/optiq-studio.css), so the centre stays optically centred no matter
+  how many nav links or actions are present.
+
+  This markup is theme-neutral. It inherits the dark palette used by the AI
+  receptionist pages and the dashboard, and optiq-studio.css repaints it for
+  cream studio pages via body:has(.stu-page). One header, two skins - rather
+  than a second header section that would drift out of sync.
+
+  Cart and menu both drive the theme's existing drawer controller
+  (assets/optiq-ui.js): a [data-o-drawer-open="x"] button opens the matching
+  [data-o-drawer="x"] panel, with focus trapping, scroll lock and Escape
+  already handled. The count badge is [data-o-cart-count], which
+  assets/optiq-cart.js repaints after every add.
+
+  Icons are inline rather than {% render 'icon' %} so this section cannot be
+  broken by a name that does not exist in that snippet.
+{%- endcomment -%}
+
+{%- comment -%}
+  Loaded here rather than from each studio section because the header is the
+  first element in the body: a stylesheet link blocks rendering of everything
+  that follows it, so the header itself paints already themed instead of
+  flashing dark and correcting once a section further down the page pulls the
+  sheet in. Same pattern the Signature sections already use for their own
+  stylesheet. Everything inside is gated behind body:has(.stu-page), so this
+  is inert on the dark receptionist and dashboard pages.
+{%- endcomment -%}
+{{ 'optiq-studio.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign links = section.settings.menu.links
+-%}
+
+<header class="o-header" data-o-header {{ section.shopify_attributes }}>
+  <div class="o-wrap stu-hdr">
+
+    {%- comment -%} Left: navigation (desktop) / menu button (mobile) {%- endcomment -%}
+    <nav class="stu-nav" aria-label="Main navigation">
+      {%- if links.size > 0 -%}
+        {%- for link in links -%}
+          <a href="{{ link.url }}">{{ link.title | escape }}</a>
         {%- endfor -%}
       {%- else -%}
-        <a href="{{ routes.root_url }}#cards">Cards</a>
-        <a href="{{ routes.root_url }}pages/membership">Membership</a>
-        <a href="{{ routes.root_url }}#faq">FAQ</a>
+        <a href="{{ routes.root_url }}">Home</a>
+        <a href="{{ routes.root_url }}#collection">Shop</a>
+        <a href="{{ routes.root_url }}pages/ai-receptionist">Receptionist</a>
         <a href="{{ routes.root_url }}pages/contact">Contact</a>
       {%- endif -%}
     </nav>
 
-    <button type="button" class="site-header__cart" data-cart-toggle aria-label="Open cart">
-      Cart
-      <span class="site-header__cart-count" data-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
+    <button
+      type="button"
+      class="stu-hdr__act stu-burger"
+      data-o-drawer-open="menu"
+      aria-expanded="false"
+      aria-label="Open menu"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+        <path d="M3 6h18M3 12h18M3 18h18"/>
+      </svg>
     </button>
+
+    {%- comment -%} Centre: wordmark {%- endcomment -%}
+    <a class="stu-logo" href="{{ routes.root_url }}">
+      {%- if section.settings.logo != blank -%}
+        {%- assign logo_w = section.settings.logo_height | times: section.settings.logo.aspect_ratio | round -%}
+        <img
+          src="{{ section.settings.logo | image_url: height: 120 }}"
+          alt="{{ shop.name | escape }}"
+          width="{{ logo_w }}"
+          height="{{ section.settings.logo_height }}"
+          style="height:{{ section.settings.logo_height }}px"
+        >
+      {%- else -%}
+        {{ section.settings.wordmark | default: 'OPTIQ' | escape }}
+      {%- endif -%}
+    </a>
+
+    {%- comment -%} Right: search, account, cart {%- endcomment -%}
+    <div class="stu-hdr__right">
+
+      <a class="stu-hdr__act" href="{{ routes.search_url }}" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
+        </svg>
+      </a>
+
+      {%- comment -%}
+        Only rendered when customer accounts are actually switched on - the
+        underlying login flow 404s otherwise, and a dead control in a
+        persistent header is worse than one fewer control. Signed in goes to
+        the gated dashboard, not Shopify's generic /account.
+      {%- endcomment -%}
+      {%- if shop.customer_accounts_enabled -%}
+        <a
+          class="stu-hdr__act"
+          href="{% if customer %}/pages/my-receptionist{% else %}/pages/sign-in{% endif %}"
+          aria-label="{% if customer %}Your account{% else %}Log in{% endif %}"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="8" r="3.6"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/>
+          </svg>
+        </a>
+      {%- endif -%}
+
+      <button
+        type="button"
+        class="stu-hdr__act"
+        data-o-drawer-open="cart"
+        aria-expanded="false"
+        aria-label="Open cart"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/>
+        </svg>
+        <span class="stu-hdr__count" data-o-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>
+          {{- cart.item_count -}}
+        </span>
+      </button>
+
+    </div>
   </div>
 </header>
+
+{%- comment -%}
+  Mobile navigation drawer. Rendered once here rather than in the layout so
+  it always carries exactly the links the header above is configured with.
+{%- endcomment -%}
+<div class="stu-menu" data-o-drawer="menu" aria-hidden="true" role="dialog" aria-label="Menu" tabindex="-1" data-o-drawer-focus>
+  <div class="stu-menu__head">
+    <span class="stu-eyebrow">Menu</span>
+    <button type="button" class="stu-menu__x" data-o-drawer-close aria-label="Close menu">&times;</button>
+  </div>
+  <nav class="stu-menu__links">
+    {%- if links.size > 0 -%}
+      {%- for link in links -%}
+        <a href="{{ link.url }}" data-o-drawer-close>{{ link.title | escape }}</a>
+      {%- endfor -%}
+    {%- else -%}
+      <a href="{{ routes.root_url }}" data-o-drawer-close>Home</a>
+      <a href="{{ routes.root_url }}#collection" data-o-drawer-close>Shop</a>
+      <a href="{{ routes.root_url }}pages/ai-receptionist" data-o-drawer-close>Receptionist</a>
+      <a href="{{ routes.root_url }}pages/contact" data-o-drawer-close>Contact</a>
+    {%- endif -%}
+  </nav>
+</div>
 
 {% schema %}
 {
   "name": "Header",
   "settings": [
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" },
+    { "type": "text", "id": "wordmark", "label": "Wordmark", "default": "OPTIQ", "info": "Used when no logo image is set." },
+    { "type": "image_picker", "id": "logo", "label": "Logo", "info": "Leave empty to use the wordmark." },
     {
-      "type": "link_list",
-      "id": "menu",
-      "label": "Menu",
-      "default": "main-menu"
+      "type": "range",
+      "id": "logo_height",
+      "label": "Logo height",
+      "min": 18,
+      "max": 56,
+      "step": 2,
+      "default": 30,
+      "unit": "px"
     }
   ]
 }

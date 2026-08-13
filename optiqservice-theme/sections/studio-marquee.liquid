@@ -1,0 +1,74 @@
+{%- comment -%}
+  Scrolling marquee strip.
+
+  The item list is rendered twice inside one track, and the animation
+  translates the track by exactly -50%. At that point copy two sits precisely
+  where copy one started, so the loop restarts on an identical frame - the
+  standard seamless-marquee construction, with no JS and no measurement.
+
+  Pure CSS transform on a single element, so it runs on the compositor and
+  costs nothing per frame. Pauses on hover; static under reduced-motion
+  (assets/optiq-studio.css), where it becomes a normal scrollable strip.
+{%- endcomment -%}
+
+{%- liquid
+  assign items = section.blocks | where: 'type', 'item'
+-%}
+
+{%- if items.size > 0 -%}
+  <section class="stu-page stu-marquee" style="--stu-marquee-dur: {{ section.settings.duration | default: 42 }}s;" {{ section.shopify_attributes }}>
+    <div class="stu-marquee__track" aria-hidden="false">
+      {%- comment -%} Copy one - the readable pass, exposed to assistive tech. {%- endcomment -%}
+      {%- for block in items -%}
+        <span class="stu-marquee__item" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</span>
+      {%- endfor -%}
+
+      {%- comment -%} Copy two - purely visual, so it is not read out twice. {%- endcomment -%}
+      {%- for block in items -%}
+        <span class="stu-marquee__item" aria-hidden="true">{{ block.settings.text | escape }}</span>
+      {%- endfor -%}
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Marquee strip",
+  "settings": [
+    {
+      "type": "range",
+      "id": "duration",
+      "label": "Loop duration",
+      "min": 16,
+      "max": 90,
+      "step": 2,
+      "default": 42,
+      "unit": "s",
+      "info": "Higher is slower. Add more items to fill wider screens."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "limit": 12,
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Programmed before it ships" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marquee strip",
+      "blocks": [
+        { "type": "item", "settings": { "text": "Programmed with your review link" } },
+        { "type": "item", "settings": { "text": "No app required" } },
+        { "type": "item", "settings": { "text": "Works with iPhone and Android" } },
+        { "type": "item", "settings": { "text": "One-time purchase" } },
+        { "type": "item", "settings": { "text": "Tap-tested before dispatch" } },
+        { "type": "item", "settings": { "text": "Free shipping on all orders" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
