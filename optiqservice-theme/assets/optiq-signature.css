@@ -382,11 +382,10 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
    need the same expansive width. Scoped modifier so this doesn't shrink
    signature-configurator.liquid on the dedicated /pages/signature page. */
 .sig-configurator--catalog {
-  --sig-config-pad: clamp(24px, 3vw, 40px);
-  max-width: 620px;
+  --sig-config-pad: clamp(28px, 3.5vw, 48px);
+  max-width: 860px;
   margin-inline: auto;
 }
-.sig-configurator--catalog .sig-config__row { padding-block: 20px; }
 
 .sig-config__preview {
   position: relative;
@@ -400,39 +399,25 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 .sig-config__preview .sig-placeholder { width: 100%; height: 100%; }
 .sig-config__preview img { object-fit: cover; object-position: center top; display: block; }
 
-/* Catalog preview (Counter Card / Bulk / Wristband) - a padded, uncropped
-   box rather than .sig-config__preview's fixed 2:1 crop: those photos are a
-   different shape than Signature's own photography and overflowed it.
-   Capped to a realistic product-shot size (not full container width) so it
-   reads as a compact photo inside the card, not a full-bleed poster. */
+/* Catalog preview (Counter Card / Bulk / Wristband) - a fixed 5:4 box (the
+   same ratio .sig-split__media already uses elsewhere on this page) that
+   the photo fills completely via object-fit: cover, rather than
+   .sig-config__preview's negative-margin full-bleed 2:1 crop, which was
+   tuned for Signature's own photography and overflowed with these
+   products' photos. Contained within the card's own padding so it can't
+   overflow the card, but sized to fill its box edge to edge - no
+   letterboxing, no wasted white space around a tiny centred thumbnail. */
 .sig-catalog__preview {
   position: relative;
   margin-bottom: 32px;
-  padding: 24px;
-  min-height: 160px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--sig-paper);
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
   border: 1px solid var(--sig-line-2);
 }
-.sig-catalog__preview [data-sig-preview] { width: 100%; max-width: 320px; margin-inline: auto; }
+.sig-catalog__preview [data-sig-preview] { position: absolute; inset: 0; }
 .sig-catalog__preview img,
-.sig-catalog__preview .sig-placeholder {
-  width: 100%;
-  height: auto;
-  max-height: 280px;
-  object-fit: contain;
-  display: block;
-  margin-inline: auto;
-}
-
-@media (max-width: 640px) {
-  .sig-catalog__preview { padding: 18px; min-height: 130px; }
-  .sig-catalog__preview [data-sig-preview] { max-width: 240px; }
-  .sig-catalog__preview img,
-  .sig-catalog__preview .sig-placeholder { max-height: 200px; }
-}
+.sig-catalog__preview .sig-placeholder { width: 100%; height: 100%; display: block; }
+.sig-catalog__preview img { object-fit: cover; object-position: center top; }
 
 .sig-config__row { display: grid; gap: 16px; padding-block: 30px; border-top: 1px solid var(--sig-line); }
 .sig-config__row:first-child { border-top: 0; padding-top: 0; }
