@@ -9,386 +9,71 @@
  */
 {
   "sections": {
-    "hero": {
-      "type": "hero",
+    "sighero": {
+      "type": "signature-hero",
       "settings": {
-        "kicker": "NFC review cards for local businesses",
-        "heading": "Get More Google Reviews With One Simple Tap",
-        "subheading": "Your customers tap their phone on the card, and your Google review page opens instantly. No app. No QR code needed. No monthly fee.",
-        "button_label": "Get My Review Card",
-        "button_link": "",
-        "secondary_label": "See How It Works",
-        "trust_line": "Works with iPhone & Android · No app to download · One-time purchase",
-        "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_40_03_PM_4.png"
+        "eyebrow": "NFC review cards for local businesses",
+        "heading": "Optiq Review Cards",
+        "subheading": "Your customers tap their phone on the card or wristband, and your Google review page opens instantly. No app. No QR code needed. No monthly fee.",
+        "hero_image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_40_03_PM_4.png",
+        "cta_label": "Choose Your Product",
+        "cta_link": "#sig-configurator",
+        "full_page_takeover": false
       }
     },
-    "showcase": {
-      "type": "card-showcase",
-      "blocks": {
-        "c1": {
-          "type": "card",
-          "settings": {
-            "mode": "counter",
-            "name": "Counter Card - Black",
-            "note": "Our premium counter card in classic matte black.",
-            "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_41_02_PM_3.png",
-            "tag": "Premium high-quality material",
-            "badge": "Bestseller"
-          }
-        },
-        "c4": {
-          "type": "card",
-          "settings": {
-            "mode": "counter",
-            "name": "Counter Card - White",
-            "note": "Clean white card with black print - bright on any counter.",
-            "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_40_15_PM_4.png",
-            "tag": "Premium high-quality material",
-            "badge": ""
-          }
-        },
-        "c5": {
-          "type": "card",
-          "settings": {
-            "mode": "bulk",
-            "name": "Mini Bulk Card - Black",
-            "note": "Smaller, simpler card made to hand out with bills, receipts, and takeout bags.",
-            "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_58_27_PM_4.png",
-            "tag": "Made to hand out",
-            "badge": ""
-          }
-        },
-        "c6": {
-          "type": "card",
-          "settings": {
-            "mode": "bulk",
-            "name": "Mini Bulk Card - White",
-            "note": "Same hand-out card in clean white, if you'd rather match a lighter brand.",
-            "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_08_02_25_PM_3.png",
-            "tag": "Made to hand out",
-            "badge": ""
-          }
-        },
-        "q1": {
-          "type": "qty",
-          "settings": {
-            "mode": "counter",
-            "qty_label": "1 Card",
-            "price": "$29.99",
-            "featured": true,
-            "variant_id": "",
-            "link": "/products/google-review-nfc-card"
-          }
-        },
-        "q2": {
-          "type": "qty",
-          "settings": {
-            "mode": "counter",
-            "qty_label": "2 Cards",
-            "price": "$49.99",
-            "featured": false,
-            "variant_id": "",
-            "link": "/products/google-review-nfc-card"
-          }
-        },
-        "q3": {
-          "type": "qty",
-          "settings": {
-            "mode": "counter",
-            "qty_label": "3 Cards",
-            "price": "$64.99",
-            "featured": false,
-            "variant_id": "",
-            "link": "/products/google-review-nfc-card"
-          }
-        },
-        "q4": {
-          "type": "qty",
-          "settings": {
-            "mode": "bulk",
-            "qty_label": "10 Cards",
-            "price": "$49.99",
-            "featured": true,
-            "variant_id": "",
-            "link": "/products/bulk-review-cards"
-          }
-        },
-        "q5": {
-          "type": "qty",
-          "settings": {
-            "mode": "bulk",
-            "qty_label": "25 Cards",
-            "price": "$99.99",
-            "featured": false,
-            "variant_id": "",
-            "link": "/products/bulk-review-cards"
-          }
-        },
-        "q6": {
-          "type": "qty",
-          "settings": {
-            "mode": "bulk",
-            "qty_label": "50 Cards",
-            "price": "$174.99",
-            "featured": false,
-            "variant_id": "",
-            "link": "/products/bulk-review-cards"
-          }
-        },
-        "q7": {
-          "type": "qty",
-          "settings": {
-            "mode": "bulk",
-            "qty_label": "100 Cards",
-            "price": "$299.99",
-            "featured": false,
-            "variant_id": "",
-            "link": "/products/bulk-review-cards"
-          }
-        },
-        "w1": {
-          "type": "card",
-          "settings": {
-            "mode": "wristband",
-            "name": "Google Review Wristband",
-            "note": "Premium silicone wristband, programmed with your Google review link. Waterproof and comfortable for all-day wear.",
-            "image": "shopify://shop_images/hf_20260806_033730_5b6406a1-139f-44fb-a473-d16c69042b7b.png",
-            "tag": "Premium silicone construction",
-            "badge": "New"
-          }
-        },
-        "wq1": {
-          "type": "qty",
-          "settings": {
-            "mode": "wristband",
-            "qty_label": "1 Wristband",
-            "price": "$39.99",
-            "featured": true,
-            "variant_id": "48855927161064",
-            "link": "/products/google-review-nfc-wristband"
-          }
-        },
-        "wq2": {
-          "type": "qty",
-          "settings": {
-            "mode": "wristband",
-            "qty_label": "2 Wristbands",
-            "price": "$69.99",
-            "featured": false,
-            "variant_id": "48855927193832",
-            "link": "/products/google-review-nfc-wristband"
-          }
-        },
-        "wq3": {
-          "type": "qty",
-          "settings": {
-            "mode": "wristband",
-            "qty_label": "3 Wristbands",
-            "price": "$99.99",
-            "featured": false,
-            "variant_id": "48855927226600",
-            "link": "/products/google-review-nfc-wristband"
-          }
-        }
-      },
-      "block_order": [
-        "c1",
-        "c4",
-        "c5",
-        "c6",
-        "q1",
-        "q2",
-        "q3",
-        "q4",
-        "q5",
-        "q6",
-        "q7",
-        "w1",
-        "wq1",
-        "wq2",
-        "wq3"
-      ],
+    "sigmaterial": {
+      "type": "signature-material",
       "settings": {
-        "kicker": "Choose your setup",
-        "heading": "Which Card Is Right for Your Business?",
-        "subheading": "The Main Counter Card sits on your counter for years. Mini Bulk Cards go home with every customer. Most businesses use both.",
-        "counter_mode_label": "Main Counter Card",
-        "bulk_mode_label": "Mini Bulk Cards",
-        "wristband_mode_label": "Wristband",
-        "membership_label": "See full plan details",
-        "membership_link": "/pages/membership"
+        "eyebrow": "Built to last",
+        "heading": "Durable, tap-ready NFC technology.",
+        "body": "Every card and wristband is built from premium, durable material and finished clean - a card sturdy enough to sit on your counter for years, and a wristband comfortable enough for all-day wear. The NFC chip sits invisibly inside, programmed with your review link before it ever leaves us.",
+        "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_41_02_PM_3.png"
       }
     },
-    "wristbandspotlight": {
-      "type": "wristband-spotlight",
+    "sigengineering": {
+      "type": "signature-engineering",
       "settings": {
-        "kicker": "New",
-        "heading": "Now Available: The Google Review Wristband",
-        "subheading": "Same one-tap technology as the card, worn instead of displayed - built for anyone on their feet interacting with customers all day.",
-        "card_handle": "google-review-nfc-card",
-        "card_label": "Also available",
-        "wristband_handle": "google-review-nfc-wristband",
-        "wristband_label": "New",
-        "wristband_image": "shopify://shop_images/hf_20260806_033730_5b6406a1-139f-44fb-a473-d16c69042b7b.png",
-        "badges": "NFC Enabled, Waterproof, Works with iPhone & Android, No App Required",
-        "button_label": "Shop the Wristband"
+        "eyebrow": "How it works",
+        "heading": "Simple, reliable, tap-ready.",
+        "layer_1_title": "Durable card or wristband body",
+        "layer_1_text": "Premium material, built to hold up to daily use",
+        "layer_2_title": "NFC technology layer",
+        "layer_2_text": "Programmed with your Google review link",
+        "layer_3_title": "Tap-tested before it ships",
+        "layer_3_text": "Verified to work with iPhone and Android"
       }
     },
-    "highlight": {
-      "type": "product-highlight",
-      "blocks": {
-        "spec1": {
-          "type": "spec",
-          "settings": {
-            "title": "Credit-card size",
-            "text": "Fits the counter, the till, or the front desk - built to stay there."
-          }
-        },
-        "spec2": {
-          "type": "spec",
-          "settings": {
-            "title": "NFC chip inside",
-            "text": "Programmed with your review link before it ships. One tap and your review page opens."
-          }
-        },
-        "spec3": {
-          "type": "spec",
-          "settings": {
-            "title": "No batteries, no QR code",
-            "text": "Powered by the customer's phone. Nothing to charge, nothing to scan, nothing to break."
-          }
-        }
-      },
-      "block_order": [
-        "spec1",
-        "spec2",
-        "spec3"
-      ],
+    "sigcatalog": {
+      "type": "signature-catalog",
       "settings": {
-        "kicker": "The card",
-        "heading": "Designed to Sit on Your Counter. Built to Get Tapped.",
-        "subheading": "A glossy card with a clean matte design that says exactly what it does: tap to review."
+        "eyebrow": "Choose your product",
+        "heading": "Make it yours.",
+        "cta_label": "Add to Cart",
+        "counter_image_black": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_41_02_PM_3.png",
+        "counter_image_white": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_40_15_PM_4.png",
+        "bulk_image_black": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_58_27_PM_4.png",
+        "bulk_image_white": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_08_02_25_PM_3.png",
+        "wristband_image": "shopify://shop_images/hf_20260806_033730_5b6406a1-139f-44fb-a473-d16c69042b7b.png"
       }
     },
-    "how": {
-      "type": "how-it-works",
-      "blocks": {
-        "step1": {
-          "type": "step",
-          "settings": {
-            "title": "Choose Your Card",
-            "text": "Pick the Main Counter Card, Mini Bulk Cards, or both. One-time price - no subscription required."
-          }
-        },
-        "step2": {
-          "type": "step",
-          "settings": {
-            "title": "Send Your Review Link",
-            "text": "Enter your business name and Google or Yelp review link at checkout. Don't have it handy? We'll help you find it."
-          }
-        },
-        "step3": {
-          "type": "step",
-          "settings": {
-            "title": "We Program It for You",
-            "text": "Every card is loaded with your review link and tap-tested on iPhone and Android before it ships."
-          }
-        },
-        "step4": {
-          "type": "step",
-          "settings": {
-            "title": "Customers Tap, Your Page Opens",
-            "text": "One tap opens your review page on their phone - no app, no typing, no QR code needed."
-          }
-        }
-      },
-      "block_order": [
-        "step1",
-        "step2",
-        "step3",
-        "step4"
-      ],
+    "sigpackaging": {
+      "type": "signature-packaging",
       "settings": {
-        "kicker": "How it works",
-        "heading": "From Order to First Tap in Four Steps",
-        "subheading": "We handle the programming. You just put the card where customers can tap it."
+        "eyebrow": "Fast and simple",
+        "heading": "Ships fast, ready to use.",
+        "subheading": "Every card and wristband is programmed with your review link and tap-tested on iPhone and Android before it ships - nothing for you to set up.",
+        "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_41_03_PM_4_27f6dcc0-502f-45db-a375-277ecfd74a23.png"
       }
     },
-    "demo": {
-      "type": "video-demo",
+    "sigpurchase": {
+      "type": "signature-purchase",
       "settings": {
-        "kicker": "See it in action",
-        "heading": "Watch One Tap Open a Review Page",
-        "subheading": "Here's the card doing exactly what it does on your counter: a customer taps their phone, and your review page opens on the spot.",
-        "video_url": "https://cdn.shopify.com/s/files/1/0797/5554/2760/files/optiqservice-demo-v2.mp4?v=1783916790",
-        "poster_url": "https://cdn.shopify.com/s/files/1/0797/5554/2760/files/ChatGPT_Image_Jul_7_2026_07_41_03_PM_4_27f6dcc0-502f-45db-a375-277ecfd74a23.png?v=1783638921",
-        "autoplay": true,
-        "caption": "Muted by default. Tap the video for sound.",
-        "side_heading": "Google or Yelp. Your Choice.",
-        "side_text": "Tell us which review page you want your card to open. We program it before it ships, so a single tap takes customers straight there.",
-        "google_label": "Google review page",
-        "yelp_label": "Yelp review page",
-        "side_note": "One tap opens whichever you pick. No app, no QR code needed."
-      }
-    },
-    "who": {
-      "type": "who-its-for",
-      "blocks": {
-        "aud1": {
-          "type": "audience",
-          "settings": {
-            "title": "Barbershops",
-            "text": "Hand it over while they check out the fresh cut in the mirror."
-          }
-        },
-        "aud2": {
-          "type": "audience",
-          "settings": {
-            "title": "Restaurants & cafes",
-            "text": "Drop it with the check, or tuck a mini card into every takeout bag."
-          }
-        },
-        "aud3": {
-          "type": "audience",
-          "settings": {
-            "title": "Salons & spas",
-            "text": "Catch clients at their best - right after the appointment."
-          }
-        },
-        "aud4": {
-          "type": "audience",
-          "settings": {
-            "title": "Auto detailers",
-            "text": "They just saw their car transformed. Make the review as easy as the tap."
-          }
-        },
-        "aud5": {
-          "type": "audience",
-          "settings": {
-            "title": "Gyms & studios",
-            "text": "Keep it at the front desk for members who love the place."
-          }
-        },
-        "aud6": {
-          "type": "audience",
-          "settings": {
-            "title": "Local shops",
-            "text": "Turn friendly counter chat into reviews new customers can find."
-          }
-        }
-      },
-      "block_order": [
-        "aud1",
-        "aud2",
-        "aud3",
-        "aud4",
-        "aud5",
-        "aud6"
-      ],
-      "settings": {
-        "kicker": "Who it's for",
-        "heading": "Made for Businesses That Live on Reviews",
-        "subheading": "If your customers walk out happy, give them the easiest possible way to say so."
+        "eyebrow": "Optiq Review Cards",
+        "heading": "Ready when you are.",
+        "subheading": "Main Counter Card, Mini Bulk Cards, or the Wristband - pick what fits your business. Programmed with your review link, one-time purchase, no subscription.",
+        "image": "shopify://shop_images/hf_20260806_033730_5b6406a1-139f-44fb-a473-d16c69042b7b.png",
+        "price_label": "$29.99",
+        "cta_label": "Choose Your Product"
       }
     },
     "faq": {
@@ -419,28 +104,28 @@
           "type": "question",
           "settings": {
             "question": "What comes with my order?",
-            "answer": "You get your NFC review card (or cards), already programmed with your Google or Yelp review link and tested on iPhone and Android. Nothing to set up - just place it where customers can tap it."
+            "answer": "You get your NFC review card or wristband, already programmed with your Google or Yelp review link and tested on iPhone and Android. Nothing to set up - just place it where customers can tap it."
           }
         },
         "q9": {
           "type": "question",
           "settings": {
-            "question": "How fast will my card ship?",
-            "answer": "Every card is programmed with your review link and tap-tested before it ships. Most orders are prepared within a few business days, and you'll get a tracking email as soon as yours is on the way."
+            "question": "How fast will my order ship?",
+            "answer": "Every card and wristband is programmed with your review link and tap-tested before it ships. Most orders are prepared within a few business days, and you'll get a tracking email as soon as yours is on the way."
           }
         },
         "q10": {
           "type": "question",
           "settings": {
-            "question": "What if my card arrives faulty?",
-            "answer": "If a card ever arrives damaged or doesn't tap correctly, email sales@optiqservice.com and we'll sort out a replacement. Because each card is custom-programmed with your review link, we can't take back correctly working cards - but if something isn't right, we're happy to help."
+            "question": "What if my order arrives faulty?",
+            "answer": "If anything ever arrives damaged or doesn't tap correctly, email sales@optiqservice.com and we'll sort out a replacement. Because each item is custom-programmed with your review link, we can't take back correctly working products - but if something isn't right, we're happy to help."
           }
         },
         "q4": {
           "type": "question",
           "settings": {
-            "question": "What's the difference between the Main Counter Card and Mini Bulk Cards?",
-            "answer": "The Main Counter Card is bigger and built to stay on your counter for years - it costs more because it's made to last and be seen every day. Mini Bulk Cards are smaller and cheaper per card, made to hand out with bills, receipts, and takeout orders. Both open the same review page with one tap."
+            "question": "What's the difference between the Main Counter Card, Mini Bulk Cards, and the Wristband?",
+            "answer": "The Main Counter Card is bigger and built to stay on your counter for years. Mini Bulk Cards are smaller and cheaper per card, made to hand out with bills, receipts, and takeout orders. The Wristband is worn instead of displayed - great for anyone on their feet interacting with customers all day. All three open the same review page with one tap."
           }
         },
         "q5": {
@@ -454,7 +139,7 @@
           "type": "question",
           "settings": {
             "question": "Is there a monthly fee?",
-            "answer": "No. Every card is a one-time purchase. The Review Growth Plan is a separate, optional membership - you never need it for your card to work."
+            "answer": "No. Every card and wristband is a one-time purchase. The Review Growth Plan is a separate, optional membership - you never need it for your card or wristband to work."
           }
         },
         "q7": {
@@ -468,7 +153,7 @@
           "type": "question",
           "settings": {
             "question": "Does this guarantee good reviews?",
-            "answer": "No - and we wouldn't trust anyone who claims it does. What the card does is remove the friction: instead of searching for your business and finding the review button, customers get there in one tap. What they write is entirely up to them."
+            "answer": "No - and we wouldn't trust anyone who claims it does. What it does is remove the friction: instead of searching for your business and finding the review button, customers get there in one tap. What they write is entirely up to them."
           }
         }
       },
@@ -495,20 +180,19 @@
       "type": "cta-banner",
       "settings": {
         "heading": "Make Leaving a Review One Tap Away",
-        "subheading": "Order today, send us your review link, and your card arrives programmed and ready to use.",
-        "button_label": "Get Your Review Card",
-        "button_link": ""
+        "subheading": "Order today, send us your review link, and your card or wristband arrives programmed and ready to use.",
+        "button_label": "Choose Your Product",
+        "button_link": "#sig-configurator"
       }
     }
   },
   "order": [
-    "hero",
-    "showcase",
-    "wristbandspotlight",
-    "highlight",
-    "how",
-    "demo",
-    "who",
+    "sighero",
+    "sigmaterial",
+    "sigengineering",
+    "sigcatalog",
+    "sigpackaging",
+    "sigpurchase",
     "faq",
     "cta"
   ]

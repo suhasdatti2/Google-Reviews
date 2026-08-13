@@ -18,7 +18,7 @@
       {% render 'sig-media', image: section.settings.image, label: 'Add closing product photo' %}
     </div>
 
-    <p class="sig-purchase__price" data-o-reveal="fade"><small>From</small> <b>$99.99</b></p>
+    <p class="sig-purchase__price" data-o-reveal="fade"><small>From</small> <b>{{ section.settings.price_label | default: '$99.99' }}</b></p>
 
     <div class="sig-hero__actions" data-o-reveal="fade">
       <a class="sig-cta sig-cta--solid" href="#sig-configurator">{{ section.settings.cta_label | default: 'Configure Yours' }}</a>
@@ -39,6 +39,7 @@
       "default": "Finished in your choice of metal, programmed with your review link, engraved if you like. One card, built to last."
     },
     { "type": "image_picker", "id": "image", "label": "Closing product photo" },
+    { "type": "text", "id": "price_label", "label": "Starting price label", "default": "$99.99" },
     { "type": "text", "id": "cta_label", "label": "Button label", "default": "Configure Yours" }
   ],
   "presets": [{ "name": "Signature purchase" }]

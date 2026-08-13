@@ -16,15 +16,6 @@
    rounding. Restraint is the luxury cue, not ornament.
    ========================================================================== */
 
-/* Tokens live on :root, not scoped to a wrapper element. Each of the 7
-   Signature sections renders as its own independent top-level sibling under
-   <main> (separate section files in templates/page.signature.json), so none
-   of them are DOM descendants of one another - a `.sig-page { --sig-x: ... }`
-   block would only have been visible inside whichever single section
-   happened to contain that element, exactly the bug already found and fixed
-   once this session in the shopify-account sign-in sheet (custom properties
-   only inherit down the real DOM tree). Global :root, uniquely prefixed, is
-   what actually guarantees every section sees the same values. */
 :root {
   --sig-white: #ffffff;
   --sig-white-bg: var(--sig-white);
@@ -53,8 +44,6 @@
   --sig-dur: 420ms;
 }
 
-/* Base reset (box-sizing, img sizing) is already global from optiq-core.css,
-   so it is not repeated here - only what is specific to this page's look. */
 .sig-hero, .sig-section {
   background: var(--sig-white);
   color: var(--sig-ink);
@@ -62,24 +51,12 @@
   -webkit-font-smoothing: antialiased;
 }
 
-/* Full immersion: this page replaces the marketing chrome rather than
-   sitting inside it, the same technique already used for the auth screen
-   and dashboard (assets/optiq-app.css). The dock's own stylesheet reserves
-   body padding for itself unconditionally, so that has to be cancelled
-   here too or this page keeps a blank strip at the bottom for a dock that
-   is no longer there. `.sig-page` here is just a presence marker on the
-   hero section's root (the only section that needs one) - :has() only
-   needs it to exist once anywhere in the document, not to wrap anything. */
 body:has(.sig-page) .o-header,
 body:has(.sig-page) .o-announce,
 body:has(.sig-page) .o-footer,
 body:has(.sig-page) .optiq-dock,
 body:has(.sig-page) .oqa { display: none !important; }
 body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-bg); }
-
-/* ==========================================================================
-   Type + layout primitives
-   ========================================================================== */
 
 .sig-wrap {
   width: 100%;
@@ -128,13 +105,8 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 .sig-body { font-size: 0.98rem; line-height: 1.7; color: var(--sig-ink-2); max-width: 44ch; }
 .sig-section--black .sig-body { color: var(--sig-on-black-2); }
 
-/* Centred head block used at the top of most sections */
 .sig-head { display: grid; gap: 18px; max-width: 640px; }
 .sig-head--center { justify-items: center; text-align: center; margin-inline: auto; }
-
-/* ==========================================================================
-   Buttons + links — restrained, no ecommerce chrome
-   ========================================================================== */
 
 .sig-cta {
   position: relative;
@@ -191,10 +163,6 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 .sig-link svg { width: 13px; height: 13px; transition: transform 320ms var(--sig-ease); }
 .sig-link:hover svg { transform: translateX(3px); }
 
-/* ==========================================================================
-   Sections
-   ========================================================================== */
-
 .sig-section { padding-block: var(--sig-section); background: var(--sig-white-bg); position: relative; }
 .sig-section--tight { padding-block: var(--sig-section-tight); }
 .sig-section--paper { background: var(--sig-paper); }
@@ -202,10 +170,6 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 .sig-section--black { background: var(--sig-black); color: var(--sig-on-black); }
 .sig-section--ruled { border-top: 1px solid var(--sig-line); }
 .sig-section--black.sig-section--ruled { border-top-color: rgba(243, 241, 236, 0.1); }
-
-/* ==========================================================================
-   Minimal top identity bar — not a header, just a way back
-   ========================================================================== */
 
 .sig-topbar {
   position: absolute;
@@ -235,14 +199,6 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 }
 .sig-topbar__back:hover { color: var(--sig-ink); }
 
-/* ==========================================================================
-   Hero
-   ========================================================================== */
-
-/* The whole hero IS the photo, edge to edge - .sig-hero's own padding is
-   the "thick white border" around it (top padding is taller to clear the
-   topbar, which sits over the white zone, not the photo). .sig-hero__frame
-   fills whatever space that padding leaves. */
 .sig-hero {
   position: relative;
   min-height: 100svh;
@@ -263,9 +219,6 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 .sig-hero__media { position: absolute; inset: 0; }
 .sig-hero__media img,
 .sig-hero__media .sig-placeholder { width: 100%; height: 100%; }
-/* object-position: top keeps the empty space above the card in the source
-   photo rather than cropping it away evenly top/bottom - the card itself
-   ends up sitting lower in the frame, clear of the heading above it. */
 .sig-hero__media img { object-fit: cover; object-position: center top; display: block; }
 
 .sig-hero__overlay {
@@ -284,9 +237,6 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 .sig-hero__text { display: grid; justify-items: center; gap: 20px; max-width: 720px; }
 .sig-hero__sub { font-size: clamp(1.05rem, 0.98rem + 0.35vw, 1.3rem); color: var(--sig-ink-2); max-width: 46ch; }
 
-/* Text sits directly on the uploaded photo, which reads dark - override the
-   base ink colours (tuned for the white page background) to white here so
-   the heading stays legible regardless of source image. */
 .sig-hero__overlay .sig-eyebrow { color: rgba(255, 255, 255, 0.75); }
 .sig-hero__overlay .sig-h1 { color: var(--sig-white); }
 .sig-hero__overlay .sig-hero__sub { color: rgba(255, 255, 255, 0.82); }
@@ -298,18 +248,10 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
   .sig-hero__frame { min-height: 70vh; }
 }
 
-/* Embedded mode (signature-hero.liquid, full_page_takeover off): no topbar
-   is rendered, so the extra top padding reserved to clear it is not
-   needed - matches the section's own side/bottom padding instead. */
 .sig-hero--embedded { padding-top: clamp(20px, 4.5vw, 72px); }
 @media (max-width: 640px) {
   .sig-hero--embedded { padding-top: clamp(20px, 4.5vw, 72px); }
 }
-
-/* ==========================================================================
-   Placeholder media (light-mode, for this page only — replaces the dark
-   theme's dashed-stripe placeholder, which would clash badly here)
-   ========================================================================== */
 
 .sig-placeholder {
   display: flex;
@@ -334,10 +276,6 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
   color: var(--sig-on-black-2);
 }
 
-/* ==========================================================================
-   Split layout (Material section)
-   ========================================================================== */
-
 .sig-split {
   display: grid;
   grid-template-columns: 1.15fr 1fr;
@@ -357,10 +295,6 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
   .sig-split--reverse .sig-split__media,
   .sig-split--reverse .sig-split__text { order: initial; }
 }
-
-/* ==========================================================================
-   Engineering diagram
-   ========================================================================== */
 
 .sig-diagram {
   display: grid;
@@ -397,10 +331,6 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
   border-bottom: 1px solid var(--sig-line-2);
 }
 
-/* ==========================================================================
-   Marble showroom detail grid
-   ========================================================================== */
-
 .sig-showroom {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -416,14 +346,6 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
   .sig-showroom__item:first-child { grid-column: span 2; aspect-ratio: 16 / 10; grid-row: auto; }
 }
 
-/* ==========================================================================
-   Configurator — Porsche-style selection, not a Shopify variant <select>
-   ========================================================================== */
-
-/* Widened just for this section - the shared .sig-wrap cap (~1228px) left a
-   lot of unused page width on either side of the "choose your product"
-   card. Scoped to #sig-configurator's own wrap only, so every other
-   section on the page keeps the standard content width. */
 #sig-configurator > .sig-wrap { max-width: 1520px; }
 
 .sig-configurator {
@@ -434,13 +356,6 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
   padding: var(--sig-config-pad);
 }
 
-/* Was unstyled - the placeholder's own 260px min-height was all that kept
-   it from collapsing, so it read as a thin strip. Given real size and
-   object-fit: cover so an uploaded finish photo actually fills it edge to
-   edge, no letterboxing. Full-bleed to the configurator card's own border -
-   negative margins matching the card's own padding pull it out past the
-   padding on all sides so the photo touches the border, not just fills a
-   box floating inside it. */
 .sig-config__preview {
   position: relative;
   width: calc(100% + var(--sig-config-pad) * 2);
@@ -451,10 +366,25 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 .sig-config__preview [data-sig-preview] { position: absolute; inset: 0; }
 .sig-config__preview img,
 .sig-config__preview .sig-placeholder { width: 100%; height: 100%; }
-/* object-position: top crops the extra height off the bottom (empty
-   velvet) rather than equally off both edges, so the card itself stays
-   fully in frame as the box gets shorter. */
 .sig-config__preview img { object-fit: cover; object-position: center top; display: block; }
+
+/* Catalog preview (Counter Card / Bulk / Wristband) - a padded, uncropped
+   box rather than .sig-config__preview's fixed 2:1 crop: those photos are a
+   different shape than Signature's own photography and overflowed it. */
+.sig-catalog__preview {
+  position: relative;
+  margin-bottom: 36px;
+  padding: 40px 28px;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sig-paper);
+  border: 1px solid var(--sig-line-2);
+}
+.sig-catalog__preview [data-sig-preview] { width: 100%; }
+.sig-catalog__preview img,
+.sig-catalog__preview .sig-placeholder { width: 100%; height: auto; display: block; }
 
 .sig-config__row { display: grid; gap: 16px; padding-block: 30px; border-top: 1px solid var(--sig-line); }
 .sig-config__row:first-child { border-top: 0; padding-top: 0; }
@@ -471,7 +401,6 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 }
 .sig-config__label b { color: var(--sig-ink); font-weight: 700; letter-spacing: 0; text-transform: none; font-size: 13px; }
 
-/* Finish swatches */
 .sig-swatches { display: flex; gap: 18px; flex-wrap: wrap; }
 .sig-swatch { display: grid; justify-items: center; gap: 10px; background: none; border: 0; cursor: pointer; padding: 4px; }
 .sig-swatch__dot {
@@ -489,7 +418,6 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 .sig-swatch.is-active .sig-swatch__dot { box-shadow: inset 0 0 0 3px var(--sig-white), 0 0 0 2px var(--sig-ink); }
 .sig-swatch.is-active span { color: var(--sig-ink); }
 
-/* Quantity + generic pill choices */
 .sig-pills { display: inline-flex; gap: 8px; padding: 4px; border: 1px solid var(--sig-line-2); border-radius: 999px; }
 .sig-pill {
   border: 0;
@@ -504,7 +432,6 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 }
 .sig-pill.is-active { background: var(--sig-ink); color: var(--sig-white); }
 
-/* Engraving + programming fields — thin underline inputs, not boxed */
 .sig-fields { display: grid; gap: 22px; grid-template-columns: 1fr 1fr; }
 .sig-fields--single { grid-template-columns: 1fr; }
 .sig-field { display: grid; gap: 8px; }
@@ -533,7 +460,6 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 
 @media (max-width: 620px) { .sig-fields { grid-template-columns: 1fr; } }
 
-/* Summary + buy */
 .sig-config__summary {
   display: flex;
   align-items: center;
@@ -548,10 +474,6 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 .sig-config__price small { display: block; font-family: var(--sig-font-body); font-size: 11.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sig-ink-3); margin-bottom: 4px; }
 .sig-config__note { font-size: 12.5px; color: var(--sig-ink-3); margin-top: 10px; }
 
-/* ==========================================================================
-   Packaging — the one deliberate dark beat, for contrast/pacing
-   ========================================================================== */
-
 .sig-packaging__stage {
   margin-top: 56px;
   max-width: 460px;
@@ -559,15 +481,7 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
   aspect-ratio: 1;
 }
 
-/* ==========================================================================
-   Final purchase
-   ========================================================================== */
-
 .sig-purchase { text-align: center; }
 .sig-purchase__media { max-width: 420px; margin: 48px auto 0; aspect-ratio: 4 / 3; }
 .sig-purchase__price { margin: 28px 0 8px; font-family: var(--sig-font-display); font-size: 20px; }
 .sig-purchase__price b { font-size: 30px; }
-
-/* Motion: every reveal on this page uses the parent theme's existing
-   data-o-reveal engine (assets/optiq-motion.js) and its default timing -
-   no separate motion system to keep in sync with it. */
