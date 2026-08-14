@@ -389,12 +389,19 @@ body:has(.stu-page) { padding-bottom: 0 !important; }
   color: var(--stu-ink-3);
 }
 
+/* flex: 1 so this fills whatever height the media box doesn't use - grid
+   rows stretch every cell to the tallest sibling, and without this the
+   name/price row stayed pinned to the top with a dead gap of white space
+   below it whenever a neighbouring card was taller. Centering the row
+   inside that filled space is what actually uses the extra height instead
+   of just claiming it. */
 .stu-card__foot {
+  flex: 1;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 0 clamp(16px, 2vw, 26px) clamp(20px, 2.4vw, 30px);
+  padding: clamp(14px, 1.8vw, 20px) clamp(16px, 2vw, 26px);
 }
 .stu-card__name {
   font-family: var(--stu-display);
