@@ -1,33 +1,40 @@
 /* ==========================================================================
-   OPTIQ STUDIO — cream editorial storefront
+   OPTIQ STUDIO - premium white editorial storefront
    --------------------------------------------------------------------------
-   The design system for the homepage (hero -> marquee -> collection) and the
+   The design system for the homepage (hero -> marquee -> collections) and the
    product detail page. Every class is prefixed stu-, and every page-level
    override is gated behind body:has(.stu-page), so the dark AI-receptionist
    pages, the dashboard, and the Signature micro-site are untouched by this
-   file even though it is loaded globally.
+   file even though it is loaded on every page.
 
    .stu-page is a presence marker, not a wrapper: Shopify renders each JSON
    template section as its own top-level element under <main>, so sections are
    siblings rather than ancestors. :has() only needs the class to exist once
    anywhere in the document, which any single studio section guarantees.
 
-   Palette: warm paper, near-black ink, one hairline rule weight. Contrast and
-   scale carry the hierarchy - no gradients, no shadows, minimal rounding.
+   Structure: white content held between black edges - announcement bar,
+   marquee and footer are solid black, everything between them is white with
+   one hairline rule weight. Contrast and scale carry the hierarchy; no
+   gradients, no shadows, minimal rounding.
    ========================================================================== */
 
 :root {
-  --stu-paper: #f2efe8;
-  --stu-paper-2: #eae5db;
-  --stu-tile: #e8e3d8;
-  --stu-white: #fbfaf7;
-  --stu-ink: #14130f;
-  --stu-ink-2: #565349;
-  --stu-ink-3: #8d887c;
-  --stu-line: rgba(20, 19, 15, 0.16);
-  --stu-hair: rgba(20, 19, 15, 0.09);
-  --stu-black: #14130f;
-  --stu-on-black: #f4f1ea;
+  /* Premium white rather than warm paper: the product photography is dark
+     and high-contrast, so a clean white ground lets the products carry the
+     page and keeps the black bars (announcement, marquee, footer) reading
+     as deliberate structure rather than as one more shade of beige. */
+  --stu-paper: #ffffff;
+  --stu-paper-2: #f6f5f2;
+  --stu-tile: #f4f3ef;
+  --stu-white: #ffffff;
+  --stu-ink: #101010;
+  --stu-ink-2: #55524c;
+  --stu-ink-3: #8b877f;
+  --stu-line: rgba(16, 16, 16, 0.13);
+  --stu-hair: rgba(16, 16, 16, 0.07);
+  --stu-black: #0d0d0d;
+  --stu-on-black: #f4f2ee;
+  --stu-on-black-2: #9a968e;
 
   --stu-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --stu-body: "DM Sans", ui-sans-serif, system-ui, sans-serif;
@@ -131,7 +138,7 @@ body:has(.stu-page) { padding-bottom: 0 !important; }
 .stu-btn[data-loading="true"] { opacity: 0.6; pointer-events: none; }
 
 /* --------------------------------------------------------------------------
-   Empty media slot — shown until the real asset is uploaded. Deliberately a
+   Empty media slot - shown until the real asset is uploaded. Deliberately a
    neutral labelled frame rather than stand-in imagery.
    -------------------------------------------------------------------------- */
 
@@ -250,12 +257,15 @@ body:has(.stu-page) { padding-bottom: 0 !important; }
    MARQUEE
    ========================================================================== */
 
+/* Inverted band. On a white page a white marquee is invisible structure;
+   solid black turns it into the rule that separates the hero from the
+   catalogue, and pairs with the announcement bar and footer so the page
+   reads as white content held between black edges. */
 .stu-marquee {
-  border-top: 1px solid var(--stu-line);
-  border-bottom: 1px solid var(--stu-line);
-  background: var(--stu-paper);
+  border: 0;
+  background: var(--stu-black);
   overflow: hidden;
-  padding-block: 14px;
+  padding-block: 15px;
   /* Isolate the moving band so a hover on it cannot rubber-band the page. */
   contain: content;
 }
@@ -276,7 +286,7 @@ body:has(.stu-page) { padding-bottom: 0 !important; }
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--stu-ink-2);
+  color: var(--stu-on-black);
   white-space: nowrap;
 }
 .stu-marquee__item::after {
@@ -284,7 +294,7 @@ body:has(.stu-page) { padding-bottom: 0 !important; }
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: var(--stu-ink-3);
+  background: rgba(244, 242, 238, 0.45);
   flex: none;
 }
 
@@ -304,10 +314,14 @@ body:has(.stu-page) { padding-bottom: 0 !important; }
 
 .stu-collection {
   padding-block: clamp(48px, 6vw, 86px) 0;
-  /* The hero's "Shop Now" links to #collection; without this the sticky
+  /* The hero's "Shop Now" links to the first grid; without this the sticky
      header lands on top of the heading it just scrolled to. */
   scroll-margin-top: 80px;
 }
+/* Two grids stack on the homepage, so the second must not pay the full
+   top pad again - the first one's cards already opened the rhythm. */
+.stu-collection + .stu-collection { padding-top: clamp(38px, 4.5vw, 64px); }
+.stu-collection:last-of-type { padding-bottom: clamp(48px, 6vw, 86px); }
 
 .stu-collection__head {
   display: flex;
@@ -321,7 +335,11 @@ body:has(.stu-page) { padding-bottom: 0 !important; }
 
 .stu-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* Column count comes from the section so one grid can hold a two-up
+     premium row and a three-up catalogue row without a second component.
+     An empty trailing cell would show a stray top border, so the count is
+     set to match the number of cards rather than left fixed at three. */
+  grid-template-columns: repeat(var(--stu-cols, 3), 1fr);
   border-top: 1px solid var(--stu-line);
   border-left: 1px solid var(--stu-line);
 }
@@ -337,7 +355,8 @@ body:has(.stu-page) { padding-bottom: 0 !important; }
   text-decoration: none;
   transition: background 320ms var(--stu-ease);
 }
-.stu-card:hover { background: rgba(255, 255, 255, 0.42); }
+/* On white, a white hover wash is invisible - the tint has to darken. */
+.stu-card:hover { background: rgba(16, 16, 16, 0.022); }
 
 .stu-card__media {
   position: relative;
@@ -393,6 +412,12 @@ body:has(.stu-page) { padding-bottom: 0 !important; }
   white-space: nowrap;
 }
 .stu-card__sold { color: var(--stu-ink-3); }
+
+/* Announced-but-unbuyable card: no hover affordance, since there is
+   nowhere for it to go yet. */
+.stu-card--static { cursor: default; }
+.stu-card--static:hover { background: transparent; }
+.stu-card--static:hover .stu-card__media img { transform: none; }
 
 @media (max-width: 1000px) {
   .stu-grid { grid-template-columns: repeat(2, 1fr); }
@@ -529,7 +554,7 @@ body:has(.stu-page) { padding-bottom: 0 !important; }
   height: 42px;
   border: 1px solid var(--stu-line);
   border-radius: 50%;
-  background: rgba(251, 250, 247, 0.82);
+  background: rgba(255, 255, 255, 0.86);
   color: var(--stu-ink);
   cursor: pointer;
   opacity: 0;
@@ -650,7 +675,7 @@ body:has(.stu-page) { padding-bottom: 0 !important; }
   margin-right: 9px;
   border-radius: 50%;
   flex: none;
-  box-shadow: inset 0 0 0 1px rgba(20, 19, 15, 0.22);
+  box-shadow: inset 0 0 0 1px rgba(16, 16, 16, 0.22);
 }
 .stu-chip.is-active i { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3); }
 
@@ -708,7 +733,7 @@ body:has(.stu-page) { padding-bottom: 0 !important; }
   padding: 0 12px;
   border: 1px solid var(--stu-line);
   border-radius: 2px;
-  background: var(--stu-white);
+  background: var(--stu-paper-2);
   font-family: var(--stu-body);
   font-size: 14px;
   color: var(--stu-ink);
@@ -890,6 +915,33 @@ body:has(.stu-page) .o-announce {
 }
 body:has(.stu-page) .o-announce a { color: inherit; }
 
+/* Inverted footer, closing the page the way the announcement bar opens it.
+   The base footer is painted from --o-surface-1 and its text from the dark
+   theme's ink tokens, so each text role is repointed explicitly rather than
+   relying on inheritance - an unset one would land dark-on-dark. */
+body:has(.stu-page) .o-footer {
+  background: var(--stu-black);
+  color: var(--stu-on-black-2);
+  border-top: 0;
+}
+body:has(.stu-page) .o-footer .o-logo,
+body:has(.stu-page) .o-footer h2,
+body:has(.stu-page) .o-footer strong { color: var(--stu-on-black); }
+body:has(.stu-page) .o-footer p,
+body:has(.stu-page) .o-footer li,
+body:has(.stu-page) .o-footer span,
+body:has(.stu-page) .o-footer .o-muted,
+body:has(.stu-page) .o-footer .o-body { color: var(--stu-on-black-2); }
+body:has(.stu-page) .o-footer a {
+  color: var(--stu-on-black-2);
+  transition: color 200ms var(--stu-ease);
+}
+body:has(.stu-page) .o-footer a:hover { color: var(--stu-on-black); }
+body:has(.stu-page) .o-footer .o-social a { color: var(--stu-on-black-2); }
+body:has(.stu-page) .o-footer__bottom {
+  border-top: 1px solid rgba(244, 242, 238, 0.14);
+}
+
 body:has(.stu-page) .o-header {
   background: var(--stu-paper);
   border-bottom: 1px solid var(--stu-line);
@@ -905,7 +957,7 @@ body:has(.stu-page) .o-header .o-wrap {
 body:has(.stu-page) .stu-nav a,
 body:has(.stu-page) .stu-hdr__act { color: var(--stu-ink); }
 body:has(.stu-page) .stu-logo { color: var(--stu-ink); }
-body:has(.stu-page) .stu-hdr__act:hover { background: rgba(20, 19, 15, 0.06); }
+body:has(.stu-page) .stu-hdr__act:hover { background: rgba(16, 16, 16, 0.06); }
 body:has(.stu-page) .stu-hdr__count { background: var(--stu-ink); color: var(--stu-paper); }
 
 /* Header layout itself is theme-neutral so the dark pages keep working. */
@@ -1043,7 +1095,7 @@ body:has(.stu-page) .stu-hdr__count { background: var(--stu-ink); color: var(--s
   color: inherit;
   text-decoration: none;
 }
-.stu-menu__links a:hover { background: rgba(20, 19, 15, 0.05); }
+.stu-menu__links a:hover { background: rgba(16, 16, 16, 0.05); }
 
 /* --------------------------------------------------------------------------
    Focus

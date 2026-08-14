@@ -72,15 +72,14 @@
   </style>
 
   {%- comment -%}
-    Flow-field background: homepage keeps the animated grayscale canvas.
+    Flow-field background: off. The homepage is now the Studio storefront,
+    which is a light editorial page - the animated grayscale canvas painted
+    a near-black sheet over the whole thing, and its backdrop colour turned
+    the body black behind it. Left as a false flag rather than deleted so
+    the canvas can be switched back on for a future dark template without
+    reconstructing the gate and the matching render below.
   {%- endcomment -%}
   {%- assign show_flow_bg = false -%}
-  {%- if template == 'index' -%}
-    {%- assign show_flow_bg = true -%}
-  {%- endif -%}
-  {%- if show_flow_bg -%}
-    <style>body.is-home { background: #0a0a0b; }</style>
-  {%- endif -%}
 
   {%- comment -%}
     Google Review Cards page: plain premium white, same as every other page

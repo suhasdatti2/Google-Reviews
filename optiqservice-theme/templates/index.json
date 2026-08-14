@@ -49,7 +49,7 @@
         "heading": "One Tap. More Reviews.",
         "subheading": "Customers tap their phone on the card and your Google review page opens instantly. No app. No QR code. No monthly fee.",
         "cta_label": "Shop Now",
-        "cta_link": "#collection",
+        "cta_link": "#signature",
         "height": "large",
         "show_veil": true
       }
@@ -66,6 +66,35 @@
       },
       "block_order": ["m1", "m2", "m3", "m4", "m5", "m6"],
       "settings": { "duration": 44 }
+    },
+    "signature": {
+      "type": "studio-collection",
+      "blocks": {
+        "g1": {
+          "type": "product",
+          "settings": {
+            "product": "optiq-signature",
+            "title_override": "Signature Metal Card",
+            "image": "shopify://shop_images/hf_20260809_191808_46f7dcda-4f86-45f5-b0e4-96c9812eab25.png",
+            "tag": "Metal"
+          }
+        },
+        "g2": {
+          "type": "product",
+          "settings": {
+            "title_override": "Tap Ring",
+            "tag": "Coming soon"
+          }
+        }
+      },
+      "block_order": ["g1", "g2"],
+      "settings": {
+        "eyebrow": "Premium",
+        "heading": "Optiq Signature",
+        "subheading": "Solid metal, finished by hand, programmed with your review link before it ships.",
+        "columns": 2,
+        "anchor": "signature"
+      }
     },
     "collection": {
       "type": "studio-collection",
@@ -100,9 +129,10 @@
         "eyebrow": "",
         "heading": "Collection",
         "subheading": "",
+        "columns": 3,
         "anchor": "collection"
       }
     }
   },
-  "order": ["hero", "marquee", "collection"]
+  "order": ["hero", "marquee", "signature", "collection"]
 }
