@@ -1,19 +1,44 @@
 {%- comment -%}
   Studio hero - the full-bleed opening frame of the homepage.
 
-  The visual is supplied by the merchant (image_picker, or an uploaded video
-  for a moving frame). Nothing is shipped in its place: with both empty this
-  renders a labelled empty slot at the exact final proportions, so the layout
-  can be judged before the asset exists and dropping the real asset in later
-  changes nothing but the pixels.
+  Accepts a rotating set of slides (blocks), a single image, or a video. With
+  none of those set it renders a labelled empty slot at the exact final
+  proportions, so the layout can be judged before the artwork exists and
+  dropping the real asset in later changes nothing but the pixels.
+
+  Each slide carries its own portrait crop for phones, delivered through
+  <picture> so the browser - not JS - picks the right file before layout.
+  The landscape masters are 16:9; on a tall phone viewport a cover-crop of
+  those would throw away most of the frame, which is why the portrait
+  variants exist and why they are worth the extra setting.
+
+  Rotation matches the services splash it was lifted from (assets/
+  optiq-hero.js): 6s crossfade cycle, arrows that wrap at both ends, a brief
+  pause after a manual step, and a hard stop while the tab is hidden so a
+  backgrounded page is not burning a timer and decoding images.
 
   Carries the .stu-page marker that switches the document to the studio
-  palette (see assets/optiq-studio.css) - it is a presence marker only, since
+  palette (see assets/optiq-studio.css) - a presence marker only, since
   Shopify renders each JSON template section as a top-level sibling under
   <main> rather than nesting them.
 {%- endcomment -%}
 
 {%- liquid
+  assign slides = section.blocks | where: 'type', 'slide'
+
+  comment
+    Blocks with no image are skipped entirely, so an empty block added in the
+    editor cannot become a blank frame in the rotation. Counted up front
+    because the arrows and the autoplay both need to know whether more than
+    one slide will actually render.
+  endcomment
+  assign slide_count = 0
+  for block in slides
+    if block.settings.image != blank
+      assign slide_count = slide_count | plus: 1
+    endif
+  endfor
+
   assign has_video = false
   if section.settings.video != blank
     assign has_video = true
@@ -35,9 +60,70 @@
   {{ section.shopify_attributes }}
 >
   <div class="stu-hero__media">
-    {%- if has_video -%}
+    {%- if slide_count > 0 -%}
+      <div class="stu-hero__slides" data-stu-hero data-stu-hero-interval="{{ section.settings.interval | default: 6 }}">
+        {%- assign shown = 0 -%}
+        {%- for block in slides -%}
+          {%- if block.settings.image == blank -%}{%- continue -%}{%- endif -%}
+          {%- assign shown = shown | plus: 1 -%}
+
+          {%- comment -%}
+            Only the first slide is eager: the rest are in-viewport but
+            invisible, so the browser still fetches them without competing
+            with the one frame that decides Largest Contentful Paint.
+          {%- endcomment -%}
+          {%- if shown == 1 -%}
+            {%- assign load = 'eager' -%}
+            {%- assign priority = 'high' -%}
+          {%- else -%}
+            {%- assign load = 'lazy' -%}
+            {%- assign priority = 'auto' -%}
+          {%- endif -%}
+
+          <div
+            class="stu-hero__slide{% if shown == 1 %} is-active{% endif %}"
+            data-stu-hero-slide
+            {{ block.shopify_attributes }}
+          >
+            <picture>
+              {%- if block.settings.image_mobile != blank -%}
+                <source
+                  media="(max-width: 749px)"
+                  sizes="100vw"
+                  srcset="{{ block.settings.image_mobile | image_url: width: 640 }} 640w,
+                          {{ block.settings.image_mobile | image_url: width: 900 }} 900w,
+                          {{ block.settings.image_mobile | image_url: width: 1200 }} 1200w,
+                          {{ block.settings.image_mobile | image_url: width: 1600 }} 1600w"
+                >
+              {%- endif -%}
+              {{ block.settings.image
+                 | image_url: width: 2400
+                 | image_tag:
+                     loading: load,
+                     fetchpriority: priority,
+                     sizes: '100vw',
+                     widths: '800, 1200, 1600, 2000, 2400',
+                     alt: '' }}
+            </picture>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- if slide_count > 1 and section.settings.show_arrows -%}
+        <div class="stu-hero__nav">
+          <button type="button" class="stu-hero__arrow" data-stu-hero-prev aria-label="Previous photo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+          </button>
+          <button type="button" class="stu-hero__arrow" data-stu-hero-next aria-label="Next photo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      {%- endif -%}
+
+    {%- elsif has_video -%}
       {{ section.settings.video
          | video_tag: autoplay: true, loop: true, muted: true, controls: false, playsinline: true, image_size: '1920x' }}
+
     {%- elsif section.settings.image != blank -%}
       {{ section.settings.image
          | image_url: width: 2400
@@ -47,6 +133,7 @@
              sizes: '100vw',
              widths: '600, 900, 1200, 1600, 2000, 2400',
              alt: section.settings.heading | default: shop.name }}
+
     {%- else -%}
       {% render 'stu-slot', label: 'Homepage hero image or video goes here' %}
     {%- endif -%}
@@ -75,17 +162,165 @@
   </div>
 </section>
 
+{%- if slide_count > 1 -%}
+<script>
+(function () {
+  function initStudioHero() {
+    var root = document.querySelector('[data-stu-hero]');
+    if (!root || root.dataset.stuReady === '1') { return; }
+    root.dataset.stuReady = '1';
+
+    var slides = [].slice.call(root.querySelectorAll('[data-stu-hero-slide]'));
+    if (slides.length < 2) { return; }
+
+    var section = root.closest('.stu-hero') || document;
+    var prevBtn = section.querySelector('[data-stu-hero-prev]');
+    var nextBtn = section.querySelector('[data-stu-hero-next]');
+
+    var seconds = parseInt(root.getAttribute('data-stu-hero-interval'), 10);
+    if (isNaN(seconds) || seconds < 2) { seconds = 6; }
+    var AUTOPLAY_MS = seconds * 1000;
+    var RESUME_MS = AUTOPLAY_MS + 500;
+
+    var index = 0; // slide one already carries .is-active from the markup
+    var timer = null;
+    var resumeTimer = null;
+
+    function show(next) {
+      slides[index].classList.remove('is-active');
+      index = next;
+      slides[index].classList.add('is-active');
+    }
+    function goNext() { show((index + 1) % slides.length); }
+    function goPrev() { show((index - 1 + slides.length) % slides.length); }
+
+    function stop() {
+      if (timer) { window.clearInterval(timer); timer = null; }
+    }
+    function start() {
+      stop();
+      timer = window.setInterval(goNext, AUTOPLAY_MS);
+    }
+    /* A manual step should not immediately be overridden by a timer that was
+       already most of the way through its interval. */
+    function pauseThenResume() {
+      stop();
+      if (resumeTimer) { window.clearTimeout(resumeTimer); }
+      resumeTimer = window.setTimeout(start, RESUME_MS);
+    }
+
+    if (nextBtn) { nextBtn.addEventListener('click', function () { goNext(); pauseThenResume(); }); }
+    if (prevBtn) { prevBtn.addEventListener('click', function () { goPrev(); pauseThenResume(); }); }
+
+    /* A backgrounded tab should not keep cycling - it burns a timer and
+       decodes images nobody is looking at. */
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) { stop(); } else { start(); }
+    });
+
+    start();
+  }
+
+  initStudioHero();
+  /* The theme editor re-renders the section on every setting change. */
+  document.addEventListener('shopify:section:load', initStudioHero);
+})();
+</script>
+{%- endif -%}
+
+{% stylesheet %}
+/* Rotation is section-specific, so it lives with the section rather than in
+   assets/optiq-studio.css, matching how main-product.liquid keeps its own
+   variant-picker styles. */
+.stu-hero__slides { position: absolute; inset: 0; }
+
+.stu-hero__slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1100ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.stu-hero__slide.is-active { opacity: 1; }
+
+.stu-hero__slide picture,
+.stu-hero__slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Slow drift on the visible frame only, so a still photograph still feels
+   alive across a six second hold without reading as a zoom effect. */
+.stu-hero__slide img { transform: scale(1.04); transition: transform 7600ms linear; }
+.stu-hero__slide.is-active img { transform: scale(1); }
+
+.stu-hero__nav {
+  position: absolute;
+  z-index: 3;
+  right: clamp(16px, 3vw, 40px);
+  top: clamp(16px, 3vw, 40px);
+  display: flex;
+  gap: 8px;
+}
+.stu-hero__arrow {
+  display: grid;
+  place-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 50%;
+  background: rgba(12, 11, 9, 0.28);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  cursor: pointer;
+  transition: background 220ms cubic-bezier(0.22, 1, 0.36, 1), border-color 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.stu-hero__arrow:hover { background: rgba(12, 11, 9, 0.52); border-color: rgba(255, 255, 255, 0.6); }
+.stu-hero__arrow:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.stu-hero__arrow svg { width: 16px; height: 16px; }
+
+/* Slides still rotate under reduced motion - they just cut rather than
+   crossfade and drift, which is the part that causes discomfort. */
+@media (prefers-reduced-motion: reduce) {
+  .stu-hero__slide { transition-duration: 1ms; }
+  .stu-hero__slide img,
+  .stu-hero__slide.is-active img { transition: none; transform: none; }
+}
+{% endstylesheet %}
+
 {% schema %}
 {
   "name": "Studio hero",
   "settings": [
-    { "type": "header", "content": "Visual" },
+    { "type": "header", "content": "Rotation" },
     {
       "type": "paragraph",
-      "content": "Upload your own hero image or video. Until one is added, a labelled empty frame is shown at the final size."
+      "content": "Add Photo blocks below to rotate through several images. With one block it simply shows that image. With none, the single image or video below is used instead."
+    },
+    {
+      "type": "range",
+      "id": "interval",
+      "label": "Seconds per photo",
+      "min": 3,
+      "max": 15,
+      "step": 1,
+      "default": 6,
+      "unit": "s"
+    },
+    { "type": "checkbox", "id": "show_arrows", "label": "Show back and forward arrows", "default": true },
+
+    { "type": "header", "content": "Fallback visual" },
+    {
+      "type": "paragraph",
+      "content": "Only used when there are no Photo blocks. Until one is added, a labelled empty frame is shown at the final size."
     },
     { "type": "image_picker", "id": "image", "label": "Hero image" },
-    { "type": "video", "id": "video", "label": "Hero video", "info": "Optional. If set, it plays muted on loop and takes priority over the image." },
+    { "type": "video", "id": "video", "label": "Hero video", "info": "Plays muted on loop. Takes priority over the image above." },
+
+    { "type": "header", "content": "Layout" },
     {
       "type": "select",
       "id": "height",
@@ -102,8 +337,9 @@
       "id": "show_veil",
       "label": "Darken behind the text",
       "default": true,
-      "info": "Keeps the headline readable over a bright image. Turn off if your image is already dark at the bottom."
+      "info": "Keeps the headline readable over a bright photo. Turn off if your photos are already dark at the bottom."
     },
+
     { "type": "header", "content": "Text" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "New Drop Out Now" },
@@ -111,6 +347,27 @@
     { "type": "text", "id": "cta_label", "label": "Button label", "default": "Shop Now" },
     { "type": "url", "id": "cta_link", "label": "Button link", "info": "Defaults to #collection, which scrolls to the products below." }
   ],
-  "presets": [{ "name": "Studio hero" }]
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Photo",
+      "limit": 8,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo", "info": "Landscape. Used on tablet and desktop." },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Phone photo",
+          "info": "Optional portrait crop for phones. Without it, the landscape photo is cropped to fit."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Studio hero",
+      "blocks": [{ "type": "slide" }]
+    }
+  ]
 }
 {% endschema %}

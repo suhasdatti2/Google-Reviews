@@ -11,7 +11,40 @@
   "sections": {
     "hero": {
       "type": "studio-hero",
+      "blocks": {
+        "s1": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/hf_20260807_032922_b8902637-8c24-4a47-8c13-39b2ad594145.png",
+            "image_mobile": "shopify://shop_images/hf_20260811_233031_fdf9a3f9-7d1b-4ef6-9013-21acb3528fa1.png"
+          }
+        },
+        "s2": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/hf_20260810_051812_b4b31f05-54af-40a6-b2b9-980d76d76771.png",
+            "image_mobile": "shopify://shop_images/hf_20260811_233259_191f850c-fa56-4ae1-988e-3c4a9f9981bd.png"
+          }
+        },
+        "s3": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/hf_20260810_052110_1adb636b-a4cb-4366-a593-fa37701c602b.png",
+            "image_mobile": "shopify://shop_images/hf_20260811_234017_19e3dbd6-e08e-443c-a95b-d5bfac67c023.png"
+          }
+        },
+        "s4": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/hf_20260809_191808_d7032847-de25-498e-a132-a2ed7ceedbde.png",
+            "image_mobile": "shopify://shop_images/hf_20260811_234319_60fe0384-d2b8-46d0-9f13-fbd982cf4273.png"
+          }
+        }
+      },
+      "block_order": ["s1", "s2", "s3", "s4"],
       "settings": {
+        "interval": 6,
+        "show_arrows": true,
         "eyebrow": "NFC review cards for local businesses",
         "heading": "One Tap. More Reviews.",
         "subheading": "Customers tap their phone on the card and your Google review page opens instantly. No app. No QR code. No monthly fee.",
