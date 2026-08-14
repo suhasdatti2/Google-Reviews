@@ -378,12 +378,14 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 }
 
 /* Catalog form (Counter Card / Bulk / Wristband) is a simpler pill-based
-   picker, not Signature's own finish/engraving configurator - it doesn't
-   need the same expansive width. Scoped modifier so this doesn't shrink
-   signature-configurator.liquid on the dedicated /pages/signature page. */
+   picker, not Signature's own finish/engraving configurator, but it still
+   reads as cramped against the page at a fixed 860px, so it now shares the
+   site's general content width (--sig-maxw) instead of its own narrower
+   cap. Scoped modifier so this doesn't shrink signature-configurator.liquid
+   on the dedicated /pages/signature page. */
 .sig-configurator--catalog {
   --sig-config-pad: clamp(28px, 3.5vw, 48px);
-  max-width: 860px;
+  max-width: var(--sig-maxw);
   margin-inline: auto;
 }
 
