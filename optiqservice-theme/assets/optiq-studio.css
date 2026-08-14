@@ -340,16 +340,19 @@ body:has(.stu-page) { padding-bottom: 0 !important; }
      An empty trailing cell would show a stray top border, so the count is
      set to match the number of cards rather than left fixed at three. */
   grid-template-columns: repeat(var(--stu-cols, 3), 1fr);
-  border-top: 1px solid var(--stu-line);
-  border-left: 1px solid var(--stu-line);
 }
 
+/* Each card is its own outlined box - full border on all four sides,
+   rather than the earlier shared-hairline grid technique (one line split
+   between neighbouring cells). Adjacent cards touch, so the shared edge
+   reads as a slightly bolder line than the outer edge; that's the boxed
+   look being asked for, not a bug to fix with negative margins. */
 .stu-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid var(--stu-line);
-  border-bottom: 1px solid var(--stu-line);
+  border: 1.5px solid var(--stu-black);
+  margin: -1.5px 0 0 -1.5px;
   background: transparent;
   color: inherit;
   text-decoration: none;
