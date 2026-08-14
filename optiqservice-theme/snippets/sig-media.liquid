@@ -5,9 +5,19 @@
   (the dark-theme .img-placeholder would clash badly on a white page).
 
   Usage: {% render 'sig-media', image: section.settings.some_image, label: 'Add material close-up' %}
+
+  Optional height + crop: pass both to request a server-side cropped
+  rendition (Shopify's CDN does the crop, not CSS) instead of the natural
+  aspect ratio - e.g. to trim an uploaded photo down to just its top
+  portion. Leave both blank for the default behaviour every other caller
+  already relies on.
 {%- endcomment -%}
 {%- if image != blank -%}
-  {{ image | image_url: width: 1400 | image_tag: alt: alt | default: label, loading: loading | default: 'lazy' }}
+  {%- if height != blank -%}
+    {{ image | image_url: width: width | default: 1400, height: height, crop: crop | default: 'top' | image_tag: alt: alt | default: label, loading: loading | default: 'lazy' }}
+  {%- else -%}
+    {{ image | image_url: width: width | default: 1400 | image_tag: alt: alt | default: label, loading: loading | default: 'lazy' }}
+  {%- endif -%}
 {%- else -%}
   <div class="sig-placeholder">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

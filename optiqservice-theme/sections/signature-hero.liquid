@@ -49,7 +49,16 @@
 
   <div class="sig-hero__frame">
     <div class="sig-hero__media" data-o-reveal="fade">
-      {% render 'sig-media', image: section.settings.hero_image, label: 'Add hero background photo', alt: section.settings.heading %}
+      {%- comment -%}
+        Cropped to roughly the top half of the uploaded photo, anchored top,
+        rather than the natural square - the lower portion (marble counter,
+        card's own printed CTA text, the tapping hand) duplicated what this
+        section's own overlay heading/subheading already say, and read as
+        cluttered underneath them. Width/height are a fixed 1254x690 request
+        (the source photo's own native resolution), not a guess Shopify has
+        to upscale.
+      {%- endcomment -%}
+      {% render 'sig-media', image: section.settings.hero_image, label: 'Add hero background photo', alt: section.settings.heading, width: 1254, height: 690, crop: 'top' %}
     </div>
 
     <div class="sig-hero__overlay">
