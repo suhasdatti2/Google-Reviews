@@ -13,10 +13,14 @@
 
 {%- liquid
   assign cards = section.blocks | where: 'type', 'product'
+  assign is_premium = false
+  if section.settings.tier == 'premium'
+    assign is_premium = true
+  endif
 -%}
 
 <section
-  class="stu-page stu-collection"
+  class="stu-page stu-collection{% if is_premium %} stu-collection--premium{% endif %}"
   id="{{ section.settings.anchor | default: 'collection' }}"
   style="--stu-cols: {{ section.settings.columns | default: 3 }};"
   {{ section.shopify_attributes }}
@@ -27,7 +31,7 @@
         {%- if section.settings.eyebrow != blank -%}
           <span class="stu-eyebrow" data-o-reveal="fade">{{ section.settings.eyebrow | escape }}</span>
         {%- endif -%}
-        <h2 class="stu-h2" data-o-reveal="fade">{{ section.settings.heading | default: 'Collection' | escape }}</h2>
+        <h2 class="stu-h2{% unless is_premium %} stu-h2--compact{% endunless %}" data-o-reveal="fade">{{ section.settings.heading | default: 'Collection' | escape }}</h2>
         {%- if section.settings.subheading != blank -%}
           <p class="stu-body" data-o-reveal="fade">{{ section.settings.subheading | escape }}</p>
         {%- endif -%}
@@ -51,13 +55,13 @@
           {%- endcomment -%}
           {%- if card_url != blank -%}
           <a
-            class="stu-card"
+            class="stu-card{% if is_premium %} stu-card--premium{% endif %}"
             href="{{ card_url }}"
             data-o-reveal="fade"
             {{ block.shopify_attributes }}
           >
           {%- else -%}
-          <div class="stu-card stu-card--static" data-o-reveal="fade" {{ block.shopify_attributes }}>
+          <div class="stu-card stu-card--static{% if is_premium %} stu-card--premium{% endif %}" data-o-reveal="fade" {{ block.shopify_attributes }}>
           {%- endif -%}
             <div class="stu-card__media">
               {%- if block.settings.image != blank -%}
@@ -89,7 +93,7 @@
               <span class="stu-card__name">{{ card_title | escape }}</span>
 
               {%- if p != blank -%}
-                <span class="stu-card__price">
+                <span class="stu-card__price{% if is_premium %} stu-card__price--premium{% endif %}">
                   {%- if p.available == false -%}
                     <span class="stu-card__sold">Sold out</span>
                   {%- elsif p.price_varies -%}
@@ -106,6 +110,12 @@
     {%- else -%}
       <p class="stu-body">Add product blocks to this section to build the grid.</p>
     {%- endif -%}
+
+    {%- if section.settings.cta_label != blank -%}
+      <div class="stu-collection__cta" data-o-reveal="fade">
+        <a class="stu-btn{% if is_premium %} stu-btn--solid{% endif %}" href="{{ section.settings.cta_link | default: '#' }}">{{ section.settings.cta_label | escape }}</a>
+      </div>
+    {%- endif -%}
   </div>
 </section>
 
@@ -116,6 +126,17 @@
     { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Collection" },
     { "type": "textarea", "id": "subheading", "label": "Subheading" },
+    {
+      "type": "select",
+      "id": "tier",
+      "label": "Tier",
+      "options": [
+        { "value": "standard", "label": "Standard" },
+        { "value": "premium", "label": "Premium" }
+      ],
+      "default": "standard",
+      "info": "Premium adds extra whitespace, a bolder price and a solid CTA button - for the Signature row only."
+    },
     {
       "type": "range",
       "id": "columns",
@@ -132,7 +153,9 @@
       "label": "Anchor id",
       "default": "collection",
       "info": "The hero button links to #collection by default. Change both if you rename this."
-    }
+    },
+    { "type": "text", "id": "cta_label", "label": "Button label", "info": "Optional. Leave empty to hide the button below the grid." },
+    { "type": "url", "id": "cta_link", "label": "Button link" }
   ],
   "blocks": [
     {

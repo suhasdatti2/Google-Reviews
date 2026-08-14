@@ -89,11 +89,14 @@
       },
       "block_order": ["g1", "g2"],
       "settings": {
-        "eyebrow": "Premium",
+        "eyebrow": "Engineered for permanence",
         "heading": "Optiq Signature",
-        "subheading": "Solid metal, finished by hand, programmed with your review link before it ships.",
+        "subheading": "Metal construction, designed to last. A card that reflects your business - durable, intentional, unforgettable.",
+        "tier": "premium",
         "columns": 2,
-        "anchor": "signature"
+        "anchor": "signature",
+        "cta_label": "Shop Signature Cards",
+        "cta_link": "/products/optiq-signature"
       }
     },
     "collection": {
@@ -127,10 +130,12 @@
       "block_order": ["p1", "p2", "p3"],
       "settings": {
         "eyebrow": "",
-        "heading": "Collection",
-        "subheading": "",
+        "heading": "The Collection",
+        "subheading": "Durable plastic cards with the same NFC power as our metal line. Great for testing the waters or building your review network cost-effectively.",
         "columns": 3,
-        "anchor": "collection"
+        "anchor": "collection",
+        "cta_label": "Shop The Collection",
+        "cta_link": "/products/google-review-nfc-card"
       }
     }
   },

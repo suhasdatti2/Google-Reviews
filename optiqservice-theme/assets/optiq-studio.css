@@ -91,6 +91,10 @@ body:has(.stu-page) { padding-bottom: 0 !important; }
 .stu-h2 { font-size: clamp(1.5rem, 1.15rem + 1.5vw, 2.4rem); letter-spacing: -0.005em; }
 .stu-h3 { font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.3rem); letter-spacing: 0; }
 
+/* Collection sits a step below Signature in the type scale alone - weight
+   and size carry that hierarchy so nothing else has to announce it. */
+.stu-h2--compact { font-size: clamp(1.3rem, 1.05rem + 1vw, 1.9rem); font-weight: 600; }
+
 .stu-eyebrow {
   display: inline-block;
   font-family: var(--stu-body);
@@ -323,6 +327,12 @@ body:has(.stu-page) { padding-bottom: 0 !important; }
 .stu-collection + .stu-collection { padding-top: clamp(38px, 4.5vw, 64px); }
 .stu-collection:last-of-type { padding-bottom: clamp(48px, 6vw, 86px); }
 
+/* Premium row gets more air above and below - space reads as luxury, tight
+   spacing reads as value, and that contrast is doing quiet work the copy
+   never has to. */
+.stu-collection--premium { padding-top: clamp(56px, 7vw, 96px); }
+.stu-collection--premium + .stu-collection { padding-top: clamp(28px, 3.2vw, 44px); }
+
 .stu-collection__head {
   display: flex;
   align-items: flex-end;
@@ -360,6 +370,21 @@ body:has(.stu-page) { padding-bottom: 0 !important; }
 }
 /* On white, a white hover wash is invisible - the tint has to darken. */
 .stu-card:hover { background: rgba(16, 16, 16, 0.022); }
+
+/* Signature gets a restrained lift on hover - the rest of the site does
+   not, so this stays a tier signal rather than a house-wide mannerism.
+   The scale is barely perceptible (1.2%) and z-index keeps the lifted card
+   drawn over its neighbours' borders instead of the grid's shared edges
+   fighting the shadow. */
+.stu-card--premium {
+  transition: background 320ms var(--stu-ease), transform 320ms var(--stu-ease), box-shadow 320ms var(--stu-ease);
+}
+.stu-card--premium:hover {
+  position: relative;
+  z-index: 2;
+  transform: scale(1.012);
+  box-shadow: 0 10px 24px rgba(16, 16, 16, 0.14);
+}
 
 /* 4:3 rather than a square: the product photography is landscape, and a
    square box padded on all sides left most of the cell empty around a
@@ -420,13 +445,27 @@ body:has(.stu-page) { padding-bottom: 0 !important; }
   color: var(--stu-ink-2);
   white-space: nowrap;
 }
+/* Signature price reads as a confident number, not a discreet detail -
+   the anchor a shopper sees before anything else in the row. */
+.stu-card__price--premium {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--stu-ink);
+}
 .stu-card__sold { color: var(--stu-ink-3); }
 
 /* Announced-but-unbuyable card: no hover affordance, since there is
-   nowhere for it to go yet. */
+   nowhere for it to go yet - this overrides the premium lift too, since
+   the Tap Ring placeholder carries both classes. */
 .stu-card--static { cursor: default; }
-.stu-card--static:hover { background: transparent; }
+.stu-card--static:hover {
+  background: transparent;
+  transform: none;
+  box-shadow: none;
+}
 .stu-card--static:hover .stu-card__media img { transform: none; }
+
+.stu-collection__cta { margin-top: clamp(28px, 3vw, 40px); }
 
 @media (max-width: 1000px) {
   .stu-grid { grid-template-columns: repeat(2, 1fr); }
