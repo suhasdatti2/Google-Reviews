@@ -394,7 +394,10 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  border: 1px solid rgba(243, 241, 236, 0.14);
+  /* A visible frame is the whole point of this layout - the reference site's
+     boxes read as boxes at a glance, which a near-invisible 14% hairline
+     did not. */
+  border: 1.5px solid rgba(243, 241, 236, 0.4);
   background: var(--sig-black-2);
   color: inherit;
   text-decoration: none;
@@ -403,7 +406,7 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%);
   transition: border-color 260ms var(--sig-ease);
 }
-.sig-gallery__card:hover { border-color: rgba(243, 241, 236, 0.34); }
+.sig-gallery__card:hover { border-color: rgba(243, 241, 236, 0.7); }
 
 .sig-gallery__media { position: absolute; inset: 0; }
 .sig-gallery__img {
