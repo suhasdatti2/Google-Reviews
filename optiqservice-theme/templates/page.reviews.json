@@ -39,9 +39,16 @@
         "d2": { "type": "design", "settings": { "name": "Matte Black" } },
         "d3": { "type": "design", "settings": { "name": "Brushed Silver" } },
         "d4": { "type": "design", "settings": { "name": "Custom Engraved" } },
-        "d5": { "type": "design", "settings": { "name": "Rose Gold" } }
+        "d5": { "type": "design", "settings": { "name": "Rose Gold" } },
+        "d6": { "type": "design", "settings": { "name": "Matte White" } },
+        "d7": { "type": "design", "settings": { "name": "Gunmetal" } },
+        "d8": { "type": "design", "settings": { "name": "Champagne Gold" } },
+        "d9": { "type": "design", "settings": { "name": "Carbon Fiber" } },
+        "d10": { "type": "design", "settings": { "name": "Slate Blue" } },
+        "d11": { "type": "design", "settings": { "name": "Copper" } },
+        "d12": { "type": "design", "settings": { "name": "Onyx Black" } }
       },
-      "block_order": ["d1", "d2", "d3", "d4", "d5"],
+      "block_order": ["d1", "d2", "d3", "d4", "d5", "d6", "d7", "d8", "d9", "d10", "d11", "d12"],
       "settings": {
         "eyebrow": "Choose your finish",
         "heading": "Every card, made to order.",

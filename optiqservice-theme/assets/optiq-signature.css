@@ -379,6 +379,13 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
    same honesty rule as sig-media.
    ========================================================================== */
 
+/* Card size is entirely a function of container width divided by 4
+   columns, so growing the cards ~28% means growing the wrap this grid
+   sits in, not any grid/card property - same scoped-wrap technique
+   #sig-configurator already uses below, so this doesn't widen sig-wrap
+   for the rest of the page. */
+#sig-gallery > .sig-wrap { max-width: 1520px; }
+
 .sig-gallery {
   width: 100%;
   display: grid;
