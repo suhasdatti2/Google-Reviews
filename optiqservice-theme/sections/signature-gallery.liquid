@@ -12,9 +12,18 @@
   one, a tile just shows its single photo with no crossfade, and the base
   image never dims on hover (nothing would be revealed underneath it).
 
+  Hover photo source: a linked product's own "Hover Image (Image V2)"
+  metafield (custom.hover_image, a store-wide definition every product
+  has) takes priority when a product is linked, since that lets a design
+  tied to a real product be managed straight from that product's own
+  Shopify admin page. The block's own "Hover photo" upload is the
+  fallback - for designs not tied to a specific product yet, or to
+  override the product's metafield for this tile only.
+
   Cards without a link render as a plain, non-interactive tile (no href to
   fabricate) rather than a link to nowhere - same pattern as
-  studio-collection's "coming soon" cards.
+  studio-collection's "coming soon" cards. A linked product's own URL is
+  used when no explicit Link is set.
 {%- endcomment -%}
 
 <section class="sig-section sig-section--black sig-section--ruled" id="sig-gallery" data-sig-gallery {{ section.shopify_attributes }}>
@@ -32,13 +41,23 @@
       <div class="sig-gallery" data-o-reveal-group>
         {%- for block in designs -%}
           {%- assign design_name = block.settings.name | default: 'Design' -%}
+          {%- assign linked_product = block.settings.product -%}
+
+          {%- assign hover_image = block.settings.image_alt -%}
+          {%- if hover_image == blank and linked_product != blank -%}
+            {%- assign hover_image = linked_product.metafields.custom.hover_image -%}
+          {%- endif -%}
           {%- assign has_alt = false -%}
-          {%- if block.settings.image_alt != blank -%}{%- assign has_alt = true -%}{%- endif -%}
+          {%- if hover_image != blank -%}{%- assign has_alt = true -%}{%- endif -%}
+
+          {%- assign card_link = block.settings.link -%}
+          {%- if card_link == blank and linked_product != blank -%}{%- assign card_link = linked_product.url -%}{%- endif -%}
+
           {%- assign card_class = 'sig-gallery__card' -%}
           {%- if has_alt -%}{%- assign card_class = card_class | append: ' sig-gallery__card--has-alt' -%}{%- endif -%}
 
-          {%- if block.settings.link != blank -%}
-          <a class="{{ card_class }}" href="{{ block.settings.link }}" data-o-reveal="fade" {{ block.shopify_attributes }}>
+          {%- if card_link != blank -%}
+          <a class="{{ card_class }}" href="{{ card_link }}" data-o-reveal="fade" {{ block.shopify_attributes }}>
           {%- else -%}
           <div class="{{ card_class }} sig-gallery__card--static" data-o-reveal="fade" {{ block.shopify_attributes }}>
           {%- endif -%}
@@ -48,7 +67,7 @@
               </div>
               {%- if has_alt -%}
                 <div class="sig-gallery__img sig-gallery__img--alt">
-                  {% render 'sig-media', image: block.settings.image_alt, alt: design_name | append: ' - alternate angle', loading: 'eager' %}
+                  {% render 'sig-media', image: hover_image, alt: design_name | append: ' - alternate angle', loading: 'eager' %}
                 </div>
               {%- endif -%}
             </div>
@@ -58,7 +77,7 @@
                 <span class="sig-gallery__tag">{{ block.settings.tag | escape }}</span>
               {%- endif -%}
             </div>
-          {%- if block.settings.link != blank -%}</a>{%- else -%}</div>{%- endif -%}
+          {%- if card_link != blank -%}</a>{%- else -%}</div>{%- endif -%}
         {%- endfor -%}
       </div>
     {%- else -%}
@@ -111,14 +130,20 @@
       "settings": [
         { "type": "image_picker", "id": "image", "label": "Photo" },
         {
+          "type": "product",
+          "id": "product",
+          "label": "Linked product (optional)",
+          "info": "Optional. When set, this tile's hover photo can come straight from that product's own \"Hover Image (Image V2)\" field in Shopify admin, and the card links to its product page unless a Link is set below."
+        },
+        {
           "type": "image_picker",
           "id": "image_alt",
           "label": "Hover photo (different angle)",
-          "info": "Optional. Crossfades in over the main photo on hover (or on tap, on touch devices)."
+          "info": "Optional. Crossfades in over the main photo on hover (or on tap, on touch devices). Used when no product is linked above, or as an override for one tile even if the linked product has its own Hover Image set."
         },
         { "type": "text", "id": "name", "label": "Name", "default": "Titanium Gray" },
         { "type": "text", "id": "tag", "label": "Tag", "info": "Optional short accent label, e.g. a year, New, or Limited." },
-        { "type": "url", "id": "link", "label": "Link", "info": "Optional. Where this design should take shoppers." }
+        { "type": "url", "id": "link", "label": "Link", "info": "Optional. Where this design should take shoppers. Falls back to the linked product's own page if left blank." }
       ]
     }
   ],

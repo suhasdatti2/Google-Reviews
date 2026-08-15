@@ -408,7 +408,7 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
   cursor: pointer;
   text-decoration: none;
   color: inherit;
-  transition: border-color 0.35s ease, transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.3s ease;
 }
 .sig-gallery__card--static { cursor: default; }
 
@@ -420,17 +420,28 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 .sig-gallery__card:nth-child(4n+4) { transform: translateY(190px); }
 
 .sig-gallery__card:nth-child(4n+1):hover,
-.sig-gallery__card:nth-child(4n+3):hover { transform: scale(1.012); }
+.sig-gallery__card:nth-child(4n+3):hover { transform: scale(1.02); }
 .sig-gallery__card:nth-child(4n+2):hover,
-.sig-gallery__card:nth-child(4n+4):hover { transform: translateY(190px) scale(1.012); }
+.sig-gallery__card:nth-child(4n+4):hover { transform: translateY(190px) scale(1.02); }
 
-.sig-gallery__card:hover { border-color: #555; }
+/* Hovered card gets a bright outline and lifts slightly above its
+   siblings; every other card in the grid dims so the hovered one reads as
+   the clear focus, not just one tile among equals. is-touched mirrors the
+   outline for touch devices (see the section's own script), which have no
+   real :hover to trigger it from. */
+.sig-gallery__card:hover,
+.sig-gallery__card.is-touched {
+  border-color: #fff;
+  box-shadow: 0 0 0 1px #fff;
+  z-index: 2;
+}
+.sig-gallery:hover .sig-gallery__card:not(:hover) { opacity: 0.55; }
 
 .sig-gallery__media { position: absolute; inset: 0; overflow: hidden; }
 .sig-gallery__img {
   position: absolute;
   inset: 0;
-  transition: opacity 0.38s cubic-bezier(0.22, 0.61, 0.36, 1), transform 0.65s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .sig-gallery__img img {
   display: block;
@@ -501,7 +512,7 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
   .sig-gallery__card:nth-child(4n+2),
   .sig-gallery__card:nth-child(4n+4) { transform: translateY(70px); }
   .sig-gallery__card:nth-child(4n+2):hover,
-  .sig-gallery__card:nth-child(4n+4):hover { transform: translateY(70px) scale(1.012); }
+  .sig-gallery__card:nth-child(4n+4):hover { transform: translateY(70px) scale(1.02); }
 }
 @media (max-width: 600px) {
   .sig-gallery { grid-template-columns: 1fr; column-gap: 10px; row-gap: 10px; }
@@ -509,7 +520,7 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
     transform: translateX(22px);
     width: calc(100% - 22px);
   }
-  .sig-gallery__card:nth-child(even):hover { transform: translateX(22px) scale(1.012); }
+  .sig-gallery__card:nth-child(even):hover { transform: translateX(22px) scale(1.02); }
 }
 
 #sig-configurator > .sig-wrap { max-width: 1520px; }
