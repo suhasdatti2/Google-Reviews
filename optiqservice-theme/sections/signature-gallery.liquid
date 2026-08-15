@@ -1,0 +1,99 @@
+{%- comment -%}
+  Signature gallery - a pick-a-design grid modelled on LandoNorris.com's
+  helmet gallery: an uneven bento grid of photo tiles, each named at its
+  bottom-left corner, that slides down a second photo on hover to show the
+  design from a different angle.
+
+  Every photo is a real merchant upload via the block's image pickers -
+  same honesty rule as sig-media (rendered through it for both slots), so a
+  design with no photo yet shows the labelled placeholder rather than
+  invented artwork. The hover-angle photo is optional per design; without
+  one, the tile just shows its single photo with no swap.
+{%- endcomment -%}
+
+<section class="sig-section sig-section--black sig-section--ruled" {{ section.shopify_attributes }}>
+  <div class="sig-wrap">
+    <div class="sig-head sig-head--center">
+      <span class="sig-eyebrow" data-o-reveal="fade">{{ section.settings.eyebrow | default: 'Choose your finish' }}</span>
+      <h2 class="sig-h2" data-o-reveal="fade">{{ section.settings.heading | default: 'Every card, made to order.' }}</h2>
+      {%- if section.settings.subheading != blank -%}
+        <p class="sig-lede" data-o-reveal="fade">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- assign designs = section.blocks | where: 'type', 'design' -%}
+    {%- if designs.size > 0 -%}
+      <div class="sig-gallery" data-o-reveal-group>
+        {%- for block in designs -%}
+          {%- assign design_name = block.settings.name | default: 'Design' -%}
+          {%- if block.settings.link != blank -%}
+          <a class="sig-gallery__card" href="{{ block.settings.link }}" data-o-reveal="fade" {{ block.shopify_attributes }}>
+          {%- else -%}
+          <div class="sig-gallery__card" data-o-reveal="fade" {{ block.shopify_attributes }}>
+          {%- endif -%}
+            <div class="sig-gallery__media">
+              <div class="sig-gallery__img sig-gallery__img--base">
+                {% render 'sig-media', image: block.settings.image, label: design_name | append: ' photo goes here', alt: design_name %}
+              </div>
+              {%- if block.settings.image_alt != blank -%}
+                <div class="sig-gallery__img sig-gallery__img--alt">
+                  {% render 'sig-media', image: block.settings.image_alt, alt: design_name | append: ' - alternate angle' %}
+                </div>
+              {%- endif -%}
+            </div>
+            <div class="sig-gallery__foot">
+              <span class="sig-gallery__name">{{ design_name | escape }}</span>
+              {%- if block.settings.tag != blank -%}
+                <span class="sig-gallery__tag">{{ block.settings.tag | escape }}</span>
+              {%- endif -%}
+            </div>
+          {%- if block.settings.link != blank -%}</a>{%- else -%}</div>{%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <p class="sig-body" style="max-width: none; text-align: center; margin-top: 40px;">Add design blocks to build this gallery.</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Signature gallery",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Choose your finish" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Every card, made to order." },
+    { "type": "textarea", "id": "subheading", "label": "Subheading" }
+  ],
+  "blocks": [
+    {
+      "type": "design",
+      "name": "Design",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        {
+          "type": "image_picker",
+          "id": "image_alt",
+          "label": "Hover photo (different angle)",
+          "info": "Optional. Slides down over the main photo when a shopper hovers this tile."
+        },
+        { "type": "text", "id": "name", "label": "Name", "default": "Titanium Gray" },
+        { "type": "text", "id": "tag", "label": "Tag", "info": "Optional short label, e.g. New or Limited." },
+        { "type": "url", "id": "link", "label": "Link", "info": "Optional. Where this design should take shoppers." }
+      ]
+    }
+  ],
+  "max_blocks": 16,
+  "presets": [
+    {
+      "name": "Signature gallery",
+      "blocks": [
+        { "type": "design", "settings": { "name": "Titanium Gray" } },
+        { "type": "design", "settings": { "name": "Matte Black" } },
+        { "type": "design", "settings": { "name": "Brushed Silver" } },
+        { "type": "design", "settings": { "name": "Custom Engraved" } },
+        { "type": "design", "settings": { "name": "Rose Gold" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

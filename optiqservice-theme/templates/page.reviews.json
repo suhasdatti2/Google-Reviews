@@ -15,10 +15,12 @@
         "eyebrow": "NFC review cards for local businesses",
         "heading": "Optiq Review Cards",
         "subheading": "Your customers tap their phone on the card or wristband, and your Google review page opens instantly. No app. No QR code needed. No monthly fee.",
-        "hero_image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_40_03_PM_4.png",
+        "hero_image": "shopify://shop_images/hf_20260809_191808_d7032847-de25-498e-a132-a2ed7ceedbde.png",
         "cta_label": "Choose Your Product",
         "cta_link": "#sig-configurator",
-        "full_page_takeover": false
+        "full_page_takeover": false,
+        "back_label": "← Back to Optiq",
+        "back_link": ""
       }
     },
     "sigmaterial": {
@@ -30,17 +32,20 @@
         "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_41_02_PM_3.png"
       }
     },
-    "sigengineering": {
-      "type": "signature-engineering",
+    "siggallery": {
+      "type": "signature-gallery",
+      "blocks": {
+        "d1": { "type": "design", "settings": { "name": "Titanium Gray" } },
+        "d2": { "type": "design", "settings": { "name": "Matte Black" } },
+        "d3": { "type": "design", "settings": { "name": "Brushed Silver" } },
+        "d4": { "type": "design", "settings": { "name": "Custom Engraved" } },
+        "d5": { "type": "design", "settings": { "name": "Rose Gold" } }
+      },
+      "block_order": ["d1", "d2", "d3", "d4", "d5"],
       "settings": {
-        "eyebrow": "How it works",
-        "heading": "Simple, reliable, tap-ready.",
-        "layer_1_title": "Durable card or wristband body",
-        "layer_1_text": "Premium material, built to hold up to daily use",
-        "layer_2_title": "NFC technology layer",
-        "layer_2_text": "Programmed with your Google review link",
-        "layer_3_title": "Tap-tested before it ships",
-        "layer_3_text": "Verified to work with iPhone and Android"
+        "eyebrow": "Choose your finish",
+        "heading": "Every card, made to order.",
+        "subheading": "Pick a design below. Each tile can hold a second photo, so hovering shows the card from another angle."
       }
     },
     "sigcatalog": {
@@ -189,7 +194,7 @@
   "order": [
     "sighero",
     "sigmaterial",
-    "sigengineering",
+    "siggallery",
     "sigcatalog",
     "sigpackaging",
     "sigpurchase",
