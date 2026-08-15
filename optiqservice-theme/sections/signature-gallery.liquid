@@ -1,17 +1,23 @@
 {%- comment -%}
-  Signature gallery - a pick-a-design grid modelled on LandoNorris.com's
-  helmet gallery: an uneven bento grid of photo tiles, each named at its
-  bottom-left corner, that slides down a second photo on hover to show the
-  design from a different angle.
+  Signature gallery - a pick-a-design grid matching LandoNorris.com's
+  helmet gallery exactly: a 4-column staggered grid of square photo cards
+  (columns 2 and 4 dropped ~190px), each with a bottom-right angled
+  metadata panel, that crossfades to a second photo on hover to preview
+  the design from another angle.
 
   Every photo is a real merchant upload via the block's image pickers -
   same honesty rule as sig-media (rendered through it for both slots), so a
   design with no photo yet shows the labelled placeholder rather than
   invented artwork. The hover-angle photo is optional per design; without
-  one, the tile just shows its single photo with no swap.
+  one, a tile just shows its single photo with no crossfade, and the base
+  image never dims on hover (nothing would be revealed underneath it).
+
+  Cards without a link render as a plain, non-interactive tile (no href to
+  fabricate) rather than a link to nowhere - same pattern as
+  studio-collection's "coming soon" cards.
 {%- endcomment -%}
 
-<section class="sig-section sig-section--black sig-section--ruled" {{ section.shopify_attributes }}>
+<section class="sig-section sig-section--black sig-section--ruled" data-sig-gallery {{ section.shopify_attributes }}>
   <div class="sig-wrap">
     <div class="sig-head sig-head--center">
       <span class="sig-eyebrow" data-o-reveal="fade">{{ section.settings.eyebrow | default: 'Choose your finish' }}</span>
@@ -26,18 +32,23 @@
       <div class="sig-gallery" data-o-reveal-group>
         {%- for block in designs -%}
           {%- assign design_name = block.settings.name | default: 'Design' -%}
+          {%- assign has_alt = false -%}
+          {%- if block.settings.image_alt != blank -%}{%- assign has_alt = true -%}{%- endif -%}
+          {%- assign card_class = 'sig-gallery__card' -%}
+          {%- if has_alt -%}{%- assign card_class = card_class | append: ' sig-gallery__card--has-alt' -%}{%- endif -%}
+
           {%- if block.settings.link != blank -%}
-          <a class="sig-gallery__card" href="{{ block.settings.link }}" data-o-reveal="fade" {{ block.shopify_attributes }}>
+          <a class="{{ card_class }}" href="{{ block.settings.link }}" data-o-reveal="fade" {{ block.shopify_attributes }}>
           {%- else -%}
-          <div class="sig-gallery__card" data-o-reveal="fade" {{ block.shopify_attributes }}>
+          <div class="{{ card_class }} sig-gallery__card--static" data-o-reveal="fade" {{ block.shopify_attributes }}>
           {%- endif -%}
             <div class="sig-gallery__media">
               <div class="sig-gallery__img sig-gallery__img--base">
                 {% render 'sig-media', image: block.settings.image, label: design_name | append: ' photo goes here', alt: design_name %}
               </div>
-              {%- if block.settings.image_alt != blank -%}
+              {%- if has_alt -%}
                 <div class="sig-gallery__img sig-gallery__img--alt">
-                  {% render 'sig-media', image: block.settings.image_alt, alt: design_name | append: ' - alternate angle' %}
+                  {% render 'sig-media', image: block.settings.image_alt, alt: design_name | append: ' - alternate angle', loading: 'eager' %}
                 </div>
               {%- endif -%}
             </div>
@@ -55,6 +66,35 @@
     {%- endif -%}
   </div>
 </section>
+
+<script>
+(function () {
+  // Touch devices have no hover, so the second photo would never be
+  // reachable at all without this: first tap reveals it (and holds the
+  // link), a second tap on the same card follows the link through as
+  // normal. Desktop/mouse never runs this - :hover already does the job.
+  var isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+  if (!isTouch) { return; }
+
+  var root = document.querySelector('[data-sig-gallery]');
+  if (!root) { return; }
+
+  var cards = [].slice.call(root.querySelectorAll('.sig-gallery__card--has-alt'));
+  cards.forEach(function (card) {
+    card.addEventListener('click', function (e) {
+      if (card.classList.contains('is-touched')) { return; }
+      e.preventDefault();
+      cards.forEach(function (c) { c.classList.remove('is-touched'); });
+      card.classList.add('is-touched');
+    });
+  });
+
+  document.addEventListener('click', function (e) {
+    if (root.contains(e.target)) { return; }
+    cards.forEach(function (c) { c.classList.remove('is-touched'); });
+  });
+})();
+</script>
 
 {% schema %}
 {
@@ -74,10 +114,10 @@
           "type": "image_picker",
           "id": "image_alt",
           "label": "Hover photo (different angle)",
-          "info": "Optional. Slides down over the main photo when a shopper hovers this tile."
+          "info": "Optional. Crossfades in over the main photo on hover (or on tap, on touch devices)."
         },
         { "type": "text", "id": "name", "label": "Name", "default": "Titanium Gray" },
-        { "type": "text", "id": "tag", "label": "Tag", "info": "Optional short label, e.g. New or Limited." },
+        { "type": "text", "id": "tag", "label": "Tag", "info": "Optional short accent label, e.g. a year, New, or Limited." },
         { "type": "url", "id": "link", "label": "Link", "info": "Optional. Where this design should take shoppers." }
       ]
     }
