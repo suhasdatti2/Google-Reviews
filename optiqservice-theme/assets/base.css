@@ -900,14 +900,40 @@ h1, h2, h3, h4 { font-weight: 650; letter-spacing: -0.02em; line-height: 1.15; }
 .product-gallery { display: grid; gap: 14px; }
 .product-gallery__stage { position: relative; }
 
+/* Fixed 5:4 frame rather than the image's own raw aspect ratio. The
+   product photos are wide render mockups with a lot of dead backdrop
+   above and below the card itself - shown at their natural proportions
+   they run far taller than the page needs, especially once the grid
+   stacks to a single column on mobile. Capping the frame and letting
+   object-fit: cover fill it keeps the card the same size on screen no
+   matter what shape the source photo happens to be. */
 .product-gallery__viewport {
+  position: relative;
   border-radius: var(--radius-sm);
   overflow: hidden;
   background: var(--bg-raised-2);
+  aspect-ratio: 5 / 4;
 }
-.product-gallery__slide { display: none; }
+.product-gallery__slide { display: none; position: absolute; inset: 0; }
 .product-gallery__slide.is-active { display: block; animation: pg-fade 0.25s ease; }
-.product-gallery__slide img { width: 100%; height: auto; display: block; margin: 0; border-radius: 0; }
+.product-gallery__slide img { width: 100%; height: 100%; object-fit: cover; display: block; margin: 0; border-radius: 0; }
+
+/* These are rendered product mockups shot against a dark charcoal
+   backdrop - that's baked into the photo's pixels, so it can't be
+   recoloured directly. This wash sits on top of the image and pulls the
+   dark backdrop toward the page's warm clay/off-white palette instead:
+   soft-light lifts shadows toward the clay tone while leaving the
+   brightest highlights (the card's own metal and printed text) close to
+   their own colour, rather than flattening the whole photo into a tint. */
+.product-gallery__viewport::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: #efe4d4;
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
 
 @keyframes pg-fade { from { opacity: 0.35; } to { opacity: 1; } }
 
