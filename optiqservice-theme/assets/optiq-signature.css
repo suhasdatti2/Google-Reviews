@@ -415,6 +415,11 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
     opacity 900ms var(--sig-ease-out),
     transform 900ms var(--sig-ease-out);
 }
+/* The gap between words is a real margin, not the whitespace text node
+   Liquid leaves between the spans - inline-block boxes can end up flush
+   against each other across browsers/renderers that don't preserve that
+   text node, which read as words run together with no space at all. */
+.sig-lines__w + .sig-lines__w { margin-left: 0.26em; }
 .is-revealed .sig-lines__w,
 .sig-lines.is-revealed .sig-lines__w { opacity: 1; transform: none; }
 .sig-lines__w:nth-child(1) { transition-delay: 0ms; }
@@ -467,7 +472,7 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 .sig-hero {
   position: relative;
   background: var(--sig-white-bg);
-  padding-top: clamp(88px, 14vh, 168px);
+  padding-top: clamp(28px, 4vh, 56px);
   overflow: hidden;
 }
 
@@ -476,7 +481,7 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
   max-width: calc(var(--sig-maxw-wide) + (var(--sig-gutter) * 2));
   margin-inline: auto;
   padding-inline: var(--sig-gutter);
-  padding-bottom: clamp(56px, 9vh, 120px);
+  padding-bottom: clamp(32px, 5vh, 64px);
 }
 
 /* 12-column editorial grid. The headline occupies 9 of 12 and the supporting
@@ -486,7 +491,7 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   column-gap: var(--sig-s7);
-  row-gap: clamp(28px, 5vw, 56px);
+  row-gap: clamp(16px, 2.6vw, 32px);
   align-items: end;
 }
 .sig-hero__title { grid-column: 1 / span 10; }
@@ -496,7 +501,7 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
   gap: var(--sig-s6);
   align-content: start;
 }
-.sig-hero__meta { grid-column: 1 / -1; margin-bottom: clamp(24px, 4vw, 48px); }
+.sig-hero__meta { grid-column: 1 / -1; margin-bottom: clamp(12px, 2vw, 24px); }
 
 .sig-hero__sub {
   font-size: var(--sig-t-lede);
