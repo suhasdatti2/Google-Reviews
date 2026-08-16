@@ -17,31 +17,83 @@
    ========================================================================== */
 
 :root {
+  /* --- Surfaces. A near-neutral white stack: pure white for the page,
+     two barely-there greys for tonal separation. The whole palette spans
+     about 4% of luminance, which is what makes tonal shifts read as
+     architecture rather than as "sections with background colours". --- */
   --sig-white: #ffffff;
   --sig-white-bg: var(--sig-white);
-  --sig-paper: #fbfaf8;
-  --sig-marble: #f3f1ec;
-  --sig-marble-2: #eae7e0;
-  --sig-ink: #111110;
-  --sig-ink-2: #5c5b56;
-  --sig-ink-3: #9a988f;
-  --sig-line: rgba(17, 17, 16, 0.1);
-  --sig-line-2: rgba(17, 17, 16, 0.17);
-  --sig-black: #0b0b0a;
-  --sig-black-2: #171615;
-  --sig-on-black: #f3f1ec;
-  --sig-on-black-2: #9a988f;
+  --sig-paper: #fafaf9;
+  --sig-marble: #f4f4f2;
+  --sig-marble-2: #ececea;
+
+  /* Ink. Near-black rather than #000 - true black on white is harsh at
+     large display sizes and reads cheap. */
+  --sig-ink: #0a0a0a;
+  --sig-ink-2: #6b6b68;
+  --sig-ink-3: #9c9c98;
+
+  /* Hairlines. Two weights only: one you can barely see, one you can. */
+  --sig-line: rgba(10, 10, 10, 0.09);
+  --sig-line-2: rgba(10, 10, 10, 0.16);
+
+  --sig-black: #0a0a0a;
+  --sig-black-2: #141414;
+  --sig-on-black: #f4f4f2;
+  --sig-on-black-2: #8a8a86;
+
   --sig-accent: var(--o-accent, #b68a3f);
   --sig-accent-ink: var(--o-accent-ink, #14100a);
 
-  --sig-font-display: var(--o-font-display, "Space Grotesk", ui-sans-serif, system-ui, sans-serif);
+  /* One neutral grotesque for the entire page. Hierarchy comes from size,
+     weight and tracking - never from a second typeface. */
+  --sig-font-display: var(--o-font-body, "DM Sans", ui-sans-serif, system-ui, sans-serif);
   --sig-font-body: var(--o-font-body, "DM Sans", ui-sans-serif, system-ui, sans-serif);
+  --sig-font-mono: ui-monospace, "SF Mono", Menlo, monospace;
 
-  --sig-maxw: 1180px;
-  --sig-section: clamp(88px, 11vw, 176px);
-  --sig-section-tight: clamp(56px, 7vw, 108px);
+  /* --- Type scale. Fluid, with tracking tightening as size grows -
+     optical correction: the same letter-spacing that reads open at 14px
+     reads loose and amateurish at 80px. --- */
+  --sig-t-display: clamp(2.9rem, 1.4rem + 6.4vw, 7.5rem);
+  --sig-t-h1: clamp(2.4rem, 1.3rem + 4.6vw, 5.2rem);
+  --sig-t-h2: clamp(1.9rem, 1.2rem + 2.9vw, 3.6rem);
+  --sig-t-h3: clamp(1.15rem, 1rem + 0.7vw, 1.5rem);
+  --sig-t-lede: clamp(1.05rem, 0.98rem + 0.34vw, 1.28rem);
+  --sig-t-body: 1rem;
+  --sig-t-meta: 0.6875rem;
+
+  /* --- Space scale. A 4px base, so every gap in the page is a multiple
+     of the same unit and vertical rhythm holds without eyeballing. --- */
+  --sig-s1: 4px;
+  --sig-s2: 8px;
+  --sig-s3: 12px;
+  --sig-s4: 16px;
+  --sig-s5: 24px;
+  --sig-s6: 32px;
+  --sig-s7: 48px;
+  --sig-s8: 64px;
+  --sig-s9: 96px;
+  --sig-s10: 128px;
+
+  --sig-maxw: 1240px;
+  --sig-maxw-wide: 1520px;
+  --sig-gutter: clamp(20px, 5vw, 64px);
+
+  /* Sections breathe. This is the single biggest lever on whether a page
+     reads as expensive, so it is deliberately generous. */
+  --sig-section: clamp(96px, 12vw, 200px);
+  --sig-section-tight: clamp(64px, 8vw, 120px);
+
+  /* --- Motion. Three curves, used consistently:
+     ease-out for entrances (fast start, long settle - feels physical),
+     ease-inout for state changes, spring for the few playful moments. --- */
   --sig-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --sig-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --sig-ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --sig-dur-fast: 240ms;
   --sig-dur: 420ms;
+  --sig-dur-slow: 900ms;
+  --sig-radius: 2px;
 }
 
 .sig-hero, .sig-section {
@@ -60,83 +112,204 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 
 .sig-wrap {
   width: 100%;
-  max-width: calc(var(--sig-maxw) + 48px);
+  max-width: calc(var(--sig-maxw) + (var(--sig-gutter) * 2));
   margin-inline: auto;
-  padding-inline: 24px;
+  padding-inline: var(--sig-gutter);
 }
-@media (min-width: 700px) { .sig-wrap { padding-inline: 40px; } }
+.sig-wrap--wide { max-width: calc(var(--sig-maxw-wide) + (var(--sig-gutter) * 2)); }
+
+/* --------------------------------------------------------------------------
+   Type
+   --------------------------------------------------------------------------
+   Every size below is set with its own tracking. The rule the whole system
+   follows: as type grows, tracking tightens and line-height drops.
+   -------------------------------------------------------------------------- */
 
 .sig-eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.22em;
+  gap: var(--sig-s3);
+  font-family: var(--sig-font-body);
+  font-size: var(--sig-t-meta);
+  font-weight: 500;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--sig-ink-3);
+  font-feature-settings: "tnum";
 }
 .sig-section--black .sig-eyebrow { color: var(--sig-on-black-2); }
 
-.sig-h1, .sig-h2, .sig-h3 {
+/* Metadata label - the small numbered tag that opens a section. A hairline
+   rule runs from the text to the edge of its column, which is what makes it
+   read as editorial apparatus rather than as a heading. */
+.sig-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--sig-s4);
+  font-family: var(--sig-font-body);
+  font-size: var(--sig-t-meta);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sig-ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.sig-meta::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--sig-line);
+}
+.sig-meta__num { color: var(--sig-ink); font-weight: 500; }
+.sig-section--black .sig-meta { color: var(--sig-on-black-2); }
+.sig-section--black .sig-meta::after { background: rgba(244, 244, 242, 0.14); }
+.sig-section--black .sig-meta__num { color: var(--sig-on-black); }
+
+.sig-display, .sig-h1, .sig-h2, .sig-h3 {
   font-family: var(--sig-font-display);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.05;
   color: var(--sig-ink);
+  margin: 0;
   text-wrap: balance;
 }
+.sig-section--black .sig-display,
 .sig-section--black .sig-h1,
 .sig-section--black .sig-h2,
 .sig-section--black .sig-h3 { color: var(--sig-on-black); }
 
-.sig-h1 { font-size: clamp(2.6rem, 1.7rem + 4.2vw, 5.4rem); }
-.sig-h2 { font-size: clamp(2rem, 1.5rem + 2.4vw, 3.4rem); }
-.sig-h3 { font-size: clamp(1.3rem, 1.1rem + 0.9vw, 1.85rem); letter-spacing: -0.01em; }
+.sig-display {
+  font-size: var(--sig-t-display);
+  font-weight: 500;
+  letter-spacing: -0.042em;
+  line-height: 0.9;
+}
+.sig-h1 {
+  font-size: var(--sig-t-h1);
+  font-weight: 500;
+  letter-spacing: -0.036em;
+  line-height: 0.95;
+}
+.sig-h2 {
+  font-size: var(--sig-t-h2);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+}
+.sig-h3 {
+  font-size: var(--sig-t-h3);
+  font-weight: 500;
+  letter-spacing: -0.014em;
+  line-height: 1.25;
+}
 
 .sig-lede {
-  font-size: clamp(1.02rem, 0.95rem + 0.3vw, 1.2rem);
-  line-height: 1.6;
+  font-size: var(--sig-t-lede);
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: -0.006em;
   color: var(--sig-ink-2);
-  max-width: 46ch;
+  max-width: 44ch;
+  margin: 0;
 }
 .sig-section--black .sig-lede { color: var(--sig-on-black-2); }
 
-.sig-body { font-size: 0.98rem; line-height: 1.7; color: var(--sig-ink-2); max-width: 44ch; }
+.sig-body {
+  font-size: var(--sig-t-body);
+  line-height: 1.68;
+  letter-spacing: -0.003em;
+  color: var(--sig-ink-2);
+  max-width: 42ch;
+  margin: 0;
+}
 .sig-section--black .sig-body { color: var(--sig-on-black-2); }
 
-.sig-head { display: grid; gap: 18px; max-width: 640px; }
+.sig-head { display: grid; gap: var(--sig-s5); max-width: 720px; }
 .sig-head--center { justify-items: center; text-align: center; margin-inline: auto; }
+.sig-head--center .sig-lede { margin-inline: auto; }
+
+/* Hairline rule, used as a section divider and as editorial punctuation. */
+.sig-rule { height: 1px; width: 100%; background: var(--sig-line); border: 0; margin: 0; }
+.sig-section--black .sig-rule { background: rgba(244, 244, 242, 0.14); }
+
+/* --------------------------------------------------------------------------
+   Buttons
+   --------------------------------------------------------------------------
+   Squared, not pilled. Hover is a fill that wipes up from the bottom edge
+   rather than a colour swap - the movement is what makes it feel considered.
+   The fill is a ::before on a transform, so it composites on the GPU and
+   never triggers layout.
+   -------------------------------------------------------------------------- */
 
 .sig-cta {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  min-height: 54px;
-  padding: 0 38px;
+  gap: var(--sig-s3);
+  min-height: 52px;
+  padding: 0 var(--sig-s7);
   border: 1px solid var(--sig-ink);
-  border-radius: 999px;
+  border-radius: var(--sig-radius);
   background: transparent;
   color: var(--sig-ink);
   font-family: var(--sig-font-body);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+  text-decoration: none;
   cursor: pointer;
-  transition: background var(--sig-dur, 420ms) var(--sig-ease), color var(--sig-dur, 420ms) var(--sig-ease), transform 220ms var(--sig-ease);
+  overflow: hidden;
+  isolation: isolate;
+  transition: color var(--sig-dur) var(--sig-ease-out), border-color var(--sig-dur) var(--sig-ease-out);
 }
-.sig-cta:hover { background: var(--sig-ink); color: var(--sig-white); transform: translateY(-1px); }
-.sig-cta:active { transform: translateY(0); }
-.sig-cta[disabled], .sig-cta[aria-disabled="true"] { opacity: 0.4; cursor: not-allowed; transform: none; }
+.sig-cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--sig-ink);
+  transform: translateY(100%);
+  transition: transform var(--sig-dur) var(--sig-ease-out);
+}
+.sig-cta:hover::before,
+.sig-cta:focus-visible::before { transform: translateY(0); }
+.sig-cta:hover, .sig-cta:focus-visible { color: var(--sig-white); }
+.sig-cta:active { transform: scale(0.985); }
+.sig-cta[disabled], .sig-cta[aria-disabled="true"] { opacity: 0.35; cursor: not-allowed; }
+.sig-cta[disabled]::before, .sig-cta[aria-disabled="true"]::before { transform: translateY(100%); }
 
+/* Solid: already filled, so hover wipes the *lighter* state in instead. */
 .sig-cta--solid { background: var(--sig-ink); color: var(--sig-white); }
-.sig-cta--solid:hover { background: var(--sig-ink-2); }
+.sig-cta--solid::before { background: var(--sig-ink-2); }
+.sig-cta--solid:hover, .sig-cta--solid:focus-visible { color: var(--sig-white); }
 
-.sig-cta--on-black { border-color: rgba(243, 241, 236, 0.5); color: var(--sig-on-black); }
-.sig-cta--on-black:hover { background: var(--sig-on-black); color: var(--sig-black); }
+.sig-cta--on-black { border-color: rgba(244, 244, 242, 0.4); color: var(--sig-on-black); }
+.sig-cta--on-black::before { background: var(--sig-on-black); }
+.sig-cta--on-black:hover, .sig-cta--on-black:focus-visible { color: var(--sig-black); border-color: var(--sig-on-black); }
+
+/* Ghost: a text-only action for secondary paths. Underline grows from the
+   left rather than appearing all at once. */
+.sig-cta--ghost {
+  border-color: transparent;
+  padding-inline: 0;
+  min-height: 0;
+  overflow: visible;
+}
+.sig-cta--ghost::before { display: none; }
+.sig-cta--ghost::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--sig-dur) var(--sig-ease-out);
+}
+.sig-cta--ghost:hover::after, .sig-cta--ghost:focus-visible::after { transform: scaleX(1); }
+.sig-cta--ghost:hover, .sig-cta--ghost:focus-visible { color: var(--sig-ink); }
 
 .sig-link {
   position: relative;
@@ -166,10 +339,91 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 .sig-section { padding-block: var(--sig-section); background: var(--sig-white-bg); position: relative; }
 .sig-section--tight { padding-block: var(--sig-section-tight); }
 .sig-section--paper { background: var(--sig-paper); }
-.sig-section--marble { background: var(--sig-white); }
+.sig-section--marble { background: var(--sig-marble); }
 .sig-section--black { background: var(--sig-black); color: var(--sig-on-black); }
 .sig-section--ruled { border-top: 1px solid var(--sig-line); }
-.sig-section--black.sig-section--ruled { border-top-color: rgba(243, 241, 236, 0.1); }
+.sig-section--black.sig-section--ruled { border-top-color: rgba(244, 244, 242, 0.12); }
+
+/* --------------------------------------------------------------------------
+   Motion
+   --------------------------------------------------------------------------
+   Reveal variants layered on the theme's existing IntersectionObserver
+   (assets/optiq-motion.js), which adds .is-revealed and staggers children
+   of [data-o-reveal-group] by 70ms. Nothing here needs new JS.
+
+   Everything animates opacity and transform only - both composite on the
+   GPU, so none of this triggers layout or paint on scroll. The full
+   reduced-motion escape hatch lives at the foot of this file.
+   -------------------------------------------------------------------------- */
+
+/* Rise: the default entrance. Long, slow settle rather than a quick pop. */
+[data-o-reveal="rise"] {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+  transition:
+    opacity var(--sig-dur-slow) var(--sig-ease-out),
+    transform var(--sig-dur-slow) var(--sig-ease-out);
+  transition-delay: var(--o-reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+[data-o-reveal="rise"].is-revealed { opacity: 1; transform: none; will-change: auto; }
+
+/* Mask and lines both animate their *children*, but still need the bare
+   [data-o-reveal] attribute so the shared observer in optiq-motion.js picks
+   them up and adds .is-revealed. That attribute also carries a default
+   opacity/transform from optiq-core.css, which would double up against the
+   child animation and read as two things moving at once - so it is
+   neutralised here. The container stays put; only its contents move. */
+.sig-mask[data-o-reveal],
+.sig-lines[data-o-reveal] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Mask: an image wipes open from its bottom edge while the picture inside
+   settles back from a slight over-scale. Two elements moving at different
+   rates is what separates a real reveal from a fade. */
+.sig-mask { overflow: hidden; }
+.sig-mask > * {
+  clip-path: inset(0 0 100% 0);
+  transform: scale(1.08);
+  transition:
+    clip-path 1200ms var(--sig-ease-out),
+    transform 1600ms var(--sig-ease-out);
+  transition-delay: var(--o-reveal-delay, 0ms);
+}
+.sig-mask.is-revealed > * { clip-path: inset(0 0 0 0); transform: scale(1); }
+
+/* Line: a hairline that draws itself in from the left as it enters. */
+[data-o-reveal="rule"] {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1000ms var(--sig-ease-out);
+  transition-delay: var(--o-reveal-delay, 0ms);
+}
+[data-o-reveal="rule"].is-revealed { transform: scaleX(1); }
+
+/* Word-level stagger for display headlines. Each word is wrapped by the
+   section markup and rises on its own short delay, so the line assembles
+   left to right instead of arriving as one block. */
+.sig-lines { display: block; }
+.sig-lines__w {
+  display: inline-block;
+  opacity: 0;
+  transform: translate3d(0, 0.42em, 0);
+  transition:
+    opacity 900ms var(--sig-ease-out),
+    transform 900ms var(--sig-ease-out);
+}
+.is-revealed .sig-lines__w,
+.sig-lines.is-revealed .sig-lines__w { opacity: 1; transform: none; }
+.sig-lines__w:nth-child(1) { transition-delay: 0ms; }
+.sig-lines__w:nth-child(2) { transition-delay: 60ms; }
+.sig-lines__w:nth-child(3) { transition-delay: 120ms; }
+.sig-lines__w:nth-child(4) { transition-delay: 180ms; }
+.sig-lines__w:nth-child(5) { transition-delay: 240ms; }
+.sig-lines__w:nth-child(6) { transition-delay: 300ms; }
+.sig-lines__w:nth-child(n + 7) { transition-delay: 360ms; }
 
 .sig-topbar {
   position: absolute;
@@ -199,122 +453,202 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 }
 .sig-topbar__back:hover { color: var(--sig-ink); }
 
+/* --------------------------------------------------------------------------
+   HERO
+   --------------------------------------------------------------------------
+   Two acts rather than one: a white typographic stage, then a full-bleed
+   image below it. The previous version centred the headline on top of a
+   dark scrim over the photo - which forces a heavy gradient just to keep
+   text legible, and makes the type legibility hostage to whatever photo is
+   uploaded. Setting type on white instead removes the scrim entirely, and
+   lets the photograph be a photograph.
+   -------------------------------------------------------------------------- */
+
 .sig-hero {
   position: relative;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  padding: 108px clamp(20px, 4.5vw, 72px) clamp(20px, 4.5vw, 72px);
   background: var(--sig-white-bg);
+  padding-top: clamp(88px, 14vh, 168px);
   overflow: hidden;
 }
 
+.sig-hero__stage {
+  width: 100%;
+  max-width: calc(var(--sig-maxw-wide) + (var(--sig-gutter) * 2));
+  margin-inline: auto;
+  padding-inline: var(--sig-gutter);
+  padding-bottom: clamp(56px, 9vh, 120px);
+}
+
+/* 12-column editorial grid. The headline occupies 9 of 12 and the supporting
+   copy sits under the right-hand 4 - an intentional offset, so the block
+   reads as a composition rather than a stack. */
+.sig-hero__grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--sig-s7);
+  row-gap: clamp(28px, 5vw, 56px);
+  align-items: end;
+}
+.sig-hero__title { grid-column: 1 / span 10; }
+.sig-hero__aside {
+  grid-column: 9 / span 4;
+  display: grid;
+  gap: var(--sig-s6);
+  align-content: start;
+}
+.sig-hero__meta { grid-column: 1 / -1; margin-bottom: clamp(24px, 4vw, 48px); }
+
+.sig-hero__sub {
+  font-size: var(--sig-t-lede);
+  line-height: 1.55;
+  letter-spacing: -0.006em;
+  color: var(--sig-ink-2);
+  max-width: 38ch;
+  margin: 0;
+}
+
+.sig-hero__actions { display: flex; gap: var(--sig-s5); flex-wrap: wrap; align-items: center; }
+
+/* Full-bleed image below the type. Masked reveal, and a very slight
+   parallax drift driven by the section markup's own transform. */
 .sig-hero__frame {
   position: relative;
-  flex: 1 1 auto;
-  min-height: 0;
+  width: 100%;
+  aspect-ratio: 21 / 9;
+  min-height: clamp(320px, 52vh, 660px);
   overflow: hidden;
+  background: var(--sig-marble);
 }
-
 .sig-hero__media { position: absolute; inset: 0; }
 .sig-hero__media img,
 .sig-hero__media .sig-placeholder { width: 100%; height: 100%; }
-.sig-hero__media img { object-fit: cover; object-position: center top; display: block; }
+.sig-hero__media img { object-fit: cover; object-position: center; display: block; }
 
-/* Scrim: the overlaid heading/subheading/button need to stay legible no
-   matter what's underneath - a busy product photo, a light background,
-   whatever gets uploaded here - rather than depending on the photo itself
-   being dark and uncluttered exactly where the text sits. Darkest at the
-   top (eyebrow/heading) and bottom (button), lighter through the middle so
-   the photo still reads as a photo. */
-.sig-hero__media::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg,
-    rgba(9, 9, 8, 0.68) 0%,
-    rgba(9, 9, 8, 0.36) 20%,
-    rgba(9, 9, 8, 0.32) 46%,
-    rgba(9, 9, 8, 0.54) 72%,
-    rgba(9, 9, 8, 0.8) 100%);
+@media (max-width: 900px) {
+  .sig-hero__title { grid-column: 1 / -1; }
+  .sig-hero__aside { grid-column: 1 / -1; }
+  .sig-hero__frame { aspect-ratio: 4 / 3; }
 }
-
-.sig-hero__overlay {
-  position: relative;
-  z-index: 2;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  text-align: center;
-  gap: 32px;
-  padding: clamp(56px, 9vh, 116px) 24px 0;
-}
-
-.sig-hero__text { display: grid; justify-items: center; gap: 20px; max-width: 720px; }
-.sig-hero__sub { font-size: clamp(1.05rem, 0.98rem + 0.35vw, 1.3rem); color: var(--sig-ink-2); max-width: 46ch; }
-
-.sig-hero__overlay .sig-eyebrow { color: rgba(255, 255, 255, 0.8); text-shadow: 0 1px 10px rgba(0, 0, 0, 0.35); }
-.sig-hero__overlay .sig-h1 { color: var(--sig-white); text-shadow: 0 4px 28px rgba(0, 0, 0, 0.45); }
-.sig-hero__overlay .sig-hero__sub { color: rgba(255, 255, 255, 0.92); text-shadow: 0 2px 16px rgba(0, 0, 0, 0.4); }
-
-.sig-hero__actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
-
 @media (max-width: 640px) {
-  .sig-hero { padding-top: 92px; min-height: auto; }
-  .sig-hero__frame { min-height: 70vh; }
-  .sig-hero__overlay { gap: 22px; padding-top: 44px; }
-  .sig-hero__text { gap: 12px; max-width: 480px; }
-  .sig-hero__sub { font-size: 0.96rem; max-width: 38ch; }
+  .sig-hero { padding-top: clamp(72px, 12vh, 112px); }
+  .sig-hero__sub { max-width: 100%; }
+  .sig-hero__actions .sig-cta { width: 100%; }
+  .sig-hero__actions .sig-cta--ghost { width: auto; }
 }
 
-.sig-hero--embedded { padding-top: clamp(20px, 4.5vw, 72px); }
-@media (max-width: 640px) {
-  .sig-hero--embedded { padding-top: clamp(20px, 4.5vw, 72px); }
-}
+.sig-hero--embedded { padding-top: clamp(56px, 9vh, 120px); }
 
 .sig-placeholder {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 14px;
+  gap: var(--sig-s4);
   width: 100%;
   height: 100%;
-  min-height: 260px;
-  border: 1px solid var(--sig-line-2);
-  background: var(--sig-paper);
+  min-height: 220px;
+  border: 1px solid var(--sig-line);
+  background: var(--sig-marble);
   color: var(--sig-ink-3);
   text-align: center;
-  padding: 32px;
+  padding: var(--sig-s6);
 }
-.sig-placeholder svg { width: 30px; height: 30px; opacity: 0.55; }
-.sig-placeholder span { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; max-width: 24ch; }
+.sig-placeholder svg { width: 24px; height: 24px; opacity: 0.4; }
+.sig-placeholder span {
+  font-size: var(--sig-t-meta);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  max-width: 24ch;
+  line-height: 1.6;
+}
 .sig-section--black .sig-placeholder {
   border-color: rgba(243, 241, 236, 0.16);
   background: var(--sig-black-2);
   color: var(--sig-on-black-2);
 }
 
+/* --------------------------------------------------------------------------
+   Editorial split
+   --------------------------------------------------------------------------
+   Deliberately asymmetric: a 12-column grid where the image takes 7 and the
+   copy takes 4, with a full column of air between them. The text block is
+   also pushed down slightly against the top of the image, so the two sides
+   do not start on the same line - symmetry here would read as a template.
+   -------------------------------------------------------------------------- */
+
 .sig-split {
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: clamp(40px, 6vw, 96px);
-  align-items: center;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--sig-s7);
+  row-gap: var(--sig-s7);
+  align-items: start;
 }
-.sig-split--reverse { grid-template-columns: 1fr 1.15fr; }
-.sig-split--reverse .sig-split__media { order: 2; }
-.sig-split--reverse .sig-split__text { order: 1; }
+.sig-split__media { grid-column: 1 / span 7; aspect-ratio: 4 / 5; overflow: hidden; }
+.sig-split__text {
+  grid-column: 9 / span 4;
+  display: grid;
+  gap: var(--sig-s5);
+  align-content: start;
+  padding-top: clamp(24px, 6vw, 96px);
+}
+.sig-split--reverse .sig-split__media { grid-column: 6 / span 7; grid-row: 1; }
+.sig-split--reverse .sig-split__text { grid-column: 1 / span 4; grid-row: 1; }
 
-.sig-split__media { aspect-ratio: 5 / 4; overflow: hidden; }
-.sig-split__media img { width: 100%; height: 100%; object-fit: cover; }
-.sig-split__text { display: grid; gap: 22px; }
+.sig-split__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-@media (max-width: 880px) {
-  .sig-split, .sig-split--reverse { grid-template-columns: 1fr; gap: 32px; }
-  .sig-split--reverse .sig-split__media,
-  .sig-split--reverse .sig-split__text { order: initial; }
+@media (max-width: 900px) {
+  .sig-split { grid-template-columns: minmax(0, 1fr); row-gap: var(--sig-s6); }
+  .sig-split__media,
+  .sig-split--reverse .sig-split__media { grid-column: 1 / -1; grid-row: auto; aspect-ratio: 4 / 3; }
+  .sig-split__text,
+  .sig-split--reverse .sig-split__text { grid-column: 1 / -1; grid-row: auto; padding-top: 0; }
+}
+
+/* --------------------------------------------------------------------------
+   Stat / spec row - three facts on a hairline grid, no cards. This is the
+   answer to "headline, paragraph, three boxes": same information, expressed
+   as typography and rules instead of containers.
+   -------------------------------------------------------------------------- */
+
+.sig-specs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--sig-line);
+}
+.sig-spec {
+  padding: var(--sig-s6) var(--sig-s5) var(--sig-s5) 0;
+  border-right: 1px solid var(--sig-line);
+}
+.sig-spec:last-child { border-right: 0; }
+.sig-spec__k {
+  display: block;
+  font-size: var(--sig-t-meta);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sig-ink-3);
+  margin-bottom: var(--sig-s4);
+}
+.sig-spec__v {
+  display: block;
+  font-family: var(--sig-font-display);
+  font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.35rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--sig-ink);
+}
+.sig-section--black .sig-specs { border-top-color: rgba(244, 244, 242, 0.14); }
+.sig-section--black .sig-spec { border-right-color: rgba(244, 244, 242, 0.14); }
+.sig-section--black .sig-spec__k { color: var(--sig-on-black-2); }
+.sig-section--black .sig-spec__v { color: var(--sig-on-black); }
+
+@media (max-width: 720px) {
+  .sig-specs { grid-template-columns: minmax(0, 1fr); }
+  .sig-spec { border-right: 0; border-bottom: 1px solid var(--sig-line); padding-right: 0; }
+  .sig-spec:last-child { border-bottom: 0; }
+  .sig-section--black .sig-spec { border-bottom-color: rgba(244, 244, 242, 0.14); }
 }
 
 .sig-diagram {
@@ -352,21 +686,6 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
   border-bottom: 1px solid var(--sig-line-2);
 }
 
-.sig-showroom {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-  margin-top: 56px;
-}
-.sig-showroom__item { aspect-ratio: 4 / 5; overflow: hidden; }
-.sig-showroom__item img { width: 100%; height: 100%; object-fit: cover; }
-.sig-showroom__item:first-child { grid-row: span 2; aspect-ratio: 4 / 9; }
-
-@media (max-width: 780px) {
-  .sig-showroom { grid-template-columns: 1fr 1fr; }
-  .sig-showroom__item:first-child { grid-column: span 2; aspect-ratio: 16 / 10; grid-row: auto; }
-}
-
 /* ==========================================================================
    SIGNATURE GALLERY — pick-a-design grid, matching LandoNorris.com's
    helmet gallery exactly: 4 equal columns, square cards, columns 2 and 4
@@ -386,6 +705,24 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
    for the rest of the page. */
 #sig-gallery > .sig-wrap { max-width: 1520px; }
 
+/* Section header used by the gallery and the catalog: numbered metadata
+   line, then the headline and its supporting sentence set side by side on
+   a baseline rather than stacked and centred. Centred stacks are what make
+   consecutive sections read as the same slide repeated. */
+.sig-ghead { display: grid; gap: var(--sig-s6); }
+.sig-ghead__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  column-gap: var(--sig-s7);
+  row-gap: var(--sig-s4);
+  align-items: end;
+}
+.sig-ghead__row .sig-body { max-width: 46ch; padding-bottom: 0.35em; }
+@media (max-width: 800px) {
+  .sig-ghead__row { grid-template-columns: minmax(0, 1fr); }
+  .sig-ghead__row .sig-body { padding-bottom: 0; }
+}
+
 .sig-gallery {
   width: 100%;
   display: grid;
@@ -393,7 +730,7 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
   column-gap: 18px;
   row-gap: 18px;
   align-items: start;
-  margin-top: 56px;
+  margin-top: clamp(48px, 6vw, 80px);
 }
 
 .sig-gallery__card {
@@ -607,18 +944,30 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 .sig-swatch.is-active .sig-swatch__dot { box-shadow: inset 0 0 0 3px var(--sig-white), 0 0 0 2px var(--sig-ink); }
 .sig-swatch.is-active span { color: var(--sig-ink); }
 
-.sig-pills { display: inline-flex; gap: 8px; padding: 4px; border: 1px solid var(--sig-line-2); border-radius: 999px; }
+/* Segmented control. Squared to match the button system - a pill here read
+   as a leftover from a different, softer design language. */
+.sig-pills {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--sig-line-2);
+  border-radius: var(--sig-radius);
+}
 .sig-pill {
   border: 0;
   background: transparent;
   padding: 12px 22px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 600;
+  border-radius: var(--sig-radius);
+  font-family: var(--sig-font-body);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: -0.005em;
   color: var(--sig-ink-2);
   cursor: pointer;
-  transition: background 200ms var(--sig-ease), color 200ms var(--sig-ease);
+  transition: background var(--sig-dur-fast) var(--sig-ease-out), color var(--sig-dur-fast) var(--sig-ease-out);
 }
+.sig-pill:hover { color: var(--sig-ink); }
 .sig-pill.is-active { background: var(--sig-ink); color: var(--sig-white); }
 
 .sig-fields { display: grid; gap: 22px; grid-template-columns: 1fr 1fr; }
@@ -670,7 +1019,206 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
   aspect-ratio: 1;
 }
 
-.sig-purchase { text-align: center; }
-.sig-purchase__media { max-width: 420px; margin: 48px auto 0; aspect-ratio: 4 / 3; }
-.sig-purchase__price { margin: 28px 0 8px; font-family: var(--sig-font-display); font-size: 20px; }
-.sig-purchase__price b { font-size: 30px; }
+/* --------------------------------------------------------------------------
+   CLOSING STATEMENT
+   --------------------------------------------------------------------------
+   The final section is a single oversized line of type over a full-bleed
+   image, not another centred eyebrow/heading/lede/button stack. By this
+   point the page has already made its argument; the close only has to be
+   confident.
+   -------------------------------------------------------------------------- */
+
+.sig-close { position: relative; overflow: hidden; padding-block: 0; background: var(--sig-black); }
+.sig-close__frame {
+  position: relative;
+  min-height: clamp(560px, 88vh, 900px);
+  display: flex;
+  align-items: flex-end;
+}
+.sig-close__media { position: absolute; inset: 0; }
+.sig-close__media img,
+.sig-close__media .sig-placeholder { width: 100%; height: 100%; }
+.sig-close__media img { object-fit: cover; object-position: center; display: block; }
+/* A soft floor gradient rather than a full scrim - just enough to seat the
+   type, so the photograph above it stays untouched. */
+.sig-close__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 10, 10, 0) 38%, rgba(10, 10, 10, 0.82) 100%);
+}
+.sig-close__body {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding-bottom: clamp(48px, 8vw, 104px);
+}
+.sig-close__grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--sig-s7);
+  row-gap: var(--sig-s6);
+  align-items: end;
+}
+.sig-close__title { grid-column: 1 / span 7; color: var(--sig-on-black); }
+.sig-close__side {
+  grid-column: 9 / span 4;
+  display: grid;
+  gap: var(--sig-s5);
+  justify-items: start;
+}
+.sig-close__price {
+  font-family: var(--sig-font-display);
+  font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--sig-on-black);
+  margin: 0;
+}
+.sig-close__price small {
+  display: block;
+  font-size: var(--sig-t-meta);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sig-on-black-2);
+  margin-bottom: var(--sig-s2);
+}
+@media (max-width: 900px) {
+  .sig-close__title, .sig-close__side { grid-column: 1 / -1; }
+}
+
+/* --------------------------------------------------------------------------
+   FAQ
+   --------------------------------------------------------------------------
+   Hairline rows, no cards, no chevron icons. The open/close affordance is a
+   plus that rotates into a minus - the least decorative signal available.
+   -------------------------------------------------------------------------- */
+
+/* Sticky heading beside a scrolling list. Real classes rather than inline
+   grid-column values, because inline styles outrank media queries - the
+   single-column mobile rule below could never have taken effect. */
+.sig-faqlayout {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--sig-s7);
+  row-gap: var(--sig-s7);
+  align-items: start;
+}
+.sig-faqlayout__head {
+  grid-column: 1 / span 4;
+  display: grid;
+  gap: var(--sig-s5);
+  align-content: start;
+  position: sticky;
+  top: clamp(88px, 12vh, 132px);
+}
+.sig-faqlayout__list { grid-column: 6 / span 7; }
+@media (max-width: 900px) {
+  .sig-faqlayout { grid-template-columns: minmax(0, 1fr); row-gap: var(--sig-s6); }
+  .sig-faqlayout__head { grid-column: 1 / -1; position: static; }
+  .sig-faqlayout__list { grid-column: 1 / -1; }
+}
+
+.sig-faq { border-top: 1px solid var(--sig-line); }
+.sig-faq__item { border-bottom: 1px solid var(--sig-line); }
+.sig-faq__q {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sig-s6);
+  width: 100%;
+  padding: clamp(22px, 3vw, 32px) 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--sig-font-display);
+  font-size: clamp(1rem, 0.95rem + 0.35vw, 1.2rem);
+  font-weight: 500;
+  letter-spacing: -0.016em;
+  line-height: 1.35;
+  color: var(--sig-ink);
+  transition: opacity var(--sig-dur-fast) var(--sig-ease-out);
+}
+.sig-faq__q:hover { opacity: 0.55; }
+.sig-faq__sign { position: relative; flex: none; width: 12px; height: 12px; margin-top: 0.4em; }
+.sig-faq__sign::before,
+.sig-faq__sign::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 12px;
+  height: 1px;
+  background: var(--sig-ink);
+  transition: transform var(--sig-dur) var(--sig-ease-out);
+}
+.sig-faq__sign::after { transform: rotate(90deg); }
+.sig-faq__q[aria-expanded="true"] .sig-faq__sign::after { transform: rotate(0deg); }
+
+/* Grid-rows 0fr -> 1fr animates height without measuring it in JS. */
+.sig-faq__a {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--sig-dur) var(--sig-ease-out);
+}
+.sig-faq__a.is-open { grid-template-rows: 1fr; }
+.sig-faq__a > div { overflow: hidden; }
+.sig-faq__a p {
+  margin: 0;
+  padding: 0 0 clamp(24px, 3vw, 34px);
+  max-width: 62ch;
+  font-size: 0.9375rem;
+  line-height: 1.72;
+  color: var(--sig-ink-2);
+}
+
+/* --------------------------------------------------------------------------
+   Focus
+   --------------------------------------------------------------------------
+   One ring for every interactive surface. :focus-visible so it appears for
+   keyboard and assistive navigation without ringing every mouse click.
+   -------------------------------------------------------------------------- */
+
+.sig-cta:focus-visible,
+.sig-pill:focus-visible,
+.sig-swatch:focus-visible,
+.sig-faq__q:focus-visible,
+.sig-gallery__card:focus-visible,
+.sig-field input:focus-visible {
+  outline: 2px solid var(--sig-ink);
+  outline-offset: 3px;
+}
+.sig-section--black .sig-cta:focus-visible,
+.sig-close .sig-cta:focus-visible { outline-color: var(--sig-on-black); }
+.sig-gallery__card:focus-visible { outline-offset: 2px; }
+
+/* --------------------------------------------------------------------------
+   Reduced motion
+   --------------------------------------------------------------------------
+   A single blanket override rather than per-component opt-outs, so a new
+   component can never accidentally ship without honouring the preference.
+   Content lands in its final state instantly; nothing is hidden.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .sig-hero *,
+  .sig-section *,
+  .sig-close * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-o-reveal="rise"],
+  .sig-lines__w { opacity: 1 !important; transform: none !important; }
+  [data-o-reveal="rule"] { transform: scaleX(1) !important; }
+  .sig-mask > * { clip-path: none !important; transform: none !important; }
+}
+
+/* .sig-purchase / .sig-showroom removed: the closing section is now
+   .sig-close, and signature-showcase.liquid is an empty stub. Dead rules in
+   a design system are worse than missing ones - they invite reuse of a
+   pattern that no longer belongs. */

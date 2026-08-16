@@ -12,12 +12,15 @@
     "sighero": {
       "type": "signature-hero",
       "settings": {
+        "index": "01",
         "eyebrow": "NFC review cards for local businesses",
-        "heading": "Optiq Review Cards",
-        "subheading": "Your customers tap their phone on the card or wristband, and your Google review page opens instantly. No app. No QR code needed. No monthly fee.",
+        "heading": "One tap. More reviews.",
+        "subheading": "Customers tap their phone on the card or wristband and your Google review page opens instantly. No app. No QR code. No monthly fee.",
         "hero_image": "shopify://shop_images/hf_20260809_191808_d7032847-de25-498e-a132-a2ed7ceedbde.png",
         "cta_label": "Choose Your Product",
         "cta_link": "#sig-configurator",
+        "cta2_label": "See the finishes",
+        "cta2_link": "#sig-gallery",
         "full_page_takeover": false,
         "back_label": "← Back to Optiq",
         "back_link": ""
@@ -25,7 +28,14 @@
     },
     "sigmaterial": {
       "type": "signature-material",
+      "blocks": {
+        "s1": { "type": "spec", "settings": { "label": "Body", "value": "Premium durable" } },
+        "s2": { "type": "spec", "settings": { "label": "Chip", "value": "NFC, sealed in" } },
+        "s3": { "type": "spec", "settings": { "label": "Setup", "value": "None required" } }
+      },
+      "block_order": ["s1", "s2", "s3"],
       "settings": {
+        "index": "02",
         "eyebrow": "Built to last",
         "heading": "Durable, tap-ready NFC technology.",
         "body": "Every card and wristband is built from premium, durable material and finished clean - a card sturdy enough to sit on your counter for years, and a wristband comfortable enough for all-day wear. The NFC chip sits invisibly inside, programmed with your review link before it ever leaves us.",
@@ -35,21 +45,78 @@
     "siggallery": {
       "type": "signature-gallery",
       "blocks": {
-        "d1": { "type": "design", "settings": { "name": "Titanium Gray" } },
-        "d2": { "type": "design", "settings": { "name": "Matte Black" } },
-        "d3": { "type": "design", "settings": { "name": "Brushed Silver" } },
-        "d4": { "type": "design", "settings": { "name": "Custom Engraved" } },
-        "d5": { "type": "design", "settings": { "name": "Rose Gold" } },
-        "d6": { "type": "design", "settings": { "name": "Matte White" } },
-        "d7": { "type": "design", "settings": { "name": "Gunmetal" } },
-        "d8": { "type": "design", "settings": { "name": "Champagne Gold" } },
-        "d9": { "type": "design", "settings": { "name": "Carbon Fiber" } },
-        "d10": { "type": "design", "settings": { "name": "Slate Blue" } },
-        "d11": { "type": "design", "settings": { "name": "Copper" } },
-        "d12": { "type": "design", "settings": { "name": "Onyx Black" } }
+        "d1": {
+          "type": "design",
+          "settings": { "product": "", "name": "Titanium Gray", "tag": "", "link": "" }
+        },
+        "d2": {
+          "type": "design",
+          "settings": {
+            "image": "shopify://shop_images/hf_20260811_233031_fdf9a3f9-7d1b-4ef6-9013-21acb3528fa1.png",
+            "product": "",
+            "image_alt": "shopify://shop_images/hf_20260809_191808_d7032847-de25-498e-a132-a2ed7ceedbde.png",
+            "name": "Matte Black",
+            "tag": "",
+            "link": ""
+          }
+        },
+        "d3": {
+          "type": "design",
+          "settings": { "product": "", "name": "Brushed Silver", "tag": "", "link": "" }
+        },
+        "d4": {
+          "type": "design",
+          "settings": { "product": "", "name": "Custom Engraved", "tag": "", "link": "" }
+        },
+        "d5": {
+          "type": "design",
+          "settings": { "product": "", "name": "Rose Gold", "tag": "", "link": "" }
+        },
+        "d6": {
+          "type": "design",
+          "settings": { "product": "", "name": "Matte White", "tag": "", "link": "" }
+        },
+        "d7": {
+          "type": "design",
+          "settings": { "product": "", "name": "Gunmetal", "tag": "", "link": "" }
+        },
+        "d8": {
+          "type": "design",
+          "settings": { "product": "", "name": "Champagne Gold", "tag": "", "link": "" }
+        },
+        "d9": {
+          "type": "design",
+          "settings": { "product": "", "name": "Carbon Fiber", "tag": "", "link": "" }
+        },
+        "d10": {
+          "type": "design",
+          "settings": { "product": "", "name": "Slate Blue", "tag": "", "link": "" }
+        },
+        "d11": {
+          "type": "design",
+          "settings": { "product": "", "name": "Copper", "tag": "", "link": "" }
+        },
+        "d12": {
+          "type": "design",
+          "settings": { "product": "", "name": "Onyx Black", "tag": "", "link": "" }
+        }
       },
-      "block_order": ["d1", "d2", "d3", "d4", "d5", "d6", "d7", "d8", "d9", "d10", "d11", "d12"],
+      "block_order": [
+        "d1",
+        "d2",
+        "d3",
+        "d4",
+        "d5",
+        "d6",
+        "d7",
+        "d8",
+        "d9",
+        "d10",
+        "d11",
+        "d12"
+      ],
       "settings": {
+        "index": "03",
         "eyebrow": "Choose your finish",
         "heading": "Every card, made to order.",
         "subheading": "Pick a design below. Each tile can hold a second photo, so hovering shows the card from another angle."
@@ -58,6 +125,7 @@
     "sigcatalog": {
       "type": "signature-catalog",
       "settings": {
+        "index": "04",
         "eyebrow": "Choose your product",
         "heading": "Make it yours.",
         "cta_label": "Add to Cart",
@@ -71,6 +139,7 @@
     "sigpackaging": {
       "type": "signature-packaging",
       "settings": {
+        "index": "05",
         "eyebrow": "Fast and simple",
         "heading": "Ships fast, ready to use.",
         "subheading": "Every card and wristband is programmed with your review link and tap-tested on iPhone and Android before it ships - nothing for you to set up.",
@@ -80,16 +149,17 @@
     "sigpurchase": {
       "type": "signature-purchase",
       "settings": {
+        "index": "06",
         "eyebrow": "Optiq Review Cards",
         "heading": "Ready when you are.",
-        "subheading": "Main Counter Card, Mini Bulk Cards, or the Wristband - pick what fits your business. Programmed with your review link, one-time purchase, no subscription.",
         "image": "shopify://shop_images/hf_20260806_033730_5b6406a1-139f-44fb-a473-d16c69042b7b.png",
         "price_label": "$29.99",
-        "cta_label": "Choose Your Product"
+        "cta_label": "Choose Your Product",
+        "cta_link": "#sig-configurator"
       }
     },
-    "faq": {
-      "type": "faq",
+    "sigfaq": {
+      "type": "signature-faq",
       "blocks": {
         "q1": {
           "type": "question",
@@ -183,18 +253,10 @@
         "q8"
       ],
       "settings": {
+        "index": "07",
         "kicker": "FAQ",
-        "heading": "Questions, Answered",
+        "heading": "Questions, answered.",
         "subheading": "Anything else? Email sales@optiqservice.com - we reply within one business day."
-      }
-    },
-    "cta": {
-      "type": "cta-banner",
-      "settings": {
-        "heading": "Make Leaving a Review One Tap Away",
-        "subheading": "Order today, send us your review link, and your card or wristband arrives programmed and ready to use.",
-        "button_label": "Choose Your Product",
-        "button_link": "#sig-configurator"
       }
     }
   },
@@ -205,7 +267,6 @@
     "sigcatalog",
     "sigpackaging",
     "sigpurchase",
-    "faq",
-    "cta"
+    "sigfaq"
   ]
 }

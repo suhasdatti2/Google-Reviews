@@ -1,19 +1,48 @@
 {%- comment -%}
-  Optiq Signature - material / craftsmanship. Large photo + short, confident
-  copy, watch-advertisement pacing rather than a feature list. Reveal
-  animation via the theme's existing data-o-reveal engine, no new JS.
+  Optiq Signature - material / craftsmanship.
+
+  Asymmetric editorial split: a tall 4:5 photograph across 7 of 12 columns,
+  copy in the right-hand 4, with a full empty column between them and the
+  text block dropped below the top of the image. The offset is the point -
+  a symmetric two-up with vertically centred text is the layout every
+  template ships with, and it reads that way.
+
+  The three specs below the copy replace what would otherwise be a second
+  paragraph. Same information, expressed as a hairline grid of label/value
+  pairs rather than prose or - worse - three bordered cards.
+
+  Image reveal is the shared .sig-mask (clip-path wipe + slow scale-back),
+  so it matches every other photograph on the page.
 {%- endcomment -%}
 
 <section class="sig-section" id="sig-material" {{ section.shopify_attributes }}>
-  <div class="sig-wrap">
-    <div class="sig-split">
-      <div class="sig-split__media" data-o-reveal>
-        {% render 'sig-media', image: section.settings.image, label: 'Add material close-up photo' %}
+  <div class="sig-wrap sig-wrap--wide">
+    <div class="sig-split" data-o-reveal-group>
+      <div class="sig-split__media sig-mask" data-o-reveal>
+        {% render 'sig-media', image: section.settings.image, label: 'Add material close-up photograph' %}
       </div>
+
       <div class="sig-split__text">
-        <span class="sig-eyebrow" data-o-reveal="fade">{{ section.settings.eyebrow | default: 'Material' }}</span>
-        <h2 class="sig-h2" data-o-reveal="fade">{{ section.settings.heading | default: 'Engineered from precision metal.' }}</h2>
-        <p class="sig-body" data-o-reveal="fade">{{ section.settings.body | default: "A solid metal body, finished by hand and machined to a tolerance most cards never see. The NFC layer sits invisibly inside - nothing about the surface hints at the technology underneath until the moment it's tapped." }}</p>
+        <p class="sig-meta" data-o-reveal="rise">
+          <span class="sig-meta__num">{{ section.settings.index | default: '02' }}</span>
+          <span>{{ section.settings.eyebrow | default: 'Material' | escape }}</span>
+        </p>
+
+        <h2 class="sig-h2" data-o-reveal="rise">{{ section.settings.heading | default: 'Engineered from precision metal.' }}</h2>
+
+        <p class="sig-body" data-o-reveal="rise">{{ section.settings.body | default: "A solid metal body, finished by hand and machined to a tolerance most cards never see. The NFC layer sits invisibly inside - nothing about the surface hints at the technology underneath until the moment it's tapped." }}</p>
+
+        {%- assign specs = section.blocks | where: 'type', 'spec' -%}
+        {%- if specs.size > 0 -%}
+          <div class="sig-specs" data-o-reveal="rise">
+            {%- for block in specs -%}
+              <div class="sig-spec" {{ block.shopify_attributes }}>
+                <span class="sig-spec__k">{{ block.settings.label | escape }}</span>
+                <span class="sig-spec__v">{{ block.settings.value | escape }}</span>
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
       </div>
     </div>
   </div>
@@ -23,6 +52,7 @@
 {
   "name": "Signature material",
   "settings": [
+    { "type": "text", "id": "index", "label": "Section number", "default": "02" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Material" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Engineered from precision metal." },
     {
@@ -31,8 +61,28 @@
       "label": "Body copy",
       "default": "A solid metal body, finished by hand and machined to a tolerance most cards never see. The NFC layer sits invisibly inside - nothing about the surface hints at the technology underneath until the moment it's tapped."
     },
-    { "type": "image_picker", "id": "image", "label": "Material close-up photo" }
+    { "type": "image_picker", "id": "image", "label": "Material close-up photograph" }
   ],
-  "presets": [{ "name": "Signature material" }]
+  "blocks": [
+    {
+      "type": "spec",
+      "name": "Spec",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Material" },
+        { "type": "text", "id": "value", "label": "Value", "default": "Solid metal" }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "Signature material",
+      "blocks": [
+        { "type": "spec", "settings": { "label": "Body", "value": "Solid metal" } },
+        { "type": "spec", "settings": { "label": "Chip", "value": "NFC, sealed" } },
+        { "type": "spec", "settings": { "label": "Setup", "value": "None required" } }
+      ]
+    }
+  ]
 }
 {% endschema %}

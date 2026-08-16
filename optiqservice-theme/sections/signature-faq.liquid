@@ -1,0 +1,126 @@
+{%- comment -%}
+  Optiq Signature - FAQ.
+
+  This exists as its own section rather than restyling sections/faq.liquid
+  because that file is still used by templates/index.json and
+  page.membership.json, which run the site's original dark design system
+  (.section / .page-width / .kicker). Rewriting it in sig- classes would
+  have silently broken the styling of both of those pages. A separate
+  section is the honest fix: the Signature pages get a component that
+  belongs to their design system, and nothing else on the site moves.
+
+  Structure is hairline rows - no cards, no chevrons, no shadows. The
+  open/close affordance is a plus rotating into a minus, which is the least
+  decorative signal available for the job.
+
+  Built on <button aria-expanded> rather than <details>/<summary>: the
+  height transition uses grid-template-rows 0fr -> 1fr, which needs a
+  wrapper element that <details> does not give us without extra markup, and
+  <details> cannot animate its own open state at all. The button keeps the
+  same keyboard and screen-reader semantics.
+{%- endcomment -%}
+
+{%- assign items = section.blocks | where: 'type', 'question' -%}
+
+<section class="sig-section sig-section--ruled" id="sig-faq" data-sig-faq="{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="sig-wrap">
+    <div class="sig-faqlayout" data-o-reveal-group>
+      <div class="sig-faqlayout__head">
+        <p class="sig-meta" data-o-reveal="rise">
+          <span class="sig-meta__num">{{ section.settings.index | default: '07' }}</span>
+          <span>{{ section.settings.kicker | default: 'FAQ' | escape }}</span>
+        </p>
+        <h2 class="sig-h2" data-o-reveal="rise">{{ section.settings.heading | default: 'Questions, answered.' }}</h2>
+        {%- if section.settings.subheading != blank -%}
+          <p class="sig-body" data-o-reveal="rise">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+      </div>
+
+      <div class="sig-faqlayout__list" data-o-reveal="rise">
+        {%- if items.size > 0 -%}
+          <div class="sig-faq">
+            {%- for block in items -%}
+              {%- assign uid = section.id | append: '-' | append: block.id -%}
+              <div class="sig-faq__item" {{ block.shopify_attributes }}>
+                <button
+                  class="sig-faq__q"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="faq-a-{{ uid }}"
+                  id="faq-q-{{ uid }}"
+                >
+                  <span>{{ block.settings.question | escape }}</span>
+                  <span class="sig-faq__sign" aria-hidden="true"></span>
+                </button>
+                <div class="sig-faq__a" id="faq-a-{{ uid }}" role="region" aria-labelledby="faq-q-{{ uid }}">
+                  <div><p>{{ block.settings.answer }}</p></div>
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- else -%}
+          <p class="sig-body">Add question blocks to build this list.</p>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  // Scoped by the section's own id rather than a bare class lookup, so a
+  // second instance of this section on the same page keeps its own state
+  // (and so the theme editor re-rendering one does not rewire the other).
+  var root = document.querySelector('[data-sig-faq="{{ section.id }}"]');
+  if (!root) { return; }
+
+  [].slice.call(root.querySelectorAll('.sig-faq__q')).forEach(function (btn) {
+    var panel = document.getElementById(btn.getAttribute('aria-controls'));
+    if (!panel) { return; }
+
+    btn.addEventListener('click', function () {
+      var open = btn.getAttribute('aria-expanded') === 'true';
+
+      // One answer open at a time - a wall of simultaneously expanded rows
+      // loses the scannability that made the list worth having.
+      [].slice.call(root.querySelectorAll('.sig-faq__q')).forEach(function (other) {
+        if (other === btn) { return; }
+        other.setAttribute('aria-expanded', 'false');
+        var p = document.getElementById(other.getAttribute('aria-controls'));
+        if (p) { p.classList.remove('is-open'); }
+      });
+
+      btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+      panel.classList.toggle('is-open', !open);
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Signature FAQ",
+  "settings": [
+    { "type": "text", "id": "index", "label": "Section number", "default": "07" },
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "FAQ" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Questions, answered." },
+    { "type": "textarea", "id": "subheading", "label": "Subheading" }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "How does the card work?" },
+        { "type": "textarea", "id": "answer", "label": "Answer", "default": "The card has an NFC chip inside, programmed with your Google review link." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Signature FAQ",
+      "blocks": [{ "type": "question" }, { "type": "question" }, { "type": "question" }]
+    }
+  ]
+}
+{% endschema %}

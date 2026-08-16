@@ -1,27 +1,56 @@
 {%- comment -%}
-  Optiq Signature - final purchase. Deliberately does NOT run its own
-  add-to-cart: the configurator section above is the one real purchase
-  flow on this page (state, variant resolution, the actual /cart/add.js
-  call), so this section's CTA scrolls back up to it rather than
-  duplicating that logic here. Two independent "buy" paths that could
-  disagree is exactly the bug already found and removed once from
-  snippets/card-configurator.liquid - not repeating it on this page.
+  Optiq Signature - closing statement.
+
+  Deliberately does NOT run its own add-to-cart: the configurator/catalog
+  section above is the one real purchase flow on this page (state, variant
+  resolution, the actual /cart/add.js call), so this section's CTA scrolls
+  back up to it rather than duplicating that logic here. Two independent
+  "buy" paths that could disagree is exactly the bug already found and
+  removed once from snippets/card-configurator.liquid - not repeating it.
+
+  Composition: one oversized line of type seated on a full-bleed
+  photograph, price set opposite it. Previously this was a third
+  consecutive centred eyebrow/heading/lede/image/button stack, which by
+  that point in the page read as the same slide for the third time. A close
+  only has to be confident - so it is a statement and a price, nothing else.
+
+  The floor gradient is intentionally weak and bottom-only (transparent
+  until 38%), enough to seat the type without flattening the photograph the
+  way a full-frame scrim does.
 {%- endcomment -%}
 
-<section class="sig-section sig-section--marble sig-purchase" {{ section.shopify_attributes }}>
-  <div class="sig-wrap">
-    <span class="sig-eyebrow" data-o-reveal="fade">{{ section.settings.eyebrow | default: 'Optiq Signature' }}</span>
-    <h2 class="sig-h2" data-o-reveal="fade">{{ section.settings.heading | default: 'Own the Signature experience.' }}</h2>
-    <p class="sig-lede" data-o-reveal="fade" style="margin-inline: auto;">{{ section.settings.subheading | default: 'Finished in your choice of metal, programmed with your review link, engraved if you like. One card, built to last.' }}</p>
+{%- assign heading = section.settings.heading | default: 'Own the Signature experience.' -%}
 
-    <div class="sig-purchase__media" data-o-reveal="fade">
-      {% render 'sig-media', image: section.settings.image, label: 'Add closing product photo' %}
+<section class="sig-close" id="sig-close" {{ section.shopify_attributes }}>
+  <div class="sig-close__frame">
+    <div class="sig-close__media sig-mask" data-o-reveal>
+      {% render 'sig-media', image: section.settings.image, label: 'Add closing photograph', alt: heading %}
     </div>
 
-    <p class="sig-purchase__price" data-o-reveal="fade"><small>From</small> <b>{{ section.settings.price_label | default: '$99.99' }}</b></p>
+    <div class="sig-close__body">
+      <div class="sig-wrap sig-wrap--wide">
+        <div class="sig-close__grid" data-o-reveal-group>
+          <div class="sig-close__title">
+            <p class="sig-meta" data-o-reveal="rise" style="margin-bottom: var(--sig-s6);">
+              <span class="sig-meta__num">{{ section.settings.index | default: '06' }}</span>
+              <span>{{ section.settings.eyebrow | default: 'Optiq Signature' | escape }}</span>
+            </p>
+            <h2 class="sig-h1 sig-lines" data-o-reveal>
+              {%- assign words = heading | split: ' ' -%}
+              {%- for word in words -%}<span class="sig-lines__w">{{ word | escape }}</span>{% unless forloop.last %} {% endunless %}{%- endfor -%}
+            </h2>
+          </div>
 
-    <div class="sig-hero__actions" data-o-reveal="fade">
-      <a class="sig-cta sig-cta--solid" href="#sig-configurator">{{ section.settings.cta_label | default: 'Configure Yours' }}</a>
+          <div class="sig-close__side">
+            {%- if section.settings.price_label != blank -%}
+              <p class="sig-close__price" data-o-reveal="rise">
+                <small>From</small>{{ section.settings.price_label }}
+              </p>
+            {%- endif -%}
+            <a class="sig-cta sig-cta--on-black" href="{{ section.settings.cta_link | default: '#sig-configurator' }}" data-o-reveal="rise">{{ section.settings.cta_label | default: 'Configure Yours' }}</a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -30,17 +59,13 @@
 {
   "name": "Signature purchase",
   "settings": [
+    { "type": "text", "id": "index", "label": "Section number", "default": "06" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Optiq Signature" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Own the Signature experience." },
-    {
-      "type": "textarea",
-      "id": "subheading",
-      "label": "Subheading",
-      "default": "Finished in your choice of metal, programmed with your review link, engraved if you like. One card, built to last."
-    },
-    { "type": "image_picker", "id": "image", "label": "Closing product photo" },
-    { "type": "text", "id": "price_label", "label": "Starting price label", "default": "$99.99" },
-    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Configure Yours" }
+    { "type": "image_picker", "id": "image", "label": "Closing photograph" },
+    { "type": "text", "id": "price_label", "label": "Starting price", "default": "$99.99", "info": "Leave blank to hide the price entirely." },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Configure Yours" },
+    { "type": "url", "id": "cta_link", "label": "Button link", "info": "Defaults to #sig-configurator, which scrolls up to the purchase flow on this page." }
   ],
   "presets": [{ "name": "Signature purchase" }]
 }

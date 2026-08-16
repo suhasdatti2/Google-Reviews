@@ -1,25 +1,25 @@
 {%- comment -%}
-  Optiq Signature - hero. First section on /pages/signature. Carries the
-  sig-page marker class (design-system chrome-hiding rules keyed off
-  body:has(.sig-page), see assets/optiq-signature.css) and the page's only
-  nav element: a small identity bar rather than the marketing header, which
-  is hidden on this page entirely. Every other Signature section is a
-  sibling of this one, not a descendant - Shopify renders each JSON
-  template section as its own top-level block under <main> - so sig-page is
-  a presence marker only, not a wrapper: :has() just needs it to exist
-  once, anywhere, which this single section guarantees.
+  Optiq Signature - hero. First section on /pages/signature and the opening
+  of the reviews page. Carries the sig-page marker class (design-system
+  chrome-hiding rules keyed off body:has(.sig-page), see
+  assets/optiq-signature.css) and, in full-page mode, the page's only nav
+  element. Every other Signature section is a sibling of this one, not a
+  descendant - Shopify renders each JSON template section as its own
+  top-level block under <main> - so sig-page is a presence marker only, not
+  a wrapper: :has() just needs it to exist once, anywhere.
 
-  The cinematic entrance itself is the site's existing full-page preloader
-  (layout/theme.liquid) - it already runs on every non-home page, so this
-  section does not duplicate it. What it adds on top is the reveal-on-load
-  for the hero's own text stack, using the theme's existing scroll-reveal
-  engine (data-o-reveal, assets/optiq-motion.js) rather than new JS.
+  Composition: two acts. A white typographic stage (metadata line, display
+  headline, supporting copy, actions) and then a full-bleed image beneath
+  it. The previous version set centred text on top of the photo behind a
+  heavy dark gradient, which meant the headline's legibility depended on
+  whatever photo happened to be uploaded, and the gradient had to be strong
+  enough to cover the worst case. Type on white needs no scrim at all, and
+  the photograph gets to be a photograph.
 
-  Photo fills the whole hero, edge to edge, inset only by .sig-hero's own
-  padding (the "thick white border"). Text sits directly on top of the
-  photo - no scrim, so heading contrast depends on the uploaded photo
-  itself; keep the top third reasonably dark/uncluttered for the heading
-  to read clearly.
+  The headline is split into per-word spans so it can assemble left to
+  right on load rather than fading in as one block - see .sig-lines in the
+  stylesheet. Liquid does the splitting, so there is no JS involved and no
+  flash of unsplit text.
 {%- endcomment -%}
 
 {{ 'optiq-signature.css' | asset_url | stylesheet_tag }}
@@ -30,16 +30,22 @@
   body:has(.sig-page) in optiq-signature.css, and this section shows its
   own minimal "back to Optiq" topbar instead, since there is no other nav
   on that page. When this same section is embedded mid-page elsewhere (the
-  Google Review Cards page also runs its own real header/footer around it),
-  that takeover would wrongly hide that page's chrome too - so it is turned
-  off there, and the topbar (redundant next to a real header) is skipped.
+  reviews page also runs its own real header/footer around it), that
+  takeover would wrongly hide that page's chrome too - so it is turned off
+  there, and the topbar (redundant next to a real header) is skipped.
 {%- endcomment -%}
 {%- assign sig_full_page = true -%}
 {%- if section.settings.full_page_takeover == false -%}
   {%- assign sig_full_page = false -%}
 {%- endif -%}
 
-<section class="sig-hero{% if sig_full_page %} sig-page{% else %} sig-hero--embedded{% endif %}" id="sig-hero" {{ section.shopify_attributes }}>
+{%- assign heading = section.settings.heading | default: 'Optiq Signature' -%}
+
+<section
+  class="sig-hero{% if sig_full_page %} sig-page{% else %} sig-hero--embedded{% endif %}"
+  id="sig-hero"
+  {{ section.shopify_attributes }}
+>
   {%- if sig_full_page -%}
     <div class="sig-topbar">
       <a class="sig-topbar__mark" href="{{ routes.root_url }}">OPTIQ <span>Signature</span></a>
@@ -47,43 +53,126 @@
     </div>
   {%- endif -%}
 
-  <div class="sig-hero__frame">
-    <div class="sig-hero__media" data-o-reveal="fade">
-      {%- comment -%}
-        Cropped down from the uploaded photo's natural square, anchored top,
-        trimming further from the bottom only - width stays at the source's
-        full 1254px so nothing is cut from the sides. The lower portion
-        (marble counter, card's own printed CTA text, the tapping hand)
-        duplicated what this section's own overlay heading/subheading
-        already say, and read as cluttered underneath them.
-      {%- endcomment -%}
-      {% render 'sig-media', image: section.settings.hero_image, label: 'Add hero background photo', alt: section.settings.heading, width: 1254, height: 560, crop: 'top' %}
-    </div>
+  <div class="sig-hero__stage">
+    <div class="sig-hero__grid" data-o-reveal-group>
+      {%- if section.settings.eyebrow != blank -%}
+        <div class="sig-hero__meta">
+          <p class="sig-meta" data-o-reveal="rise">
+            <span class="sig-meta__num">{{ section.settings.index | default: '01' }}</span>
+            <span>{{ section.settings.eyebrow | escape }}</span>
+          </p>
+        </div>
+      {%- endif -%}
 
-    <div class="sig-hero__overlay">
-      <div class="sig-hero__text" data-o-reveal-group>
-        <span class="sig-eyebrow" data-o-reveal="fade">{{ section.settings.eyebrow | default: 'Introducing' }}</span>
-        <h1 class="sig-h1" data-o-reveal="fade">{{ section.settings.heading | default: 'OPTIQ Signature' }}</h1>
-        <p class="sig-hero__sub" data-o-reveal="fade">{{ section.settings.subheading | default: "The world's most refined NFC experience." }}</p>
-      </div>
+      <h1 class="sig-display sig-hero__title sig-lines" data-o-reveal>
+        {%- assign words = heading | split: ' ' -%}
+        {%- for word in words -%}<span class="sig-lines__w">{{ word | escape }}</span>{% unless forloop.last %} {% endunless %}{%- endfor -%}
+      </h1>
 
-      <div class="sig-hero__actions" data-o-reveal="fade">
-        <a class="sig-cta sig-cta--solid" href="{{ section.settings.cta_link | default: '#sig-configurator' }}">{{ section.settings.cta_label | default: 'Explore Signature' }}</a>
+      <div class="sig-hero__aside">
+        {%- if section.settings.subheading != blank -%}
+          <p class="sig-hero__sub" data-o-reveal="rise">{{ section.settings.subheading | escape }}</p>
+        {%- endif -%}
+
+        <div class="sig-hero__actions" data-o-reveal="rise">
+          <a class="sig-cta sig-cta--solid" href="{{ section.settings.cta_link | default: '#sig-configurator' }}">{{ section.settings.cta_label | default: 'Explore Signature' }}</a>
+          {%- if section.settings.cta2_label != blank -%}
+            <a class="sig-cta sig-cta--ghost" href="{{ section.settings.cta2_link | default: '#sig-gallery' }}">{{ section.settings.cta2_label | escape }}</a>
+          {%- endif -%}
+        </div>
       </div>
     </div>
   </div>
+
+  <div class="sig-hero__frame sig-mask" data-o-reveal>
+    <div class="sig-hero__media" data-sig-parallax="{{ section.id }}">
+      {% render 'sig-media', image: section.settings.hero_image, label: 'Add hero photograph', alt: heading, loading: 'eager' %}
+    </div>
+  </div>
 </section>
+
+<script>
+(function () {
+  // Hero parallax: the photograph drifts at ~88% of scroll speed inside its
+  // own overflow-hidden frame, which reads as depth without ever detaching
+  // from the layout.
+  //
+  // Cost control, because a scroll listener that fights the main thread is
+  // worse than no effect at all:
+  //   - transform only (composites on the GPU, no layout, no paint)
+  //   - reads scroll position once per rAF, never per scroll event
+  //   - an IntersectionObserver disconnects the loop entirely once the hero
+  //     leaves the viewport, so it costs nothing for the rest of the page
+  //   - opted out completely under prefers-reduced-motion
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { return; }
+
+  var media = document.querySelector('[data-sig-parallax="{{ section.id }}"]');
+  if (!media) { return; }
+
+  // Drive the <img> rather than its wrapper: the wrapper is the .sig-mask
+  // child, so it already owns a clip-path + scale for the entrance reveal,
+  // and writing an inline transform onto it would clobber that. Two
+  // separate elements, one effect each.
+  var layer = media.querySelector('img');
+  if (!layer) { return; }
+
+  var frame = media.parentElement;
+  var running = false;
+  var ticking = false;
+  var depth = 0.12;
+
+  // Scale up by exactly the drift range so the image can never expose an
+  // empty edge at either extreme of its travel.
+  layer.style.willChange = 'transform';
+  layer.style.transform = 'scale(' + (1 + depth) + ')';
+
+  function update() {
+    var rect = frame.getBoundingClientRect();
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    // -1 when the frame sits just below the fold, +1 once it has passed above.
+    var progress = (rect.top + rect.height / 2 - vh / 2) / (vh / 2 + rect.height / 2);
+    if (progress < -1) { progress = -1; } else if (progress > 1) { progress = 1; }
+    var shift = progress * depth * rect.height * 0.5;
+    layer.style.transform = 'translate3d(0,' + shift.toFixed(2) + 'px,0) scale(' + (1 + depth) + ')';
+    ticking = false;
+  }
+
+  function onScroll() {
+    if (ticking || !running) { return; }
+    ticking = true;
+    window.requestAnimationFrame(update);
+  }
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        running = e.isIntersecting;
+        if (running) { onScroll(); }
+      });
+    }, { rootMargin: '120px 0px' }).observe(frame);
+  } else {
+    running = true;
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  update();
+})();
+</script>
 
 {% schema %}
 {
   "name": "Signature hero",
   "settings": [
+    { "type": "text", "id": "index", "label": "Section number", "default": "01", "info": "Small editorial index shown before the eyebrow." },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Introducing" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "OPTIQ Signature" },
-    { "type": "text", "id": "subheading", "label": "Subheading", "default": "The world's most refined NFC experience." },
-    { "type": "image_picker", "id": "hero_image", "label": "Hero product photo" },
-    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Explore Signature" },
-    { "type": "url", "id": "cta_link", "label": "Button link", "info": "Defaults to #sig-configurator, which scrolls to the configurator section on this page." },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Optiq Signature" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "The world's most refined NFC experience." },
+    { "type": "image_picker", "id": "hero_image", "label": "Hero photograph" },
+    { "type": "text", "id": "cta_label", "label": "Primary button label", "default": "Explore Signature" },
+    { "type": "url", "id": "cta_link", "label": "Primary button link", "info": "Defaults to #sig-configurator." },
+    { "type": "text", "id": "cta2_label", "label": "Secondary link label", "info": "Optional. Renders as an understated text link beside the primary button." },
+    { "type": "url", "id": "cta2_link", "label": "Secondary link URL" },
     {
       "type": "checkbox",
       "id": "full_page_takeover",
