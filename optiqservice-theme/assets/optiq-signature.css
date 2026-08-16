@@ -912,9 +912,18 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
    tuned for Signature's own photography and overflowed with these
    products' photos. Contained within the card's own padding so it can't
    overflow the card, but sized to fill its box edge to edge - no
-   letterboxing, no wasted white space around a tiny centred thumbnail. */
+   letterboxing, no wasted white space around a tiny centred thumbnail.
+
+   Had no width cap of its own, so on a wide screen it filled the entire
+   form (over 1100px) with only the form's own padding around it - it
+   just reads as full-bleed once the image is that much bigger than its
+   margin. This is a purchase-flow preview, not a hero photo, so it does
+   not need to be that large: capped to 640x512 max and centred. */
 .sig-catalog__preview {
   position: relative;
+  width: 100%;
+  max-width: 640px;
+  margin-inline: auto;
   margin-bottom: 32px;
   aspect-ratio: 5 / 4;
   overflow: hidden;
