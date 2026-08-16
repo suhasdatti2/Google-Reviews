@@ -514,18 +514,21 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 
 .sig-hero__actions { display: flex; gap: var(--sig-s5); flex-wrap: wrap; align-items: center; }
 
-/* Fixed 1200x880 box rather than a viewport-height-driven clamp. The old
-   min-height: clamp(...vh...) rule scaled with the screen, which meant a
-   narrow, tall phone viewport could still push this past 600px of pure
-   photo before any page copy resumed - "smaller" has to mean an actual
-   pixel ceiling, not a smaller fraction of a screen that varies by
-   device. Capped at 1200x880 and centred; still fluid narrower than
-   that, so it shrinks further on a small phone rather than cropping. */
+/* Hard pixel ceiling: max-width 1200px, max-height 880px, on BOTH desktop
+   and mobile - not a fraction of the viewport that can still grow with
+   the screen. Locking the box to a 1200x880 aspect-ratio was a mistake
+   here: at a typical 1200-1600px desktop width the old 21:9 band was
+   ~700px tall, and forcing an 880-tall ratio at the new narrower width
+   made it TALLER, not smaller. Keeping a 16:9 shape instead - width and
+   height both shrink together at every screen size, and max-height is a
+   genuine ceiling this ratio never reaches (1200x675 at its largest), so
+   the box is smaller everywhere, not just narrower in one dimension. */
 .sig-hero__frame {
   position: relative;
   width: 100%;
   max-width: 1200px;
-  aspect-ratio: 1200 / 880;
+  max-height: 880px;
+  aspect-ratio: 16 / 9;
   margin-inline: auto;
   overflow: hidden;
   background: var(--sig-marble);
@@ -1039,9 +1042,13 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
    -------------------------------------------------------------------------- */
 
 .sig-close { position: relative; overflow: hidden; padding-block: 0; background: var(--sig-black); }
+/* Ceiling brought down from a near-fullscreen clamp(560px, 88vh, 900px)
+   - which reached 900px tall on any monitor over ~1024px, i.e. most
+   desktops - to a real cap that tops out well under that on every
+   screen. */
 .sig-close__frame {
   position: relative;
-  min-height: clamp(560px, 88vh, 900px);
+  min-height: clamp(380px, 50vh, 640px);
   display: flex;
   align-items: flex-end;
 }
