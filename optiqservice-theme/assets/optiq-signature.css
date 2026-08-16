@@ -514,13 +514,19 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 
 .sig-hero__actions { display: flex; gap: var(--sig-s5); flex-wrap: wrap; align-items: center; }
 
-/* Full-bleed image below the type. Masked reveal, and a very slight
-   parallax drift driven by the section markup's own transform. */
+/* Fixed 1200x880 box rather than a viewport-height-driven clamp. The old
+   min-height: clamp(...vh...) rule scaled with the screen, which meant a
+   narrow, tall phone viewport could still push this past 600px of pure
+   photo before any page copy resumed - "smaller" has to mean an actual
+   pixel ceiling, not a smaller fraction of a screen that varies by
+   device. Capped at 1200x880 and centred; still fluid narrower than
+   that, so it shrinks further on a small phone rather than cropping. */
 .sig-hero__frame {
   position: relative;
   width: 100%;
-  aspect-ratio: 21 / 9;
-  min-height: clamp(320px, 52vh, 660px);
+  max-width: 1200px;
+  aspect-ratio: 1200 / 880;
+  margin-inline: auto;
   overflow: hidden;
   background: var(--sig-marble);
 }
@@ -532,7 +538,6 @@ body:has(.sig-page) { padding-bottom: 0 !important; background: var(--sig-white-
 @media (max-width: 900px) {
   .sig-hero__title { grid-column: 1 / -1; }
   .sig-hero__aside { grid-column: 1 / -1; }
-  .sig-hero__frame { aspect-ratio: 4 / 3; }
 }
 @media (max-width: 640px) {
   .sig-hero { padding-top: clamp(72px, 12vh, 112px); }
