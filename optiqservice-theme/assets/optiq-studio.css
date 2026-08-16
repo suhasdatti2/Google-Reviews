@@ -177,7 +177,7 @@ body:has(.stu-page) { padding-bottom: 0 !important; }
 .stu-hero {
   position: relative;
   width: 100%;
-  min-height: clamp(460px, 86svh, 880px);
+  min-height: clamp(320px, 52svh, 560px);
   display: flex;
   align-items: flex-end;
   overflow: hidden;
@@ -195,17 +195,34 @@ body:has(.stu-page) { padding-bottom: 0 !important; }
 }
 .stu-hero__media .stu-slot { min-height: 0; }
 
+/* The source photography is shot against a dark charcoal/marble backdrop,
+   which is baked into the pixels and cannot be recoloured by CSS - this
+   wash is what pulls it toward the page's premium clay/white palette
+   instead. soft-light lifts shadows toward the clay tone while leaving
+   the brightest highlights (the card metal, the printed text) closer to
+   their own colour, so the backdrop reads warm and light instead of
+   black without flattening the product photo into a solid tint. */
+.stu-hero__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #efe4d4;
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
 /* Legibility floor for the overlaid headline. Weighted to the bottom only,
    where the text actually sits, so the upper two thirds of the supplied
-   image stay untouched. */
+   image stay untouched. Warmed to match the clay wash above rather than
+   the flat black this used to darken toward. */
 .stu-hero__veil {
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg,
-    rgba(12, 11, 9, 0.28) 0%,
-    rgba(12, 11, 9, 0.05) 34%,
-    rgba(12, 11, 9, 0.22) 68%,
-    rgba(12, 11, 9, 0.72) 100%);
+    rgba(58, 46, 32, 0.22) 0%,
+    rgba(58, 46, 32, 0.04) 34%,
+    rgba(58, 46, 32, 0.18) 68%,
+    rgba(40, 30, 20, 0.66) 100%);
   pointer-events: none;
 }
 .stu-hero--no-veil .stu-hero__veil { display: none; }
@@ -253,7 +270,7 @@ body:has(.stu-page) { padding-bottom: 0 !important; }
 .stu-hero .stu-btn:hover { background: var(--stu-paper); color: var(--stu-ink); }
 
 @media (max-width: 700px) {
-  .stu-hero { min-height: 74svh; }
+  .stu-hero { min-height: 48svh; }
   .stu-hero__title { max-width: 12ch; }
 }
 
