@@ -56,11 +56,12 @@
       "blocks": {
         "ring1": { "type": "ring_option", "settings": {} },
         "ring2": { "type": "ring_option", "settings": {} },
+        "ring3": { "type": "ring_option", "settings": {} },
         "card1": { "type": "card_option", "settings": {} },
         "card2": { "type": "card_option", "settings": {} },
         "card3": { "type": "card_option", "settings": {} }
       },
-      "block_order": ["ring1", "ring2", "card1", "card2", "card3"],
+      "block_order": ["ring1", "ring2", "ring3", "card1", "card2", "card3"],
       "settings": {
         "eyebrow": "Make It Yours",
         "heading": "Choose Your Signature",
