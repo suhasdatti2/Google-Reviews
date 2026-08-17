@@ -132,9 +132,11 @@
             if slot == 'ring'
               assign p = ring
               assign slot_name = section.settings.ring_label | default: 'Ring'
+              assign slot_image = section.settings.ring_image
             else
               assign p = card
               assign slot_name = section.settings.card_label | default: 'Metal Card'
+              assign slot_image = section.settings.card_image
             endif
           -%}
           {% render 'bset-gallery',
@@ -142,7 +144,8 @@
              slot: slot,
              swatches: swatches,
              label: slot_name,
-             is_active: forloop.first %}
+             is_active: forloop.first,
+             main_image: slot_image %}
         {%- endfor -%}
       </div>
 
@@ -394,9 +397,11 @@
     { "type": "text", "id": "ring_handle", "label": "Ring product handle", "default": "optiq-signature-ring" },
     { "type": "text", "id": "ring_label", "label": "Ring switch label", "default": "Ring" },
     { "type": "richtext", "id": "ring_desc", "label": "Ring description", "info": "Leave blank to use the product's own description." },
+    { "type": "image_picker", "id": "ring_image", "label": "Ring photo", "info": "Shown in the gallery. For a photo per colour instead, use the \"Colour option\" blocks below." },
     { "type": "text", "id": "card_handle", "label": "Metal Card product handle", "default": "optiq-signature" },
     { "type": "text", "id": "card_label", "label": "Metal Card switch label", "default": "Metal Card" },
     { "type": "richtext", "id": "card_desc", "label": "Metal Card description", "info": "Leave blank to use the product's own description." },
+    { "type": "image_picker", "id": "card_image", "label": "Metal Card photo", "info": "Shown in the gallery. For a photo per finish instead, use the \"Colour option\" blocks below." },
 
     { "type": "header", "content": "Bundle" },
     {

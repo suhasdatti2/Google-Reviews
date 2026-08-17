@@ -6,25 +6,31 @@
   crossfades instead of fetching and reflowing.
 
   Photo sources, in order:
-    1. "Colour option" blocks for this slot that carry an image — these get
+    1. `main_image` - a single, directly-visible image_picker in the
+       section's own settings (no blocks to find first). This is the
+       simplest way to add a photo: one field, right in the section panel.
+    2. "Colour option" blocks for this slot that carry an image — these get
        data-shot-value so choosing that colour brings its own photo forward.
-    2. The product's own Shopify images.
-  With neither, a single flat placeholder stands in (prem-media), matching the
-  rest of the Premium pages.
+    3. The product's own Shopify images.
+  With none of the three, a single flat placeholder stands in (prem-media),
+  matching the rest of the Premium pages.
 
   The source list is walked twice — once for the stacked shots, once for the
   thumbnail strip. Liquid cannot write to two output buffers in one pass, and
-  duplicating the two short loops is clearer here than building an
-  intermediate array of image handles.
+  duplicating the short loops is clearer here than building an intermediate
+  array of image handles.
 
   The first slot renders visible rather than hidden, so with JavaScript off the
   page still shows a complete, buyable product instead of an empty frame.
 
-  Accepts: product, slot, swatches, label, is_active
+  Accepts: product, slot, swatches, label, is_active, main_image
 {%- endcomment -%}
 
 {%- liquid
   assign shot_n = 0
+  if main_image != blank
+    assign shot_n = shot_n | plus: 1
+  endif
   for b in swatches
     if b.settings.product == slot and b.settings.image != blank
       assign shot_n = shot_n | plus: 1
@@ -38,6 +44,13 @@
 <div class="bset-gallery" data-bset-gallery="{{ slot }}" data-bset-for="{{ slot }}"{% unless is_active %} hidden{% endunless %}>
   <div class="bset-media">
     {%- assign i = 0 -%}
+
+    {%- if main_image != blank -%}
+      <div class="bset-shot is-active" data-shot="0">
+        {% render 'prem-media', image: main_image, width: 1400, alt: label, label: label, loading: 'eager' %}
+      </div>
+      {%- assign i = i | plus: 1 -%}
+    {%- endif -%}
 
     {%- for b in swatches -%}
       {%- if b.settings.product == slot and b.settings.image != blank -%}
@@ -82,6 +95,17 @@
   {%- if shot_n > 1 -%}
     <div class="bset-thumbs" role="group" aria-label="{{ label | escape }} thumbnails">
       {%- assign t = 0 -%}
+
+      {%- if main_image != blank -%}
+        <button type="button"
+                class="bset-thumb{% if t == 0 %} is-active{% endif %}"
+                data-shot-go="{{ t }}"
+                aria-pressed="{% if t == 0 %}true{% else %}false{% endif %}"
+                aria-label="Show main photo">
+          {{ main_image | image_url: width: 220 | image_tag: alt: '', loading: 'lazy' }}
+        </button>
+        {%- assign t = t | plus: 1 -%}
+      {%- endif -%}
 
       {%- for b in swatches -%}
         {%- if b.settings.product == slot and b.settings.image != blank -%}
