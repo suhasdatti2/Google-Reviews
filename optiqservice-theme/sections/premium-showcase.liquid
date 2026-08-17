@@ -1,0 +1,57 @@
+{%- comment -%}
+  Premium Products - "The Ring" / "Metal Cards" two-card grid. Exactly two
+  fixed cards rather than a repeatable block list, since the wireframe is
+  specifically Ring + Metal Card, not an open-ended product grid.
+
+  The Ring has no real product yet, so its explore link defaults to "#" -
+  see the schema info text. Metal Cards defaults to the real, existing
+  Optiq Signature product.
+{%- endcomment -%}
+
+<section class="prem-showcase" id="prem-showcase" {{ section.shopify_attributes }}>
+  <div class="prem-wrap">
+    <div class="prem-showcase__grid">
+
+      <div class="prem-showcase__card">
+        <h3 class="prem-showcase__heading">{{ section.settings.ring_heading | default: 'The Ring' }}</h3>
+        <div class="prem-showcase__media">
+          {% render 'prem-media', image: section.settings.ring_image, label: 'Ring product image' %}
+        </div>
+        <p class="prem-showcase__caption">{{ section.settings.ring_caption | default: 'A symbol of commitment and identity.' }}</p>
+        <a class="prem-link" href="{{ section.settings.ring_url | default: '#' }}">{{ section.settings.ring_cta | default: 'Explore Rings' | escape }}</a>
+      </div>
+
+      <div class="prem-showcase__card">
+        <h3 class="prem-showcase__heading">{{ section.settings.cards_heading | default: 'Metal Cards' }}</h3>
+        <div class="prem-showcase__media">
+          {% render 'prem-media', image: section.settings.cards_image, label: 'Metal card product image' %}
+        </div>
+        <p class="prem-showcase__caption">{{ section.settings.cards_caption | default: 'Tap. Share. Leave an impression.' }}</p>
+        <a class="prem-link" href="{{ section.settings.cards_url | default: '/pages/signature' }}">{{ section.settings.cards_cta | default: 'Explore Cards' | escape }}</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Premium showcase",
+  "settings": [
+    { "type": "header", "content": "The Ring" },
+    { "type": "text", "id": "ring_heading", "label": "Heading", "default": "The Ring" },
+    { "type": "image_picker", "id": "ring_image", "label": "Photo" },
+    { "type": "text", "id": "ring_caption", "label": "Caption", "default": "A symbol of commitment and identity." },
+    { "type": "text", "id": "ring_cta", "label": "Link label", "default": "Explore Rings" },
+    { "type": "url", "id": "ring_url", "label": "Link URL", "info": "The Ring is not a real product yet - link this once it exists. Defaults to a dead link (#)." },
+
+    { "type": "header", "content": "Metal Cards" },
+    { "type": "text", "id": "cards_heading", "label": "Heading", "default": "Metal Cards" },
+    { "type": "image_picker", "id": "cards_image", "label": "Photo" },
+    { "type": "text", "id": "cards_caption", "label": "Caption", "default": "Tap. Share. Leave an impression." },
+    { "type": "text", "id": "cards_cta", "label": "Link label", "default": "Explore Cards" },
+    { "type": "url", "id": "cards_url", "label": "Link URL", "info": "Defaults to /pages/signature, the existing Optiq Signature metal card page." }
+  ],
+  "presets": [{ "name": "Premium showcase" }]
+}
+{% endschema %}

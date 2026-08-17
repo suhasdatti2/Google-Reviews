@@ -1,0 +1,75 @@
+{%- comment -%}
+  Premium Products - "Get In Touch" closing block. Matches the wireframe's
+  layout (heading/body/link left, an Email/Phone/Instagram/Location list
+  right), but the wireframe's own contact values ("your@email.com",
+  "(000) 000-0000", "@optiq.signature", "Seattle, Washington, USA") are
+  obviously placeholder text, not real facts about this business - keeping
+  them as literal defaults would put fake contact info on a real page.
+
+  Email defaults to the store's actual address (settings_data.json:
+  sales@optiqservice.com). Phone, Instagram and location are real facts
+  this theme has never stated anywhere, so they default to blank and each
+  row hides itself rather than showing an invented value - the merchant
+  fills in whichever apply.
+{%- endcomment -%}
+
+<section class="prem-contact" id="prem-contact" {{ section.shopify_attributes }}>
+  <div class="prem-wrap">
+    <div class="prem-contact__grid">
+      <div>
+        <h2 class="prem-contact__heading">{{ section.settings.heading | default: 'Get In Touch' }}</h2>
+        {%- if section.settings.body != blank -%}
+          <p class="prem-contact__body">{{ section.settings.body }}</p>
+        {%- endif -%}
+        {%- if section.settings.cta_label != blank -%}
+          <a class="prem-link" href="{{ section.settings.cta_link | default: '/pages/contact' }}">{{ section.settings.cta_label | escape }}</a>
+        {%- endif -%}
+      </div>
+
+      <dl class="prem-contact__list">
+        {%- if section.settings.email != blank -%}
+          <div class="prem-contact__row">
+            <dt>Email</dt>
+            <dd><a href="mailto:{{ section.settings.email }}">{{ section.settings.email }}</a></dd>
+          </div>
+        {%- endif -%}
+        {%- if section.settings.phone != blank -%}
+          <div class="prem-contact__row">
+            <dt>Phone</dt>
+            <dd><a href="tel:{{ section.settings.phone | remove: ' ' | remove: '(' | remove: ')' | remove: '-' }}">{{ section.settings.phone }}</a></dd>
+          </div>
+        {%- endif -%}
+        {%- if section.settings.instagram != blank -%}
+          <div class="prem-contact__row">
+            <dt>Instagram</dt>
+            <dd><a href="https://instagram.com/{{ section.settings.instagram | remove: '@' }}" target="_blank" rel="noopener">{{ section.settings.instagram }}</a></dd>
+          </div>
+        {%- endif -%}
+        {%- if section.settings.location != blank -%}
+          <div class="prem-contact__row">
+            <dt>Location</dt>
+            <dd>{{ section.settings.location }}</dd>
+          </div>
+        {%- endif -%}
+      </dl>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Premium contact",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Get In Touch" },
+    { "type": "textarea", "id": "body", "label": "Body", "default": "We're here to help. Reach out for collaborations, inquiries, or support." },
+    { "type": "text", "id": "cta_label", "label": "Link label", "default": "Contact Us" },
+    { "type": "url", "id": "cta_link", "label": "Link URL", "info": "Defaults to /pages/contact" },
+    { "type": "header", "content": "Contact details" },
+    { "type": "text", "id": "email", "label": "Email", "default": "sales@optiqservice.com" },
+    { "type": "text", "id": "phone", "label": "Phone", "info": "Leave blank to hide this row." },
+    { "type": "text", "id": "instagram", "label": "Instagram handle", "info": "e.g. @optiqservice. Leave blank to hide this row." },
+    { "type": "text", "id": "location", "label": "Location", "info": "Leave blank to hide this row." }
+  ],
+  "presets": [{ "name": "Premium contact" }]
+}
+{% endschema %}

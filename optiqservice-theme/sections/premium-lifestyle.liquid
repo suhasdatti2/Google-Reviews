@@ -1,0 +1,20 @@
+{%- comment -%}
+  Premium Products - full-bleed lifestyle photo, two-line placeholder
+  label matching the reference wireframe exactly.
+{%- endcomment -%}
+
+<section class="prem-section" id="prem-lifestyle" {{ section.shopify_attributes }}>
+  <div class="prem-lifestyle__frame">
+    {% render 'prem-media', image: section.settings.image, label: 'Lifestyle image', label2: '(Person wearing ring and holding card)' %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Premium lifestyle",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Lifestyle photo" }
+  ],
+  "presets": [{ "name": "Premium lifestyle" }]
+}
+{% endschema %}

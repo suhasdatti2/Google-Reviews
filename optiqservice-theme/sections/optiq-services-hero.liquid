@@ -5,6 +5,7 @@
   assign row1_url = section.settings.row1_url | default: '/pages/ai-receptionist'
   assign row2_url = section.settings.row2_url | default: '/pages/google-review-cards'
   assign row3_url = section.settings.row3_url | default: '/pages/other-services'
+  assign row4_url = section.settings.row4_url | default: '/pages/premium-products'
   assign splash = ''
   if section.settings.splash
     assign splash = ' opsh--splash'
@@ -84,6 +85,15 @@
       >
         <span class="opsh__row-label">{{ section.settings.row3_label | escape }}</span>
       </a>
+      <a
+        class="opsh__row"
+        href="{{ row4_url }}"
+        data-opsh-choose="row4"
+        data-opsh-name="{{ section.settings.row4_label | escape }}"
+        style="--opsh-delay: 380ms;"
+      >
+        <span class="opsh__row-label">{{ section.settings.row4_label | escape }}</span>
+      </a>
     </nav>
 
     <div class="opsh__logo" aria-hidden="true" style="--opsh-delay: 420ms;">{{ section.settings.wordmark | escape }}</div>
@@ -121,7 +131,10 @@
     { "type": "url", "id": "row2_url", "label": "Link", "info": "Defaults to /pages/google-review-cards" },
     { "type": "header", "content": "Row 3" },
     { "type": "text", "id": "row3_label", "label": "Label", "default": "Other Services" },
-    { "type": "url", "id": "row3_url", "label": "Link", "info": "Defaults to /pages/other-services" }
+    { "type": "url", "id": "row3_url", "label": "Link", "info": "Defaults to /pages/other-services" },
+    { "type": "header", "content": "Row 4" },
+    { "type": "text", "id": "row4_label", "label": "Label", "default": "Premium Products" },
+    { "type": "url", "id": "row4_url", "label": "Link", "info": "Defaults to /pages/premium-products" }
   ],
   "presets": [{ "name": "Services splash" }]
 }

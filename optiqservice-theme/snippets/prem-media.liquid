@@ -1,0 +1,18 @@
+{%- comment -%}
+  Premium Products page media slot. Flat, borderless placeholder (no icon)
+  rather than snippets/sig-media's bordered+icon version - this page's
+  reference wireframe uses plain grey boxes with a centred label only, and
+  matching that placeholder style is part of matching the page.
+
+  Usage: {% render 'prem-media', image: section.settings.some_image, label: 'HERO IMAGE / VIDEO' %}
+  Optional label2 renders a second centred line under the first (used once,
+  for the lifestyle photo's two-line caption).
+{%- endcomment -%}
+{%- if image != blank -%}
+  {{ image | image_url: width: width | default: 1600 | image_tag: alt: alt | default: label, loading: loading | default: 'lazy' }}
+{%- else -%}
+  <div class="prem-ph">
+    <span>{{ label }}</span>
+    {%- if label2 != blank -%}<span>{{ label2 }}</span>{%- endif -%}
+  </div>
+{%- endif -%}

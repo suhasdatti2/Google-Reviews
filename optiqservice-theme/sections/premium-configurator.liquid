@@ -1,0 +1,75 @@
+{%- comment -%}
+  Premium Products - "Make It Yours / Choose Your Signature" preview.
+  Text left; Ring photo + Metal Card photo right, separated by a "+" and
+  each with four decorative swatch dots underneath, matching the
+  reference wireframe. The dots are presentational only (no real colour
+  options exist yet for either product) - marked aria-hidden rather than
+  built as buttons that would falsely imply they do something.
+{%- endcomment -%}
+
+<section class="prem-section prem-config" id="prem-config" {{ section.shopify_attributes }}>
+  <div class="prem-wrap">
+    <div class="prem-config__grid">
+      <div>
+        <p class="prem-config__eyebrow">{{ section.settings.eyebrow | default: 'Make It Yours' | escape }}</p>
+        <h2 class="prem-config__heading">{{ section.settings.heading | default: 'Choose Your Signature' }}</h2>
+        {%- if section.settings.body != blank -%}
+          <p class="prem-config__body">{{ section.settings.body }}</p>
+        {%- endif -%}
+        {%- if section.settings.cta_label != blank -%}
+          <a class="prem-link" href="{{ section.settings.cta_link | default: '#' }}">{{ section.settings.cta_label | escape }}</a>
+        {%- endif -%}
+      </div>
+
+      <div class="prem-config__pieces">
+        <div class="prem-config__piece">
+          <div class="prem-config__media">
+            {% render 'prem-media', image: section.settings.ring_image, label: 'Ring image' %}
+          </div>
+          <span class="prem-config__piece-label">{{ section.settings.ring_label | default: 'Ring' | escape }}</span>
+          <div class="prem-config__swatches" aria-hidden="true">
+            <span class="prem-config__swatch"></span>
+            <span class="prem-config__swatch"></span>
+            <span class="prem-config__swatch"></span>
+            <span class="prem-config__swatch"></span>
+          </div>
+        </div>
+
+        <span class="prem-config__plus" aria-hidden="true">+</span>
+
+        <div class="prem-config__piece">
+          <div class="prem-config__media">
+            {% render 'prem-media', image: section.settings.card_image, label: 'Metal card image' %}
+          </div>
+          <span class="prem-config__piece-label">{{ section.settings.card_label | default: 'Metal Card' | escape }}</span>
+          <div class="prem-config__swatches" aria-hidden="true">
+            <span class="prem-config__swatch"></span>
+            <span class="prem-config__swatch"></span>
+            <span class="prem-config__swatch"></span>
+            <span class="prem-config__swatch"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Premium configurator",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Make It Yours" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Choose Your Signature" },
+    { "type": "textarea", "id": "body", "label": "Body", "default": "Select the pieces that represent your identity. Wear it. Share it. Leave a lasting mark." },
+    { "type": "text", "id": "cta_label", "label": "Link label", "default": "Build Your Set" },
+    { "type": "url", "id": "cta_link", "label": "Link URL" },
+    { "type": "header", "content": "Ring" },
+    { "type": "image_picker", "id": "ring_image", "label": "Photo" },
+    { "type": "text", "id": "ring_label", "label": "Caption", "default": "Ring" },
+    { "type": "header", "content": "Metal Card" },
+    { "type": "image_picker", "id": "card_image", "label": "Photo" },
+    { "type": "text", "id": "card_label", "label": "Caption", "default": "Metal Card" }
+  ],
+  "presets": [{ "name": "Premium configurator" }]
+}
+{% endschema %}

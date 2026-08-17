@@ -1,0 +1,70 @@
+{%- comment -%}
+  Premium Products - nav + hero. First section on /pages/premium-products.
+  Carries the .prem-page marker (see assets/optiq-premium.css) so the
+  theme's own header/footer/dock hide themselves - this section shows its
+  own nav instead, matching the reference wireframe: left utility links,
+  centred OPTIQ / SIGNATURE wordmark, right utility links.
+
+  "The Ring" is not a real product yet (see the section's schema info
+  text), so its nav link and showcase CTA default to "#" rather than a
+  fabricated URL - the merchant fills it in once that product exists.
+  "Metal Cards" already exists as Optiq Signature, so that link defaults
+  to the real /pages/signature showcase.
+{%- endcomment -%}
+
+{{ 'optiq-premium.css' | asset_url | stylesheet_tag }}
+
+<div class="prem-page">
+  <header class="prem-nav">
+    <div class="prem-nav__inner">
+      <nav class="prem-nav__links" aria-label="Shop">
+        <a href="{{ section.settings.ring_url | default: '#' }}">{{ section.settings.ring_label | default: 'Ring' | escape }}</a>
+        <a href="{{ section.settings.cards_url | default: '/pages/signature' }}">{{ section.settings.cards_label | default: 'Metal Cards' | escape }}</a>
+        <a href="{{ section.settings.about_url | default: '/pages/about-us' }}">{{ section.settings.about_label | default: 'About' | escape }}</a>
+        <a href="{{ section.settings.collections_url | default: '/collections' }}">{{ section.settings.collections_label | default: 'Collections' | escape }}</a>
+      </nav>
+
+      <a class="prem-nav__mark" href="{{ routes.root_url }}">
+        <span class="prem-nav__mark-word">{{ section.settings.wordmark | default: 'Optiq' | escape }}</span>
+        <span class="prem-nav__mark-sub">{{ section.settings.wordmark_sub | default: 'Signature' | escape }}</span>
+      </a>
+
+      <nav class="prem-nav__links prem-nav__links--right" aria-label="Account">
+        <a href="{{ routes.search_url }}">Search</a>
+        <a href="{{ routes.account_url }}">Account</a>
+        <a href="{{ routes.cart_url }}">Cart ({{ cart.item_count }})</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="prem-section" id="prem-hero" {{ section.shopify_attributes }}>
+    <div class="prem-hero__frame">
+      {% render 'prem-media', image: section.settings.hero_image, label: 'Hero image / video' %}
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "Premium hero",
+  "settings": [
+    { "type": "header", "content": "Wordmark" },
+    { "type": "text", "id": "wordmark", "label": "Wordmark", "default": "Optiq" },
+    { "type": "text", "id": "wordmark_sub", "label": "Wordmark subtitle", "default": "Signature" },
+
+    { "type": "header", "content": "Nav links" },
+    { "type": "text", "id": "ring_label", "label": "Ring label", "default": "Ring" },
+    { "type": "url", "id": "ring_url", "label": "Ring link", "info": "The Ring is not a real product yet - link this once it exists. Defaults to a dead link (#)." },
+    { "type": "text", "id": "cards_label", "label": "Metal Cards label", "default": "Metal Cards" },
+    { "type": "url", "id": "cards_url", "label": "Metal Cards link", "info": "Defaults to /pages/signature, the existing Optiq Signature metal card page." },
+    { "type": "text", "id": "about_label", "label": "About label", "default": "About" },
+    { "type": "url", "id": "about_url", "label": "About link", "info": "Defaults to /pages/about-us" },
+    { "type": "text", "id": "collections_label", "label": "Collections label", "default": "Collections" },
+    { "type": "url", "id": "collections_url", "label": "Collections link", "info": "Defaults to /collections" },
+
+    { "type": "header", "content": "Hero" },
+    { "type": "image_picker", "id": "hero_image", "label": "Hero photo" }
+  ],
+  "presets": [{ "name": "Premium hero" }]
+}
+{% endschema %}
