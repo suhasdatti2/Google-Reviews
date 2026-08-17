@@ -1,0 +1,482 @@
+{%- comment -%}
+  BUILD YOUR SET — the purchase experience behind the CTA of the same name.
+
+  Three columns, matching the supplied wireframe: identity left, photography
+  centre, purchase panel right. One panel serves both products; switching
+  between Ring and Metal Card swaps the identity, the gallery and the option
+  set, so ring-only controls never appear under a card and vice versa.
+
+  Everything on this page is driven by REAL product data. The two products are
+  looked up by handle through all_products, so their options, option values,
+  variants, prices and availability all come from Shopify — nothing about the
+  catalogue is hard-coded here. Add a size in the admin and it appears; sell
+  out of one and its chip strikes through.
+
+  Purchasing reuses the theme's existing cart rather than introducing a second
+  one: this is a genuine <form action="/cart/add"> whose submit is picked up by
+  assets/optiq-cart.js (AJAX add, drawer repaint via the Section Rendering API,
+  optiq:cart:updated event). assets/optiq-buildset.js only validates the
+  selection first. With JS off the form still posts and Shopify still adds the
+  pre-selected variant.
+
+  The bundle saving is a real Shopify automatic discount (Buy Ring → Metal Card
+  discounted), so it lands in the cart and at checkout on its own. The setting
+  below is the DISPLAY figure only; it is stated as such in the schema so the
+  two cannot silently disagree.
+{%- endcomment -%}
+
+{{ 'optiq-premium.css' | asset_url | stylesheet_tag }}
+{{ 'optiq-buildset.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'optiq-buildset.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign ring = all_products[section.settings.ring_handle]
+  assign card = all_products[section.settings.card_handle]
+
+  assign features = section.blocks | where: 'type', 'feature'
+  assign swatches = section.blocks | where: 'type', 'swatch'
+
+  assign slots = 'ring,card' | split: ','
+
+  assign bundle_cents = section.settings.bundle_discount | times: 100 | round
+-%}
+
+<div class="prem-page" data-bset-root>
+  {% render 'prem-nav',
+     wordmark: section.settings.wordmark,
+     wordmark_sub: section.settings.wordmark_sub,
+     ring_url: section.settings.nav_ring_url,
+     cards_url: section.settings.nav_cards_url,
+     about_url: section.settings.nav_about_url,
+     collections_url: section.settings.nav_collections_url %}
+
+  <section class="bset" {{ section.shopify_attributes }}>
+    <div class="bset-layout">
+
+      {%- comment -%} ---------- LEFT: identity ---------- {%- endcomment -%}
+      <div class="bset-info">
+        <nav class="bset-crumbs" aria-label="Breadcrumb">
+          <a href="{{ routes.root_url }}">Home</a>
+          <span aria-hidden="true">/</span>
+          <a href="{{ section.settings.parent_url | default: '/pages/premium-products' }}">{{ section.settings.parent_label | default: 'Build Your Set' | escape }}</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page" data-bset-crumb>Product</span>
+        </nav>
+
+        {%- for slot in slots -%}
+          {%- liquid
+            if slot == 'ring'
+              assign p = ring
+              assign slot_desc = section.settings.ring_desc
+              assign slot_name = section.settings.ring_label | default: 'Ring'
+            else
+              assign p = card
+              assign slot_desc = section.settings.card_desc
+              assign slot_name = section.settings.card_label | default: 'Metal Card'
+            endif
+          -%}
+
+          <div class="bset-head" data-bset-for="{{ slot }}"{% unless forloop.first %} hidden{% endunless %}>
+            <h1 class="bset-title">
+              {%- if p != blank -%}{{ p.title }}{%- else -%}{{ slot_name | escape }}{%- endif -%}
+            </h1>
+            <div class="bset-desc">
+              {%- if slot_desc != blank -%}
+                {{ slot_desc }}
+              {%- elsif p != blank -%}
+                {{ p.description }}
+              {%- endif -%}
+            </div>
+          </div>
+
+          <p class="bset-price-lead" data-bset-for="{{ slot }}"{% unless forloop.first %} hidden{% endunless %}>
+            {%- if p != blank -%}
+              {%- if p.price_min != p.price_max -%}<small>From</small>{%- endif -%}
+              {{ p.price_min | money }}
+            {%- else -%}
+              <small>Coming soon</small>&mdash;
+            {%- endif -%}
+          </p>
+
+          {%- comment -%}
+            `where` filters block properties, not block settings, so the
+            product a feature belongs to has to be matched by hand.
+          {%- endcomment -%}
+          {%- assign has_feature = false -%}
+          {%- for b in features -%}
+            {%- if b.settings.product == slot -%}{%- assign has_feature = true -%}{%- endif -%}
+          {%- endfor -%}
+
+          {%- if has_feature -%}
+            <ul class="bset-features" data-bset-for="{{ slot }}"{% unless forloop.first %} hidden{% endunless %}>
+              {%- for b in features -%}
+                {%- if b.settings.product == slot -%}
+                  <li class="bset-feature" {{ b.shopify_attributes }}>
+                    <span class="bset-feature__icon">{% render 'bset-icon', name: b.settings.icon %}</span>
+                    <span>
+                      <span class="bset-feature__title">{{ b.settings.title | escape }}</span>
+                      <span class="bset-feature__body">{{ b.settings.body | escape }}</span>
+                    </span>
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      {%- comment -%} ---------- CENTRE: photography ---------- {%- endcomment -%}
+      <div class="bset-stage">
+        {%- for slot in slots -%}
+          {%- liquid
+            if slot == 'ring'
+              assign p = ring
+              assign slot_name = section.settings.ring_label | default: 'Ring'
+            else
+              assign p = card
+              assign slot_name = section.settings.card_label | default: 'Metal Card'
+            endif
+          -%}
+          {% render 'bset-gallery',
+             product: p,
+             slot: slot,
+             swatches: swatches,
+             label: slot_name,
+             is_active: forloop.first %}
+        {%- endfor -%}
+      </div>
+
+      {%- comment -%} ---------- RIGHT: purchase panel ---------- {%- endcomment -%}
+      <div class="bset-panel">
+
+        <div class="bset-field bset-switchwrap">
+          <span class="bset-label" id="bset-switch-{{ section.id }}">Product</span>
+          <div class="bset-switch" role="group" aria-labelledby="bset-switch-{{ section.id }}">
+            {%- for slot in slots -%}
+              {%- liquid
+                if slot == 'ring'
+                  assign slot_name = section.settings.ring_label | default: 'Ring'
+                else
+                  assign slot_name = section.settings.card_label | default: 'Metal Card'
+                endif
+              -%}
+              <button type="button"
+                      class="bset-switch__btn"
+                      data-bset-switch="{{ slot }}"
+                      aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">{{ slot_name | escape }}</button>
+            {%- endfor -%}
+          </div>
+        </div>
+
+        <div class="bset-field bset-qtywrap">
+          <label class="bset-label" for="bset-qty-{{ section.id }}">Quantity</label>
+          <div class="bset-qty" data-bset-qty>
+            <button type="button" class="bset-qty__btn" data-bset-qty-step="-1" aria-label="Decrease quantity">&minus;</button>
+            <input class="bset-qty__input"
+                   id="bset-qty-{{ section.id }}"
+                   type="number"
+                   name="quantity"
+                   form="bset-form-{{ section.id }}"
+                   value="1"
+                   min="1"
+                   max="99"
+                   step="1"
+                   inputmode="numeric"
+                   data-bset-qty-input>
+            <button type="button" class="bset-qty__btn" data-bset-qty-step="1" aria-label="Increase quantity">&plus;</button>
+          </div>
+        </div>
+
+        {%- for slot in slots -%}
+          {%- liquid
+            if slot == 'ring'
+              assign p = ring
+            else
+              assign p = card
+            endif
+          -%}
+
+          <div class="bset-field bset-options" data-bset-for="{{ slot }}"{% unless forloop.first %} hidden{% endunless %}>
+            {%- if p != blank -%}
+              {%- for option in p.options_with_values -%}
+                {%- assign oi = forloop.index0 -%}
+                <div class="bset-optgroup{% unless forloop.first %} bset-optgroup--spaced{% endunless %}" role="group" aria-label="{{ option.name | escape }}">
+                  <span class="bset-label">{{ option.name | escape }}</span>
+
+                  {%- if oi == 0 -%}
+                    {%- comment -%} First option is the finish — real swatches. {%- endcomment -%}
+                    <div class="bset-swatches">
+                      {%- for value in option.values -%}
+                        {%- liquid
+                          assign val_key = value | downcase | strip
+                          assign dot_color = ''
+                          for sb in swatches
+                            assign sb_val = sb.settings.value | downcase | strip
+                            if sb.settings.product == slot and sb_val == val_key and sb.settings.color != blank
+                              assign dot_color = sb.settings.color
+                            endif
+                          endfor
+                        -%}
+                        {%- if dot_color != blank -%}
+                          {%- capture dot_style -%}background: {{ dot_color }};{%- endcapture -%}
+                        {%- else -%}
+                          {%- case val_key -%}
+                            {%- when 'gold' -%}
+                              {%- assign dot_style = 'background-image: linear-gradient(145deg,#E9CE86,#C9A227 52%,#9C7A1E);' -%}
+                            {%- when 'rose gold' -%}
+                              {%- assign dot_style = 'background-image: linear-gradient(145deg,#F0C4B4,#D08E76 52%,#A96A54);' -%}
+                            {%- when 'silver' -%}
+                              {%- assign dot_style = 'background-image: linear-gradient(145deg,#F2F2F2,#C4C4C4 52%,#9A9A9A);' -%}
+                            {%- when 'brushed silver' -%}
+                              {%- assign dot_style = 'background-image: linear-gradient(145deg,#F0F0F0,#C8C8C8 52%,#A2A2A2);' -%}
+                            {%- when 'black' -%}
+                              {%- assign dot_style = 'background-image: linear-gradient(145deg,#4A4A4A,#1C1C1C 52%,#0A0A0A);' -%}
+                            {%- when 'matte black metal' -%}
+                              {%- assign dot_style = 'background-image: linear-gradient(145deg,#3C3C3C,#1A1A1A 52%,#0D0D0D);' -%}
+                            {%- when 'titanium gray' -%}
+                              {%- assign dot_style = 'background-image: linear-gradient(145deg,#C6C9CD,#8E9297 52%,#6B6F74);' -%}
+                            {%- else -%}
+                              {%- assign dot_style = '' -%}
+                          {%- endcase -%}
+                        {%- endif -%}
+
+                        <button type="button"
+                                class="bset-swatch"
+                                data-bset-value="{{ value | escape }}"
+                                data-bset-option-index="{{ oi }}"
+                                aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">
+                          <span class="bset-swatch__dot" style="{{ dot_style }}"></span>
+                          <span class="bset-swatch__name">{{ value | escape }}</span>
+                        </button>
+                      {%- endfor -%}
+                    </div>
+
+                  {%- else -%}
+                    <div class="bset-chips">
+                      {%- for value in option.values -%}
+                        <button type="button"
+                                class="bset-chip"
+                                data-bset-value="{{ value | escape }}"
+                                data-bset-option-index="{{ oi }}"
+                                aria-pressed="false">{{ value | escape }}</button>
+                      {%- endfor -%}
+                    </div>
+                  {%- endif -%}
+                </div>
+              {%- endfor -%}
+            {%- else -%}
+              <p class="bset-help">
+                This product is not available yet. Set its handle in the theme editor once it exists.
+              </p>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+
+        {%- if section.settings.bundle_enabled -%}
+          <div class="bset-field bset-bundlewrap">
+            <div class="bset-bundle" data-bset-bundle>
+              <p class="bset-bundle__eyebrow" data-bset-bundle-eyebrow>{{ section.settings.bundle_title | escape }}</p>
+              <p class="bset-bundle__body" data-bset-bundle-body></p>
+              <div class="bset-bundle__math" data-bset-bundle-math></div>
+              <button type="button" class="bset-bundle__cta" data-bset-bundle-cta hidden></button>
+            </div>
+          </div>
+        {%- endif -%}
+
+        <form class="bset-buy"
+              id="bset-form-{{ section.id }}"
+              action="{{ routes.cart_add_url }}"
+              method="post"
+              enctype="multipart/form-data"
+              data-bset-form>
+          <input type="hidden" name="id" data-bset-variant-id
+                 value="{% if ring != blank %}{{ ring.selected_or_first_available_variant.id }}{% endif %}">
+
+          <div class="bset-total">
+            <span class="bset-total__label">Total</span>
+            <span class="bset-total__value" data-bset-total aria-live="polite">
+              {%- if ring != blank -%}{{ ring.price_min | money }}{%- endif -%}
+            </span>
+          </div>
+          <p class="bset-total__note" data-bset-total-note hidden></p>
+
+          <p class="bset-alert" data-bset-alert role="alert" hidden></p>
+
+          <button type="submit" class="bset-add" data-bset-add>Add to Cart</button>
+
+          <p class="bset-secure">
+            {% render 'bset-icon', name: 'lock' %}
+            <span>{{ section.settings.secure_note | default: 'Secure Checkout' | escape }}</span>
+          </p>
+        </form>
+      </div>
+    </div>
+
+    {%- comment -%}
+      Real catalogue data for the script. Options, values, variants, prices and
+      availability all come straight from Shopify.
+    {%- endcomment -%}
+    <script type="application/json" data-bset-data>
+      {
+        "moneyFormat": {{ shop.money_format | json }},
+        "bundle": {
+          "enabled": {% if section.settings.bundle_enabled %}true{% else %}false{% endif %},
+          "discountCents": {{ bundle_cents | default: 0 }},
+          "title": {{ section.settings.bundle_title | json }},
+          "keys": ["ring", "card"]
+        },
+        "products": {
+          {%- for slot in slots -%}
+            {%- liquid
+              if slot == 'ring'
+                assign p = ring
+                assign slot_name = section.settings.ring_label | default: 'Ring'
+              else
+                assign p = card
+                assign slot_name = section.settings.card_label | default: 'Metal Card'
+              endif
+            -%}
+            {{ slot | json }}: {
+              "key": {{ slot | json }},
+              "switchLabel": {{ slot_name | json }},
+              {%- if p != blank -%}
+                "id": {{ p.id }},
+                "handle": {{ p.handle | json }},
+                "title": {{ p.title | json }},
+                "available": {{ p.available }},
+                "priceFrom": {{ p.price_min }},
+                "options": [
+                  {%- for option in p.options_with_values -%}
+                    {
+                      "name": {{ option.name | json }},
+                      "values": [{% for v in option.values %}{{ v | json }}{% unless forloop.last %},{% endunless %}{% endfor %}]
+                    }{% unless forloop.last %},{% endunless %}
+                  {%- endfor -%}
+                ],
+                "variants": [
+                  {%- for v in p.variants -%}
+                    {
+                      "id": {{ v.id }},
+                      "price": {{ v.price }},
+                      "available": {{ v.available }},
+                      "opts": [{% for o in v.options %}{{ o | json }}{% unless forloop.last %},{% endunless %}{% endfor %}]
+                    }{% unless forloop.last %},{% endunless %}
+                  {%- endfor -%}
+                ]
+              {%- else -%}
+                "id": 0,
+                "handle": "",
+                "title": {{ slot_name | json }},
+                "available": false,
+                "priceFrom": 0,
+                "options": [],
+                "variants": []
+              {%- endif -%}
+            }{% unless forloop.last %},{% endunless %}
+          {%- endfor -%}
+        }
+      }
+    </script>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "Build Your Set",
+  "settings": [
+    { "type": "header", "content": "Products" },
+    {
+      "type": "paragraph",
+      "content": "Both products are looked up by handle, so options, sizes, prices and stock always come from Shopify. Nothing about the catalogue is duplicated here."
+    },
+    { "type": "text", "id": "ring_handle", "label": "Ring product handle", "default": "optiq-signature-ring" },
+    { "type": "text", "id": "ring_label", "label": "Ring switch label", "default": "Ring" },
+    { "type": "richtext", "id": "ring_desc", "label": "Ring description", "info": "Leave blank to use the product's own description." },
+    { "type": "text", "id": "card_handle", "label": "Metal Card product handle", "default": "optiq-signature" },
+    { "type": "text", "id": "card_label", "label": "Metal Card switch label", "default": "Metal Card" },
+    { "type": "richtext", "id": "card_desc", "label": "Metal Card description", "info": "Leave blank to use the product's own description." },
+
+    { "type": "header", "content": "Bundle" },
+    {
+      "type": "paragraph",
+      "content": "The saving itself is a Shopify automatic discount (Discounts → Build Your Set — Ring + Metal Card), which is what actually applies it in the cart and at checkout. The figure below is only what this page displays — change both together so they cannot disagree."
+    },
+    { "type": "checkbox", "id": "bundle_enabled", "label": "Show the bundle offer", "default": true },
+    { "type": "text", "id": "bundle_title", "label": "Bundle heading", "default": "Build your set & save" },
+    { "type": "text", "id": "bundle_discount", "label": "Displayed saving", "default": "29.99", "info": "In dollars, e.g. 29.99. Must match the Shopify automatic discount." },
+
+    { "type": "header", "content": "Breadcrumb" },
+    { "type": "text", "id": "parent_label", "label": "Parent label", "default": "Build Your Set" },
+    { "type": "url", "id": "parent_url", "label": "Parent link", "info": "Defaults to /pages/premium-products" },
+    { "type": "text", "id": "secure_note", "label": "Checkout note", "default": "Secure Checkout" },
+
+    { "type": "header", "content": "Navigation" },
+    { "type": "text", "id": "wordmark", "label": "Wordmark", "default": "Optiq" },
+    { "type": "text", "id": "wordmark_sub", "label": "Wordmark subtitle", "default": "Signature" },
+    { "type": "url", "id": "nav_ring_url", "label": "Ring link" },
+    { "type": "url", "id": "nav_cards_url", "label": "Metal Cards link" },
+    { "type": "url", "id": "nav_about_url", "label": "About link" },
+    { "type": "url", "id": "nav_collections_url", "label": "Collections link" }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "select",
+          "id": "product",
+          "label": "Shown for",
+          "options": [
+            { "value": "ring", "label": "Ring" },
+            { "value": "card", "label": "Metal Card" }
+          ],
+          "default": "ring"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "shield", "label": "Shield" },
+            { "value": "droplet", "label": "Droplet" },
+            { "value": "diamond", "label": "Diamond" },
+            { "value": "ring", "label": "Ring" },
+            { "value": "card", "label": "Card" },
+            { "value": "box", "label": "Box" },
+            { "value": "spark", "label": "Spark" },
+            { "value": "lock", "label": "Lock" }
+          ],
+          "default": "spark"
+        },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "textarea", "id": "body", "label": "Description", "info": "Only state things about the product you can stand behind." }
+      ]
+    },
+    {
+      "type": "swatch",
+      "name": "Colour option",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Ties a photo and a swatch colour to one of the product's real option values. The values themselves live in Shopify — this only styles them."
+        },
+        {
+          "type": "select",
+          "id": "product",
+          "label": "Product",
+          "options": [
+            { "value": "ring", "label": "Ring" },
+            { "value": "card", "label": "Metal Card" }
+          ],
+          "default": "ring"
+        },
+        { "type": "text", "id": "value", "label": "Option value", "info": "Must match Shopify exactly, e.g. Gold, Brushed Silver." },
+        { "type": "color", "id": "color", "label": "Swatch colour", "info": "Leave blank for the built-in metallic finish." },
+        { "type": "image_picker", "id": "image", "label": "Photo", "info": "Shown when this option is selected." }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Build Your Set" }]
+}
+{% endschema %}

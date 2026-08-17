@@ -27,7 +27,7 @@
           <p class="prem-config__body">{{ section.settings.body }}</p>
         {%- endif -%}
         {%- if section.settings.cta_label != blank -%}
-          <a class="prem-link" href="{{ section.settings.cta_link | default: '#' }}">{{ section.settings.cta_label | escape }}</a>
+          <a class="prem-link" href="{{ section.settings.cta_link | default: '/pages/build-your-set' }}">{{ section.settings.cta_label | escape }}</a>
         {%- endif -%}
       </div>
 
@@ -149,7 +149,7 @@
     { "type": "text", "id": "heading", "label": "Heading", "default": "Choose Your Signature" },
     { "type": "textarea", "id": "body", "label": "Body", "default": "Select the pieces that represent your identity. Wear it. Share it. Leave a lasting mark." },
     { "type": "text", "id": "cta_label", "label": "Link label", "default": "Build Your Set" },
-    { "type": "url", "id": "cta_link", "label": "Link URL" },
+    { "type": "url", "id": "cta_link", "label": "Link URL", "info": "Defaults to /pages/build-your-set, the purchase page." },
     { "type": "header", "content": "Ring" },
     { "type": "paragraph", "content": "Used only if no Ring option blocks are added below." },
     { "type": "image_picker", "id": "ring_image", "label": "Fallback photo" },

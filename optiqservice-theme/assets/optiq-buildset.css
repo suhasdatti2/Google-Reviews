@@ -1,0 +1,648 @@
+/* ==========================================================================
+   OPTIQ — BUILD YOUR SET
+   --------------------------------------------------------------------------
+   The purchase experience behind the "Build Your Set" CTA. Layers on top of
+   assets/optiq-premium.css (loaded first by the section) and reuses its
+   tokens, so this page reads as the same world as /pages/premium-products
+   rather than a second design language.
+
+   Layout is the supplied wireframe exactly: a full-bleed three-column frame —
+   product information left, photography centre, purchase panel right, with
+   hairline rules between them. Nothing is boxed in a card; whitespace and the
+   rules do the work.
+
+   On mobile the three columns collapse to one flow. The column wrappers become
+   `display: contents` so their children reorder freely into the sequence the
+   brief specifies (image, name, price, info, switcher, customisation,
+   quantity, bundle, total, buy) instead of being trapped in column order.
+   ========================================================================== */
+
+:root {
+  --bset-pad-y: clamp(28px, 3.4vw, 52px);
+  --bset-pad-x: clamp(22px, 2.2vw, 40px);
+  --bset-gap: clamp(22px, 2.4vw, 34px);
+  --bset-rule: var(--prem-line);
+  --bset-radius: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   Frame
+   -------------------------------------------------------------------------- */
+
+.bset {
+  border-top: 1px solid var(--bset-rule);
+  background: var(--prem-white);
+  color: var(--prem-ink);
+  font-family: var(--prem-sans);
+}
+
+.bset-layout {
+  display: grid;
+  grid-template-columns:
+    clamp(230px, 21vw, 330px)
+    minmax(0, 1fr)
+    clamp(310px, 26vw, 420px);
+  align-items: stretch;
+}
+
+.bset-info,
+.bset-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--bset-gap);
+  padding: var(--bset-pad-y) var(--bset-pad-x);
+  min-width: 0;
+}
+.bset-info { border-right: 1px solid var(--bset-rule); }
+.bset-panel { border-left: 1px solid var(--bset-rule); }
+
+/* Centre column: photography sits on the paper tone and stays in view while
+   the purchase panel scrolls beside it. */
+.bset-stage {
+  background: var(--prem-paper);
+  position: sticky;
+  top: 0;
+  align-self: start;
+  min-width: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Shared type
+   -------------------------------------------------------------------------- */
+
+.bset-label {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--prem-ink-2);
+  margin: 0 0 12px;
+}
+
+.bset-crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--prem-ink-3);
+  margin: 0;
+}
+.bset-crumbs a { color: inherit; text-decoration: none; }
+.bset-crumbs a:hover { color: var(--prem-ink); }
+.bset-crumbs span[aria-current] { color: var(--prem-ink); }
+
+/* --------------------------------------------------------------------------
+   Left column — identity
+   -------------------------------------------------------------------------- */
+
+.bset-title {
+  font-family: var(--prem-serif);
+  font-weight: 500;
+  font-size: clamp(1.85rem, 1.2rem + 1.9vw, 2.6rem);
+  line-height: 1.08;
+  letter-spacing: 0.005em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.bset-desc {
+  font-size: 14px;
+  line-height: 1.72;
+  color: var(--prem-ink-2);
+  max-width: 34ch;
+  margin: 14px 0 0;
+}
+
+.bset-price-lead {
+  font-family: var(--prem-serif);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 1.95rem);
+  letter-spacing: 0.01em;
+  margin: 0;
+  padding-top: var(--bset-gap);
+  border-top: 1px solid var(--bset-rule);
+}
+.bset-price-lead small {
+  display: block;
+  font-family: var(--prem-sans);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--prem-ink-3);
+  margin-bottom: 8px;
+}
+
+/* Feature list */
+.bset-features {
+  display: grid;
+  gap: 22px;
+  margin: 0;
+  padding-top: var(--bset-gap);
+  border-top: 1px solid var(--bset-rule);
+  list-style: none;
+}
+.bset-feature {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 14px;
+  align-items: start;
+}
+.bset-feature__icon {
+  width: 26px;
+  height: 26px;
+  color: var(--prem-ink);
+  flex: none;
+}
+.bset-feature__icon svg { width: 100%; height: 100%; display: block; }
+.bset-feature__title {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  margin: 2px 0 4px;
+}
+.bset-feature__body {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--prem-ink-2);
+  margin: 0;
+  max-width: 30ch;
+}
+
+/* --------------------------------------------------------------------------
+   Centre column — gallery
+   -------------------------------------------------------------------------- */
+
+.bset-gallery { display: block; }
+
+.bset-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+/* Each candidate photo is stacked in the same box and crossfaded, so changing
+   colour never reflows the page. */
+.bset-shot {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 340ms var(--prem-ease);
+  pointer-events: none;
+}
+.bset-shot.is-active { opacity: 1; pointer-events: auto; }
+.bset-shot img,
+.bset-shot .prem-ph { width: 100%; height: 100%; }
+.bset-shot img { object-fit: cover; object-position: center; display: block; }
+
+/* Dots overlaid on the photo, as in the reference. */
+.bset-dots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  z-index: 2;
+}
+.bset-dot {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(17, 17, 16, 0.24);
+  cursor: pointer;
+  transition: background 200ms var(--prem-ease), transform 200ms var(--prem-ease);
+}
+.bset-dot:hover { transform: scale(1.25); }
+.bset-dot.is-active { background: var(--prem-ink); }
+.bset-dot:focus-visible { outline: 2px solid var(--prem-ink); outline-offset: 3px; }
+
+/* Thumbnail strip */
+.bset-thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 18px clamp(16px, 2vw, 28px) clamp(20px, 2.4vw, 30px);
+  border-top: 1px solid var(--bset-rule);
+}
+.bset-thumb {
+  width: clamp(56px, 5.4vw, 74px);
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  border: 1px solid transparent;
+  background: var(--prem-ph);
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 200ms var(--prem-ease), opacity 200ms var(--prem-ease);
+  opacity: 0.72;
+}
+.bset-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.bset-thumb:hover { opacity: 1; }
+.bset-thumb.is-active { border-color: var(--prem-ink); opacity: 1; }
+.bset-thumb:focus-visible { outline: 2px solid var(--prem-ink); outline-offset: 2px; }
+
+/* --------------------------------------------------------------------------
+   Right column — purchase panel
+   -------------------------------------------------------------------------- */
+
+.bset-field { margin: 0; }
+.bset-field + .bset-field { padding-top: var(--bset-gap); border-top: 1px solid var(--bset-rule); }
+
+/* Product switcher — segmented control */
+.bset-switch {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  border: 1px solid var(--prem-ink);
+  border-radius: var(--bset-radius);
+  overflow: hidden;
+}
+.bset-switch__btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--prem-ink);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 15px 10px;
+  cursor: pointer;
+  transition: background 220ms var(--prem-ease), color 220ms var(--prem-ease);
+}
+.bset-switch__btn + .bset-switch__btn { border-left: 1px solid var(--prem-ink); }
+.bset-switch__btn:hover { background: rgba(17, 17, 16, 0.06); }
+.bset-switch__btn[aria-pressed="true"] {
+  background: var(--prem-ink);
+  color: var(--prem-white);
+}
+.bset-switch__btn:focus-visible { outline: 2px solid var(--prem-ink); outline-offset: -4px; }
+
+/* Quantity stepper */
+.bset-qty {
+  display: inline-grid;
+  grid-template-columns: 46px minmax(56px, 1fr) 46px;
+  align-items: center;
+  border: 1px solid var(--bset-rule);
+  border-radius: var(--bset-radius);
+  overflow: hidden;
+  min-width: 168px;
+}
+.bset-qty__btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--prem-ink);
+  font-size: 17px;
+  line-height: 1;
+  height: 48px;
+  cursor: pointer;
+  transition: background 200ms var(--prem-ease);
+}
+.bset-qty__btn:hover:not(:disabled) { background: rgba(17, 17, 16, 0.05); }
+.bset-qty__btn:disabled { opacity: 0.28; cursor: not-allowed; }
+.bset-qty__btn:focus-visible { outline: 2px solid var(--prem-ink); outline-offset: -3px; }
+.bset-qty__input {
+  appearance: none;
+  -moz-appearance: textfield;
+  border: 0;
+  background: transparent;
+  text-align: center;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--prem-ink);
+  height: 48px;
+  width: 100%;
+  padding: 0;
+}
+.bset-qty__input::-webkit-outer-spin-button,
+.bset-qty__input::-webkit-inner-spin-button { appearance: none; margin: 0; }
+.bset-qty__input:focus-visible { outline: 2px solid var(--prem-ink); outline-offset: -3px; }
+
+/* Colour / finish swatches */
+.bset-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(14px, 1.6vw, 22px);
+}
+.bset-swatch {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  display: grid;
+  justify-items: center;
+  gap: 9px;
+  width: 62px;
+}
+.bset-swatch__dot {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--prem-ph-2);
+  box-shadow: inset 0 0 0 1px rgba(17, 17, 16, 0.16);
+  transition: transform 220ms var(--prem-ease), box-shadow 220ms var(--prem-ease);
+}
+.bset-swatch:hover .bset-swatch__dot { transform: translateY(-2px); }
+.bset-swatch[aria-pressed="true"] .bset-swatch__dot {
+  box-shadow:
+    inset 0 0 0 1px rgba(17, 17, 16, 0.16),
+    0 0 0 2px var(--prem-white),
+    0 0 0 3px var(--prem-ink);
+}
+.bset-swatch__name {
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--prem-ink-2);
+  text-align: center;
+  transition: color 200ms var(--prem-ease);
+}
+.bset-swatch[aria-pressed="true"] .bset-swatch__name { color: var(--prem-ink); font-weight: 600; }
+.bset-swatch:focus-visible { outline: 2px solid var(--prem-ink); outline-offset: 3px; border-radius: 6px; }
+/* Selection is never communicated by colour alone — the ring, the weight
+   change and the aria-pressed state all carry it. */
+.bset-swatch.is-unavailable .bset-swatch__dot { opacity: 0.32; }
+.bset-swatch.is-unavailable .bset-swatch__name { text-decoration: line-through; }
+
+/* Size / option chips */
+.bset-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.bset-chip {
+  appearance: none;
+  min-width: 46px;
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--bset-rule);
+  border-radius: var(--bset-radius);
+  background: transparent;
+  color: var(--prem-ink);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 200ms var(--prem-ease), background 200ms var(--prem-ease);
+}
+.bset-chip:hover:not(.is-unavailable) { border-color: var(--prem-ink-2); }
+.bset-chip[aria-pressed="true"] {
+  border-color: var(--prem-ink);
+  box-shadow: inset 0 0 0 1px var(--prem-ink);
+  font-weight: 700;
+}
+.bset-chip:focus-visible { outline: 2px solid var(--prem-ink); outline-offset: 2px; }
+.bset-chip.is-unavailable {
+  color: var(--prem-ink-3);
+  text-decoration: line-through;
+  cursor: not-allowed;
+  background: repeating-linear-gradient(
+    -45deg, transparent, transparent 5px,
+    rgba(17, 17, 16, 0.045) 5px, rgba(17, 17, 16, 0.045) 10px
+  );
+}
+
+/* A product with more than one option stacks its groups inside one field. */
+.bset-optgroup--spaced { margin-top: 26px; }
+
+.bset-help {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--prem-ink-2);
+  margin: 12px 0 0;
+}
+
+/* --------------------------------------------------------------------------
+   Bundle
+   -------------------------------------------------------------------------- */
+
+.bset-bundle {
+  border: 1px solid var(--prem-ink);
+  border-radius: var(--bset-radius);
+  padding: clamp(16px, 1.7vw, 22px);
+  display: grid;
+  gap: 12px;
+}
+.bset-bundle__eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--prem-ink);
+  margin: 0;
+}
+.bset-bundle__body {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--prem-ink-2);
+  margin: 0;
+}
+.bset-bundle__math {
+  display: grid;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--prem-ink-2);
+  margin: 0;
+}
+.bset-bundle__row { display: flex; justify-content: space-between; gap: 12px; }
+.bset-bundle__row--strike { color: var(--prem-ink-3); }
+.bset-bundle__row--strike span:last-child { text-decoration: line-through; }
+.bset-bundle__row--save { color: var(--prem-ink); font-weight: 700; }
+.bset-bundle__cta {
+  appearance: none;
+  width: 100%;
+  border: 1px solid var(--prem-ink);
+  border-radius: var(--bset-radius);
+  background: transparent;
+  color: var(--prem-ink);
+  font-family: inherit;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 13px 12px;
+  cursor: pointer;
+  transition: background 220ms var(--prem-ease), color 220ms var(--prem-ease);
+}
+.bset-bundle__cta:hover { background: var(--prem-ink); color: var(--prem-white); }
+.bset-bundle__cta:focus-visible { outline: 2px solid var(--prem-ink); outline-offset: 2px; }
+.bset-bundle.is-complete { background: var(--prem-ink); border-color: var(--prem-ink); }
+.bset-bundle.is-complete .bset-bundle__eyebrow { color: var(--prem-white); }
+.bset-bundle.is-complete .bset-bundle__body,
+.bset-bundle.is-complete .bset-bundle__math { color: rgba(255, 255, 255, 0.66); }
+.bset-bundle.is-complete .bset-bundle__row--save { color: var(--prem-white); }
+
+/* --------------------------------------------------------------------------
+   Total + buy
+   -------------------------------------------------------------------------- */
+
+.bset-buy {
+  padding-top: var(--bset-gap);
+  border-top: 1px solid var(--bset-rule);
+}
+
+.bset-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+.bset-total__label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--prem-ink-2);
+}
+.bset-total__value {
+  font-family: var(--prem-serif);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 1.95rem);
+  letter-spacing: 0.01em;
+}
+.bset-total__note {
+  font-size: 11.5px;
+  color: var(--prem-ink-2);
+  margin: 8px 0 0;
+  text-align: right;
+}
+
+.bset-add {
+  appearance: none;
+  width: 100%;
+  border: 0;
+  border-radius: var(--bset-radius);
+  background: var(--prem-ink);
+  color: var(--prem-white);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 20px 16px;
+  cursor: pointer;
+  transition: transform 200ms var(--prem-ease), opacity 200ms var(--prem-ease);
+}
+.bset-add:hover:not(:disabled) { opacity: 0.88; }
+.bset-add:active:not(:disabled) { transform: translateY(1px); }
+.bset-add:focus-visible { outline: 2px solid var(--prem-ink); outline-offset: 3px; }
+.bset-add:disabled { background: var(--prem-ph-2); color: var(--prem-ink-3); cursor: not-allowed; }
+.bset-add[data-loading] { opacity: 0.6; pointer-events: none; }
+
+.bset-secure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 11.5px;
+  color: var(--prem-ink-2);
+  margin: 14px 0 0;
+}
+.bset-secure svg { width: 13px; height: 13px; flex: none; }
+
+/* Inline validation / error */
+.bset-alert {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--prem-ink);
+  margin: 12px 0 0;
+  padding: 11px 13px;
+  border-left: 2px solid var(--prem-ink);
+  background: var(--prem-paper);
+}
+.bset-alert[hidden] { display: none; }
+
+/* --------------------------------------------------------------------------
+   Responsive — single flow, brief's mobile order, sticky buy bar
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 1080px) {
+  .bset-layout { grid-template-columns: clamp(200px, 24vw, 280px) minmax(0, 1fr); }
+  .bset-panel {
+    grid-column: 1 / -1;
+    border-left: 0;
+    border-top: 1px solid var(--bset-rule);
+  }
+}
+
+@media (max-width: 900px) {
+  .bset-layout { display: flex; flex-direction: column; }
+
+  /* Columns dissolve so their children can be ordered individually. */
+  .bset-info,
+  .bset-panel {
+    display: contents;
+  }
+  .bset-info > *,
+  .bset-panel > * {
+    padding-inline: var(--prem-gutter);
+  }
+  .bset-field + .bset-field,
+  .bset-price-lead,
+  .bset-features {
+    padding-top: 26px;
+    margin-top: 0;
+  }
+
+  .bset-stage { position: static; }
+  .bset-media { aspect-ratio: 4 / 3.4; }
+
+  .bset-crumbs      { order: 0; padding-top: 20px; }
+  .bset-stage       { order: 1; margin-top: 20px; }
+  .bset-head        { order: 2; padding-top: 26px; }
+  .bset-price-lead  { order: 3; border-top: 0; }
+  .bset-features    { order: 4; }
+  .bset-switchwrap  { order: 5; }
+  .bset-options     { order: 6; }
+  .bset-qtywrap     { order: 7; }
+  .bset-bundlewrap  { order: 8; }
+  .bset-buy         { order: 9; }
+
+  /* The buy block parks itself at the bottom of the viewport once reached. */
+  .bset-buy {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    background: var(--prem-white);
+    border-top: 1px solid var(--bset-rule);
+    padding-block: 16px calc(16px + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 -8px 24px rgba(17, 17, 16, 0.06);
+  }
+  .bset-add { padding-block: 18px; }
+  .bset-secure { margin-top: 10px; }
+}
+
+@media (max-width: 560px) {
+  .bset-swatch { width: 56px; }
+  .bset-swatch__dot { width: 36px; height: 36px; }
+  .bset-chip { min-width: 44px; height: 46px; }  /* comfortable touch target */
+  .bset-qty { width: 100%; }
+  .bset-thumb { width: 60px; }
+}
+
+/* --------------------------------------------------------------------------
+   Motion preferences
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .bset-shot,
+  .bset-dot,
+  .bset-thumb,
+  .bset-swatch__dot,
+  .bset-chip,
+  .bset-switch__btn,
+  .bset-add,
+  .bset-bundle__cta {
+    transition: none !important;
+  }
+  .bset-swatch:hover .bset-swatch__dot,
+  .bset-dot:hover { transform: none; }
+}
