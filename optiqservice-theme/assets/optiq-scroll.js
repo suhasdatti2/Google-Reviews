@@ -49,13 +49,23 @@
       // value actually driving the feel below. `duration` is left set as
       // the documented target/fallback if `lerp` is ever removed in favour
       // of duration-based easing instead.
-      lerp: 0.1,
-      duration: 1.2,
+      //
+      // Tuned for a fast, high-velocity feel (Maison Margiela's site is the
+      // reference) rather than the slower, floaty glide the previous
+      // lerp: 0.1 / wheelMultiplier: 1 produced. `lerp` closer to 1 makes
+      // the page catch up to the target position almost immediately each
+      // frame (snappier, less trailing lag); `wheelMultiplier` scales how
+      // far a single wheel tick moves the page (raw speed/distance). This
+      // only touches scroll velocity - the magnetic hover effect below is
+      // untouched.
+      lerp: 0.22,
+      duration: 0.65,
       smoothWheel: true,
       // Mobile touch scroll stays native (default) rather than simulated -
-      // it's already smooth on touch devices and cheaper to leave alone.
+      // it's already fast and smooth on touch devices and cheaper to leave
+      // alone.
       syncTouch: false,
-      wheelMultiplier: 1,
+      wheelMultiplier: 2.2,
       touchMultiplier: 1
     });
 
