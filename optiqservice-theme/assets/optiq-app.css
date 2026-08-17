@@ -61,7 +61,16 @@
   --oq-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   --oq-font: var(--o-font-body, "Inter", system-ui, -apple-system, "Segoe UI", sans-serif);
-  --oq-font-display: var(--o-font-display, var(--oq-font));
+  /* Retinted for the premium wireframe template: headings switch to the
+     same serif (Bodoni Moda) used across Build Your Set / Premium Products
+     / the Cards pages, so this authenticated app reads as part of the same
+     family. Deliberately typography-only - every colour token below is
+     unchanged, since ~1500 lines of component CSS reference them and some
+     (e.g. .oqauth-mark, .oqauth-head h1) hardcode #fff rather than reading
+     --oq-ink, so retinting the palette itself risks invisible text this
+     session cannot verify against the live app (the environment's egress
+     proxy blocks optiq.shop). No markup or JS touched either. */
+  --oq-font-display: "Bodoni Moda", Georgia, serif;
 
   --oq-sidebar-w: 266px;
   --oq-sidebar-w-collapsed: 78px;

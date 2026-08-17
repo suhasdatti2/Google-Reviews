@@ -1,0 +1,144 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+/*
+ * ------------------------------------------------------------
+ * Product template for the AI Receptionist.
+ *
+ * Assigned to the product via its "ai-receptionist" template suffix, so
+ * /products/ai-receptionist renders this landing page instead of the
+ * standard product layout. Blocks are enumerated here because section
+ * presets only apply when a section is added through the theme editor -
+ * a JSON template has to list them explicitly.
+ *
+ * hero/showcase/pricing/faq were rebuilt into the premium wireframe
+ * template (prem-air-*), matching templates/page.ai-receptionist.json so
+ * the product URL and the marketing page URL stay visually identical.
+ * "dashboard" (the sample console preview) keeps its exact original type,
+ * blocks and settings unchanged - only its own stylesheet was retinted.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "prem-air-hero",
+      "blocks": {
+        "p1": { "type": "proof", "settings": { "text": "Answers in under a second" } },
+        "p2": { "type": "proof", "settings": { "text": "Books straight into your calendar" } },
+        "p3": { "type": "proof", "settings": { "text": "Live in about a week" } },
+        "l1": { "type": "loss", "settings": { "title": "Missed Calls", "text": "The line rings out while you are mid-job, mid-appointment, or closed for the night." } },
+        "l2": { "type": "loss", "settings": { "title": "Lost Leads", "text": "Most callers will not leave a voicemail, and will not try a second time." } },
+        "l3": { "type": "loss", "settings": { "title": "Lost Revenue", "text": "Every unanswered call is a booking that was already yours to win." } },
+        "l4": { "type": "loss", "settings": { "title": "Competitors Win", "text": "They call the next name on the list, and someone else picks up first." } }
+      },
+      "block_order": ["p1", "p2", "p3", "l1", "l2", "l3", "l4"],
+      "settings": {}
+    },
+    "showcase": {
+      "type": "prem-air-showcase",
+      "blocks": {
+        "f1": { "type": "feature", "settings": { "icon": "clock", "title": "24/7 Answering", "text": "Nights, weekends and holidays included. The line is never unattended." } },
+        "f2": { "type": "feature", "settings": { "icon": "calendar", "title": "Appointment Booking", "text": "Reads your real availability and books straight into your calendar." } },
+        "f3": { "type": "feature", "settings": { "icon": "filter", "title": "Lead Qualification", "text": "Asks the questions that separate a real job from a time-waster." } },
+        "f4": { "type": "feature", "settings": { "icon": "database", "title": "CRM Integration", "text": "Every caller, note and outcome written to your existing system." } },
+        "f5": { "type": "feature", "settings": { "icon": "message", "title": "SMS Follow-ups", "text": "Confirmations, reminders and links sent before they hang up." } },
+        "f6": { "type": "feature", "settings": { "icon": "transfer", "title": "Call Transfers", "text": "Urgent calls routed to the right person on the first try." } },
+        "f7": { "type": "feature", "settings": { "icon": "handoff", "title": "Human Handoff", "text": "Steps aside the moment a caller needs a person, with full context." } },
+        "f8": { "type": "feature", "settings": { "icon": "analytics", "title": "Call Analytics", "text": "Volume, peak hours, booking rate and what callers actually ask for." } },
+        "f9": { "type": "feature", "settings": { "icon": "mic", "title": "Custom Voice", "text": "Tone, pace and phrasing tuned until it sounds like your business." } },
+        "f10": { "type": "feature", "settings": { "icon": "book", "title": "Business Knowledge", "text": "Hours, pricing, services, policies and the answers you repeat daily." } },
+        "s1": { "type": "step", "settings": { "title": "Business Setup", "text": "We connect your number, calendar and tools. Nothing to install." } },
+        "s2": { "type": "step", "settings": { "title": "Train the AI", "text": "We load your hours, services, pricing and the questions you answer most." } },
+        "s3": { "type": "step", "settings": { "title": "Launch", "text": "We test the whole flow end to end, tune the voice, then switch it live." } },
+        "s4": { "type": "step", "settings": { "title": "AI Answers Every Call", "text": "It picks up, qualifies, books and logs - then tells you what happened." } }
+      },
+      "block_order": ["f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10", "s1", "s2", "s3", "s4"],
+      "settings": {}
+    },
+    "dashboard": {
+      "type": "air-dashboard",
+      "blocks": {
+        "n1": { "type": "nav_item", "settings": { "icon": "home", "label": "Overview", "view": "overview" } },
+        "n2": { "type": "nav_item", "settings": { "icon": "phone", "label": "Call log", "badge": "8", "view": "call_log" } },
+        "n3": { "type": "nav_item", "settings": { "icon": "calendar", "label": "Bookings", "view": "bookings" } },
+        "n4": { "type": "nav_item", "settings": { "icon": "users", "label": "Callers", "view": "callers" } },
+        "n5": { "type": "nav_item", "settings": { "icon": "chart", "label": "Analytics", "view": "analytics" } },
+        "n6": { "type": "nav_item", "settings": { "icon": "mic", "label": "Voice & script", "view": "voice" } },
+        "st1": { "type": "stat", "settings": { "icon": "phone", "label": "Calls answered", "value": "482", "delta": "+18% vs last month" } },
+        "st2": { "type": "stat", "settings": { "icon": "calendar", "label": "Appointments booked", "value": "126", "delta": "+9% vs last month" } },
+        "st3": { "type": "stat", "settings": { "icon": "zap", "label": "Avg. response time", "value": "0.6s", "delta": "0.2s faster than last month" } },
+        "st4": { "type": "stat", "settings": { "icon": "phone-off", "label": "Missed calls", "value": "0", "delta": "Every call answered" } },
+        "a1": { "type": "activity", "settings": { "icon": "calendar", "title": "Booked appointment", "description": "Marisol Okafor · Saturday 10:30 AM", "time": "2 min ago" } },
+        "a2": { "type": "activity", "settings": { "icon": "phone", "title": "New caller", "description": "+1 (312) 555-0142 · first-time caller", "time": "14 min ago" } },
+        "a3": { "type": "activity", "settings": { "icon": "message", "title": "Question answered", "description": "Asked about pricing and hours", "time": "38 min ago" } },
+        "a4": { "type": "activity", "settings": { "icon": "calendar", "title": "Booked appointment", "description": "David Chen · Thursday 2:00 PM", "time": "1 hr ago" } },
+        "a5": { "type": "activity", "settings": { "icon": "transfer", "title": "Call transferred", "description": "Routed to the front desk", "time": "2 hr ago" } },
+        "m1": { "type": "meter", "settings": { "label": "Answer rate", "value": "98%", "percent": 98 } },
+        "m2": { "type": "meter", "settings": { "label": "Booking rate", "value": "41%", "percent": 41 } },
+        "m3": { "type": "meter", "settings": { "label": "Caller satisfaction", "value": "94%", "percent": 94 } },
+        "r1": { "type": "reason", "settings": { "label": "Book an appointment", "value": "186" } },
+        "r2": { "type": "reason", "settings": { "label": "Ask about pricing", "value": "94" } },
+        "r3": { "type": "reason", "settings": { "label": "Hours & location", "value": "61" } },
+        "r4": { "type": "reason", "settings": { "label": "Reschedule or cancel", "value": "38" } },
+        "r5": { "type": "reason", "settings": { "label": "General question", "value": "29" } },
+        "c1": { "type": "call_row", "settings": { "caller": "Marisol Okafor", "phone": "+1 (312) 847-1928", "reason": "Book an appointment", "duration": "2:14", "status": "booked", "time": "Today, 10:12 AM" } },
+        "c2": { "type": "call_row", "settings": { "caller": "Unknown caller", "phone": "+1 (312) 555-0142", "reason": "General question", "duration": "0:58", "status": "answered", "time": "Today, 9:47 AM" } },
+        "c3": { "type": "call_row", "settings": { "caller": "David Chen", "phone": "+1 (773) 212-9981", "reason": "Reschedule", "duration": "1:32", "status": "booked", "time": "Yesterday, 4:03 PM" } },
+        "c4": { "type": "call_row", "settings": { "caller": "Unknown caller", "phone": "+1 (630) 411-2207", "reason": "Pricing", "duration": "1:05", "status": "answered", "time": "Yesterday, 2:21 PM" } },
+        "c5": { "type": "call_row", "settings": { "caller": "Priya Nair", "phone": "+1 (312) 998-4471", "reason": "Urgent repair", "duration": "2:47", "status": "transferred", "time": "Yesterday, 11:15 AM" } },
+        "c6": { "type": "call_row", "settings": { "caller": "Unknown caller", "phone": "+1 (872) 305-6634", "reason": "Hours", "duration": "0:41", "status": "answered", "time": "Mon, 5:52 PM" } },
+        "c7": { "type": "call_row", "settings": { "caller": "Sam Rodriguez", "phone": "+1 (708) 662-1190", "reason": "Cancel appointment", "duration": "1:18", "status": "booked", "time": "Mon, 1:09 PM" } },
+        "c8": { "type": "call_row", "settings": { "caller": "Unknown caller", "phone": "+1 (312) 774-0025", "reason": "Hung up before connecting", "duration": "0:12", "status": "missed", "time": "Sun, 8:30 PM" } },
+        "b1": { "type": "booking_row", "settings": { "customer": "Marisol Okafor", "service": "Consultation", "datetime": "Saturday, 10:30 AM", "status": "confirmed" } },
+        "b2": { "type": "booking_row", "settings": { "customer": "David Chen", "service": "Repair estimate", "datetime": "Thursday, 2:00 PM", "status": "confirmed" } },
+        "b3": { "type": "booking_row", "settings": { "customer": "Priya Nair", "service": "Follow-up visit", "datetime": "Friday, 9:00 AM", "status": "pending" } },
+        "b4": { "type": "booking_row", "settings": { "customer": "Sam Rodriguez", "service": "Standard service", "datetime": "Monday, 1:30 PM", "status": "confirmed" } },
+        "b5": { "type": "booking_row", "settings": { "customer": "Angela Brooks", "service": "Consultation", "datetime": "Tuesday, 11:00 AM", "status": "pending" } },
+        "b6": { "type": "booking_row", "settings": { "customer": "New customer (callback requested)", "service": "Intro call", "datetime": "Wednesday, 3:15 PM", "status": "confirmed" } },
+        "u1": { "type": "caller_row", "settings": { "name": "Marisol Okafor", "phone": "+1 (312) 847-1928", "tag": "qualified", "last_call": "Last call today", "calls_count": "3 calls" } },
+        "u2": { "type": "caller_row", "settings": { "name": "David Chen", "phone": "+1 (773) 212-9981", "tag": "returning", "last_call": "Last call yesterday", "calls_count": "5 calls" } },
+        "u3": { "type": "caller_row", "settings": { "name": "Priya Nair", "phone": "+1 (312) 998-4471", "tag": "new", "last_call": "Last call yesterday", "calls_count": "1 call" } },
+        "u4": { "type": "caller_row", "settings": { "name": "Sam Rodriguez", "phone": "+1 (708) 662-1190", "tag": "returning", "last_call": "Last call Monday", "calls_count": "4 calls" } },
+        "u5": { "type": "caller_row", "settings": { "name": "Angela Brooks", "phone": "+1 (872) 441-0093", "tag": "new", "last_call": "Last call Monday", "calls_count": "1 call" } },
+        "u6": { "type": "caller_row", "settings": { "name": "Unknown caller", "phone": "+1 (630) 411-2207", "tag": "new", "last_call": "Last call yesterday", "calls_count": "1 call" } },
+        "d1": { "type": "day_bar", "settings": { "day": "Mon", "percent": 62 } },
+        "d2": { "type": "day_bar", "settings": { "day": "Tue", "percent": 74 } },
+        "d3": { "type": "day_bar", "settings": { "day": "Wed", "percent": 58 } },
+        "d4": { "type": "day_bar", "settings": { "day": "Thu", "percent": 81 } },
+        "d5": { "type": "day_bar", "settings": { "day": "Fri", "percent": 96 } },
+        "d6": { "type": "day_bar", "settings": { "day": "Sat", "percent": 88 } },
+        "d7": { "type": "day_bar", "settings": { "day": "Sun", "percent": 34 } },
+        "v1": { "type": "voice_line", "settings": { "speaker": "ai", "text": "Thanks for calling — how can I help you today?" } },
+        "v2": { "type": "voice_line", "settings": { "speaker": "caller", "text": "Do you have anything open Saturday morning?" } },
+        "v3": { "type": "voice_line", "settings": { "speaker": "ai", "text": "We do — I have 9:30 or 10:30 open. Which works better?" } },
+        "v4": { "type": "voice_line", "settings": { "speaker": "caller", "text": "10:30 is perfect." } }
+      },
+      "block_order": ["n1", "n2", "n3", "n4", "n5", "n6", "st1", "st2", "st3", "st4", "a1", "a2", "a3", "a4", "a5", "m1", "m2", "m3", "r1", "r2", "r3", "r4", "r5", "c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8", "b1", "b2", "b3", "b4", "b5", "b6", "u1", "u2", "u3", "u4", "u5", "u6", "d1", "d2", "d3", "d4", "d5", "d6", "d7", "v1", "v2", "v3", "v4"],
+      "settings": {}
+    },
+    "pricing": {
+      "type": "prem-air-pricing",
+      "settings": {}
+    },
+    "faq": {
+      "type": "prem-air-faq",
+      "blocks": {
+        "q1": { "type": "faq", "settings": { "question": "Can it book appointments?", "answer": "<p>Yes. It reads your real availability, offers the slots that are actually free, writes the booking into your calendar and sends a confirmation before the caller hangs up.</p>" } },
+        "q2": { "type": "faq", "settings": { "question": "Can it transfer calls?", "answer": "<p>Yes. You decide which situations warrant a transfer and where they go. Anything urgent or outside its remit is routed to a person, with the context already gathered.</p>" } },
+        "q3": { "type": "faq", "settings": { "question": "Can I customize the voice?", "answer": "<p>Yes. Voice, tone, pace and phrasing are tuned during setup, and we keep adjusting until it sounds like your business rather than a robot.</p>" } },
+        "q4": { "type": "faq", "settings": { "question": "Can it answer after hours?", "answer": "<p>That is most of the value. Nights, weekends and holidays are when the majority of missed calls happen, and it answers all of them the same way.</p>" } },
+        "q5": { "type": "faq", "settings": { "question": "Does it work with my phone number?", "answer": "<p>Yes. You keep your existing number and we forward it, so nothing on your printed material, listings or business profile has to change.</p>" } },
+        "q6": { "type": "faq", "settings": { "question": "How long does setup take?", "answer": "<p>Usually about a week from the moment we have your hours, services and calendar access. We test the whole flow before switching it live.</p>" } }
+      },
+      "block_order": ["q1", "q2", "q3", "q4", "q5", "q6"],
+      "settings": {}
+    }
+  },
+  "order": ["hero", "showcase", "dashboard", "pricing", "faq"]
+}

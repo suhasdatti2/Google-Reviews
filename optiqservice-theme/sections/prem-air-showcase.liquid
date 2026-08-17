@@ -1,0 +1,209 @@
+{%- comment -%}
+  AI Receptionist - small light "live call" demo card, features grid, and
+  how-it-works steps. Replaces air-showcase.liquid's visual system.
+
+  Deliberately light, not dark: the ONE dark section on this page is the
+  sample dashboard preview that follows this section (unchanged markup,
+  reskinned separately) - stacking a second dark moment here would be more
+  black than the brief asked for.
+{%- endcomment -%}
+
+{{ 'optiq-premium.css' | asset_url | stylesheet_tag }}
+{{ 'prem-air.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign features = section.blocks | where: 'type', 'feature'
+  assign steps = section.blocks | where: 'type', 'step'
+-%}
+
+<section class="prem-section prem-air-section" id="prem-air-console" {{ section.shopify_attributes }}>
+  <div class="prem-wrap">
+    <div class="prem-air-head">
+      {%- if section.settings.dash_eyebrow != blank -%}
+        <p class="prem-config__eyebrow">{{ section.settings.dash_eyebrow | escape }}</p>
+      {%- endif -%}
+      <h2 class="prem-config__heading">{{ section.settings.dash_heading | default: 'Meet your AI receptionist' }}</h2>
+      {%- if section.settings.dash_sub != blank -%}
+        <p class="prem-config__body">{{ section.settings.dash_sub | escape }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="prem-air-call" role="img" aria-label="Preview of a live AI call: transcript, caller detail and today's call statistics.">
+      <div class="prem-air-call__bar">
+        <span class="prem-air-call__dot"></span>
+        <span class="prem-air-call__dot"></span>
+        <span class="prem-air-call__dot"></span>
+        <span class="prem-air-call__name">Optiq Console</span>
+        <span class="prem-air-call__live"><span class="prem-air-call__pip"></span>Live call</span>
+      </div>
+      <div class="prem-air-call__body">
+        <p class="prem-air-call__meta"><strong>+1 (312) 847-1928</strong> &middot; Connected 00:42 &middot; First-time caller</p>
+        <div class="prem-air-txt">
+          <div class="prem-air-txt__line prem-air-txt__line--ai">
+            <span class="prem-air-txt__who">AI Receptionist</span>
+            <p class="prem-air-txt__body">Good evening, thanks for calling. How can I help you tonight?</p>
+          </div>
+          <div class="prem-air-txt__line">
+            <span class="prem-air-txt__who">Caller</span>
+            <p class="prem-air-txt__body">Hi, are you open Saturday? I need to get something looked at.</p>
+          </div>
+          <div class="prem-air-txt__line prem-air-txt__line--ai">
+            <span class="prem-air-txt__who">AI Receptionist</span>
+            <p class="prem-air-txt__body">We are, 9 to 4. I have 10:30 or 1:15 open on Saturday &mdash; which suits you better?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{%- if features.size > 0 -%}
+  <section class="prem-section prem-air-section" id="prem-air-features">
+    <div class="prem-wrap">
+      <div class="prem-air-head">
+        {%- if section.settings.feat_eyebrow != blank -%}
+          <p class="prem-config__eyebrow">{{ section.settings.feat_eyebrow | escape }}</p>
+        {%- endif -%}
+        <h2 class="prem-config__heading">{{ section.settings.feat_heading | default: 'Everything a great receptionist does' }}</h2>
+        {%- if section.settings.feat_sub != blank -%}
+          <p class="prem-config__body">{{ section.settings.feat_sub | escape }}</p>
+        {%- endif -%}
+      </div>
+
+      <div class="prem-air-feat__grid">
+        {%- for block in features -%}
+          <article class="prem-air-feat__card" {{ block.shopify_attributes }}>
+            <span class="prem-air-feat__icon">{% render 'bset-icon', name: block.settings.icon %}</span>
+            <h3 class="prem-air-feat__title">{{ block.settings.title | escape }}</h3>
+            {%- if block.settings.text != blank -%}
+              <p class="prem-air-feat__text">{{ block.settings.text | escape }}</p>
+            {%- endif -%}
+          </article>
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{%- if steps.size > 0 -%}
+  <section class="prem-section prem-air-section" id="prem-air-how">
+    <div class="prem-wrap">
+      <div class="prem-air-head">
+        {%- if section.settings.how_eyebrow != blank -%}
+          <p class="prem-config__eyebrow">{{ section.settings.how_eyebrow | escape }}</p>
+        {%- endif -%}
+        <h2 class="prem-config__heading">{{ section.settings.how_heading | default: 'How it works' }}</h2>
+        {%- if section.settings.how_sub != blank -%}
+          <p class="prem-config__body">{{ section.settings.how_sub | escape }}</p>
+        {%- endif -%}
+      </div>
+
+      <ol class="prem-air-steps">
+        {%- for block in steps -%}
+          <li class="prem-air-step" {{ block.shopify_attributes }}>
+            <span class="prem-air-step__disc">{{ forloop.index }}</span>
+            <h3 class="prem-air-step__title">{{ block.settings.title | escape }}</h3>
+            <p class="prem-air-step__text">{{ block.settings.text | escape }}</p>
+          </li>
+        {%- endfor -%}
+      </ol>
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "AI Receptionist showcase",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Live call preview" },
+    { "type": "text", "id": "dash_eyebrow", "label": "Eyebrow", "default": "The console" },
+    { "type": "text", "id": "dash_heading", "label": "Heading", "default": "Meet your AI receptionist" },
+    {
+      "type": "textarea",
+      "id": "dash_sub",
+      "label": "Subheading",
+      "default": "Every call answered, transcribed, qualified and booked - visible in one place, as it happens."
+    },
+    { "type": "header", "content": "Features" },
+    { "type": "text", "id": "feat_eyebrow", "label": "Eyebrow", "default": "Capabilities" },
+    { "type": "text", "id": "feat_heading", "label": "Heading", "default": "Everything a great receptionist does" },
+    {
+      "type": "textarea",
+      "id": "feat_sub",
+      "label": "Subheading",
+      "default": "Trained on your business, working the hours you cannot."
+    },
+    { "type": "header", "content": "How it works" },
+    { "type": "text", "id": "how_eyebrow", "label": "Eyebrow", "default": "Getting live" },
+    { "type": "text", "id": "how_heading", "label": "Heading", "default": "How it works" },
+    {
+      "type": "textarea",
+      "id": "how_sub",
+      "label": "Subheading",
+      "default": "Four steps from first call with us to your phone never ringing out again."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "clock",
+          "options": [
+            { "value": "clock", "label": "Clock" },
+            { "value": "calendar", "label": "Calendar" },
+            { "value": "filter", "label": "Filter" },
+            { "value": "database", "label": "Database" },
+            { "value": "message", "label": "Message" },
+            { "value": "transfer", "label": "Transfer" },
+            { "value": "handoff", "label": "Handoff" },
+            { "value": "analytics", "label": "Analytics" },
+            { "value": "mic", "label": "Voice" },
+            { "value": "book", "label": "Knowledge" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "spark", "label": "Spark" }
+          ]
+        },
+        { "type": "text", "id": "title", "label": "Title", "default": "24/7 Answering" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Nights, weekends and holidays included." }
+      ]
+    },
+    {
+      "type": "step",
+      "name": "Step",
+      "limit": 4,
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Business Setup" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "We connect your number and calendar." }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    {
+      "name": "AI Receptionist showcase",
+      "blocks": [
+        { "type": "feature", "settings": { "icon": "clock", "title": "24/7 Answering", "text": "Nights, weekends and holidays included. The line is never unattended." } },
+        { "type": "feature", "settings": { "icon": "calendar", "title": "Appointment Booking", "text": "Reads your real availability and books straight into your calendar." } },
+        { "type": "feature", "settings": { "icon": "filter", "title": "Lead Qualification", "text": "Asks the questions that separate a real job from a time-waster." } },
+        { "type": "feature", "settings": { "icon": "database", "title": "CRM Integration", "text": "Every caller, note and outcome written to your existing system." } },
+        { "type": "feature", "settings": { "icon": "message", "title": "SMS Follow-ups", "text": "Confirmations, reminders and links sent before they hang up." } },
+        { "type": "feature", "settings": { "icon": "transfer", "title": "Call Transfers", "text": "Urgent calls routed to the right person on the first try." } },
+        { "type": "feature", "settings": { "icon": "handoff", "title": "Human Handoff", "text": "Steps aside the moment a caller needs a person, with full context." } },
+        { "type": "feature", "settings": { "icon": "analytics", "title": "Call Analytics", "text": "Volume, peak hours, booking rate and what callers actually ask for." } },
+        { "type": "feature", "settings": { "icon": "mic", "title": "Custom Voice", "text": "Tone, pace and phrasing tuned until it sounds like your business." } },
+        { "type": "feature", "settings": { "icon": "book", "title": "Business Knowledge", "text": "Hours, pricing, services, policies and the answers you repeat daily." } },
+        { "type": "step", "settings": { "title": "Business Setup", "text": "We connect your number, calendar and tools. Nothing to install." } },
+        { "type": "step", "settings": { "title": "Train the AI", "text": "We load your hours, services, pricing and the questions you answer most." } },
+        { "type": "step", "settings": { "title": "Launch", "text": "We tap-test the whole flow, tune the voice, then switch it live." } },
+        { "type": "step", "settings": { "title": "Every Call Answered", "text": "It picks up, qualifies, books and logs - and tells you what happened." } }
+      ]
+    }
+  ]
+}
+{% endschema %}
