@@ -1,0 +1,85 @@
+{%- comment -%}
+  Cards landing page - FAQ. Reuses the accordion classes/controller already
+  built for prem-product.liquid (.prem-pdp__acc*, data-o-acc / data-o-acc-
+  trigger - the theme-wide controller in assets/optiq-ui.js is class-
+  agnostic, so a second section using the same classes needs no JS of its
+  own).
+
+  Block schema and default copy are the real, curated Q&A already live on
+  this page (signature-faq), carried over verbatim rather than rewritten.
+{%- endcomment -%}
+
+{{ 'optiq-premium.css' | asset_url | stylesheet_tag }}
+{{ 'prem-product.css' | asset_url | stylesheet_tag }}
+{{ 'prem-cards.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign questions = section.blocks | where: 'type', 'question'
+-%}
+
+<section class="prem-section prem-cards-faq" id="prem-cards-faq" {{ section.shopify_attributes }}>
+  <div class="prem-wrap">
+    <div class="prem-cards-faq__head">
+      {%- if section.settings.kicker != blank -%}
+        <p class="prem-config__eyebrow">{{ section.settings.kicker | escape }}</p>
+      {%- endif -%}
+      <h2 class="prem-config__heading">{{ section.settings.heading | default: 'Questions, answered.' }}</h2>
+      {%- if section.settings.subheading != blank -%}
+        <p class="prem-config__body">{{ section.settings.subheading | escape }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- if questions.size > 0 -%}
+      <div class="prem-cards-faq__list prem-pdp__acc" data-o-acc>
+        {%- for block in questions -%}
+          <div class="prem-pdp__acc-item" {{ block.shopify_attributes }}>
+            <button
+              type="button"
+              class="prem-pdp__acc-trigger"
+              data-o-acc-trigger
+              aria-expanded="false"
+              aria-controls="prem-cards-faq-{{ block.id }}"
+            >
+              {{ block.settings.question | escape }}
+              <span class="prem-pdp__acc-sign" aria-hidden="true"></span>
+            </button>
+            <div class="prem-pdp__acc-panel" id="prem-cards-faq-{{ block.id }}">
+              <div><p>{{ block.settings.answer }}</p></div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cards FAQ",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "FAQ" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Questions, answered." },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Anything else? Email sales@optiqservice.com — we reply within one business day." }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question" },
+        { "type": "textarea", "id": "answer", "label": "Answer" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cards FAQ",
+      "blocks": [
+        { "type": "question" },
+        { "type": "question" },
+        { "type": "question" }
+      ]
+    }
+  ]
+}
+{% endschema %}

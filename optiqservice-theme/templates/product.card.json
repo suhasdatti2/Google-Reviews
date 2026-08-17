@@ -1,0 +1,101 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "prem-product",
+      "blocks": {
+        "b1": {
+          "type": "benefit",
+          "settings": {
+            "icon": "spark",
+            "title": "One tap, no typing",
+            "text": "Customers tap the card and your Google review page opens instantly, while the good experience is still fresh."
+          }
+        },
+        "b2": {
+          "type": "benefit",
+          "settings": {
+            "icon": "box",
+            "title": "Programmed for you",
+            "text": "Send us your review link at checkout and the card arrives set up, tested, and ready to use out of the box."
+          }
+        },
+        "b3": {
+          "type": "benefit",
+          "settings": {
+            "icon": "card",
+            "title": "No app, no QR code required",
+            "text": "Works with modern iPhones and Androids. Nothing to install, nothing to scan."
+          }
+        },
+        "b4": {
+          "type": "benefit",
+          "settings": {
+            "icon": "shield",
+            "title": "Built to stay on your counter",
+            "text": "A heavier, premium card designed for daily use for years, not something you hand out once."
+          }
+        },
+        "a1": {
+          "type": "accordion",
+          "settings": {
+            "heading": "How programming works",
+            "content": "<p>At checkout you'll enter your business name and Google review link. We program the chip, tap-test it on iPhone and Android, and ship it ready to use. If you'd rather send the link later, email it to sales@optiqservice.com with your order number.</p><p>Don't know your review link? Order anyway — we'll email you a quick guide to finding it, or find it for you if you share your business name and city.</p>"
+          }
+        },
+        "a2": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Shipping & returns",
+            "content": "<p>Every card is programmed with your review link and tap-tested before it ships. Most orders are prepared within a few business days, and you'll get a tracking email as soon as yours is on the way.</p><p>If a card ever arrives damaged or doesn't tap correctly, email sales@optiqservice.com and we'll sort out a replacement. Because each card is custom-programmed with your review link, we can't take back correctly working cards.</p>"
+          }
+        },
+        "a3": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Key details",
+            "content": "<p>Credit-card sized. NFC chip inside, powered by the customer's phone — no batteries, no charging. Works with almost all iPhones and Android phones released in the last several years. One-time purchase, no monthly fee.</p><p>A printed QR code can be added as an optional backup, but it is never required.</p>"
+          }
+        }
+      },
+      "block_order": ["b1", "b2", "b3", "b4", "a1", "a2", "a3"],
+      "settings": {
+        "tagline": "Programmed with your Google review link. One tap, no app, no QR code needed.",
+        "buy_label": "Add to Cart",
+        "show_payment_button": true,
+        "secure_note": "Secure Checkout",
+        "back_label": "Back to Collection",
+        "back_url": "",
+        "show_personalise": true,
+        "qr_note": "Optional backup for phones that cannot tap.",
+        "show_delivery": true,
+        "ship_min_days": 3,
+        "ship_max_days": 7,
+        "show_description": false,
+        "main_counter_card_product_image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_41_03_PM_4.png",
+        "bulk_square_handout_cards_product_image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_11_43_27_PM_2.png",
+        "bulk_restaurant_pack_product_image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_11_43_27_PM_1.png"
+      }
+    },
+    "17849212515ccb6a18": {
+      "type": "apps",
+      "blocks": {
+        "appstle_memberships_appstle_membership_product_page_widget_fffttd": {
+          "type": "shopify://apps/appstle-memberships/blocks/appstle-membership-product-page-widget/76528d70-5fbe-48f8-8e19-590d109aa2b7",
+          "settings": {}
+        }
+      },
+      "block_order": ["appstle_memberships_appstle_membership_product_page_widget_fffttd"],
+      "settings": {}
+    }
+  },
+  "order": ["main", "17849212515ccb6a18"]
+}

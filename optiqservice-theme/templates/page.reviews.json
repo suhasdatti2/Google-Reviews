@@ -9,264 +9,120 @@
  */
 {
   "sections": {
-    "sighero": {
-      "type": "signature-hero",
+    "cardshero": {
+      "type": "prem-cards-hero",
       "settings": {
-        "index": "01",
         "eyebrow": "Premium Google Review Cards for Businesses",
         "heading": "One tap. More reviews.",
-        "subheading": "Customers tap their phone on the card or wristband and your Google review page opens instantly. No app. No QR code. No monthly fee.",
+        "subheading": "Customers tap their phone on the card and your Google review page opens instantly. No app. No QR code. No monthly fee.",
         "hero_image": "shopify://shop_images/hf_20260809_191808_d7032847-de25-498e-a132-a2ed7ceedbde.png",
-        "cta_label": "Choose Your Product",
-        "cta_link": "#sig-configurator",
-        "cta2_label": "See the finishes",
-        "cta2_link": "#sig-gallery",
-        "full_page_takeover": false,
-        "back_label": "← Back to Optiq",
-        "back_link": ""
+        "cta_label": "Choose Your Card",
+        "cta_link": "",
+        "cta2_label": "See the cards",
+        "cta2_link": ""
       }
     },
-    "sigmaterial": {
-      "type": "signature-material",
-      "blocks": {
-        "s1": { "type": "spec", "settings": { "label": "Body", "value": "Premium durable" } },
-        "s2": { "type": "spec", "settings": { "label": "Chip", "value": "NFC, sealed in" } },
-        "s3": { "type": "spec", "settings": { "label": "Setup", "value": "None required" } }
-      },
-      "block_order": ["s1", "s2", "s3"],
+    "cardsintro": {
+      "type": "premium-intro",
       "settings": {
-        "index": "02",
         "eyebrow": "Built to last",
         "heading": "Durable, tap-ready NFC technology.",
-        "body": "Every card and wristband is built from premium, durable material and finished clean - a card sturdy enough to sit on your counter for years, and a wristband comfortable enough for all-day wear. The NFC chip sits invisibly inside, programmed with your review link before it ever leaves us.",
+        "body": "Every card is built from premium, durable material and finished clean - sturdy enough to sit on your counter for years. The NFC chip sits invisibly inside, programmed with your review link before it ever leaves us.",
+        "cta_label": "",
+        "cta_link": "",
         "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_41_02_PM_3.png"
       }
     },
-    "siggallery": {
-      "type": "signature-gallery",
+    "cardsshowcase": {
+      "type": "prem-cards-showcase",
+      "settings": {
+        "card1_heading": "Black",
+        "card1_image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_41_02_PM_3.png",
+        "card1_caption": "Classic matte black, at home on any counter.",
+        "card1_cta": "Shop Black",
+        "card1_url": "",
+        "card2_heading": "White",
+        "card2_image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_40_15_PM_4.png",
+        "card2_caption": "Clean white with black print, bright on any counter.",
+        "card2_cta": "Shop White",
+        "card2_url": ""
+      }
+    },
+    "cardsbuy": {
+      "type": "prem-cards-buildset",
       "blocks": {
-        "d1": {
-          "type": "design",
-          "settings": { "product": "", "name": "Titanium Gray", "tag": "", "link": "" }
-        },
-        "d2": {
-          "type": "design",
-          "settings": {
-            "image": "shopify://shop_images/hf_20260811_233031_fdf9a3f9-7d1b-4ef6-9013-21acb3528fa1.png",
-            "product": "",
-            "image_alt": "shopify://shop_images/hf_20260809_191808_d7032847-de25-498e-a132-a2ed7ceedbde.png",
-            "name": "Matte Black",
-            "tag": "",
-            "link": ""
-          }
-        },
-        "d3": {
-          "type": "design",
-          "settings": { "product": "", "name": "Brushed Silver", "tag": "", "link": "" }
-        },
-        "d4": {
-          "type": "design",
-          "settings": { "product": "", "name": "Custom Engraved", "tag": "", "link": "" }
-        },
-        "d5": {
-          "type": "design",
-          "settings": { "product": "", "name": "Rose Gold", "tag": "", "link": "" }
-        },
-        "d6": {
-          "type": "design",
-          "settings": { "product": "", "name": "Matte White", "tag": "", "link": "" }
-        },
-        "d7": {
-          "type": "design",
-          "settings": { "product": "", "name": "Gunmetal", "tag": "", "link": "" }
-        },
-        "d8": {
-          "type": "design",
-          "settings": { "product": "", "name": "Champagne Gold", "tag": "", "link": "" }
-        },
-        "d9": {
-          "type": "design",
-          "settings": { "product": "", "name": "Carbon Fiber", "tag": "", "link": "" }
-        },
-        "d10": {
-          "type": "design",
-          "settings": { "product": "", "name": "Slate Blue", "tag": "", "link": "" }
-        },
-        "d11": {
-          "type": "design",
-          "settings": { "product": "", "name": "Copper", "tag": "", "link": "" }
-        },
-        "d12": {
-          "type": "design",
-          "settings": { "product": "", "name": "Onyx Black", "tag": "", "link": "" }
-        }
+        "sw1": { "type": "swatch", "settings": { "product": "counter", "value": "Black", "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_41_02_PM_3.png" } },
+        "sw2": { "type": "swatch", "settings": { "product": "counter", "value": "White", "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_40_15_PM_4.png" } },
+        "sw3": { "type": "swatch", "settings": { "product": "bulk", "value": "Black", "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_58_27_PM_4.png" } },
+        "sw4": { "type": "swatch", "settings": { "product": "bulk", "value": "White", "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_08_02_25_PM_3.png" } }
       },
-      "block_order": [
-        "d1",
-        "d2",
-        "d3",
-        "d4",
-        "d5",
-        "d6",
-        "d7",
-        "d8",
-        "d9",
-        "d10",
-        "d11",
-        "d12"
-      ],
+      "block_order": ["sw1", "sw2", "sw3", "sw4"],
       "settings": {
-        "index": "03",
-        "eyebrow": "Choose your finish",
-        "heading": "Every card, made to order.",
-        "subheading": "Pick a design below. Each tile can hold a second photo, so hovering shows the card from another angle."
-      }
-    },
-    "sigcatalog": {
-      "type": "signature-catalog",
-      "settings": {
-        "index": "04",
         "eyebrow": "Choose your product",
-        "heading": "Make it yours.",
-        "cta_label": "Add to Cart",
-        "counter_image_black": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_41_02_PM_3.png",
-        "counter_image_white": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_40_15_PM_4.png",
-        "bulk_image_black": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_58_27_PM_4.png",
-        "bulk_image_white": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_08_02_25_PM_3.png",
-        "wristband_image": "shopify://shop_images/hf_20260806_033730_5b6406a1-139f-44fb-a473-d16c69042b7b.png"
+        "heading": "Make it yours",
+        "body": "The Main Counter Card sits on your counter for years. Bulk cards go home with every customer. Most businesses use both.",
+        "counter_handle": "google-review-nfc-card",
+        "counter_label": "Main Counter Card",
+        "bulk_handle": "bulk-review-cards",
+        "bulk_label": "Bulk Cards",
+        "buy_label": "Add to Cart",
+        "secure_note": "Secure Checkout",
+        "qr_note": "Optional backup for phones that cannot tap.",
+        "show_personalise": true,
+        "show_delivery": true,
+        "ship_min_days": 3,
+        "ship_max_days": 7
       }
     },
-    "sigpackaging": {
-      "type": "signature-packaging",
+    "cardslifestyle": {
+      "type": "premium-lifestyle",
       "settings": {
-        "index": "05",
-        "eyebrow": "Fast and simple",
-        "heading": "Ships fast, ready to use.",
-        "subheading": "Every card and wristband is programmed with your review link and tap-tested on iPhone and Android before it ships - nothing for you to set up.",
         "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_41_03_PM_4_27f6dcc0-502f-45db-a375-277ecfd74a23.png"
       }
     },
-    "sigpurchase": {
-      "type": "signature-purchase",
-      "settings": {
-        "index": "06",
-        "eyebrow": "Optiq Review Cards",
-        "heading": "Ready when you are.",
-        "image": "shopify://shop_images/hf_20260806_033730_5b6406a1-139f-44fb-a473-d16c69042b7b.png",
-        "price_label": "$29.99",
-        "cta_label": "Choose Your Product",
-        "cta_link": "#sig-configurator"
-      }
-    },
-    "sigfaq": {
-      "type": "signature-faq",
+    "cardsfaq": {
+      "type": "prem-cards-faq",
       "blocks": {
-        "q1": {
-          "type": "question",
-          "settings": {
-            "question": "How does the card work?",
-            "answer": "Each card has an NFC chip inside, programmed with your review link. When a customer holds their phone near the card, their phone opens your review page automatically - the same tap technology used for contactless payments."
-          }
-        },
-        "q2": {
-          "type": "question",
-          "settings": {
-            "question": "Do my customers need an app or a QR code?",
-            "answer": "No. NFC tap works with the phone's built-in settings on nearly all modern iPhones and Androids - nothing to download, nothing to scan. A printed QR code can be added as an optional backup if you want one."
-          }
-        },
-        "q3": {
-          "type": "question",
-          "settings": {
-            "question": "How do you program my review link?",
-            "answer": "At checkout, enter your business name and your Google or Yelp review link. We program your card, test it on iPhone and Android, and ship it ready to use - nothing for you to set up."
-          }
-        },
-        "q11": {
-          "type": "question",
-          "settings": {
-            "question": "What comes with my order?",
-            "answer": "You get your NFC review card or wristband, already programmed with your Google or Yelp review link and tested on iPhone and Android. Nothing to set up - just place it where customers can tap it."
-          }
-        },
-        "q9": {
-          "type": "question",
-          "settings": {
-            "question": "How fast will my order ship?",
-            "answer": "Every card and wristband is programmed with your review link and tap-tested before it ships. Most orders are prepared within a few business days, and you'll get a tracking email as soon as yours is on the way."
-          }
-        },
-        "q10": {
-          "type": "question",
-          "settings": {
-            "question": "What if my order arrives faulty?",
-            "answer": "If anything ever arrives damaged or doesn't tap correctly, email sales@optiqservice.com and we'll sort out a replacement. Because each item is custom-programmed with your review link, we can't take back correctly working products - but if something isn't right, we're happy to help."
-          }
-        },
-        "q4": {
-          "type": "question",
-          "settings": {
-            "question": "What's the difference between the Main Counter Card, Mini Bulk Cards, and the Wristband?",
-            "answer": "The Main Counter Card is bigger and built to stay on your counter for years. Mini Bulk Cards are smaller and cheaper per card, made to hand out with bills, receipts, and takeout orders. The Wristband is worn instead of displayed - great for anyone on their feet interacting with customers all day. All three open the same review page with one tap."
-          }
-        },
-        "q5": {
-          "type": "question",
-          "settings": {
-            "question": "What if I don't know my review link?",
-            "answer": "Order anyway. Email us at sales@optiqservice.com and we'll send you a quick guide to finding it, or find it for you if you share your business name and city."
-          }
-        },
-        "q6": {
-          "type": "question",
-          "settings": {
-            "question": "Is there a monthly fee?",
-            "answer": "No. Every card and wristband is a one-time purchase. The Review Growth Plan is a separate, optional membership - you never need it for your card or wristband to work."
-          }
-        },
-        "q7": {
-          "type": "question",
-          "settings": {
-            "question": "Which phones does this work with?",
-            "answer": "Almost all iPhones and Android phones released in the last several years support NFC tap by default. Customers with older phones can still search for your business the usual way."
-          }
-        },
-        "q8": {
-          "type": "question",
-          "settings": {
-            "question": "Does this guarantee good reviews?",
-            "answer": "No - and we wouldn't trust anyone who claims it does. What it does is remove the friction: instead of searching for your business and finding the review button, customers get there in one tap. What they write is entirely up to them."
-          }
-        }
+        "q1": { "type": "question", "settings": { "question": "How does the card work?", "answer": "Each card has an NFC chip inside, programmed with your review link. When a customer holds their phone near the card, their phone opens your review page automatically - the same tap technology used for contactless payments." } },
+        "q2": { "type": "question", "settings": { "question": "Do my customers need an app or a QR code?", "answer": "No. NFC tap works with the phone's built-in settings on nearly all modern iPhones and Androids - nothing to download, nothing to scan. A printed QR code can be added as an optional backup if you want one." } },
+        "q3": { "type": "question", "settings": { "question": "How do you program my review link?", "answer": "At checkout, enter your business name and your Google or Yelp review link. We program your card, test it on iPhone and Android, and ship it ready to use - nothing for you to set up." } },
+        "q11": { "type": "question", "settings": { "question": "What comes with my order?", "answer": "You get your NFC review card, already programmed with your Google or Yelp review link and tested on iPhone and Android. Nothing to set up - just place it where customers can tap it." } },
+        "q9": { "type": "question", "settings": { "question": "How fast will my order ship?", "answer": "Every card is programmed with your review link and tap-tested before it ships. Most orders are prepared within a few business days, and you'll get a tracking email as soon as yours is on the way." } },
+        "q10": { "type": "question", "settings": { "question": "What if my order arrives faulty?", "answer": "If anything ever arrives damaged or doesn't tap correctly, email sales@optiqservice.com and we'll sort out a replacement. Because each card is custom-programmed with your review link, we can't take back correctly working products - but if something isn't right, we're happy to help." } },
+        "q4": { "type": "question", "settings": { "question": "What's the difference between the Main Counter Card and Bulk Cards?", "answer": "The Main Counter Card is bigger and built to stay on your counter for years - it costs more because it's made to last and be seen every day. Bulk cards are smaller and cheaper per card, made to hand out with bills, receipts, and takeout orders. Both open the same review page with one tap." } },
+        "q5": { "type": "question", "settings": { "question": "What if I don't know my review link?", "answer": "Order anyway. Email us at sales@optiqservice.com and we'll send you a quick guide to finding it, or find it for you if you share your business name and city." } },
+        "q6": { "type": "question", "settings": { "question": "Is there a monthly fee?", "answer": "No. Every card is a one-time purchase. The Review Growth Plan is a separate, optional membership - you never need it for your card to work." } },
+        "q7": { "type": "question", "settings": { "question": "Which phones does this work with?", "answer": "Almost all iPhones and Android phones released in the last several years support NFC tap by default. Customers with older phones can still search for your business the usual way." } },
+        "q8": { "type": "question", "settings": { "question": "Does this guarantee good reviews?", "answer": "No - and we wouldn't trust anyone who claims it does. What it does is remove the friction: instead of searching for your business and finding the review button, customers get there in one tap. What they write is entirely up to them." } }
       },
-      "block_order": [
-        "q1",
-        "q2",
-        "q3",
-        "q11",
-        "q9",
-        "q10",
-        "q4",
-        "q5",
-        "q6",
-        "q7",
-        "q8"
-      ],
+      "block_order": ["q1", "q2", "q3", "q11", "q9", "q10", "q4", "q5", "q6", "q7", "q8"],
       "settings": {
-        "index": "07",
         "kicker": "FAQ",
         "heading": "Questions, answered.",
-        "subheading": "Anything else? Email sales@optiqservice.com - we reply within one business day."
+        "subheading": "Anything else? Email sales@optiqservice.com — we reply within one business day."
+      }
+    },
+    "cardscontact": {
+      "type": "premium-contact",
+      "settings": {
+        "heading": "Get In Touch",
+        "body": "We're here to help. Reach out for collaborations, inquiries, or support.",
+        "cta_label": "Contact Us",
+        "cta_link": "",
+        "email": "sales@optiqservice.com",
+        "phone": "",
+        "instagram": "",
+        "location": ""
       }
     }
   },
   "order": [
-    "sighero",
-    "sigmaterial",
-    "siggallery",
-    "sigcatalog",
-    "sigpackaging",
-    "sigpurchase",
-    "sigfaq"
+    "cardshero",
+    "cardsintro",
+    "cardsshowcase",
+    "cardsbuy",
+    "cardslifestyle",
+    "cardsfaq",
+    "cardscontact"
   ]
 }

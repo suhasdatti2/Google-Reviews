@@ -1,0 +1,70 @@
+{%- comment -%}
+  Cards landing page - nav + eyebrow/heading/subheading + two CTAs + hero
+  photo. Same full-page-takeover pattern as premium-hero.liquid (own nav via
+  prem-nav, hides the site header/footer/dock via body:has(.prem-page) in
+  optiq-premium.css) but with real heading copy, since this page opens on a
+  statement rather than a bare image.
+{%- endcomment -%}
+
+{{ 'optiq-premium.css' | asset_url | stylesheet_tag }}
+{{ 'prem-cards.css' | asset_url | stylesheet_tag }}
+
+<div class="prem-page">
+  {% render 'prem-nav',
+     wordmark: section.settings.wordmark,
+     wordmark_sub: section.settings.wordmark_sub,
+     ring_url: section.settings.nav_ring_url,
+     cards_url: section.settings.nav_cards_url,
+     about_url: section.settings.nav_about_url,
+     collections_url: section.settings.nav_collections_url %}
+
+  <section class="prem-section" id="prem-cards-hero" {{ section.shopify_attributes }}>
+    <div class="prem-wrap prem-cards-hero__copy">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="prem-intro__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h1 class="prem-intro__heading">{{ section.settings.heading | default: 'One tap. More reviews.' }}</h1>
+      {%- if section.settings.subheading != blank -%}
+        <p class="prem-intro__body">{{ section.settings.subheading | escape }}</p>
+      {%- endif -%}
+
+      <div class="prem-cards-hero__ctas">
+        {%- if section.settings.cta_label != blank -%}
+          <a class="prem-link" href="{{ section.settings.cta_link | default: '#prem-cards-buy' }}">{{ section.settings.cta_label | escape }}</a>
+        {%- endif -%}
+        {%- if section.settings.cta2_label != blank -%}
+          <a class="prem-link" href="{{ section.settings.cta2_link | default: '#prem-cards-showcase' }}">{{ section.settings.cta2_label | escape }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="prem-hero__frame">
+      {% render 'prem-media', image: section.settings.hero_image, label: 'Hero photo' %}
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "Cards hero",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Premium Google Review Cards for Businesses" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "One tap. More reviews." },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Customers tap their phone on the card and your Google review page opens instantly. No app. No QR code. No monthly fee." },
+    { "type": "image_picker", "id": "hero_image", "label": "Hero photo" },
+    { "type": "text", "id": "cta_label", "label": "Primary link label", "default": "Choose Your Card" },
+    { "type": "url", "id": "cta_link", "label": "Primary link URL", "info": "Defaults to #prem-cards-buy, the buying section below." },
+    { "type": "text", "id": "cta2_label", "label": "Secondary link label", "default": "See the cards" },
+    { "type": "url", "id": "cta2_link", "label": "Secondary link URL", "info": "Defaults to #prem-cards-showcase." },
+
+    { "type": "header", "content": "Navigation" },
+    { "type": "text", "id": "wordmark", "label": "Wordmark", "default": "Optiq" },
+    { "type": "text", "id": "wordmark_sub", "label": "Wordmark subtitle", "default": "Signature" },
+    { "type": "url", "id": "nav_ring_url", "label": "Ring link" },
+    { "type": "url", "id": "nav_cards_url", "label": "Metal Cards link" },
+    { "type": "url", "id": "nav_about_url", "label": "About link" },
+    { "type": "url", "id": "nav_collections_url", "label": "Collections link" }
+  ],
+  "presets": [{ "name": "Cards hero" }]
+}
+{% endschema %}

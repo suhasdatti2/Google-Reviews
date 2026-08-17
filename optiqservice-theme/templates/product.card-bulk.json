@@ -1,0 +1,90 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "prem-product",
+      "blocks": {
+        "b1": {
+          "type": "benefit",
+          "settings": {
+            "icon": "box",
+            "title": "Cheaper by the box",
+            "text": "The more you order, the less you pay per card — made to give away, not just display."
+          }
+        },
+        "b2": {
+          "type": "benefit",
+          "settings": {
+            "icon": "card",
+            "title": "Made to hand out",
+            "text": "Drop one in every takeout bag, tuck it with the bill, or slip it into a pickup order while the visit is still fresh."
+          }
+        },
+        "b3": {
+          "type": "benefit",
+          "settings": {
+            "icon": "spark",
+            "title": "Programmed for you",
+            "text": "Send us your Google review link and every card in the box arrives set up and tap-tested."
+          }
+        },
+        "b4": {
+          "type": "benefit",
+          "settings": {
+            "icon": "shield",
+            "title": "One tap, no app needed",
+            "text": "Customers tap the card with their phone and your review page opens. A printed QR code is an optional backup."
+          }
+        },
+        "a1": {
+          "type": "accordion",
+          "settings": {
+            "heading": "How many should I order?",
+            "content": "<p>A good rule of thumb: one card for every 5–10 customers you serve in a week, so you never run out. Most single-location restaurants start with the 50-pack, then reorder once they see how it's working. Busy takeout spots often jump straight to the 100-pack.</p>"
+          }
+        },
+        "a2": {
+          "type": "accordion",
+          "settings": {
+            "heading": "How is this different to the Counter Card?",
+            "content": "<p>The Main Counter Card is bigger and built to sit on your counter or station for years — it costs more because it's made to last. Mini Bulk Cards are smaller, simpler, and priced to give away: perfect for bills, receipts, and takeout bags.</p><p>Both are programmed with the same Google review link and open it with one tap.</p>"
+          }
+        },
+        "a3": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Shipping & returns",
+            "content": "<p>Every card is programmed with your review link and tap-tested before it ships. Most orders are prepared within a few business days, and you'll get a tracking email as soon as yours is on the way.</p><p>If anything arrives damaged or doesn't tap correctly, email sales@optiqservice.com and we'll sort out a replacement. Because each card is custom-programmed, we can't take back correctly working cards.</p>"
+          }
+        }
+      },
+      "block_order": ["b1", "b2", "b3", "b4", "a1", "a2", "a3"],
+      "settings": {
+        "tagline": "Smaller cards, programmed with your Google review link — priced to hand out. One tap, no app needed.",
+        "buy_label": "Add to Cart",
+        "show_payment_button": true,
+        "secure_note": "Secure Checkout",
+        "back_label": "Back to Collection",
+        "back_url": "",
+        "show_personalise": true,
+        "qr_note": "Optional backup. Adds roughly $1 per mini card.",
+        "show_delivery": true,
+        "ship_min_days": 3,
+        "ship_max_days": 7,
+        "show_description": false,
+        "main_counter_card_product_image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_41_03_PM_4.png",
+        "bulk_square_handout_cards_product_image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_11_43_27_PM_2.png",
+        "bulk_restaurant_pack_product_image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_11_43_27_PM_1.png"
+      }
+    }
+  },
+  "order": ["main"]
+}

@@ -1,0 +1,248 @@
+/* ==========================================================================
+   PREM PRODUCT DETAIL
+   --------------------------------------------------------------------------
+   Layers on optiq-premium.css (tokens, .prem-ph placeholder) and
+   optiq-buildset.css (.bset-layout/.bset-info/.bset-stage/.bset-panel,
+   .bset-title/.bset-desc/.bset-features, .bset-swatches/.bset-chips,
+   .bset-qty, .bset-add, .bset-media/.bset-shot/.bset-thumbs) - only the
+   pieces specific to a single-product PDP live here: personalisation
+   fields, the price/compare-at row, gallery arrows, and accordions.
+
+   Unlike the full-page prem- takeovers (Build Your Set, Premium Products)
+   this page keeps the SITE'S OWN header and footer - a product page is
+   reached mid-shop and needs real navigation back out. The block below
+   repaints that shared header/footer light, gated behind
+   body:has(.prem-pdp), the exact technique optiq-studio.css already uses
+   for body:has(.stu-page). One header component, several skins.
+   ========================================================================== */
+
+body:has(.prem-pdp) {
+  background: var(--prem-white);
+}
+
+body:has(.prem-pdp) .optiq-dock { display: none !important; }
+body:has(.prem-pdp) { padding-bottom: 0 !important; }
+
+body:has(.prem-pdp) .o-header {
+  background: var(--prem-white);
+  border-bottom: 1px solid var(--prem-line);
+  color: var(--prem-ink);
+}
+body:has(.prem-pdp) .stu-nav a,
+body:has(.prem-pdp) .stu-hdr__act,
+body:has(.prem-pdp) .stu-logo { color: var(--prem-ink); }
+body:has(.prem-pdp) .stu-hdr__act:hover { background: rgba(17, 17, 16, 0.06); }
+body:has(.prem-pdp) .stu-hdr__count { background: var(--prem-ink); color: var(--prem-white); }
+
+body:has(.prem-pdp) .o-announce {
+  background: var(--prem-paper);
+  color: var(--prem-ink);
+  border-bottom: 1px solid var(--prem-line);
+}
+
+body:has(.prem-pdp) .o-footer {
+  background: var(--prem-paper);
+  color: var(--prem-ink-2);
+  border-top: 1px solid var(--prem-line);
+}
+body:has(.prem-pdp) .o-footer .o-logo,
+body:has(.prem-pdp) .o-footer h2,
+body:has(.prem-pdp) .o-footer strong { color: var(--prem-ink); }
+body:has(.prem-pdp) .o-footer p,
+body:has(.prem-pdp) .o-footer li,
+body:has(.prem-pdp) .o-footer span,
+body:has(.prem-pdp) .o-footer .o-muted,
+body:has(.prem-pdp) .o-footer .o-body { color: var(--prem-ink-2); }
+body:has(.prem-pdp) .o-footer a {
+  color: var(--prem-ink-2);
+  transition: color 200ms var(--prem-ease);
+}
+body:has(.prem-pdp) .o-footer a:hover { color: var(--prem-ink); }
+body:has(.prem-pdp) .o-footer__bottom { border-top: 1px solid var(--prem-line); }
+
+/* --------------------------------------------------------------------------
+   Frame
+   -------------------------------------------------------------------------- */
+
+.prem-pdp {
+  background: var(--prem-white);
+  color: var(--prem-ink);
+  font-family: var(--prem-sans);
+  border-top: 1px solid var(--prem-line);
+}
+
+.prem-pdp__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   Gallery arrows (only shown with 2+ real images)
+   -------------------------------------------------------------------------- */
+
+.prem-pdp__media { position: relative; }
+.prem-pdp__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--prem-line);
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--prem-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 200ms var(--prem-ease), border-color 200ms var(--prem-ease);
+}
+.prem-pdp__arrow svg { width: 16px; height: 16px; }
+.prem-pdp__arrow:hover { background: var(--prem-white); border-color: var(--prem-ink-2); }
+.prem-pdp__arrow:focus-visible { outline: 2px solid var(--prem-ink); outline-offset: 2px; }
+.prem-pdp__arrow--prev { left: 14px; }
+.prem-pdp__arrow--next { right: 14px; }
+
+/* --------------------------------------------------------------------------
+   Price row
+   -------------------------------------------------------------------------- */
+
+.prem-pdp__price { display: inline-block; }
+.prem-pdp__compare {
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 14px;
+  color: var(--prem-ink-3);
+  text-decoration: line-through;
+}
+.prem-pdp__compare[hidden] { display: none; }
+
+/* --------------------------------------------------------------------------
+   Personalisation fields
+   -------------------------------------------------------------------------- */
+
+.prem-pdp__personalise { display: grid; gap: 16px; }
+.prem-pdp__field { display: grid; gap: 6px; }
+.prem-pdp__field label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--prem-ink-2);
+}
+.prem-pdp__field input {
+  appearance: none;
+  border: 1px solid var(--prem-line);
+  border-radius: 3px;
+  background: var(--prem-white);
+  color: var(--prem-ink);
+  font-family: inherit;
+  font-size: 14px;
+  padding: 12px 14px;
+}
+.prem-pdp__field input::placeholder { color: var(--prem-ink-3); }
+.prem-pdp__field input:focus-visible {
+  outline: none;
+  border-color: var(--prem-ink);
+  box-shadow: 0 0 0 1px var(--prem-ink);
+}
+.prem-pdp__hint {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--prem-ink-3);
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Buy row / payment button / delivery
+   -------------------------------------------------------------------------- */
+
+.prem-pdp__buyrow {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.prem-pdp__buyrow .bset-qty { flex: none; }
+.prem-pdp__buyrow .bset-add { flex: 1; min-width: 160px; }
+
+.prem-pdp__paybtn { margin-top: 12px; }
+
+.prem-pdp__delivery {
+  font-size: 12.5px;
+  color: var(--prem-ink-2);
+  text-align: center;
+  margin: 14px 0 0;
+}
+
+/* --------------------------------------------------------------------------
+   Accordions - data-o-acc / data-o-acc-trigger is the theme-wide controller
+   (assets/optiq-ui.js), class-agnostic. The grid-template-rows technique
+   keeps the panel's content in normal flow while animating open/closed.
+   -------------------------------------------------------------------------- */
+
+.prem-pdp__acc {
+  border-top: 1px solid var(--prem-line);
+  padding-top: var(--bset-gap, 24px);
+}
+.prem-pdp__acc-item { border-bottom: 1px solid var(--prem-line); }
+.prem-pdp__acc-trigger {
+  appearance: none;
+  width: 100%;
+  border: 0;
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 0;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--prem-ink);
+  cursor: pointer;
+  text-align: left;
+}
+.prem-pdp__acc-trigger:focus-visible { outline: 2px solid var(--prem-ink); outline-offset: -2px; }
+.prem-pdp__acc-sign {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+.prem-pdp__acc-sign::before,
+.prem-pdp__acc-sign::after {
+  content: '';
+  position: absolute;
+  background: var(--prem-ink);
+  transition: transform 200ms var(--prem-ease);
+}
+.prem-pdp__acc-sign::before { top: 6px; left: 0; width: 14px; height: 1.4px; }
+.prem-pdp__acc-sign::after { top: 0; left: 6px; width: 1.4px; height: 14px; }
+.prem-pdp__acc-trigger[aria-expanded="true"] .prem-pdp__acc-sign::after { transform: rotate(90deg); }
+
+.prem-pdp__acc-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: grid-template-rows 260ms var(--prem-ease);
+}
+.prem-pdp__acc-panel.is-open { grid-template-rows: 1fr; }
+.prem-pdp__acc-panel > div {
+  min-height: 0;
+  overflow: hidden;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--prem-ink-2);
+  padding-bottom: 18px;
+}
+.prem-pdp__acc-panel > div p { margin: 0 0 12px; }
+.prem-pdp__acc-panel > div p:last-child { margin-bottom: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .prem-pdp__acc-panel,
+  .prem-pdp__acc-sign::after { transition: none !important; }
+}

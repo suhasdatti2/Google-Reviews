@@ -1,0 +1,373 @@
+{%- comment -%}
+  Cards landing page - the actual buying section. Same two-product pattern
+  as premium-buildset.liquid (Ring/Metal Card): a switcher between Main
+  Counter Card and Bulk Square Handout Cards, real Shopify options/variants/
+  prices/stock, one purchase panel. No bundle here - not requested, and
+  bundling these two the way Ring+Metal Card are bundled would be inventing
+  a discount decision nobody made.
+
+  Reuses assets/optiq-buildset.js UNCHANGED. That script already handles an
+  arbitrary number of product slots, per-slot option/variant matching and
+  graying, quantity and the switcher; it never touches anything named
+  "properties[...]", so the personalisation fields added below (business
+  name / review link / contact) ride through for free via the SAME mechanism
+  prem-product.liquid uses: assets/optiq-cart.js forwards any
+  name="properties[...]" field in the submitted form as a line item property.
+  Two different sections, one already-proven cart path - not a second one.
+
+  Bulk Restaurant Pack is not in this switcher. It was never part of the
+  site's shopping configurator historically (the old signature-catalog /
+  card-showcase blocks only ever featured Main Counter Card and the 10/25/
+  50/100-card Bulk Square Handout Cards), and it still has its own real,
+  working page via prem-product.liquid.
+{%- endcomment -%}
+
+{{ 'optiq-premium.css' | asset_url | stylesheet_tag }}
+{{ 'optiq-buildset.css' | asset_url | stylesheet_tag }}
+{{ 'prem-product.css' | asset_url | stylesheet_tag }}
+{{ 'prem-cards.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'optiq-buildset.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign counter = all_products[section.settings.counter_handle]
+  assign bulk = all_products[section.settings.bulk_handle]
+
+  assign swatches = section.blocks | where: 'type', 'swatch'
+  assign slots = 'counter,bulk' | split: ','
+
+  assign ship_min = section.settings.ship_min_days | default: 3
+  assign ship_max = section.settings.ship_max_days | default: 7
+  assign now_s = 'now' | date: '%s'
+  assign min_offset = ship_min | times: 86400
+  assign max_offset = ship_max | times: 86400
+  assign from_date = now_s | plus: min_offset | date: '%b %-d'
+  assign to_date = now_s | plus: max_offset | date: '%b %-d'
+-%}
+
+<section class="prem-section bset" id="prem-cards-buy" data-bset-root {{ section.shopify_attributes }}>
+  <div class="bset-layout">
+
+    {%- comment -%} ---------- LEFT: identity ---------- {%- endcomment -%}
+    <div class="bset-info">
+      <p class="prem-config__eyebrow">{{ section.settings.eyebrow | default: 'Choose your product' }}</p>
+      <h2 class="prem-config__heading">{{ section.settings.heading | default: 'Make it yours' }}</h2>
+      {%- if section.settings.body != blank -%}
+        <p class="prem-config__body">{{ section.settings.body }}</p>
+      {%- endif -%}
+
+      {%- for slot in slots -%}
+        {%- liquid
+          if slot == 'counter'
+            assign p = counter
+            assign slot_name = section.settings.counter_label | default: 'Main Counter Card'
+          else
+            assign p = bulk
+            assign slot_name = section.settings.bulk_label | default: 'Bulk Square Handout Cards'
+          endif
+        -%}
+        <div class="bset-desc" data-bset-for="{{ slot }}"{% unless forloop.first %} hidden{% endunless %}>
+          {%- if p != blank -%}{{ p.description | strip_html | truncatewords: 42 }}{%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- comment -%} ---------- CENTRE: photography ---------- {%- endcomment -%}
+    <div class="bset-stage">
+      {%- for slot in slots -%}
+        {%- liquid
+          if slot == 'counter'
+            assign p = counter
+            assign slot_name = section.settings.counter_label | default: 'Main Counter Card'
+          else
+            assign p = bulk
+            assign slot_name = section.settings.bulk_label | default: 'Bulk Square Handout Cards'
+          endif
+        -%}
+        {% render 'bset-gallery',
+           product: p,
+           slot: slot,
+           swatches: swatches,
+           label: slot_name,
+           is_active: forloop.first %}
+      {%- endfor -%}
+    </div>
+
+    {%- comment -%} ---------- RIGHT: purchase panel ---------- {%- endcomment -%}
+    <div class="bset-panel">
+
+      <div class="bset-field bset-switchwrap">
+        <span class="bset-label" id="bset-cards-switch-{{ section.id }}">Product</span>
+        <div class="bset-switch" role="group" aria-labelledby="bset-cards-switch-{{ section.id }}">
+          {%- for slot in slots -%}
+            {%- liquid
+              if slot == 'counter'
+                assign slot_name = section.settings.counter_label | default: 'Main Counter Card'
+              else
+                assign slot_name = section.settings.bulk_label | default: 'Bulk Cards'
+              endif
+            -%}
+            <button type="button"
+                    class="bset-switch__btn"
+                    data-bset-switch="{{ slot }}"
+                    aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">{{ slot_name | escape }}</button>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <div class="bset-field bset-qtywrap">
+        <label class="bset-label" for="bset-cards-qty-{{ section.id }}">Quantity</label>
+        <div class="bset-qty" data-bset-qty>
+          <button type="button" class="bset-qty__btn" data-bset-qty-step="-1" aria-label="Decrease quantity">&minus;</button>
+          <input class="bset-qty__input"
+                 id="bset-cards-qty-{{ section.id }}"
+                 type="number"
+                 name="quantity"
+                 form="bset-cards-form-{{ section.id }}"
+                 value="1"
+                 min="1"
+                 max="99"
+                 step="1"
+                 inputmode="numeric"
+                 data-bset-qty-input>
+          <button type="button" class="bset-qty__btn" data-bset-qty-step="1" aria-label="Increase quantity">&plus;</button>
+        </div>
+      </div>
+
+      {%- for slot in slots -%}
+        {%- liquid
+          if slot == 'counter'
+            assign p = counter
+          else
+            assign p = bulk
+          endif
+        -%}
+
+        <div class="bset-field bset-options" data-bset-for="{{ slot }}"{% unless forloop.first %} hidden{% endunless %}>
+          {%- if p != blank -%}
+            {%- for option in p.options_with_values -%}
+              {%- assign oi = forloop.index0 -%}
+              {%- assign lowered = option.name | downcase -%}
+              {%- assign is_colour = false -%}
+              {%- if lowered contains 'colour' or lowered contains 'color' or lowered contains 'finish' -%}
+                {%- assign is_colour = true -%}
+              {%- endif -%}
+
+              <div class="bset-optgroup{% unless forloop.first %} bset-optgroup--spaced{% endunless %}" role="group" aria-label="{{ option.name | escape }}">
+                <span class="bset-label">{{ option.name | escape }}</span>
+
+                {%- if is_colour -%}
+                  <div class="bset-swatches">
+                    {%- for value in option.values -%}
+                      {%- liquid
+                        assign val_key = value | downcase
+                        case val_key
+                          when 'black'
+                            assign dot_style = 'background-image: linear-gradient(135deg,#3a3a38,#111110);'
+                          when 'white'
+                            assign dot_style = 'background-image: linear-gradient(135deg,#fbfaf8,#e7e5df);'
+                          else
+                            assign dot_style = ''
+                        endcase
+                      -%}
+                      <button
+                        type="button"
+                        class="bset-swatch"
+                        data-bset-value="{{ value | escape }}"
+                        data-bset-option-index="{{ oi }}"
+                        aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">
+                        <span class="bset-swatch__dot" style="{{ dot_style }}"></span>
+                        <span class="bset-swatch__name">{{ value | escape }}</span>
+                      </button>
+                    {%- endfor -%}
+                  </div>
+                {%- else -%}
+                  <div class="bset-chips">
+                    {%- for value in option.values -%}
+                      <button type="button"
+                              class="bset-chip"
+                              data-bset-value="{{ value | escape }}"
+                              data-bset-option-index="{{ oi }}"
+                              aria-pressed="false">{{ value | escape }}</button>
+                    {%- endfor -%}
+                  </div>
+                {%- endif -%}
+
+                {%- if lowered contains 'qr' and section.settings.qr_note != blank -%}
+                  <p class="bset-help">{{ section.settings.qr_note | escape }}</p>
+                {%- endif -%}
+              </div>
+            {%- endfor -%}
+          {%- else -%}
+            <p class="bset-help">This product is not available yet.</p>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+
+      {%- if section.settings.show_personalise -%}
+        {%- for slot in slots -%}
+          <div class="bset-field prem-pdp__personalise" data-bset-for="{{ slot }}"{% unless forloop.first %} hidden{% endunless %}>
+            <span class="bset-label">Personalise your card</span>
+
+            <div class="prem-pdp__field">
+              <label for="prem-cards-business-{{ slot }}-{{ section.id }}">Business name</label>
+              <input id="prem-cards-business-{{ slot }}-{{ section.id }}" type="text" name="properties[Business name]" form="bset-cards-form-{{ section.id }}" required placeholder="e.g. Fresh Fades Barbershop">
+            </div>
+
+            <div class="prem-pdp__field">
+              <label for="prem-cards-link-{{ slot }}-{{ section.id }}">Google review link</label>
+              <input id="prem-cards-link-{{ slot }}-{{ section.id }}" type="text" name="properties[Google review link]" form="bset-cards-form-{{ section.id }}" required placeholder="Review link, website, or business name" autocomplete="off" spellcheck="false">
+              <p class="prem-pdp__hint">Anything works - your review link, your website, or just your business name and city. We will track down the exact link before we programme your card.</p>
+            </div>
+
+            <div class="prem-pdp__field">
+              <label for="prem-cards-contact-{{ slot }}-{{ section.id }}">Best email or phone</label>
+              <input id="prem-cards-contact-{{ slot }}-{{ section.id }}" type="text" name="properties[Contact email or phone]" form="bset-cards-form-{{ section.id }}" required placeholder="you@business.com">
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+
+      <form class="bset-buy"
+            id="bset-cards-form-{{ section.id }}"
+            action="{{ routes.cart_add_url }}"
+            method="post"
+            enctype="multipart/form-data"
+            data-bset-form>
+        <input type="hidden" name="id" data-bset-variant-id
+               value="{% if counter != blank %}{{ counter.selected_or_first_available_variant.id }}{% endif %}">
+
+        <div class="bset-total">
+          <span class="bset-total__label">Total</span>
+          <span class="bset-total__value" data-bset-total aria-live="polite">
+            {%- if counter != blank -%}{{ counter.price_min | money }}{%- endif -%}
+          </span>
+        </div>
+        <p class="bset-total__note" data-bset-total-note hidden></p>
+
+        <p class="bset-alert" data-bset-alert role="alert" hidden></p>
+
+        <button type="submit" class="bset-add" data-bset-add>{{ section.settings.buy_label | default: 'Add to Cart' | escape }}</button>
+
+        {%- if section.settings.show_delivery -%}
+          <p class="prem-cards-buy__delivery">Dispatched &amp; delivered between {{ from_date }} &ndash; {{ to_date }}</p>
+        {%- endif -%}
+
+        <p class="bset-secure">
+          {% render 'bset-icon', name: 'lock' %}
+          <span>{{ section.settings.secure_note | default: 'Secure Checkout' | escape }}</span>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <script type="application/json" data-bset-data>
+    {
+      "moneyFormat": {{ shop.money_format | json }},
+      "bundle": { "enabled": false, "discountCents": 0, "title": "", "keys": ["counter", "bulk"] },
+      "products": {
+        {%- for slot in slots -%}
+          {%- liquid
+            if slot == 'counter'
+              assign p = counter
+              assign slot_name = section.settings.counter_label | default: 'Main Counter Card'
+            else
+              assign p = bulk
+              assign slot_name = section.settings.bulk_label | default: 'Bulk Cards'
+            endif
+          -%}
+          {{ slot | json }}: {
+            "key": {{ slot | json }},
+            "switchLabel": {{ slot_name | json }},
+            {%- if p != blank -%}
+              "id": {{ p.id }},
+              "handle": {{ p.handle | json }},
+              "title": {{ p.title | json }},
+              "available": {{ p.available }},
+              "priceFrom": {{ p.price_min }},
+              "options": [
+                {%- for option in p.options_with_values -%}
+                  {
+                    "name": {{ option.name | json }},
+                    "values": [{% for v in option.values %}{{ v | json }}{% unless forloop.last %},{% endunless %}{% endfor %}]
+                  }{% unless forloop.last %},{% endunless %}
+                {%- endfor -%}
+              ],
+              "variants": [
+                {%- for v in p.variants -%}
+                  {
+                    "id": {{ v.id }},
+                    "price": {{ v.price }},
+                    "available": {{ v.available }},
+                    "opts": [{% for o in v.options %}{{ o | json }}{% unless forloop.last %},{% endunless %}{% endfor %}]
+                  }{% unless forloop.last %},{% endunless %}
+                {%- endfor -%}
+              ]
+            {%- else -%}
+              "id": 0, "handle": "", "title": {{ slot_name | json }}, "available": false, "priceFrom": 0, "options": [], "variants": []
+            {%- endif -%}
+          }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      }
+    }
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Cards buy panel",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Choose your product" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Make it yours" },
+    { "type": "textarea", "id": "body", "label": "Body", "default": "The Main Counter Card sits on your counter for years. Bulk cards go home with every customer. Most businesses use both." },
+
+    { "type": "header", "content": "Products" },
+    {
+      "type": "paragraph",
+      "content": "Both products are looked up by handle, so options, prices and stock always come from Shopify."
+    },
+    { "type": "text", "id": "counter_handle", "label": "Main Counter Card handle", "default": "google-review-nfc-card" },
+    { "type": "text", "id": "counter_label", "label": "Switch label", "default": "Main Counter Card" },
+    { "type": "text", "id": "bulk_handle", "label": "Bulk cards handle", "default": "bulk-review-cards" },
+    { "type": "text", "id": "bulk_label", "label": "Switch label", "default": "Bulk Cards" },
+
+    { "type": "header", "content": "Buying" },
+    { "type": "text", "id": "buy_label", "label": "Buy button label", "default": "Add to Cart" },
+    { "type": "text", "id": "secure_note", "label": "Checkout note", "default": "Secure Checkout" },
+    { "type": "text", "id": "qr_note", "label": "QR helper note", "default": "Optional backup for phones that cannot tap." },
+    {
+      "type": "checkbox",
+      "id": "show_personalise",
+      "label": "Ask for business name and review link",
+      "default": true
+    },
+    { "type": "checkbox", "id": "show_delivery", "label": "Show delivery estimate", "default": true },
+    { "type": "range", "id": "ship_min_days", "label": "Earliest", "min": 1, "max": 21, "step": 1, "default": 3, "unit": "d" },
+    { "type": "range", "id": "ship_max_days", "label": "Latest", "min": 2, "max": 40, "step": 1, "default": 7, "unit": "d" }
+  ],
+  "blocks": [
+    {
+      "type": "swatch",
+      "name": "Colour photo",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Optional. Ties a photo to a real Colour option value. With none set, the product's own Shopify photos are used instead."
+        },
+        {
+          "type": "select",
+          "id": "product",
+          "label": "Product",
+          "options": [
+            { "value": "counter", "label": "Main Counter Card" },
+            { "value": "bulk", "label": "Bulk Cards" }
+          ],
+          "default": "counter"
+        },
+        { "type": "text", "id": "value", "label": "Colour value", "info": "Must match Shopify exactly, e.g. Black, White." },
+        { "type": "image_picker", "id": "image", "label": "Photo" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Cards buy panel" }]
+}
+{% endschema %}

@@ -1,0 +1,446 @@
+{%- comment -%}
+  Premium product detail - the "Cards" line (Main Counter Card, Bulk Square
+  Handout Cards, Bulk Restaurant Pack) reskinned into the same wireframe
+  design and interaction language as Build Your Set / Premium Products:
+  info left, photography centre, purchase right, prem-/bset- classes.
+
+  This REPLACES studio-product.liquid for these three products only - Optiq
+  Signature and the Ring keep their own dedicated pages, and every other
+  product still assigned the default template (Review Growth Plan, Card
+  Hosting) is untouched.
+
+  Unlike premium-buildset.liquid this is NOT a full-page takeover: it does
+  not carry .prem-page, does not hide the site header/footer, and does not
+  inject prem-nav. A product page is reached mid-shop (collection -> PDP ->
+  cart -> checkout) and needs the site's real header (search, account, cart)
+  and footer to stay in place. Instead, assets/prem-product.css repaints the
+  SAME shared header/footer light via `body:has(.prem-pdp)`, exactly the
+  technique optiq-studio.css already uses for `body:has(.stu-page)` - one
+  header component, reskinned per page family, never duplicated.
+
+  Every interactive piece here reuses a controller that is already global and
+  class-agnostic, so nothing new had to be taught to the rest of the theme:
+    - assets/optiq-cart.js intercepts any form[action*="/cart/add"] submit,
+      and already forwards every name="properties[...]" field as line item
+      properties - the personalisation fields below need no JS of their own.
+    - assets/optiq-ui.js's accordion driver works off data-o-acc-trigger /
+      aria-controls / aria-expanded alone, no required class names.
+    - {{ form | payment_button }} is Shopify's own accelerated checkout.
+  Only the gallery, the variant/option picker and the quantity stepper are
+  page-specific, and live in assets/prem-product.js.
+
+  Settings/blocks intentionally mirror studio-product.liquid's schema
+  (tagline, benefit/accordion blocks, personalisation toggle, QR note,
+  delivery estimate, fallback images) so the real copy already written for
+  these products carries over unchanged rather than being retyped.
+{%- endcomment -%}
+
+{{ 'optiq-premium.css' | asset_url | stylesheet_tag }}
+{{ 'optiq-buildset.css' | asset_url | stylesheet_tag }}
+{{ 'prem-product.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'prem-product.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign v = product.selected_or_first_available_variant
+
+  assign fallback_image = blank
+  case product.handle
+    when 'bulk-restaurant-pack'
+      assign fallback_image = section.settings.bulk_restaurant_pack_product_image
+    when 'bulk-review-cards'
+      assign fallback_image = section.settings.bulk_square_handout_cards_product_image
+    when 'google-review-nfc-card'
+      assign fallback_image = section.settings.main_counter_card_product_image
+  endcase
+
+  assign use_product_media = false
+  if product.media.size > 0
+    assign use_product_media = true
+  endif
+
+  assign noun = 'card'
+
+  assign back_url = section.settings.back_url | default: '/#collection'
+  assign back_label = section.settings.back_label | default: 'Back to Collection'
+  if collection != blank
+    assign back_url = collection.url
+    assign back_label = collection.title
+  endif
+
+  assign benefits = section.blocks | where: 'type', 'benefit'
+  assign panels = section.blocks | where: 'type', 'accordion'
+
+  assign ship_min = section.settings.ship_min_days | default: 3
+  assign ship_max = section.settings.ship_max_days | default: 7
+  assign now_s = 'now' | date: '%s'
+  assign min_offset = ship_min | times: 86400
+  assign max_offset = ship_max | times: 86400
+  assign from_date = now_s | plus: min_offset | date: '%b %-d'
+  assign to_date = now_s | plus: max_offset | date: '%b %-d'
+-%}
+
+<section class="prem-pdp" data-prem-pdp {{ section.shopify_attributes }}>
+  <div class="bset-layout">
+
+    {%- comment -%} ---------- LEFT: what this is ---------- {%- endcomment -%}
+    <div class="bset-info">
+      <a class="bset-crumbs prem-pdp__back" href="{{ back_url }}">
+        <span aria-hidden="true">&larr;</span> {{ back_label | escape }}
+      </a>
+
+      <div class="bset-head">
+        <h1 class="bset-title">{{ product.title | escape }}</h1>
+        {%- if section.settings.tagline != blank -%}
+          <p class="bset-desc">{{ section.settings.tagline | escape }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- if benefits.size > 0 -%}
+        <ul class="bset-features">
+          {%- for block in benefits -%}
+            <li class="bset-feature" {{ block.shopify_attributes }}>
+              <span class="bset-feature__icon">{% render 'bset-icon', name: block.settings.icon %}</span>
+              <span>
+                {%- if block.settings.title != blank -%}
+                  <span class="bset-feature__title">{{ block.settings.title | escape }}</span>
+                {%- endif -%}
+                {%- if block.settings.text != blank -%}
+                  <span class="bset-feature__body">{{ block.settings.text | escape }}</span>
+                {%- endif -%}
+              </span>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} ---------- CENTRE: the product ---------- {%- endcomment -%}
+    <div class="bset-stage">
+      <div class="bset-media prem-pdp__media" data-prem-gallery>
+        {%- if use_product_media -%}
+          {%- for media in product.media -%}
+            {%- if forloop.first -%}{%- assign load = 'eager' -%}{%- else -%}{%- assign load = 'lazy' -%}{%- endif -%}
+            {%- assign media_alt = media.alt | default: product.title -%}
+            <div class="bset-shot{% if forloop.first %} is-active{% endif %}" data-shot="{{ forloop.index0 }}" data-media-id="{{ media.id }}">
+              {{ media.preview_image | image_url: width: 1400 | image_tag: loading: load, alt: media_alt }}
+            </div>
+          {%- endfor -%}
+        {%- elsif fallback_image != blank -%}
+          <div class="bset-shot is-active" data-shot="0">
+            {{ fallback_image | image_url: width: 1400 | image_tag: loading: 'eager', alt: product.title }}
+          </div>
+        {%- else -%}
+          <div class="bset-shot is-active" data-shot="0">
+            {% render 'prem-media', label: product.title %}
+          </div>
+        {%- endif -%}
+
+        {%- if product.media.size > 1 -%}
+          <button type="button" class="prem-pdp__arrow prem-pdp__arrow--prev" data-prem-prev aria-label="Previous image">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <button type="button" class="prem-pdp__arrow prem-pdp__arrow--next" data-prem-next aria-label="Next image">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        {%- endif -%}
+      </div>
+
+      {%- if product.media.size > 1 -%}
+        <div class="bset-thumbs">
+          {%- for media in product.media -%}
+            <button
+              type="button"
+              class="bset-thumb{% if forloop.first %} is-active{% endif %}"
+              data-shot-go="{{ forloop.index0 }}"
+              aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+              aria-label="Show image {{ forloop.index }}"
+            >
+              {{ media.preview_image | image_url: width: 200 | image_tag: loading: 'lazy', alt: '' }}
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} ---------- RIGHT: the purchase ---------- {%- endcomment -%}
+    <div class="bset-panel">
+
+      <div class="bset-field">
+        <span class="bset-total__value prem-pdp__price" data-prem-price>{{ v.price | money }}</span>
+        {%- if v.compare_at_price > v.price -%}
+          <span class="prem-pdp__compare" data-prem-compare>{{ v.compare_at_price | money }}</span>
+        {%- else -%}
+          <span class="prem-pdp__compare" data-prem-compare hidden></span>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%}
+        No novalidate: the browser's own required-field check has to run
+        before submit, otherwise an order arrives with no review link and
+        there is nothing to programme the chip with.
+      {%- endcomment -%}
+      {%- form 'product', product, class: 'bset-buy', id: 'prem-pdp-form' -%}
+        <input type="hidden" name="id" value="{{ v.id }}" data-prem-variant-id>
+
+        {%- unless product.has_only_default_variant -%}
+          <div class="bset-field bset-options" data-prem-options>
+            {%- for option in product.options_with_values -%}
+              {%- assign oi = forloop.index0 -%}
+              {%- assign lowered = option.name | downcase -%}
+              {%- assign is_colour = false -%}
+              {%- if lowered contains 'colour' or lowered contains 'color' or lowered contains 'finish' -%}
+                {%- assign is_colour = true -%}
+              {%- endif -%}
+
+              <div class="bset-optgroup{% unless forloop.first %} bset-optgroup--spaced{% endunless %}" role="group" aria-label="{{ option.name | escape }}">
+                <span class="bset-label">{{ option.name | escape }}</span>
+
+                {%- if is_colour -%}
+                  <div class="bset-swatches">
+                    {%- for value in option.values -%}
+                      {%- liquid
+                        assign val_key = value | downcase
+                        case val_key
+                          when 'black'
+                            assign dot_style = 'background-image: linear-gradient(135deg,#3a3a38,#111110);'
+                          when 'white'
+                            assign dot_style = 'background-image: linear-gradient(135deg,#fbfaf8,#e7e5df);'
+                          when 'titanium gray'
+                            assign dot_style = 'background-image: linear-gradient(135deg,#a6a6a0,#77766e);'
+                          when 'matte black metal'
+                            assign dot_style = 'background-image: linear-gradient(135deg,#2c2c2a,#121211);'
+                          when 'brushed silver'
+                            assign dot_style = 'background-image: linear-gradient(135deg,#ececea,#c9c8c2);'
+                          else
+                            assign dot_style = ''
+                        endcase
+                      -%}
+                      <button
+                        type="button"
+                        class="bset-swatch"
+                        data-prem-value="{{ value | escape }}"
+                        data-prem-option-index="{{ oi }}"
+                        aria-pressed="{% if option.selected_value == value %}true{% else %}false{% endif %}"
+                      >
+                        <span class="bset-swatch__dot" style="{{ dot_style }}"></span>
+                        <span class="bset-swatch__name">{{ value | escape }}</span>
+                      </button>
+                    {%- endfor -%}
+                  </div>
+                {%- else -%}
+                  <div class="bset-chips">
+                    {%- for value in option.values -%}
+                      <button
+                        type="button"
+                        class="bset-chip"
+                        data-prem-value="{{ value | escape }}"
+                        data-prem-option-index="{{ oi }}"
+                        aria-pressed="{% if option.selected_value == value %}true{% else %}false{% endif %}"
+                      >{{ value | escape }}</button>
+                    {%- endfor -%}
+                  </div>
+                {%- endif -%}
+
+                {%- if lowered contains 'qr' and section.settings.qr_note != blank -%}
+                  <p class="bset-help">{{ section.settings.qr_note | escape }}</p>
+                {%- endif -%}
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endunless -%}
+
+        {%- if section.settings.show_personalise -%}
+          <div class="bset-field prem-pdp__personalise">
+            <span class="bset-label">Personalise your {{ noun }}</span>
+
+            <div class="prem-pdp__field">
+              <label for="prem-business-{{ section.id }}">Business name</label>
+              <input id="prem-business-{{ section.id }}" type="text" name="properties[Business name]" required placeholder="e.g. Fresh Fades Barbershop">
+            </div>
+
+            {%- comment -%}
+              Deliberately type="text", not type="url": most customers do not
+              know their raw Google review link and will paste their website,
+              their Maps listing, or just their business name - all of which
+              we can work from. URL validation rejects every one of those and
+              would block checkout on a field we are happy to resolve after
+              the order is placed.
+            {%- endcomment -%}
+            <div class="prem-pdp__field">
+              <label for="prem-link-{{ section.id }}">Google review link</label>
+              <input id="prem-link-{{ section.id }}" type="text" name="properties[Google review link]" required placeholder="Review link, website, or business name" autocomplete="off" spellcheck="false">
+              <p class="prem-pdp__hint">Anything works - your review link, your website, or just your business name and city. We will track down the exact link before we programme your {{ noun }}.</p>
+            </div>
+
+            <div class="prem-pdp__field">
+              <label for="prem-contact-{{ section.id }}">Best email or phone</label>
+              <input id="prem-contact-{{ section.id }}" type="text" name="properties[Contact email or phone]" required placeholder="you@business.com">
+            </div>
+          </div>
+        {%- endif -%}
+
+        <div class="bset-field prem-pdp__buyrow">
+          <div class="bset-qty" data-prem-qty>
+            <button type="button" class="bset-qty__btn" data-prem-qty-step="-1" aria-label="Decrease quantity">&minus;</button>
+            <input class="bset-qty__input" type="number" name="quantity" value="1" min="1" inputmode="numeric" aria-label="Quantity" data-prem-qty-input>
+            <button type="button" class="bset-qty__btn" data-prem-qty-step="1" aria-label="Increase quantity">&plus;</button>
+          </div>
+
+          <button type="submit" class="bset-add" data-prem-submit {% unless v.available %}disabled{% endunless %}>
+            {%- if v.available -%}{{ section.settings.buy_label | default: 'Add to Cart' | escape }}{%- else -%}Sold out{%- endif -%}
+          </button>
+        </div>
+
+        {%- if section.settings.show_payment_button -%}
+          <div class="prem-pdp__paybtn">{{ form | payment_button }}</div>
+        {%- endif -%}
+      {%- endform -%}
+
+      {%- if section.settings.show_delivery -%}
+        <p class="prem-pdp__delivery">Dispatched &amp; delivered between {{ from_date }} &ndash; {{ to_date }}</p>
+      {%- endif -%}
+
+      <p class="bset-secure">
+        {% render 'bset-icon', name: 'lock' %}
+        <span>{{ section.settings.secure_note | default: 'Secure Checkout' | escape }}</span>
+      </p>
+
+      {%- if panels.size > 0 or section.settings.show_description -%}
+        <div class="prem-pdp__acc" data-o-acc data-o-acc-single="true">
+          {%- if section.settings.show_description and product.description != blank -%}
+            <div class="prem-pdp__acc-item">
+              <button
+                type="button"
+                class="prem-pdp__acc-trigger"
+                data-o-acc-trigger
+                aria-expanded="false"
+                aria-controls="prem-acc-desc-{{ section.id }}"
+              >
+                Description
+                <span class="prem-pdp__acc-sign" aria-hidden="true"></span>
+              </button>
+              <div class="prem-pdp__acc-panel" id="prem-acc-desc-{{ section.id }}">
+                <div>{{ product.description }}</div>
+              </div>
+            </div>
+          {%- endif -%}
+
+          {%- for block in panels -%}
+            <div class="prem-pdp__acc-item" {{ block.shopify_attributes }}>
+              <button
+                type="button"
+                class="prem-pdp__acc-trigger"
+                data-o-acc-trigger
+                aria-expanded="false"
+                aria-controls="prem-acc-{{ block.id }}"
+              >
+                {{ block.settings.heading | default: 'Details' | escape }}
+                <span class="prem-pdp__acc-sign" aria-hidden="true"></span>
+              </button>
+              <div class="prem-pdp__acc-panel" id="prem-acc-{{ block.id }}">
+                <div>{{ block.settings.content }}</div>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<script type="application/json" data-prem-pdp-data>
+  {
+    "moneyFormat": {{ shop.money_format | json }},
+    "buyLabel": {{ section.settings.buy_label | default: 'Add to Cart' | json }},
+    "optionNames": {{ product.options | json }},
+    "variants": [
+      {%- for variant in product.variants -%}
+        {
+          "id": {{ variant.id | json }},
+          "price": {{ variant.price }},
+          "compareAtPrice": {{ variant.compare_at_price | default: 0 }},
+          "available": {{ variant.available | json }},
+          "opts": {{ variant.options | json }},
+          "mediaId": {{ variant.featured_media.id | default: 0 | json }}
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Premium product",
+  "settings": [
+    { "type": "text", "id": "tagline", "label": "Short line under the title" },
+    { "type": "text", "id": "buy_label", "label": "Buy button label", "default": "Add to Cart" },
+    { "type": "checkbox", "id": "show_payment_button", "label": "Show Shop Pay / express checkout", "default": true },
+    { "type": "text", "id": "secure_note", "label": "Checkout note", "default": "Secure Checkout" },
+
+    { "type": "header", "content": "Back link" },
+    { "type": "text", "id": "back_label", "label": "Label", "default": "Back to Collection" },
+    { "type": "url", "id": "back_url", "label": "Link", "info": "Defaults to the collection this product was reached from, or /#collection." },
+
+    { "type": "header", "content": "Personalisation" },
+    {
+      "type": "checkbox",
+      "id": "show_personalise",
+      "label": "Ask for business name and review link",
+      "default": true,
+      "info": "Turn off for products that are not programmed."
+    },
+    { "type": "text", "id": "qr_note", "label": "QR helper note", "default": "Optional backup for phones that cannot tap." },
+
+    { "type": "header", "content": "Delivery estimate" },
+    { "type": "checkbox", "id": "show_delivery", "label": "Show delivery estimate", "default": true },
+    { "type": "range", "id": "ship_min_days", "label": "Earliest", "min": 1, "max": 21, "step": 1, "default": 3, "unit": "d" },
+    { "type": "range", "id": "ship_max_days", "label": "Latest", "min": 2, "max": 40, "step": 1, "default": 7, "unit": "d" },
+
+    { "type": "header", "content": "Accordions" },
+    { "type": "checkbox", "id": "show_description", "label": "Show the Shopify product description", "default": true },
+
+    { "type": "header", "content": "Fallback images" },
+    {
+      "type": "paragraph",
+      "content": "Only used for products that have no media attached in Shopify. Upload images to the product itself to get a multi-image gallery."
+    },
+    { "type": "image_picker", "id": "main_counter_card_product_image", "label": "Main Counter Card" },
+    { "type": "image_picker", "id": "bulk_square_handout_cards_product_image", "label": "Bulk Square Handout Cards" },
+    { "type": "image_picker", "id": "bulk_restaurant_pack_product_image", "label": "Bulk Restaurant Pack" }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Bullet",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "shield", "label": "Shield" },
+            { "value": "droplet", "label": "Droplet" },
+            { "value": "diamond", "label": "Diamond" },
+            { "value": "card", "label": "Card" },
+            { "value": "box", "label": "Box" },
+            { "value": "spark", "label": "Spark" },
+            { "value": "lock", "label": "Lock" }
+          ],
+          "default": "spark"
+        },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "textarea", "id": "text", "label": "Text" }
+      ]
+    },
+    {
+      "type": "accordion",
+      "name": "Accordion",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Details" },
+        { "type": "richtext", "id": "content", "label": "Content" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Premium product" }]
+}
+{% endschema %}

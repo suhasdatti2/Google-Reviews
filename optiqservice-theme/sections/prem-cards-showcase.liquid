@@ -1,0 +1,62 @@
+{%- comment -%}
+  Cards landing page - two-card split, same visual pattern as
+  premium-showcase.liquid (Ring/Metal Cards) but a fresh file rather than a
+  reused instance: that section's field ids and labels are hardcoded to
+  "The Ring" / "Metal Cards" in the schema, which would mislabel this
+  page's actual content in the theme editor. The CSS is shared verbatim -
+  .prem-showcase* is already generic, defined once in optiq-premium.css.
+
+  Only Black and White exist as real Colour values on both card products
+  (confirmed against the actual Shopify variants) - this deliberately does
+  not invent additional finishes the way the old signature-gallery section
+  on this page did with a 12-tile finish grid mostly built from empty,
+  unlinked placeholder blocks.
+{%- endcomment -%}
+
+<section class="prem-showcase" id="prem-cards-showcase" {{ section.shopify_attributes }}>
+  <div class="prem-wrap">
+    <div class="prem-showcase__grid">
+
+      <div class="prem-showcase__card">
+        <h3 class="prem-showcase__heading">{{ section.settings.card1_heading | default: 'Black' }}</h3>
+        <div class="prem-showcase__media">
+          {% render 'prem-media', image: section.settings.card1_image, label: 'Black card photo' %}
+        </div>
+        <p class="prem-showcase__caption">{{ section.settings.card1_caption | default: 'Classic matte black, at home on any counter.' }}</p>
+        <a class="prem-link" href="{{ section.settings.card1_url | default: '#prem-cards-buy' }}">{{ section.settings.card1_cta | default: 'Shop Black' | escape }}</a>
+      </div>
+
+      <div class="prem-showcase__card">
+        <h3 class="prem-showcase__heading">{{ section.settings.card2_heading | default: 'White' }}</h3>
+        <div class="prem-showcase__media">
+          {% render 'prem-media', image: section.settings.card2_image, label: 'White card photo' %}
+        </div>
+        <p class="prem-showcase__caption">{{ section.settings.card2_caption | default: 'Clean white with black print, bright on any counter.' }}</p>
+        <a class="prem-link" href="{{ section.settings.card2_url | default: '#prem-cards-buy' }}">{{ section.settings.card2_cta | default: 'Shop White' | escape }}</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cards showcase",
+  "settings": [
+    { "type": "header", "content": "Card one" },
+    { "type": "text", "id": "card1_heading", "label": "Heading", "default": "Black" },
+    { "type": "image_picker", "id": "card1_image", "label": "Photo" },
+    { "type": "text", "id": "card1_caption", "label": "Caption", "default": "Classic matte black, at home on any counter." },
+    { "type": "text", "id": "card1_cta", "label": "Link label", "default": "Shop Black" },
+    { "type": "url", "id": "card1_url", "label": "Link URL", "info": "Defaults to #prem-cards-buy, the buying section below." },
+
+    { "type": "header", "content": "Card two" },
+    { "type": "text", "id": "card2_heading", "label": "Heading", "default": "White" },
+    { "type": "image_picker", "id": "card2_image", "label": "Photo" },
+    { "type": "text", "id": "card2_caption", "label": "Caption", "default": "Clean white with black print, bright on any counter." },
+    { "type": "text", "id": "card2_cta", "label": "Link label", "default": "Shop White" },
+    { "type": "url", "id": "card2_url", "label": "Link URL", "info": "Defaults to #prem-cards-buy." }
+  ],
+  "presets": [{ "name": "Cards showcase" }]
+}
+{% endschema %}

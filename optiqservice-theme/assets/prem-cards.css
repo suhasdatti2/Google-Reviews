@@ -1,0 +1,52 @@
+/* ==========================================================================
+   PREM CARDS LANDING PAGE
+   --------------------------------------------------------------------------
+   Small, page-specific additions for /pages/google-review-cards. Everything
+   reusable already lives elsewhere: typography from optiq-premium.css,
+   swatches/chips/qty/gallery from optiq-buildset.css, personalisation
+   fields/accordion from prem-product.css (all three loaded by the sections
+   that need them) - this file only adds what neither covers.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Hero: eyebrow/heading/subheading centred above the photo, two CTAs.
+   -------------------------------------------------------------------------- */
+
+.prem-cards-hero__copy {
+  max-width: 720px;
+  margin: 0 auto clamp(32px, 4vw, 48px);
+  padding-top: clamp(48px, 6vw, 80px);
+  text-align: center;
+}
+.prem-cards-hero__copy .prem-intro__eyebrow,
+.prem-cards-hero__copy .prem-intro__body { margin-inline: auto; }
+.prem-cards-hero__copy .prem-intro__body { max-width: 52ch; }
+
+.prem-cards-hero__ctas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(20px, 3vw, 36px);
+  flex-wrap: wrap;
+  margin-top: 22px;
+}
+
+/* --------------------------------------------------------------------------
+   Buy panel: two-slot personalisation needs unique ids per slot (handled in
+   the Liquid), and a little breathing room above the delivery/accordion.
+   -------------------------------------------------------------------------- */
+
+.prem-cards-buy__delivery {
+  font-size: 12.5px;
+  color: var(--prem-ink-2);
+  text-align: center;
+  margin: 14px 0 0;
+}
+
+/* --------------------------------------------------------------------------
+   FAQ
+   -------------------------------------------------------------------------- */
+
+.prem-cards-faq { padding-block: clamp(56px, 8vw, 96px); }
+.prem-cards-faq__head { text-align: center; max-width: 640px; margin: 0 auto clamp(32px, 4vw, 48px); }
+.prem-cards-faq__list { max-width: 760px; margin-inline: auto; }
