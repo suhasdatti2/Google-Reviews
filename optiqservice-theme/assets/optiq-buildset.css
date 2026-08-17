@@ -66,15 +66,19 @@
 .bset-info { border-right: 1px solid var(--bset-rule); }
 .bset-panel { border-left: 1px solid var(--bset-rule); }
 
-/* Centre column: photography sits on the paper tone and stays in view while
-   the purchase panel scrolls beside it. */
+/* Centre column: no paper-tone panel of its own - the placeholder/photo box
+   (.prem-ph / .bset-media) is the only visible surface, sitting straight on
+   the page's white background. Pinned with align-self: start (not center -
+   sticky positioning inside a grid item is unreliable across browsers when
+   combined with align-self: center) and given extra top padding instead, so
+   it still reads as "settled in", not glued to the very top edge. Stays in
+   view while the (taller) purchase panel scrolls beside it. */
 .bset-stage {
-  background: var(--prem-paper);
   position: sticky;
-  top: 0;
-  align-self: center;
+  top: 24px;
+  align-self: start;
   min-width: 0;
-  padding: clamp(28px, 4vw, 56px) clamp(20px, 2.4vw, 32px);
+  padding: clamp(64px, 8vw, 120px) clamp(20px, 2.4vw, 32px) clamp(28px, 4vw, 56px);
 }
 
 /* --------------------------------------------------------------------------
