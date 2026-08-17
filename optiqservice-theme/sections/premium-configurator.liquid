@@ -1,11 +1,21 @@
 {%- comment -%}
   Premium Products - "Make It Yours / Choose Your Signature" preview.
   Text left; Ring photo + Metal Card photo right, separated by a "+".
-  Ring shows 2 featured-option dots, Metal Card shows 3 - the dots are
-  presentational only (no real colour/finish options exist yet for
-  either product) - marked aria-hidden rather than built as buttons that
-  would falsely imply they do something.
+  Each piece's swatches are now real buttons, backed by "Ring option" /
+  "Metal Card option" blocks - clicking one swaps that piece's photo to
+  the block's own uploaded image. The merchant adds/removes blocks in the
+  theme editor to add or remove options (starts at 2 for Ring, 3 for
+  Metal Card, matching the previous fixed dot counts, but either can grow
+  or shrink - nothing here caps the count).
+
+  A piece with zero option blocks falls back to its old single Photo
+  setting and shows no swatches at all - no fake, non-functional dots.
 {%- endcomment -%}
+
+{%- liquid
+  assign ring_options = section.blocks | where: 'type', 'ring_option'
+  assign card_options = section.blocks | where: 'type', 'card_option'
+-%}
 
 <section class="prem-section prem-config" id="prem-config" {{ section.shopify_attributes }}>
   <div class="prem-wrap">
@@ -21,38 +31,115 @@
         {%- endif -%}
       </div>
 
-      <div class="prem-config__pieces">
-        <div class="prem-config__piece">
-          <div class="prem-config__media">
-            {% render 'prem-media', image: section.settings.ring_image, label: 'Ring image' %}
+      <div class="prem-config__pieces" data-prem-config="{{ section.id }}">
+
+        <div class="prem-config__piece" data-prem-piece>
+          <div class="prem-config__media" aria-hidden="true">
+            {%- if ring_options.size > 0 -%}
+              {%- for block in ring_options -%}
+                <div class="prem-config__opt{% if forloop.first %} is-active{% endif %}" data-prem-opt="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+                  {% render 'prem-media', image: block.settings.image, label: 'Ring image' %}
+                </div>
+              {%- endfor -%}
+            {%- else -%}
+              <div class="prem-config__opt is-active" data-prem-opt="0">
+                {% render 'prem-media', image: section.settings.ring_image, label: 'Ring image' %}
+              </div>
+            {%- endif -%}
           </div>
           <span class="prem-config__piece-label">{{ section.settings.ring_label | default: 'Ring' | escape }}</span>
-          <div class="prem-config__swatches" aria-hidden="true">
-            <span class="prem-config__swatch"></span>
-            <span class="prem-config__swatch"></span>
-          </div>
+          {%- if ring_options.size > 0 -%}
+            <div class="prem-config__swatches" role="group" aria-label="Ring options">
+              {%- for block in ring_options -%}
+                <button
+                  type="button"
+                  class="prem-config__swatch{% if forloop.first %} is-active{% endif %}"
+                  data-prem-swatch="{{ forloop.index0 }}"
+                  aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+                  aria-label="{{ block.settings.label | default: 'Ring option ' | append: forloop.index }}"
+                  {% if block.settings.swatch_color != blank %}style="background: {{ block.settings.swatch_color }};"{% endif %}
+                  {{ block.shopify_attributes }}
+                ></button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
         </div>
 
         <span class="prem-config__plus" aria-hidden="true">+</span>
 
-        <div class="prem-config__piece">
-          <div class="prem-config__media">
-            {% render 'prem-media', image: section.settings.card_image, label: 'Metal card image' %}
+        <div class="prem-config__piece" data-prem-piece>
+          <div class="prem-config__media" aria-hidden="true">
+            {%- if card_options.size > 0 -%}
+              {%- for block in card_options -%}
+                <div class="prem-config__opt{% if forloop.first %} is-active{% endif %}" data-prem-opt="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+                  {% render 'prem-media', image: block.settings.image, label: 'Metal card image' %}
+                </div>
+              {%- endfor -%}
+            {%- else -%}
+              <div class="prem-config__opt is-active" data-prem-opt="0">
+                {% render 'prem-media', image: section.settings.card_image, label: 'Metal card image' %}
+              </div>
+            {%- endif -%}
           </div>
           <span class="prem-config__piece-label">{{ section.settings.card_label | default: 'Metal Card' | escape }}</span>
           {%- if section.settings.card_note != blank -%}
             <p class="prem-config__piece-note">{{ section.settings.card_note }}</p>
           {%- endif -%}
-          <div class="prem-config__swatches" aria-hidden="true">
-            <span class="prem-config__swatch"></span>
-            <span class="prem-config__swatch"></span>
-            <span class="prem-config__swatch"></span>
-          </div>
+          {%- if card_options.size > 0 -%}
+            <div class="prem-config__swatches" role="group" aria-label="Metal Card options">
+              {%- for block in card_options -%}
+                <button
+                  type="button"
+                  class="prem-config__swatch{% if forloop.first %} is-active{% endif %}"
+                  data-prem-swatch="{{ forloop.index0 }}"
+                  aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+                  aria-label="{{ block.settings.label | default: 'Metal Card option ' | append: forloop.index }}"
+                  {% if block.settings.swatch_color != blank %}style="background: {{ block.settings.swatch_color }};"{% endif %}
+                  {{ block.shopify_attributes }}
+                ></button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
         </div>
+
       </div>
     </div>
   </div>
 </section>
+
+<script>
+(function () {
+  function initPremConfig() {
+    var root = document.querySelector('[data-prem-config="{{ section.id }}"]');
+    if (!root || root.dataset.premReady === '1') { return; }
+    root.dataset.premReady = '1';
+
+    [].slice.call(root.querySelectorAll('[data-prem-piece]')).forEach(function (piece) {
+      var opts = [].slice.call(piece.querySelectorAll('[data-prem-opt]'));
+      var swatches = [].slice.call(piece.querySelectorAll('[data-prem-swatch]'));
+      if (!swatches.length) { return; }
+
+      swatches.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var key = btn.getAttribute('data-prem-swatch');
+
+          opts.forEach(function (opt) {
+            opt.classList.toggle('is-active', opt.getAttribute('data-prem-opt') === key);
+          });
+          swatches.forEach(function (b) {
+            var on = b === btn;
+            b.classList.toggle('is-active', on);
+            b.setAttribute('aria-pressed', on ? 'true' : 'false');
+          });
+        });
+      });
+    });
+  }
+
+  initPremConfig();
+  document.addEventListener('shopify:section:load', initPremConfig);
+})();
+</script>
 
 {% schema %}
 {
@@ -64,13 +151,46 @@
     { "type": "text", "id": "cta_label", "label": "Link label", "default": "Build Your Set" },
     { "type": "url", "id": "cta_link", "label": "Link URL" },
     { "type": "header", "content": "Ring" },
-    { "type": "image_picker", "id": "ring_image", "label": "Photo" },
+    { "type": "paragraph", "content": "Used only if no Ring option blocks are added below." },
+    { "type": "image_picker", "id": "ring_image", "label": "Fallback photo" },
     { "type": "text", "id": "ring_label", "label": "Caption", "default": "Ring" },
     { "type": "header", "content": "Metal Card" },
-    { "type": "image_picker", "id": "card_image", "label": "Photo" },
+    { "type": "paragraph", "content": "Used only if no Metal Card option blocks are added below." },
+    { "type": "image_picker", "id": "card_image", "label": "Fallback photo" },
     { "type": "text", "id": "card_label", "label": "Caption", "default": "Metal Card" },
     { "type": "text", "id": "card_note", "label": "Note", "default": "Fully customizable design, to client's choice.", "info": "Leave blank to hide." }
   ],
-  "presets": [{ "name": "Premium configurator" }]
+  "blocks": [
+    {
+      "type": "ring_option",
+      "name": "Ring option",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        { "type": "text", "id": "label", "label": "Name", "info": "e.g. 14K White Gold, Rose Gold. Used as the swatch's accessible label." },
+        { "type": "color", "id": "swatch_color", "label": "Swatch colour", "info": "Optional. Leave blank for a plain grey dot." }
+      ]
+    },
+    {
+      "type": "card_option",
+      "name": "Metal Card option",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        { "type": "text", "id": "label", "label": "Name", "info": "e.g. Matte Black, Brushed Silver. Used as the swatch's accessible label." },
+        { "type": "color", "id": "swatch_color", "label": "Swatch colour", "info": "Optional. Leave blank for a plain grey dot." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Premium configurator",
+      "blocks": [
+        { "type": "ring_option" },
+        { "type": "ring_option" },
+        { "type": "card_option" },
+        { "type": "card_option" },
+        { "type": "card_option" }
+      ]
+    }
+  ]
 }
 {% endschema %}

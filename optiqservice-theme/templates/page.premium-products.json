@@ -11,27 +11,84 @@
   "sections": {
     "premhero": {
       "type": "premium-hero",
-      "settings": {}
+      "settings": {
+        "wordmark": "Optiq",
+        "wordmark_sub": "Signature",
+        "ring_label": "Ring",
+        "ring_url": "",
+        "cards_label": "Metal Cards",
+        "cards_url": "",
+        "about_label": "About",
+        "about_url": "",
+        "collections_label": "Collections",
+        "collections_url": "",
+        "hero_image": "shopify://shop_images/ChatGPT_Image_Aug_16_2026_06_42_26_PM.png"
+      }
     },
     "premintro": {
       "type": "premium-intro",
-      "settings": {}
+      "settings": {
+        "eyebrow": "Introducing",
+        "heading": "Optiq Signature",
+        "body": "Premium Rings and Metal Cards, crafted for those who lead, build, and leave a lasting impression.",
+        "cta_label": "Discover the collection",
+        "cta_link": "",
+        "image": "shopify://shop_images/hf_20260817_012132_ec77f647-9103-4baa-a942-f21c01e7a65b.png"
+      }
     },
     "premshowcase": {
       "type": "premium-showcase",
-      "settings": {}
+      "settings": {
+        "ring_heading": "The Ring",
+        "ring_image": "shopify://shop_images/Screenshot_2026-08-16_184605.png",
+        "ring_caption": "A symbol of commitment and identity.",
+        "ring_cta": "Explore Rings",
+        "ring_url": "",
+        "cards_heading": "Metal Cards",
+        "cards_image": "shopify://shop_images/ChatGPT_Image_Aug_16_2026_06_45_11_PM.png",
+        "cards_caption": "Tap. Share. Leave an impression.",
+        "cards_cta": "Explore Cards",
+        "cards_url": ""
+      }
     },
     "premconfig": {
       "type": "premium-configurator",
-      "settings": {}
+      "blocks": {
+        "ring1": { "type": "ring_option", "settings": {} },
+        "ring2": { "type": "ring_option", "settings": {} },
+        "card1": { "type": "card_option", "settings": {} },
+        "card2": { "type": "card_option", "settings": {} },
+        "card3": { "type": "card_option", "settings": {} }
+      },
+      "block_order": ["ring1", "ring2", "card1", "card2", "card3"],
+      "settings": {
+        "eyebrow": "Make It Yours",
+        "heading": "Choose Your Signature",
+        "body": "Select the pieces that represent your identity. Wear it. Share it. Leave a lasting mark.",
+        "cta_label": "Build Your Set",
+        "cta_link": "",
+        "ring_label": "Ring",
+        "card_label": "Metal Card"
+      }
     },
     "premlifestyle": {
       "type": "premium-lifestyle",
-      "settings": {}
+      "settings": {
+        "image": "shopify://shop_images/ChatGPT_Image_Aug_16_2026_06_09_39_PM.png"
+      }
     },
     "premcontact": {
       "type": "premium-contact",
-      "settings": {}
+      "settings": {
+        "heading": "Get In Touch",
+        "body": "We're here to help. Reach out for collaborations, inquiries, or support.",
+        "cta_label": "Contact Us",
+        "cta_link": "",
+        "email": "sales@optiqservice.com",
+        "phone": "",
+        "instagram": "",
+        "location": ""
+      }
     }
   },
   "order": [

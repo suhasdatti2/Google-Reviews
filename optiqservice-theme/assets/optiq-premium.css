@@ -326,9 +326,19 @@ body:has(.prem-page) { padding-bottom: 0 !important; background: var(--prem-whit
   aspect-ratio: 1 / 1;
   overflow: hidden;
 }
-.prem-config__media img,
-.prem-config__media .prem-ph { width: 100%; height: 100%; }
-.prem-config__media img { object-fit: cover; display: block; }
+/* Every option's photo is stacked in the same box; swapping which one is
+   .is-active (see the section's own script) crossfades between them
+   rather than reflowing the layout. */
+.prem-config__opt {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 320ms var(--prem-ease);
+}
+.prem-config__opt.is-active { opacity: 1; z-index: 1; }
+.prem-config__opt img,
+.prem-config__opt .prem-ph { width: 100%; height: 100%; }
+.prem-config__opt img { object-fit: cover; display: block; }
 .prem-config__piece-label {
   font-size: 11px;
   font-weight: 700;
@@ -352,13 +362,22 @@ body:has(.prem-page) { padding-bottom: 0 !important; background: var(--prem-whit
   gap: 10px;
 }
 .prem-config__swatch {
-  width: 15px;
-  height: 15px;
+  width: 17px;
+  height: 17px;
   border-radius: 50%;
   background: var(--prem-ph-2);
   border: 1px solid var(--prem-line);
   padding: 0;
-  cursor: default;
+  cursor: pointer;
+  transition: transform 200ms var(--prem-ease), box-shadow 200ms var(--prem-ease);
+}
+.prem-config__swatch:hover { transform: translateY(-1px); }
+.prem-config__swatch.is-active {
+  box-shadow: 0 0 0 2px var(--prem-white), 0 0 0 3px var(--prem-ink);
+}
+.prem-config__swatch:focus-visible {
+  outline: 2px solid var(--prem-ink);
+  outline-offset: 3px;
 }
 
 @media (max-width: 860px) {
