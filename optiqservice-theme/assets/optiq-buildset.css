@@ -72,7 +72,7 @@
   background: var(--prem-paper);
   position: sticky;
   top: 0;
-  align-self: start;
+  align-self: center;
   min-width: 0;
   padding: clamp(28px, 4vw, 56px) clamp(20px, 2.4vw, 32px);
 }

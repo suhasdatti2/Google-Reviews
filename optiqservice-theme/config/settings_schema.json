@@ -35,9 +35,9 @@
     "settings": [
       {
         "type": "paragraph",
-        "content": "The theme is built on a near-black surface ramp. Accent is used sparingly for primary buttons and highlights so it keeps its impact."
+        "content": "The theme is built on a premium white surface. Accent is used sparingly for highlights so it keeps its impact; primary buttons fill solid ink."
       },
-      { "type": "color", "id": "color_background", "label": "Page background", "default": "#08080a" },
+      { "type": "color", "id": "color_background", "label": "Page background", "default": "#ffffff" },
       { "type": "color", "id": "color_accent", "label": "Accent", "default": "#e8c07a" },
       {
         "type": "color",
