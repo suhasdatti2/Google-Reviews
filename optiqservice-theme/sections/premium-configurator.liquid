@@ -42,6 +42,9 @@
             {% render 'prem-media', image: section.settings.card_image, label: 'Metal card image' %}
           </div>
           <span class="prem-config__piece-label">{{ section.settings.card_label | default: 'Metal Card' | escape }}</span>
+          {%- if section.settings.card_note != blank -%}
+            <p class="prem-config__piece-note">{{ section.settings.card_note }}</p>
+          {%- endif -%}
           <div class="prem-config__swatches" aria-hidden="true">
             <span class="prem-config__swatch"></span>
             <span class="prem-config__swatch"></span>
@@ -68,7 +71,8 @@
     { "type": "text", "id": "ring_label", "label": "Caption", "default": "Ring" },
     { "type": "header", "content": "Metal Card" },
     { "type": "image_picker", "id": "card_image", "label": "Photo" },
-    { "type": "text", "id": "card_label", "label": "Caption", "default": "Metal Card" }
+    { "type": "text", "id": "card_label", "label": "Caption", "default": "Metal Card" },
+    { "type": "text", "id": "card_note", "label": "Note", "default": "Fully customizable design, to client's choice.", "info": "Leave blank to hide." }
   ],
   "presets": [{ "name": "Premium configurator" }]
 }
