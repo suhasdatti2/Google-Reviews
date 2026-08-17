@@ -1,10 +1,10 @@
 {%- comment -%}
   Premium Products - "Make It Yours / Choose Your Signature" preview.
-  Text left; Ring photo + Metal Card photo right, separated by a "+" and
-  each with four decorative swatch dots underneath, matching the
-  reference wireframe. The dots are presentational only (no real colour
-  options exist yet for either product) - marked aria-hidden rather than
-  built as buttons that would falsely imply they do something.
+  Text left; Ring photo + Metal Card photo right, separated by a "+".
+  Ring shows 2 featured-option dots, Metal Card shows 3 - the dots are
+  presentational only (no real colour/finish options exist yet for
+  either product) - marked aria-hidden rather than built as buttons that
+  would falsely imply they do something.
 {%- endcomment -%}
 
 <section class="prem-section prem-config" id="prem-config" {{ section.shopify_attributes }}>
@@ -30,8 +30,6 @@
           <div class="prem-config__swatches" aria-hidden="true">
             <span class="prem-config__swatch"></span>
             <span class="prem-config__swatch"></span>
-            <span class="prem-config__swatch"></span>
-            <span class="prem-config__swatch"></span>
           </div>
         </div>
 
@@ -46,7 +44,6 @@
             <p class="prem-config__piece-note">{{ section.settings.card_note }}</p>
           {%- endif -%}
           <div class="prem-config__swatches" aria-hidden="true">
-            <span class="prem-config__swatch"></span>
             <span class="prem-config__swatch"></span>
             <span class="prem-config__swatch"></span>
             <span class="prem-config__swatch"></span>
