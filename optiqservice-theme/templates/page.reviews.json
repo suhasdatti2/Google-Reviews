@@ -12,13 +12,13 @@
     "cardshero": {
       "type": "prem-cards-hero",
       "settings": {
-        "eyebrow": "Premium Google Review Cards for Businesses",
+        "eyebrow": "Premium NFC Cards & Wristbands for Businesses",
         "heading": "One tap. More reviews.",
-        "subheading": "Customers tap their phone on the card and your Google review page opens instantly. No app. No QR code. No monthly fee.",
+        "subheading": "Customers tap their phone on the card or wristband and your Google review page opens instantly. No app. No QR code. No monthly fee.",
         "hero_image": "shopify://shop_images/hf_20260809_191808_d7032847-de25-498e-a132-a2ed7ceedbde.png",
-        "cta_label": "Choose Your Card",
+        "cta_label": "Choose Your Product",
         "cta_link": "",
-        "cta2_label": "See the cards",
+        "cta2_label": "See the collection",
         "cta2_link": ""
       }
     },
@@ -65,13 +65,13 @@
         "counter_label": "Main Counter Card",
         "bulk_handle": "bulk-review-cards",
         "bulk_label": "Bulk Cards",
+        "wristband_handle": "google-review-nfc-wristband",
+        "wristband_label": "Wristband",
+        "wristband_image": "shopify://shop_images/hf_20260806_033730_20d5efb0-b13a-424c-825a-55494fe86de1.png",
         "buy_label": "Add to Cart",
         "secure_note": "Secure Checkout",
         "qr_note": "Optional backup for phones that cannot tap.",
-        "show_personalise": true,
-        "show_delivery": true,
-        "ship_min_days": 3,
-        "ship_max_days": 7
+        "show_personalise": true
       }
     },
     "cardslifestyle": {

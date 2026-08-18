@@ -1,14 +1,22 @@
 {%- comment -%}
-  Cards landing page - the actual buying section. Same two-product pattern
-  as premium-buildset.liquid (Ring/Metal Card): a switcher between Main
-  Counter Card and Bulk Square Handout Cards, real Shopify options/variants/
-  prices/stock, one purchase panel. No bundle here - not requested, and
-  bundling these two the way Ring+Metal Card are bundled would be inventing
-  a discount decision nobody made.
+  Cards & Wristbands landing page - the actual buying section. Three real
+  Shopify products across two categories: Main Counter Card and Bulk Square
+  Handout Cards under "Cards", the Google Review NFC Wristband under
+  "Wristbands" - real options/variants/prices/stock throughout, one purchase
+  panel. No bundle here - not requested, and bundling these the way Ring +
+  Metal Card are bundled would be inventing a discount decision nobody made.
 
-  Reuses assets/optiq-buildset.js UNCHANGED. That script already handles an
-  arbitrary number of product slots, per-slot option/variant matching and
-  graying, quantity and the switcher; it never touches anything named
+  The category tabs (Cards / Wristbands) are an opt-in layer added to
+  assets/optiq-buildset.js via the JSON payload's "categories" key: pick a
+  category, and it hides the Product switcher entirely when that category
+  holds only one real product (Wristbands, today) or shows it scoped to
+  just that category's slots (Cards). The script falls back to its original
+  flat-switcher behaviour whenever "categories" is absent, so
+  premium-buildset.liquid (Ring/Metal Card) is untouched by this.
+
+  Reuses assets/optiq-buildset.js. That script already handles an arbitrary
+  number of product slots, per-slot option/variant matching and graying,
+  quantity and the switcher; it never touches anything named
   "properties[...]", so the personalisation fields added below (business
   name / review link / contact) ride through for free via the SAME mechanism
   prem-product.liquid uses: assets/optiq-cart.js forwards any
@@ -31,13 +39,33 @@
 {%- liquid
   assign counter = all_products[section.settings.counter_handle]
   assign bulk = all_products[section.settings.bulk_handle]
+  assign wristband = all_products[section.settings.wristband_handle]
 
   assign swatches = section.blocks | where: 'type', 'swatch'
-  assign slots = 'counter,bulk' | split: ','
+  assign slots = 'counter,bulk,wristband' | split: ','
 
 -%}
 
 <section class="prem-section bset" id="prem-cards-buy" data-bset-root {{ section.shopify_attributes }}>
+
+  {%- comment -%}
+    Category tabs - full width, above the three-column layout, so switching
+    Cards/Wristbands reads as choosing a collection rather than a product
+    option. The two descriptions crossfade via .is-active (same pattern the
+    gallery already uses for .bset-shot); assets/optiq-buildset.js drives
+    both the tabs and which Product-switcher buttons are visible.
+  {%- endcomment -%}
+  <div class="prem-wrap bset-categories">
+    <div class="bset-category-tabs" role="tablist" aria-label="Shop by category">
+      <button type="button" class="bset-category-tab" data-bset-category="cards" aria-pressed="true">{{ section.settings.cards_category_label | default: 'Cards' | escape }}</button>
+      <button type="button" class="bset-category-tab" data-bset-category="wristbands" aria-pressed="false">{{ section.settings.wristband_category_label | default: 'Wristbands' | escape }}</button>
+    </div>
+    <div class="bset-category-descwrap">
+      <p class="bset-category-desc is-active" data-bset-cat-desc="cards">{{ section.settings.cards_category_desc | default: 'Premium NFC cards designed for effortless customer interactions.' | escape }}</p>
+      <p class="bset-category-desc" data-bset-cat-desc="wristbands">{{ section.settings.wristband_category_desc | default: 'Premium wearable NFC products designed for businesses, events, and customer engagement.' | escape }}</p>
+    </div>
+  </div>
+
   <div class="bset-layout">
 
     {%- comment -%} ---------- LEFT: identity ---------- {%- endcomment -%}
@@ -53,13 +81,25 @@
           if slot == 'counter'
             assign p = counter
             assign slot_name = section.settings.counter_label | default: 'Main Counter Card'
-          else
+          elsif slot == 'bulk'
             assign p = bulk
             assign slot_name = section.settings.bulk_label | default: 'Bulk Square Handout Cards'
+          else
+            assign p = wristband
+            assign slot_name = section.settings.wristband_label | default: 'Wristband'
           endif
         -%}
-        <div class="bset-desc" data-bset-for="{{ slot }}"{% unless forloop.first %} hidden{% endunless %}>
-          {%- if p != blank -%}{{ p.description | strip_html | truncatewords: 42 }}{%- endif -%}
+        <div class="bset-cardhead" data-bset-for="{{ slot }}"{% unless forloop.first %} hidden{% endunless %}>
+          <h3 class="bset-subhead">{%- if p != blank -%}{{ p.title }}{%- else -%}{{ slot_name | escape }}{%- endif -%}</h3>
+          {%- if p != blank -%}
+            <p class="bset-price-tag">
+              {%- if p.price_min != p.price_max -%}<small>From</small>{%- endif -%}
+              {{ p.price_min | money }}
+            </p>
+          {%- endif -%}
+          <p class="bset-desc">
+            {%- if p != blank -%}{{ p.description | strip_html | truncatewords: 42 }}{%- endif -%}
+          </p>
         </div>
       {%- endfor -%}
     </div>
@@ -71,9 +111,15 @@
           if slot == 'counter'
             assign p = counter
             assign slot_name = section.settings.counter_label | default: 'Main Counter Card'
-          else
+            assign fallback_main = blank
+          elsif slot == 'bulk'
             assign p = bulk
             assign slot_name = section.settings.bulk_label | default: 'Bulk Square Handout Cards'
+            assign fallback_main = blank
+          else
+            assign p = wristband
+            assign slot_name = section.settings.wristband_label | default: 'Wristband'
+            assign fallback_main = section.settings.wristband_image
           endif
         -%}
         {% render 'bset-gallery',
@@ -81,22 +127,25 @@
            slot: slot,
            swatches: swatches,
            label: slot_name,
-           is_active: forloop.first %}
+           is_active: forloop.first,
+           main_image: fallback_main %}
       {%- endfor -%}
     </div>
 
     {%- comment -%} ---------- RIGHT: purchase panel ---------- {%- endcomment -%}
     <div class="bset-panel">
 
-      <div class="bset-field bset-switchwrap">
+      <div class="bset-field bset-switchwrap" data-bset-switchwrap>
         <span class="bset-label" id="bset-cards-switch-{{ section.id }}">Product</span>
         <div class="bset-switch" role="group" aria-labelledby="bset-cards-switch-{{ section.id }}">
           {%- for slot in slots -%}
             {%- liquid
               if slot == 'counter'
                 assign slot_name = section.settings.counter_label | default: 'Main Counter Card'
-              else
+              elsif slot == 'bulk'
                 assign slot_name = section.settings.bulk_label | default: 'Bulk Cards'
+              else
+                assign slot_name = section.settings.wristband_label | default: 'Wristband'
               endif
             -%}
             <button type="button"
@@ -130,8 +179,10 @@
         {%- liquid
           if slot == 'counter'
             assign p = counter
-          else
+          elsif slot == 'bulk'
             assign p = bulk
+          else
+            assign p = wristband
           endif
         -%}
 
@@ -198,8 +249,14 @@
 
       {%- if section.settings.show_personalise -%}
         {%- for slot in slots -%}
+          {%- liquid
+            assign p_noun = 'card'
+            if slot == 'wristband'
+              assign p_noun = 'wristband'
+            endif
+          -%}
           <div class="bset-field prem-pdp__personalise" data-bset-for="{{ slot }}"{% unless forloop.first %} hidden{% endunless %}>
-            <span class="bset-label">Personalise your card</span>
+            <span class="bset-label">Personalise your {{ p_noun }}</span>
 
             <div class="prem-pdp__field">
               <label for="prem-cards-business-{{ slot }}-{{ section.id }}">Business name</label>
@@ -209,7 +266,7 @@
             <div class="prem-pdp__field">
               <label for="prem-cards-link-{{ slot }}-{{ section.id }}">Google review link</label>
               <input id="prem-cards-link-{{ slot }}-{{ section.id }}" type="text" name="properties[Google review link]" form="bset-cards-form-{{ section.id }}" required placeholder="Review link, website, or business name" autocomplete="off" spellcheck="false">
-              <p class="prem-pdp__hint">Anything works - your review link, your website, or just your business name and city. We will track down the exact link before we programme your card.</p>
+              <p class="prem-pdp__hint">Anything works - your review link, your website, or just your business name and city. We will track down the exact link before we programme your {{ p_noun }}.</p>
             </div>
 
             <div class="prem-pdp__field">
@@ -253,15 +310,22 @@
     {
       "moneyFormat": {{ shop.money_format | json }},
       "bundle": { "enabled": false, "discountCents": 0, "title": "", "keys": ["counter", "bulk"] },
+      "categories": [
+        { "key": "cards", "label": {{ section.settings.cards_category_label | default: 'Cards' | json }}, "slots": ["counter", "bulk"] },
+        { "key": "wristbands", "label": {{ section.settings.wristband_category_label | default: 'Wristbands' | json }}, "slots": ["wristband"] }
+      ],
       "products": {
         {%- for slot in slots -%}
           {%- liquid
             if slot == 'counter'
               assign p = counter
               assign slot_name = section.settings.counter_label | default: 'Main Counter Card'
-            else
+            elsif slot == 'bulk'
               assign p = bulk
               assign slot_name = section.settings.bulk_label | default: 'Bulk Cards'
+            else
+              assign p = wristband
+              assign slot_name = section.settings.wristband_label | default: 'Wristband'
             endif
           -%}
           {{ slot | json }}: {
@@ -303,13 +367,19 @@
 
 {% schema %}
 {
-  "name": "Cards buy panel",
+  "name": "Cards & Wristbands buy",
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Choose your product" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Make it yours" },
     { "type": "textarea", "id": "body", "label": "Body", "default": "The Main Counter Card sits on your counter for years. Bulk cards go home with every customer. Most businesses use both." },
 
-    { "type": "header", "content": "Products" },
+    { "type": "header", "content": "Categories" },
+    { "type": "text", "id": "cards_category_label", "label": "Cards tab label", "default": "Cards" },
+    { "type": "textarea", "id": "cards_category_desc", "label": "Cards tab description", "default": "Premium NFC cards designed for effortless customer interactions." },
+    { "type": "text", "id": "wristband_category_label", "label": "Wristbands tab label", "default": "Wristbands" },
+    { "type": "textarea", "id": "wristband_category_desc", "label": "Wristbands tab description", "default": "Premium wearable NFC products designed for businesses, events, and customer engagement." },
+
+    { "type": "header", "content": "Cards" },
     {
       "type": "paragraph",
       "content": "Both products are looked up by handle, so options, prices and stock always come from Shopify."
@@ -318,6 +388,15 @@
     { "type": "text", "id": "counter_label", "label": "Switch label", "default": "Main Counter Card" },
     { "type": "text", "id": "bulk_handle", "label": "Bulk cards handle", "default": "bulk-review-cards" },
     { "type": "text", "id": "bulk_label", "label": "Switch label", "default": "Bulk Cards" },
+
+    { "type": "header", "content": "Wristband" },
+    {
+      "type": "paragraph",
+      "content": "Looked up by handle, same as the two Cards above."
+    },
+    { "type": "text", "id": "wristband_handle", "label": "Wristband product handle", "default": "google-review-nfc-wristband" },
+    { "type": "text", "id": "wristband_label", "label": "Switch label", "default": "Wristband" },
+    { "type": "image_picker", "id": "wristband_image", "label": "Fallback photo", "info": "Shown only if the product has no photos of its own in Shopify." },
 
     { "type": "header", "content": "Buying" },
     { "type": "text", "id": "buy_label", "label": "Buy button label", "default": "Add to Cart" },
@@ -354,6 +433,6 @@
       ]
     }
   ],
-  "presets": [{ "name": "Cards buy panel" }]
+  "presets": [{ "name": "Cards & Wristbands buy" }]
 }
 {% endschema %}

@@ -79,10 +79,17 @@
 
     var money = data.moneyFormat;
     var bundle = data.bundle || { enabled: false };
+    /* Optional grouping layer, e.g. Cards vs Wristbands: [{ key, label,
+       slots: [productKey,...] }, ...]. Absent on every payload that predates
+       it (Build Your Set's Ring/Metal Card), so this whole feature is
+       inert there - no categories array, no tabs queried, nothing to wire
+       up, original flat-switcher behaviour untouched. */
+    var categories = data.categories || [];
 
     /* ---- state --------------------------------------------------------- */
     var state = {
       key: keys[0],
+      category: null,
       selections: {},   // productKey -> [optionValue|null, ...]
       qty: {},          // productKey -> integer
       inCart: {}        // productKey -> boolean, from the real cart
@@ -114,7 +121,10 @@
       bundleEyebrow: root.querySelector('[data-bset-bundle-eyebrow]'),
       bundleBody: root.querySelector('[data-bset-bundle-body]'),
       bundleMath: root.querySelector('[data-bset-bundle-math]'),
-      bundleCta: root.querySelector('[data-bset-bundle-cta]')
+      bundleCta: root.querySelector('[data-bset-bundle-cta]'),
+      categoryTabs: all('[data-bset-category]', root),
+      categoryDescs: all('[data-bset-cat-desc]', root),
+      switchWrap: root.querySelector('[data-bset-switchwrap]')
     };
 
     /* ---- variant resolution -------------------------------------------- */
@@ -412,6 +422,13 @@
     root.addEventListener('click', function (event) {
       var target = event.target;
 
+      var categoryBtn = target.closest('[data-bset-category]');
+      if (categoryBtn && root.contains(categoryBtn)) {
+        event.preventDefault();
+        selectCategory(categoryBtn.getAttribute('data-bset-category'));
+        return;
+      }
+
       var switcher = target.closest('[data-bset-switch]');
       if (switcher && root.contains(switcher)) {
         event.preventDefault();
@@ -480,6 +497,38 @@
       renderAll();
     }
 
+    /* Switching Cards <-> Wristbands: updates the tabs and descriptions,
+       scopes the Product switcher to just this category's slots (hiding it
+       entirely when the category holds only one real product - no point
+       showing a switcher with a single, permanently-pressed button), and
+       jumps to that category's first slot if the current one doesn't
+       belong to it. */
+    function selectCategory(catKey) {
+      var cat = null;
+      for (var i = 0; i < categories.length; i++) {
+        if (categories[i].key === catKey) { cat = categories[i]; break; }
+      }
+      if (!cat) { return; }
+      state.category = catKey;
+
+      el.categoryTabs.forEach(function (btn) {
+        var on = btn.getAttribute('data-bset-category') === catKey;
+        btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      el.categoryDescs.forEach(function (node) {
+        node.classList.toggle('is-active', node.getAttribute('data-bset-cat-desc') === catKey);
+      });
+
+      var multi = cat.slots.length > 1;
+      if (el.switchWrap) { el.switchWrap.hidden = !multi; }
+      all('[data-bset-switch]', root).forEach(function (btn) {
+        btn.hidden = cat.slots.indexOf(btn.getAttribute('data-bset-switch')) === -1;
+      });
+
+      if (cat.slots.indexOf(state.key) === -1) { state.key = cat.slots[0]; }
+      renderAll();
+    }
+
     /* ---- submit guard ---------------------------------------------------
        Runs before the theme's delegated document-level handler. If the
        selection is incomplete we stop the event here so nothing reaches the
@@ -528,7 +577,11 @@
     /* The theme's cart controller fires this after every successful change. */
     document.addEventListener('optiq:cart:updated', readCart);
 
-    renderAll();
+    if (categories.length) {
+      selectCategory(state.category || categories[0].key);
+    } else {
+      renderAll();
+    }
     readCart();
   }
 

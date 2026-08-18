@@ -36,6 +36,106 @@
 [data-bset-for][hidden] { display: none !important; }
 
 /* --------------------------------------------------------------------------
+   Category tabs — opt-in, driven by assets/optiq-buildset.js's optional
+   `categories` payload key (Cards vs Wristbands today). Sits full-width
+   above .bset-layout so switching reads as choosing a collection, not a
+   product option. Unused - and inert - on pages whose markup never
+   includes it, e.g. Build Your Set.
+   -------------------------------------------------------------------------- */
+
+.bset-categories {
+  padding-block: clamp(28px, 3.2vw, 44px) clamp(20px, 2.4vw, 30px);
+  border-bottom: 1px solid var(--bset-rule);
+}
+.bset-category-tabs {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: clamp(28px, 4vw, 56px);
+}
+.bset-category-tab {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 4px 2px 12px;
+  position: relative;
+  font-family: var(--prem-serif);
+  font-weight: 500;
+  font-size: clamp(1.15rem, 0.95rem + 0.7vw, 1.5rem);
+  letter-spacing: 0.005em;
+  color: var(--prem-ink-3);
+  cursor: pointer;
+  transition: color 240ms var(--prem-ease);
+}
+.bset-category-tab::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--prem-ink);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 280ms var(--prem-ease);
+}
+.bset-category-tab:hover { color: var(--prem-ink-2); }
+.bset-category-tab[aria-pressed="true"] { color: var(--prem-ink); }
+.bset-category-tab[aria-pressed="true"]::after { transform: scaleX(1); }
+.bset-category-tab:focus-visible { outline: 2px solid var(--prem-ink); outline-offset: 3px; }
+
+.bset-category-descwrap {
+  position: relative;
+  min-height: 1.5em;
+  max-width: 46ch;
+  margin: 10px auto 0;
+  text-align: center;
+}
+.bset-category-desc {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 260ms var(--prem-ease);
+  pointer-events: none;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--prem-ink-2);
+  margin: 0;
+}
+.bset-category-desc.is-active { opacity: 1; pointer-events: auto; position: relative; }
+
+/* Per-product name / price shown above the description. The Product
+   switcher already names the active Card, but Wristbands has no switcher
+   (one real product today), so this is the only place its name and price
+   appear. Deliberately smaller than .bset-title (the standalone PDP's hero
+   size) — this page's own "Make it yours" heading is already the H2. */
+.bset-cardhead { display: flex; flex-direction: column; gap: 6px; }
+.bset-subhead {
+  font-family: var(--prem-serif);
+  font-weight: 500;
+  font-size: clamp(1.25rem, 1.05rem + 0.7vw, 1.55rem);
+  letter-spacing: 0.005em;
+  margin: 0;
+}
+.bset-price-tag {
+  font-family: var(--prem-serif);
+  font-weight: 500;
+  font-size: 1.05rem;
+  color: var(--prem-ink-2);
+  margin: 0;
+}
+.bset-price-tag small {
+  font-family: var(--prem-sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--prem-ink-3);
+  margin-right: 5px;
+}
+.bset-cardhead .bset-desc { margin-top: 4px; }
+
+/* --------------------------------------------------------------------------
    Frame
    -------------------------------------------------------------------------- */
 
@@ -617,6 +717,7 @@
   .bset-crumbs      { order: 0; padding-top: 20px; }
   .bset-stage       { order: 1; margin-top: 20px; }
   .bset-head        { order: 2; padding-top: 26px; }
+  .bset-cardhead    { order: 2; padding-top: 26px; }
   .bset-price-lead  { order: 3; border-top: 0; }
   .bset-features    { order: 4; }
   .bset-switchwrap  { order: 5; }
@@ -645,6 +746,11 @@
   .bset-chip { min-width: 44px; height: 46px; }  /* comfortable touch target */
   .bset-qty { width: 100%; }
   .bset-thumb { width: 60px; }
+
+  .bset-categories { padding-block: 20px 16px; }
+  .bset-category-tabs { gap: 26px; }
+  .bset-category-tab { font-size: 1.05rem; padding-bottom: 10px; }
+  .bset-category-descwrap { max-width: 34ch; }
 }
 
 /* --------------------------------------------------------------------------
@@ -659,7 +765,10 @@
   .bset-chip,
   .bset-switch__btn,
   .bset-add,
-  .bset-bundle__cta {
+  .bset-bundle__cta,
+  .bset-category-tab,
+  .bset-category-tab::after,
+  .bset-category-desc {
     transition: none !important;
   }
   .bset-swatch:hover .bset-swatch__dot,
