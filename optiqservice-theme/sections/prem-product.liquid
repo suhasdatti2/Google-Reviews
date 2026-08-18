@@ -31,7 +31,7 @@
 
   Settings/blocks intentionally mirror studio-product.liquid's schema
   (tagline, benefit/accordion blocks, personalisation toggle, QR note,
-  delivery estimate, fallback images) so the real copy already written for
+  fallback images) so the real copy already written for
   these products carries over unchanged rather than being retyped.
 {%- endcomment -%}
 
@@ -70,13 +70,6 @@
   assign benefits = section.blocks | where: 'type', 'benefit'
   assign panels = section.blocks | where: 'type', 'accordion'
 
-  assign ship_min = section.settings.ship_min_days | default: 3
-  assign ship_max = section.settings.ship_max_days | default: 7
-  assign now_s = 'now' | date: '%s'
-  assign min_offset = ship_min | times: 86400
-  assign max_offset = ship_max | times: 86400
-  assign from_date = now_s | plus: min_offset | date: '%b %-d'
-  assign to_date = now_s | plus: max_offset | date: '%b %-d'
 -%}
 
 <section class="prem-pdp" data-prem-pdp {{ section.shopify_attributes }}>
@@ -296,10 +289,6 @@
         {%- endif -%}
       {%- endform -%}
 
-      {%- if section.settings.show_delivery -%}
-        <p class="prem-pdp__delivery">Dispatched &amp; delivered between {{ from_date }} &ndash; {{ to_date }}</p>
-      {%- endif -%}
-
       <p class="bset-secure">
         {% render 'bset-icon', name: 'lock' %}
         <span>{{ section.settings.secure_note | default: 'Secure Checkout' | escape }}</span>
@@ -390,11 +379,6 @@
       "info": "Turn off for products that are not programmed."
     },
     { "type": "text", "id": "qr_note", "label": "QR helper note", "default": "Optional backup for phones that cannot tap." },
-
-    { "type": "header", "content": "Delivery estimate" },
-    { "type": "checkbox", "id": "show_delivery", "label": "Show delivery estimate", "default": true },
-    { "type": "range", "id": "ship_min_days", "label": "Earliest", "min": 1, "max": 21, "step": 1, "default": 3, "unit": "d" },
-    { "type": "range", "id": "ship_max_days", "label": "Latest", "min": 2, "max": 40, "step": 1, "default": 7, "unit": "d" },
 
     { "type": "header", "content": "Accordions" },
     { "type": "checkbox", "id": "show_description", "label": "Show the Shopify product description", "default": true },

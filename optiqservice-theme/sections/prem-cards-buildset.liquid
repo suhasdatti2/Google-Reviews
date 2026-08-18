@@ -35,13 +35,6 @@
   assign swatches = section.blocks | where: 'type', 'swatch'
   assign slots = 'counter,bulk' | split: ','
 
-  assign ship_min = section.settings.ship_min_days | default: 3
-  assign ship_max = section.settings.ship_max_days | default: 7
-  assign now_s = 'now' | date: '%s'
-  assign min_offset = ship_min | times: 86400
-  assign max_offset = ship_max | times: 86400
-  assign from_date = now_s | plus: min_offset | date: '%b %-d'
-  assign to_date = now_s | plus: max_offset | date: '%b %-d'
 -%}
 
 <section class="prem-section bset" id="prem-cards-buy" data-bset-root {{ section.shopify_attributes }}>
@@ -248,10 +241,6 @@
 
         <button type="submit" class="bset-add" data-bset-add>{{ section.settings.buy_label | default: 'Add to Cart' | escape }}</button>
 
-        {%- if section.settings.show_delivery -%}
-          <p class="prem-cards-buy__delivery">Dispatched &amp; delivered between {{ from_date }} &ndash; {{ to_date }}</p>
-        {%- endif -%}
-
         <p class="bset-secure">
           {% render 'bset-icon', name: 'lock' %}
           <span>{{ section.settings.secure_note | default: 'Secure Checkout' | escape }}</span>
@@ -339,10 +328,7 @@
       "id": "show_personalise",
       "label": "Ask for business name and review link",
       "default": true
-    },
-    { "type": "checkbox", "id": "show_delivery", "label": "Show delivery estimate", "default": true },
-    { "type": "range", "id": "ship_min_days", "label": "Earliest", "min": 1, "max": 21, "step": 1, "default": 3, "unit": "d" },
-    { "type": "range", "id": "ship_max_days", "label": "Latest", "min": 2, "max": 40, "step": 1, "default": 7, "unit": "d" }
+    }
   ],
   "blocks": [
     {
