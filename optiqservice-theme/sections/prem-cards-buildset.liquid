@@ -92,9 +92,23 @@
         <div class="bset-cardhead" data-bset-for="{{ slot }}"{% unless forloop.first %} hidden{% endunless %}>
           <h3 class="bset-subhead">{%- if p != blank -%}{{ p.title }}{%- else -%}{{ slot_name | escape }}{%- endif -%}</h3>
           {%- if p != blank -%}
+            {%- comment -%}
+              A percentage reads as a real discount without the site having to
+              also say the dollar amount out loud - and stays correct on its
+              own if the price ever changes, unlike a hardcoded "$10 off".
+              Only appears when Shopify's own compare-at price says there is
+              one; nothing here invents a sale.
+            {%- endcomment -%}
             <p class="bset-price-tag">
-              {%- if p.price_min != p.price_max -%}<small>From</small>{%- endif -%}
-              {{ p.price_min | money }}
+              {%- if p.compare_at_price_min > p.price_min -%}
+                {%- assign bset_off_pct = p.compare_at_price_min | minus: p.price_min | times: 100.0 | divided_by: p.compare_at_price_min | round -%}
+                <span class="bset-price-tag__compare">{{ p.compare_at_price_min | money }}</span>
+                <span class="bset-price-tag__sale">{{ p.price_min | money }}</span>
+                <span class="bset-price-tag__off">{{ bset_off_pct }}% off</span>
+              {%- else -%}
+                {%- if p.price_min != p.price_max -%}<small>From</small>{%- endif -%}
+                {{ p.price_min | money }}
+              {%- endif -%}
             </p>
           {%- endif -%}
           <p class="bset-desc">

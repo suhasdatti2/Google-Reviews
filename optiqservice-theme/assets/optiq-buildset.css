@@ -135,6 +135,31 @@
 }
 .bset-cardhead .bset-desc { margin-top: 4px; }
 
+/* Sale state - shown only when Shopify's own compare-at price says there is
+   one. A percentage rather than a dollar figure, so it never has to be
+   retyped by hand if the price changes later. */
+.bset-price-tag__compare {
+  font-size: 0.85em;
+  color: var(--prem-ink-3);
+  text-decoration: line-through;
+  margin-right: 8px;
+}
+.bset-price-tag__sale { color: var(--prem-ink); font-weight: 600; }
+.bset-price-tag__off {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 3px 8px;
+  font-family: var(--prem-sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--prem-ink);
+  border: 1px solid var(--prem-ink);
+  border-radius: var(--bset-radius);
+  vertical-align: middle;
+}
+
 /* --------------------------------------------------------------------------
    Frame
    -------------------------------------------------------------------------- */
