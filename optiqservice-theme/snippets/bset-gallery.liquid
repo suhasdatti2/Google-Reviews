@@ -56,7 +56,7 @@
       {%- if b.settings.product == slot and b.settings.image != blank -%}
         {%- if i == 0 -%}{%- assign load = 'eager' -%}{%- else -%}{%- assign load = 'lazy' -%}{%- endif -%}
         {%- assign shot_alt = label | append: ' — ' | append: b.settings.value -%}
-        <div class="bset-shot{% if i == 0 %} is-active{% endif %}" data-shot="{{ i }}" data-shot-value="{{ b.settings.value | escape }}">
+        <div class="bset-shot{% if i == 0 %} is-active{% endif %}" data-shot="{{ i }}" data-shot-value="{{ b.settings.value | escape }}"{% if b.settings.value2 != blank %} data-shot-value2="{{ b.settings.value2 | escape }}"{% endif %}>
           {% render 'prem-media', image: b.settings.image, width: 1400, alt: shot_alt, label: label, loading: load %}
         </div>
         {%- assign i = i | plus: 1 -%}

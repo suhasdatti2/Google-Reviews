@@ -176,19 +176,39 @@
       });
     }
 
+    /* Some products (the Ring) need a photo to change on TWO option
+       dimensions - Color and Style, e.g. "Classic + White" is a different
+       shot than "Business Professional + Black" even though both are
+       "Black" on other combinations. A shot's data-shot-value2 makes it
+       specific to one second-option value; leaving it off makes the shot a
+       generic match for that first value regardless of the second option -
+       so a product with only one relevant option (the Metal Card's Finish)
+       still works exactly as before. An exact (value + value2) match always
+       wins over a generic (value-only) one. */
     function renderGallery() {
       var key = state.key;
       var gallery = root.querySelector('[data-bset-gallery="' + key + '"]');
       if (!gallery) { return; }
 
-      var lead = state.selections[key][0];
+      var selection = state.selections[key];
+      var lead = selection[0];
+      var second = selection.length > 1 ? selection[1] : null;
       var shots = all('[data-shot]', gallery);
       if (!shots.length) { return; }
 
-      var target = shots.filter(function (shot) {
-        return shot.getAttribute('data-shot-value') === lead;
-      })[0] || shots[0];
+      var exact = null, generic = null;
+      shots.forEach(function (shot) {
+        var shotValue = shot.getAttribute('data-shot-value');
+        if (shotValue === null || shotValue !== lead) { return; }
+        var shotValue2 = shot.getAttribute('data-shot-value2');
+        if (shotValue2) {
+          if (!exact && shotValue2 === second) { exact = shot; }
+        } else if (!generic) {
+          generic = shot;
+        }
+      });
 
+      var target = exact || generic || shots[0];
       setShot(gallery, target.getAttribute('data-shot'));
     }
 

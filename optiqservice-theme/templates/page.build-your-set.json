@@ -66,11 +66,11 @@
             "body": "Arrives programmed with your link, ready to use."
           }
         },
-        "ringsw1": { "type": "swatch", "settings": { "product": "ring", "value": "Gold" } },
-        "ringsw2": { "type": "swatch", "settings": { "product": "ring", "value": "Silver" } },
-        "ringsw3": { "type": "swatch", "settings": { "product": "ring", "value": "Black" } },
-        "cardsw1": { "type": "swatch", "settings": { "product": "card", "value": "Titanium Gray" } },
-        "cardsw2": { "type": "swatch", "settings": { "product": "card", "value": "Matte Black Metal" } },
+        "ringsw1": { "type": "swatch", "settings": { "product": "ring", "value": "Black", "value2": "Business Professional" } },
+        "ringsw2": { "type": "swatch", "settings": { "product": "ring", "value": "Black", "value2": "Classic" } },
+        "ringsw3": { "type": "swatch", "settings": { "product": "ring", "value": "White", "value2": "Classic" } },
+        "cardsw1": { "type": "swatch", "settings": { "product": "card", "value": "Gold" } },
+        "cardsw2": { "type": "swatch", "settings": { "product": "card", "value": "Matte Black" } },
         "cardsw3": { "type": "swatch", "settings": { "product": "card", "value": "Brushed Silver" } }
       },
       "block_order": [
