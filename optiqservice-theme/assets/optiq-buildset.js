@@ -254,25 +254,31 @@
       if (el.variantId) { el.variantId.value = variant ? variant.id : ''; }
       if (el.qtyInput) { el.qtyInput.value = state.qty[key]; }
 
+      var missing = -1;
+      for (var i = 0; i < selection.length; i++) { if (selection[i] === null) { missing = i; break; } }
+
       var reason = '';
+      var label;
       if (!product.available) {
         reason = product.title + ' is not available for purchase yet.';
+        label = 'Coming Soon';
+      } else if (missing !== -1) {
+        /* Nothing wrong yet - they just haven't picked a size, so the button
+           should point them at what to do next rather than read the same
+           "unavailable" text a real sellout would use. */
+        reason = '';
+        label = 'Select ' + product.options[missing].name;
+      } else if (!variant || !variant.available) {
+        reason = 'Currently unavailable in this combination.';
+        label = 'Currently Unavailable';
       } else {
-        var missing = -1;
-        for (var i = 0; i < selection.length; i++) { if (selection[i] === null) { missing = i; break; } }
-        if (missing !== -1) {
-          reason = '';   // not an error until they try to buy
-        } else if (!variant || !variant.available) {
-          reason = 'Currently unavailable in this combination.';
-        }
+        label = 'Add to Cart';
       }
 
-      var buyable = product.available && !!variant && variant.available;
+      var buyable = product.available && missing === -1 && !!variant && variant.available;
       if (el.addBtn) {
         el.addBtn.disabled = !buyable;
-        el.addBtn.textContent = product.available
-          ? (buyable ? 'Add to Cart' : 'Currently Unavailable')
-          : 'Coming Soon';
+        el.addBtn.textContent = label;
       }
       if (reason) { showAlert(reason); } else { clearAlert(); }
 
