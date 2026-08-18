@@ -6,13 +6,19 @@
   crossfades instead of fetching and reflowing.
 
   Photo sources, in order:
-    1. `main_image` - a single, directly-visible image_picker in the
-       section's own settings (no blocks to find first). This is the
-       simplest way to add a photo: one field, right in the section panel.
-    2. "Colour option" blocks for this slot that carry an image — these get
+    1. `extra1`/`extra2`/`extra3` - up to three named, directly-visible
+       image_picker fields in the section's own settings, each pre-wired by
+       the section (not typed by the merchant) to a specific option value
+       (and, for the Ring, a second Style value). This is the simplest and
+       least error-prone way to add a photo per colour/finish: one clearly
+       labelled field each, no free-text value to mistype or let go stale.
+    2. `main_image` - a single fallback image_picker, shown only when none
+       of the three specific photos above are set for the current selection.
+    3. "Colour option" blocks for this slot that carry an image — still
+       supported for anyone who wants more than three variations; these get
        data-shot-value so choosing that colour brings its own photo forward.
-    3. The product's own Shopify images.
-  With none of the three, a single flat placeholder stands in (prem-media),
+    4. The product's own Shopify images.
+  With none of the above, a single flat placeholder stands in (prem-media),
   matching the rest of the Premium pages.
 
   The source list is walked twice — once for the stacked shots, once for the
@@ -23,12 +29,24 @@
   The first slot renders visible rather than hidden, so with JavaScript off the
   page still shows a complete, buyable product instead of an empty frame.
 
-  Accepts: product, slot, swatches, label, is_active, main_image
+  Accepts: product, slot, swatches, label, is_active, main_image,
+           extra1_image, extra1_value, extra1_value2,
+           extra2_image, extra2_value, extra2_value2,
+           extra3_image, extra3_value, extra3_value2
 {%- endcomment -%}
 
 {%- liquid
   assign shot_n = 0
   if main_image != blank
+    assign shot_n = shot_n | plus: 1
+  endif
+  if extra1_image != blank
+    assign shot_n = shot_n | plus: 1
+  endif
+  if extra2_image != blank
+    assign shot_n = shot_n | plus: 1
+  endif
+  if extra3_image != blank
     assign shot_n = shot_n | plus: 1
   endif
   for b in swatches
@@ -45,8 +63,29 @@
   <div class="bset-media">
     {%- assign i = 0 -%}
 
+    {%- if extra1_image != blank -%}
+      <div class="bset-shot{% if i == 0 %} is-active{% endif %}" data-shot="{{ i }}" data-shot-value="{{ extra1_value | escape }}"{% if extra1_value2 != blank %} data-shot-value2="{{ extra1_value2 | escape }}"{% endif %}>
+        {% render 'prem-media', image: extra1_image, width: 1400, alt: label, label: label, loading: 'eager' %}
+      </div>
+      {%- assign i = i | plus: 1 -%}
+    {%- endif -%}
+
+    {%- if extra2_image != blank -%}
+      <div class="bset-shot{% if i == 0 %} is-active{% endif %}" data-shot="{{ i }}" data-shot-value="{{ extra2_value | escape }}"{% if extra2_value2 != blank %} data-shot-value2="{{ extra2_value2 | escape }}"{% endif %}>
+        {% render 'prem-media', image: extra2_image, width: 1400, alt: label, label: label, loading: 'lazy' %}
+      </div>
+      {%- assign i = i | plus: 1 -%}
+    {%- endif -%}
+
+    {%- if extra3_image != blank -%}
+      <div class="bset-shot{% if i == 0 %} is-active{% endif %}" data-shot="{{ i }}" data-shot-value="{{ extra3_value | escape }}"{% if extra3_value2 != blank %} data-shot-value2="{{ extra3_value2 | escape }}"{% endif %}>
+        {% render 'prem-media', image: extra3_image, width: 1400, alt: label, label: label, loading: 'lazy' %}
+      </div>
+      {%- assign i = i | plus: 1 -%}
+    {%- endif -%}
+
     {%- if main_image != blank -%}
-      <div class="bset-shot is-active" data-shot="0">
+      <div class="bset-shot{% if i == 0 %} is-active{% endif %}" data-shot="{{ i }}">
         {% render 'prem-media', image: main_image, width: 1400, alt: label, label: label, loading: 'eager' %}
       </div>
       {%- assign i = i | plus: 1 -%}
@@ -95,6 +134,39 @@
   {%- if shot_n > 1 -%}
     <div class="bset-thumbs" role="group" aria-label="{{ label | escape }} thumbnails">
       {%- assign t = 0 -%}
+
+      {%- if extra1_image != blank -%}
+        <button type="button"
+                class="bset-thumb{% if t == 0 %} is-active{% endif %}"
+                data-shot-go="{{ t }}"
+                aria-pressed="{% if t == 0 %}true{% else %}false{% endif %}"
+                aria-label="Show {{ extra1_value | escape }}">
+          {{ extra1_image | image_url: width: 220 | image_tag: alt: '', loading: 'lazy' }}
+        </button>
+        {%- assign t = t | plus: 1 -%}
+      {%- endif -%}
+
+      {%- if extra2_image != blank -%}
+        <button type="button"
+                class="bset-thumb{% if t == 0 %} is-active{% endif %}"
+                data-shot-go="{{ t }}"
+                aria-pressed="{% if t == 0 %}true{% else %}false{% endif %}"
+                aria-label="Show {{ extra2_value | escape }}">
+          {{ extra2_image | image_url: width: 220 | image_tag: alt: '', loading: 'lazy' }}
+        </button>
+        {%- assign t = t | plus: 1 -%}
+      {%- endif -%}
+
+      {%- if extra3_image != blank -%}
+        <button type="button"
+                class="bset-thumb{% if t == 0 %} is-active{% endif %}"
+                data-shot-go="{{ t }}"
+                aria-pressed="{% if t == 0 %}true{% else %}false{% endif %}"
+                aria-label="Show {{ extra3_value | escape }}">
+          {{ extra3_image | image_url: width: 220 | image_tag: alt: '', loading: 'lazy' }}
+        </button>
+        {%- assign t = t | plus: 1 -%}
+      {%- endif -%}
 
       {%- if main_image != blank -%}
         <button type="button"

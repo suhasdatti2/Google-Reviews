@@ -133,10 +133,28 @@
               assign p = ring
               assign slot_name = section.settings.ring_label | default: 'Ring'
               assign slot_image = section.settings.ring_image
+              assign extra1_image = section.settings.ring_image_bp_black
+              assign extra1_value = 'Black'
+              assign extra1_value2 = 'Business Professional'
+              assign extra2_image = section.settings.ring_image_classic_black
+              assign extra2_value = 'Black'
+              assign extra2_value2 = 'Classic'
+              assign extra3_image = section.settings.ring_image_classic_white
+              assign extra3_value = 'White'
+              assign extra3_value2 = 'Classic'
             else
               assign p = card
               assign slot_name = section.settings.card_label | default: 'Metal Card'
               assign slot_image = section.settings.card_image
+              assign extra1_image = section.settings.card_image_gold
+              assign extra1_value = 'Gold'
+              assign extra1_value2 = blank
+              assign extra2_image = section.settings.card_image_matte_black
+              assign extra2_value = 'Matte Black'
+              assign extra2_value2 = blank
+              assign extra3_image = section.settings.card_image_brushed_silver
+              assign extra3_value = 'Brushed Silver'
+              assign extra3_value2 = blank
             endif
           -%}
           {% render 'bset-gallery',
@@ -145,7 +163,10 @@
              swatches: swatches,
              label: slot_name,
              is_active: forloop.first,
-             main_image: slot_image %}
+             main_image: slot_image,
+             extra1_image: extra1_image, extra1_value: extra1_value, extra1_value2: extra1_value2,
+             extra2_image: extra2_image, extra2_value: extra2_value, extra2_value2: extra2_value2,
+             extra3_image: extra3_image, extra3_value: extra3_value, extra3_value2: extra3_value2 %}
         {%- endfor -%}
       </div>
 
@@ -399,11 +420,17 @@
     { "type": "text", "id": "ring_handle", "label": "Ring product handle", "default": "optiq-signature-ring" },
     { "type": "text", "id": "ring_label", "label": "Ring switch label", "default": "Ring" },
     { "type": "richtext", "id": "ring_desc", "label": "Ring description", "info": "Leave blank to use the product's own description." },
-    { "type": "image_picker", "id": "ring_image", "label": "Ring photo", "info": "Shown in the gallery. For a photo per colour instead, use the \"Colour option\" blocks below." },
+    { "type": "image_picker", "id": "ring_image", "label": "Ring photo (fallback)", "info": "Shown only when none of the three specific photos below are set." },
+    { "type": "image_picker", "id": "ring_image_bp_black", "label": "Photo — Business Professional, Black" },
+    { "type": "image_picker", "id": "ring_image_classic_black", "label": "Photo — Classic, Black" },
+    { "type": "image_picker", "id": "ring_image_classic_white", "label": "Photo — Classic, White" },
     { "type": "text", "id": "card_handle", "label": "Metal Card product handle", "default": "optiq-signature" },
     { "type": "text", "id": "card_label", "label": "Metal Card switch label", "default": "Metal Card" },
     { "type": "richtext", "id": "card_desc", "label": "Metal Card description", "info": "Leave blank to use the product's own description." },
-    { "type": "image_picker", "id": "card_image", "label": "Metal Card photo", "info": "Shown in the gallery. For a photo per finish instead, use the \"Colour option\" blocks below." },
+    { "type": "image_picker", "id": "card_image", "label": "Metal Card photo (fallback)", "info": "Shown only when none of the three specific photos below are set." },
+    { "type": "image_picker", "id": "card_image_gold", "label": "Photo — Gold" },
+    { "type": "image_picker", "id": "card_image_matte_black", "label": "Photo — Matte Black" },
+    { "type": "image_picker", "id": "card_image_brushed_silver", "label": "Photo — Brushed Silver" },
 
     { "type": "header", "content": "Bundle" },
     {
