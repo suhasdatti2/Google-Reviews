@@ -52,7 +52,7 @@
       "type": "prem-cards-buildset",
       "blocks": {
         "sw1": { "type": "swatch", "settings": { "product": "counter", "value": "Black" } },
-        "sw2": { "type": "swatch", "settings": { "product": "counter", "value": "White", "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_40_15_PM_4.png" } },
+        "sw2": { "type": "swatch", "settings": { "product": "counter", "value": "White" } },
         "sw3": { "type": "swatch", "settings": { "product": "bulk", "value": "Black", "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_58_27_PM_4.png" } },
         "sw4": { "type": "swatch", "settings": { "product": "bulk", "value": "White", "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_08_02_25_PM_3.png" } }
       },
