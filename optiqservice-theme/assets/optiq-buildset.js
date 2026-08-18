@@ -223,6 +223,29 @@
       });
     }
 
+    /* Picking a thumbnail/dot is choosing a colour (and, for the Ring, a
+       style) just as much as clicking the swatch itself - so it has to move
+       the same state the swatch buttons do, or the two controls drift out of
+       sync with each other. Only touches option indexes the shot actually
+       names; a shot with no data-shot-value (e.g. a plain product photo)
+       changes nothing. */
+    function syncSelectionToShot(gallery, index) {
+      var key = gallery.getAttribute('data-bset-gallery');
+      var shot = gallery.querySelector('[data-shot="' + index + '"]');
+      if (!shot) { return; }
+
+      var value = shot.getAttribute('data-shot-value');
+      if (value === null) { return; }
+      var value2 = shot.getAttribute('data-shot-value2');
+
+      var selection = state.selections[key];
+      var changed = false;
+      if (selection[0] !== value) { selection[0] = value; changed = true; }
+      if (value2 && selection.length > 1 && selection[1] !== value2) { selection[1] = value2; changed = true; }
+
+      if (changed) { renderOptions(); renderTotals(); renderBuyState(); }
+    }
+
     function renderTotals() {
       var key = state.key;
       var product = products[key];
@@ -419,7 +442,10 @@
       var shotGo = target.closest('[data-shot-go]');
       if (shotGo && root.contains(shotGo)) {
         event.preventDefault();
-        setShot(shotGo.closest('[data-bset-gallery]'), shotGo.getAttribute('data-shot-go'));
+        var galleryEl = shotGo.closest('[data-bset-gallery]');
+        var shotIndex = shotGo.getAttribute('data-shot-go');
+        setShot(galleryEl, shotIndex);
+        syncSelectionToShot(galleryEl, shotIndex);
         return;
       }
 
