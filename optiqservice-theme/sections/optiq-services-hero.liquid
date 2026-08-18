@@ -36,6 +36,10 @@
   overlaid directly on top of the image instead of sitting in a separate
   white column. Every background photo is one of the theme's real product
   photos - nothing invented.
+
+  Each row link is only rendered when its label is set, so removing a row
+  (e.g. Other Services, whose page was deleted) is just clearing its label
+  in the section settings - no dead link to an unused page.
 {%- endcomment -%}
 
 <section class="opsh{{ splash }}" data-optiq-services-hero aria-label="{{ section.settings.aria_label | escape }}">
@@ -58,42 +62,50 @@
 
   <div class="opsh__overlay">
     <nav class="opsh__list" aria-label="{{ section.settings.aria_label | escape }}">
-      <a
-        class="opsh__row"
-        href="{{ row1_url }}"
-        data-opsh-choose="row1"
-        data-opsh-name="{{ section.settings.row1_label | escape }}"
-        style="--opsh-delay: 140ms;"
-      >
-        <span class="opsh__row-label">{{ section.settings.row1_label | escape }}</span>
-      </a>
-      <a
-        class="opsh__row"
-        href="{{ row2_url }}"
-        data-opsh-choose="row2"
-        data-opsh-name="{{ section.settings.row2_label | escape }}"
-        style="--opsh-delay: 220ms;"
-      >
-        <span class="opsh__row-label">{{ section.settings.row2_label | escape }}</span>
-      </a>
-      <a
-        class="opsh__row"
-        href="{{ row3_url }}"
-        data-opsh-choose="row3"
-        data-opsh-name="{{ section.settings.row3_label | escape }}"
-        style="--opsh-delay: 300ms;"
-      >
-        <span class="opsh__row-label">{{ section.settings.row3_label | escape }}</span>
-      </a>
-      <a
-        class="opsh__row"
-        href="{{ row4_url }}"
-        data-opsh-choose="row4"
-        data-opsh-name="{{ section.settings.row4_label | escape }}"
-        style="--opsh-delay: 380ms;"
-      >
-        <span class="opsh__row-label">{{ section.settings.row4_label | escape }}</span>
-      </a>
+      {%- if section.settings.row1_label != blank -%}
+        <a
+          class="opsh__row"
+          href="{{ row1_url }}"
+          data-opsh-choose="row1"
+          data-opsh-name="{{ section.settings.row1_label | escape }}"
+          style="--opsh-delay: 140ms;"
+        >
+          <span class="opsh__row-label">{{ section.settings.row1_label | escape }}</span>
+        </a>
+      {%- endif -%}
+      {%- if section.settings.row2_label != blank -%}
+        <a
+          class="opsh__row"
+          href="{{ row2_url }}"
+          data-opsh-choose="row2"
+          data-opsh-name="{{ section.settings.row2_label | escape }}"
+          style="--opsh-delay: 220ms;"
+        >
+          <span class="opsh__row-label">{{ section.settings.row2_label | escape }}</span>
+        </a>
+      {%- endif -%}
+      {%- if section.settings.row3_label != blank -%}
+        <a
+          class="opsh__row"
+          href="{{ row3_url }}"
+          data-opsh-choose="row3"
+          data-opsh-name="{{ section.settings.row3_label | escape }}"
+          style="--opsh-delay: 300ms;"
+        >
+          <span class="opsh__row-label">{{ section.settings.row3_label | escape }}</span>
+        </a>
+      {%- endif -%}
+      {%- if section.settings.row4_label != blank -%}
+        <a
+          class="opsh__row"
+          href="{{ row4_url }}"
+          data-opsh-choose="row4"
+          data-opsh-name="{{ section.settings.row4_label | escape }}"
+          style="--opsh-delay: 380ms;"
+        >
+          <span class="opsh__row-label">{{ section.settings.row4_label | escape }}</span>
+        </a>
+      {%- endif -%}
     </nav>
 
     <div class="opsh__logo" aria-hidden="true" style="--opsh-delay: 420ms;">{{ section.settings.wordmark | escape }}</div>
@@ -124,16 +136,16 @@
     { "type": "text", "id": "confirm_note", "label": "Confirmation subtext", "default": "Taking you there" },
     { "type": "text", "id": "wordmark", "label": "Wordmark", "default": "Optiq" },
     { "type": "header", "content": "Row 1" },
-    { "type": "text", "id": "row1_label", "label": "Label", "default": "AI Receptionist" },
+    { "type": "text", "id": "row1_label", "label": "Label", "default": "AI Receptionist", "info": "Leave blank to hide this row entirely." },
     { "type": "url", "id": "row1_url", "label": "Link", "info": "Defaults to /pages/ai-receptionist" },
     { "type": "header", "content": "Row 2" },
-    { "type": "text", "id": "row2_label", "label": "Label", "default": "Cards" },
+    { "type": "text", "id": "row2_label", "label": "Label", "default": "Cards", "info": "Leave blank to hide this row entirely." },
     { "type": "url", "id": "row2_url", "label": "Link", "info": "Defaults to /pages/google-review-cards" },
     { "type": "header", "content": "Row 3" },
-    { "type": "text", "id": "row3_label", "label": "Label", "default": "Other Services" },
+    { "type": "text", "id": "row3_label", "label": "Label", "info": "Leave blank to hide this row entirely." },
     { "type": "url", "id": "row3_url", "label": "Link", "info": "Defaults to /pages/other-services" },
     { "type": "header", "content": "Row 4" },
-    { "type": "text", "id": "row4_label", "label": "Label", "default": "Premium Products" },
+    { "type": "text", "id": "row4_label", "label": "Label", "default": "Premium Products", "info": "Leave blank to hide this row entirely." },
     { "type": "url", "id": "row4_url", "label": "Link", "info": "Defaults to /pages/premium-products" }
   ],
   "presets": [{ "name": "Services splash" }]

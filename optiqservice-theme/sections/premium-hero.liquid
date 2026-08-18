@@ -2,38 +2,145 @@
   Premium Products - nav + hero. First section on /pages/premium-products.
   Carries the .prem-page marker (see assets/optiq-premium.css) so the
   theme's own header/footer/dock hide themselves - this section shows its
-  own nav instead, matching the reference wireframe: left utility links,
-  centred OPTIQ / SIGNATURE wordmark, right utility links.
+  own nav instead, matching the reference wireframe.
 
   The nav markup itself lives in snippets/prem-nav.liquid so this page and
-  /pages/build-your-set share one header rather than two that drift.
+  /pages/build-your-set share one header rather than two that drift. Ring
+  and Metal Cards both lead to Build Your Set, the single page that sells
+  both (with its own switcher) - there is one purchase destination, not two.
 
-  Both products are now real: "Metal Cards" is Optiq Signature and "Ring" is
-  Optiq Signature Ring, so the Ring link defaults to the Build Your Set
-  purchase page rather than the dead "#" it used before that product existed.
+  Wordmark placement: the nav's own wordmark (.prem-nav__mark, in
+  prem-nav.liquid) starts invisible on THIS page only. A second, large
+  decorative wordmark sits centred over the hero photo instead. Scrolling
+  past the hero crossfades the two - the big one shrinks and rises out of
+  view, the small nav one fades in - reading as the mark "flying" from the
+  photo up into the (now sticky) header. This is all scoped to this
+  section's own inline <style>/<script>, keyed off [data-prem-hero-page],
+  rather than touching the shared stylesheet - every OTHER page using
+  prem-nav (Build Your Set, the Cards pages) keeps its nav wordmark visible
+  exactly as before, since only a page with the data-prem-hero-mark element
+  opts into the hidden-until-scrolled behaviour.
 {%- endcomment -%}
 
 {{ 'optiq-premium.css' | asset_url | stylesheet_tag }}
 
-<div class="prem-page">
+<div class="prem-page" data-prem-hero-page>
   {% render 'prem-nav',
      wordmark: section.settings.wordmark,
      wordmark_sub: section.settings.wordmark_sub,
      ring_label: section.settings.ring_label,
      ring_url: section.settings.ring_url,
      cards_label: section.settings.cards_label,
-     cards_url: section.settings.cards_url,
-     about_label: section.settings.about_label,
-     about_url: section.settings.about_url,
-     collections_label: section.settings.collections_label,
-     collections_url: section.settings.collections_url %}
+     cards_url: section.settings.cards_url %}
 
   <section class="prem-section" id="prem-hero" {{ section.shopify_attributes }}>
     <div class="prem-hero__frame">
       {% render 'prem-media', image: section.settings.hero_image, label: 'Hero image / video' %}
+      <div class="prem-hero__mark" data-prem-hero-mark aria-hidden="true">
+        <span class="prem-hero__mark-word">{{ section.settings.wordmark | default: 'Optiq' | escape }}</span>
+        <span class="prem-hero__mark-sub">{{ section.settings.wordmark_sub | default: 'Signature' | escape }}</span>
+      </div>
     </div>
   </section>
 </div>
+
+<style>
+  [data-prem-hero-page] .prem-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--prem-white);
+  }
+  [data-prem-hero-page] .prem-nav__mark {
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+    transition: opacity 420ms var(--prem-ease), transform 420ms var(--prem-ease);
+  }
+  [data-prem-hero-page].is-scrolled .prem-nav__mark {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .prem-hero__frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: radial-gradient(60% 55% at 50% 50%, rgba(0, 0, 0, 0.34), rgba(0, 0, 0, 0) 72%);
+    pointer-events: none;
+  }
+  .prem-hero__mark {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    pointer-events: none;
+    transition: opacity 520ms var(--prem-ease), transform 620ms var(--prem-ease);
+  }
+  .prem-hero__mark-word {
+    font-family: var(--prem-serif);
+    font-weight: 500;
+    font-size: clamp(2.75rem, 2vw + 2.2rem, 6rem);
+    letter-spacing: 0.01em;
+    line-height: 1;
+    color: #fff;
+    text-shadow: 0 8px 40px rgba(0, 0, 0, 0.45);
+  }
+  .prem-hero__mark-sub {
+    margin-top: 10px;
+    font-family: var(--prem-sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.36em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.88);
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+  [data-prem-hero-page].is-scrolled .prem-hero__mark {
+    opacity: 0;
+    transform: translateY(-140px) scale(0.55);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-prem-hero-page] .prem-nav__mark,
+    .prem-hero__mark {
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+(function () {
+  function initPremHeroMark() {
+    var page = document.querySelector('[data-prem-hero-page]');
+    var marker = document.querySelector('[data-prem-hero-mark]');
+    if (!page || !marker || page.dataset.premHeroMarkReady === '1') { return; }
+    page.dataset.premHeroMarkReady = '1';
+
+    if (!('IntersectionObserver' in window)) { page.classList.add('is-scrolled'); return; }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        page.classList.toggle('is-scrolled', entry.intersectionRatio < 0.5);
+      });
+    }, { threshold: [0, 0.5, 1] });
+    io.observe(marker);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPremHeroMark);
+  } else {
+    initPremHeroMark();
+  }
+  document.addEventListener('shopify:section:load', initPremHeroMark);
+})();
+</script>
 
 {% schema %}
 {
@@ -45,13 +152,9 @@
 
     { "type": "header", "content": "Nav links" },
     { "type": "text", "id": "ring_label", "label": "Ring label", "default": "Ring" },
-    { "type": "url", "id": "ring_url", "label": "Ring link", "info": "Defaults to /pages/build-your-set, the Ring purchase page." },
+    { "type": "url", "id": "ring_url", "label": "Ring link", "info": "Defaults to /pages/build-your-set, the purchase page." },
     { "type": "text", "id": "cards_label", "label": "Metal Cards label", "default": "Metal Cards" },
-    { "type": "url", "id": "cards_url", "label": "Metal Cards link", "info": "Defaults to /pages/signature, the existing Optiq Signature metal card page." },
-    { "type": "text", "id": "about_label", "label": "About label", "default": "About" },
-    { "type": "url", "id": "about_url", "label": "About link", "info": "Defaults to /pages/about-us" },
-    { "type": "text", "id": "collections_label", "label": "Collections label", "default": "Collections" },
-    { "type": "url", "id": "collections_url", "label": "Collections link", "info": "Defaults to /collections" },
+    { "type": "url", "id": "cards_url", "label": "Metal Cards link", "info": "Defaults to /pages/build-your-set, the same purchase page as Ring." },
 
     { "type": "header", "content": "Hero" },
     { "type": "image_picker", "id": "hero_image", "label": "Hero photo" }

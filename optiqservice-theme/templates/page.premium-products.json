@@ -18,10 +18,6 @@
         "ring_url": "",
         "cards_label": "Metal Cards",
         "cards_url": "",
-        "about_label": "About",
-        "about_url": "",
-        "collections_label": "Collections",
-        "collections_url": "",
         "hero_image": "shopify://shop_images/ChatGPT_Image_Aug_16_2026_06_42_26_PM.png"
       }
     },
@@ -54,14 +50,63 @@
     "premconfig": {
       "type": "premium-configurator",
       "blocks": {
-        "ring1": { "type": "ring_option", "settings": {} },
-        "ring2": { "type": "ring_option", "settings": {} },
-        "ring3": { "type": "ring_option", "settings": {} },
-        "card1": { "type": "card_option", "settings": {} },
-        "card2": { "type": "card_option", "settings": {} },
-        "card3": { "type": "card_option", "settings": {} }
+        "ring1": {
+          "type": "ring_option",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_16_2026_07_39_39_PM.png",
+            "label": "",
+            "swatch_color": ""
+          }
+        },
+        "ring2": {
+          "type": "ring_option",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_16_2026_07_42_58_PM.png",
+            "label": "",
+            "swatch_color": ""
+          }
+        },
+        "ring3": {
+          "type": "ring_option",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_16_2026_07_43_01_PM.png",
+            "label": "",
+            "swatch_color": ""
+          }
+        },
+        "card1": {
+          "type": "card_option",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_16_2026_07_50_36_PM.png",
+            "label": "",
+            "swatch_color": ""
+          }
+        },
+        "card2": {
+          "type": "card_option",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_16_2026_07_51_12_PM.png",
+            "label": "",
+            "swatch_color": ""
+          }
+        },
+        "card3": {
+          "type": "card_option",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_16_2026_07_52_01_PM.png",
+            "label": "",
+            "swatch_color": ""
+          }
+        }
       },
-      "block_order": ["ring1", "ring2", "ring3", "card1", "card2", "card3"],
+      "block_order": [
+        "ring1",
+        "ring2",
+        "ring3",
+        "card1",
+        "card2",
+        "card3"
+      ],
       "settings": {
         "eyebrow": "Make It Yours",
         "heading": "Choose Your Signature",
@@ -69,7 +114,8 @@
         "cta_label": "Build Your Set",
         "cta_link": "",
         "ring_label": "Ring",
-        "card_label": "Metal Card"
+        "card_label": "Metal Card",
+        "card_note": "Fully customizable design, to client's choice."
       }
     },
     "premlifestyle": {

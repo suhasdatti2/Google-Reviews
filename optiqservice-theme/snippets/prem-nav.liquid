@@ -5,8 +5,12 @@
   settings.
 
   Accepts: wordmark, wordmark_sub, ring_label, ring_url, cards_label,
-  cards_url, about_label, about_url, collections_label, collections_url.
-  Every one is optional; the defaults below are the real destinations.
+  cards_url. Every one is optional; the defaults below are the real
+  destinations — Ring and Metal Cards both default to Build Your Set, the
+  one page that actually sells both (with its own in-page switcher), so
+  there is a single purchase destination rather than two competing ones.
+  About and Collections were removed: both pointed at unbuilt placeholder
+  pages, which have since been deleted.
 
   The cart count carries data-o-cart-count so the theme's cart controller
   (assets/optiq-cart.js) repaints it after an AJAX add — a server-rendered
@@ -17,9 +21,7 @@
   <div class="prem-nav__inner">
     <nav class="prem-nav__links" aria-label="Shop">
       <a href="{{ ring_url | default: '/pages/build-your-set' }}">{{ ring_label | default: 'Ring' | escape }}</a>
-      <a href="{{ cards_url | default: '/pages/signature' }}">{{ cards_label | default: 'Metal Cards' | escape }}</a>
-      <a href="{{ about_url | default: '/pages/about-us' }}">{{ about_label | default: 'About' | escape }}</a>
-      <a href="{{ collections_url | default: '/collections' }}">{{ collections_label | default: 'Collections' | escape }}</a>
+      <a href="{{ cards_url | default: '/pages/build-your-set' }}">{{ cards_label | default: 'Metal Cards' | escape }}</a>
     </nav>
 
     <a class="prem-nav__mark" href="{{ routes.root_url }}">

@@ -27,7 +27,10 @@
           <p class="prem-config__body">{{ section.settings.body }}</p>
         {%- endif -%}
         {%- if section.settings.cta_label != blank -%}
-          <a class="prem-link" href="{{ section.settings.cta_link | default: '/pages/build-your-set' }}">{{ section.settings.cta_label | escape }}</a>
+          <a class="prem-config__cta" href="{{ section.settings.cta_link | default: '/pages/build-your-set' }}">
+            {{ section.settings.cta_label | escape }}
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
         {%- endif -%}
       </div>
 

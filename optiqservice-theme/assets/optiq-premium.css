@@ -380,6 +380,42 @@ body:has(.prem-page) { padding-bottom: 0 !important; background: var(--prem-whit
   outline-offset: 3px;
 }
 
+/* Real button, not a small underlined text link - the primary purchase CTA
+   on this page needs to read as obviously clickable. */
+.prem-config__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 6px;
+  min-width: 240px;
+  padding: 19px 30px;
+  background: var(--prem-ink);
+  color: var(--prem-white);
+  font-family: var(--prem-sans);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 2px;
+  box-shadow: 0 20px 44px -22px rgba(17, 17, 16, 0.4);
+  transition: transform 220ms var(--prem-ease), opacity 220ms var(--prem-ease), box-shadow 220ms var(--prem-ease);
+}
+.prem-config__cta svg { flex: none; transition: transform 220ms var(--prem-ease); }
+.prem-config__cta:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 26px 54px -20px rgba(17, 17, 16, 0.48);
+}
+.prem-config__cta:hover svg { transform: translateX(3px); }
+.prem-config__cta:active { transform: translateY(0); }
+.prem-config__cta:focus-visible { outline: 2px solid var(--prem-ink); outline-offset: 3px; }
+
+@media (max-width: 520px) {
+  .prem-config__cta { width: 100%; }
+}
+
 @media (max-width: 860px) {
   .prem-config__grid { grid-template-columns: 1fr; }
 }
