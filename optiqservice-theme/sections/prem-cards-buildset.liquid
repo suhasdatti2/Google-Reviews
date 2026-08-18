@@ -187,7 +187,9 @@
         -%}
 
         <div class="bset-field bset-options" data-bset-for="{{ slot }}"{% unless forloop.first %} hidden{% endunless %}>
-          {%- if p != blank -%}
+          {%- if p == blank -%}
+            <p class="bset-help">This product is not available yet.</p>
+          {%- elsif p.has_only_default_variant == false -%}
             {%- for option in p.options_with_values -%}
               {%- assign oi = forloop.index0 -%}
               {%- assign lowered = option.name | downcase -%}
@@ -241,8 +243,6 @@
                 {%- endif -%}
               </div>
             {%- endfor -%}
-          {%- else -%}
-            <p class="bset-help">This product is not available yet.</p>
           {%- endif -%}
         </div>
       {%- endfor -%}
@@ -338,12 +338,14 @@
               "available": {{ p.available }},
               "priceFrom": {{ p.price_min }},
               "options": [
-                {%- for option in p.options_with_values -%}
-                  {
-                    "name": {{ option.name | json }},
-                    "values": [{% for v in option.values %}{{ v | json }}{% unless forloop.last %},{% endunless %}{% endfor %}]
-                  }{% unless forloop.last %},{% endunless %}
-                {%- endfor -%}
+                {%- unless p.has_only_default_variant -%}
+                  {%- for option in p.options_with_values -%}
+                    {
+                      "name": {{ option.name | json }},
+                      "values": [{% for v in option.values %}{{ v | json }}{% unless forloop.last %},{% endunless %}{% endfor %}]
+                    }{% unless forloop.last %},{% endunless %}
+                  {%- endfor -%}
+                {%- endunless -%}
               ],
               "variants": [
                 {%- for v in p.variants -%}
@@ -351,7 +353,7 @@
                     "id": {{ v.id }},
                     "price": {{ v.price }},
                     "available": {{ v.available }},
-                    "opts": [{% for o in v.options %}{{ o | json }}{% unless forloop.last %},{% endunless %}{% endfor %}]
+                    "opts": [{% unless p.has_only_default_variant %}{% for o in v.options %}{{ o | json }}{% unless forloop.last %},{% endunless %}{% endfor %}{% endunless %}]
                   }{% unless forloop.last %},{% endunless %}
                 {%- endfor -%}
               ]
