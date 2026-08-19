@@ -58,7 +58,7 @@
           "type": "accordion",
           "settings": {
             "heading": "Key details",
-            "content": "<p>Credit-card sized. NFC chip inside, powered by the customer's phone — no batteries, no charging. Works with almost all iPhones and Android phones released in the last several years. One-time purchase, no monthly fee.</p><p>A printed QR code can be added as an optional backup, but it is never required.</p>"
+            "content": "<p>Credit-card sized. Chip inside, powered by the customer's phone — no batteries, no charging. Works with almost all iPhones and Android phones released in the last several years. One-time purchase, no monthly fee.</p><p>A printed QR code can be added as an optional backup, but it is never required.</p>"
           }
         }
       },

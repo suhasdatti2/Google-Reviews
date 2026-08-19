@@ -30,7 +30,7 @@
 
         <h2 class="sig-h2" data-o-reveal="rise">{{ section.settings.heading | default: 'Engineered from precision metal.' }}</h2>
 
-        <p class="sig-body" data-o-reveal="rise">{{ section.settings.body | default: "A solid metal body, finished by hand and machined to a tolerance most cards never see. The NFC layer sits invisibly inside - nothing about the surface hints at the technology underneath until the moment it's tapped." }}</p>
+        <p class="sig-body" data-o-reveal="rise">{{ section.settings.body | default: "A solid metal body, finished by hand and machined to a tolerance most cards never see. The chip layer sits invisibly inside - nothing about the surface hints at the technology underneath until the moment it's tapped." }}</p>
 
         {%- assign specs = section.blocks | where: 'type', 'spec' -%}
         {%- if specs.size > 0 -%}
@@ -59,7 +59,7 @@
       "type": "textarea",
       "id": "body",
       "label": "Body copy",
-      "default": "A solid metal body, finished by hand and machined to a tolerance most cards never see. The NFC layer sits invisibly inside - nothing about the surface hints at the technology underneath until the moment it's tapped."
+      "default": "A solid metal body, finished by hand and machined to a tolerance most cards never see. The chip layer sits invisibly inside - nothing about the surface hints at the technology underneath until the moment it's tapped."
     },
     { "type": "image_picker", "id": "image", "label": "Material close-up photograph" }
   ],
@@ -79,7 +79,7 @@
       "name": "Signature material",
       "blocks": [
         { "type": "spec", "settings": { "label": "Body", "value": "Solid metal" } },
-        { "type": "spec", "settings": { "label": "Chip", "value": "NFC, sealed" } },
+        { "type": "spec", "settings": { "label": "Chip", "value": "Sealed" } },
         { "type": "spec", "settings": { "label": "Setup", "value": "None required" } }
       ]
     }

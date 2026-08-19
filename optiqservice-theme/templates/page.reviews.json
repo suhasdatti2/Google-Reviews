@@ -12,7 +12,7 @@
     "cardshero": {
       "type": "prem-cards-hero",
       "settings": {
-        "eyebrow": "Premium NFC Cards & Wristbands for Businesses",
+        "eyebrow": "Premium Tap-to-Review Cards & Wristbands for Businesses",
         "heading": "One tap. More reviews.",
         "subheading": "Customers tap their phone on the card or wristband and your Google review page opens instantly. No app. No QR code. No monthly fee.",
         "hero_image": "shopify://shop_images/hf_20260809_191808_d7032847-de25-498e-a132-a2ed7ceedbde.png",
@@ -26,8 +26,8 @@
       "type": "premium-intro",
       "settings": {
         "eyebrow": "Built to last",
-        "heading": "Durable, tap-ready NFC technology.",
-        "body": "Every card is built from premium, durable material and finished clean - sturdy enough to sit on your counter for years. The NFC chip sits invisibly inside, programmed with your review link before it ever leaves us.",
+        "heading": "Durable, tap-ready technology.",
+        "body": "Every card is built from premium, durable material and finished clean - sturdy enough to sit on your counter for years. The chip sits invisibly inside, programmed with your review link before it ever leaves us.",
         "cta_label": "",
         "cta_link": "",
         "image": "shopify://shop_images/ChatGPT_Image_Jul_7_2026_07_41_02_PM_3.png"
@@ -83,16 +83,16 @@
     "cardsfaq": {
       "type": "prem-cards-faq",
       "blocks": {
-        "q1": { "type": "question", "settings": { "question": "How does the card work?", "answer": "Each card has an NFC chip inside, programmed with your review link. When a customer holds their phone near the card, their phone opens your review page automatically - the same tap technology used for contactless payments." } },
-        "q2": { "type": "question", "settings": { "question": "Do my customers need an app or a QR code?", "answer": "No. NFC tap works with the phone's built-in settings on nearly all modern iPhones and Androids - nothing to download, nothing to scan. A printed QR code can be added as an optional backup if you want one." } },
+        "q1": { "type": "question", "settings": { "question": "How does the card work?", "answer": "Each card has a chip inside, programmed with your review link. When a customer holds their phone near the card, their phone opens your review page automatically - the same tap technology used for contactless payments." } },
+        "q2": { "type": "question", "settings": { "question": "Do my customers need an app or a QR code?", "answer": "No. Tap works with the phone's built-in settings on nearly all modern iPhones and Androids - nothing to download, nothing to scan. A printed QR code can be added as an optional backup if you want one." } },
         "q3": { "type": "question", "settings": { "question": "How do you program my review link?", "answer": "At checkout, enter your business name and your Google or Yelp review link. We program your card, test it on iPhone and Android, and ship it ready to use - nothing for you to set up." } },
-        "q11": { "type": "question", "settings": { "question": "What comes with my order?", "answer": "You get your NFC review card, already programmed with your Google or Yelp review link and tested on iPhone and Android. Nothing to set up - just place it where customers can tap it." } },
+        "q11": { "type": "question", "settings": { "question": "What comes with my order?", "answer": "You get your review card, already programmed with your Google or Yelp review link and tested on iPhone and Android. Nothing to set up - just place it where customers can tap it." } },
         "q9": { "type": "question", "settings": { "question": "How fast will my order ship?", "answer": "Every card is programmed with your review link and tap-tested before it ships. Most orders are prepared within a few business days, and you'll get a tracking email as soon as yours is on the way." } },
         "q10": { "type": "question", "settings": { "question": "What if my order arrives faulty?", "answer": "If anything ever arrives damaged or doesn't tap correctly, email sales@optiqservice.com and we'll sort out a replacement. Because each card is custom-programmed with your review link, we can't take back correctly working products - but if something isn't right, we're happy to help." } },
         "q4": { "type": "question", "settings": { "question": "What's the difference between the Main Counter Card and Bulk Cards?", "answer": "The Main Counter Card is bigger and built to stay on your counter for years - it costs more because it's made to last and be seen every day. Bulk cards are smaller and cheaper per card, made to hand out with bills, receipts, and takeout orders. Both open the same review page with one tap." } },
         "q5": { "type": "question", "settings": { "question": "What if I don't know my review link?", "answer": "Order anyway. Email us at sales@optiqservice.com and we'll send you a quick guide to finding it, or find it for you if you share your business name and city." } },
         "q6": { "type": "question", "settings": { "question": "Is there a monthly fee?", "answer": "No. Every card is a one-time purchase. The Review Growth Plan is a separate, optional membership - you never need it for your card to work." } },
-        "q7": { "type": "question", "settings": { "question": "Which phones does this work with?", "answer": "Almost all iPhones and Android phones released in the last several years support NFC tap by default. Customers with older phones can still search for your business the usual way." } },
+        "q7": { "type": "question", "settings": { "question": "Which phones does this work with?", "answer": "Almost all iPhones and Android phones released in the last several years support tap by default. Customers with older phones can still search for your business the usual way." } },
         "q8": { "type": "question", "settings": { "question": "Does this guarantee good reviews?", "answer": "No - and we wouldn't trust anyone who claims it does. What it does is remove the friction: instead of searching for your business and finding the review button, customers get there in one tap. What they write is entirely up to them." } }
       },
       "block_order": ["q1", "q2", "q3", "q11", "q9", "q10", "q4", "q5", "q6", "q7", "q8"],
