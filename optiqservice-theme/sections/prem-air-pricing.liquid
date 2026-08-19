@@ -169,7 +169,7 @@
           </button>
           <button type="button" class="prem-air-billing-toggle__btn" data-air-billing-toggle="yearly" aria-pressed="false">
             {{ section.settings.yearly_toggle_label | default: 'Yearly' | escape }}
-            <span class="prem-air-billing-toggle__badge">{{ section.settings.yearly_toggle_badge | default: 'Save 2 months' | escape }}</span>
+            <span class="prem-air-billing-toggle__badge">{{ section.settings.yearly_toggle_badge | default: 'Pay yearly & save' | escape }}</span>
           </button>
         </div>
       {%- endif -%}
@@ -492,7 +492,7 @@
     { "type": "header", "content": "Billing toggle" },
     { "type": "text", "id": "monthly_toggle_label", "label": "Monthly button label", "default": "Monthly" },
     { "type": "text", "id": "yearly_toggle_label", "label": "Yearly button label", "default": "Yearly" },
-    { "type": "text", "id": "yearly_toggle_badge", "label": "Yearly button badge", "default": "Save 2 months" },
+    { "type": "text", "id": "yearly_toggle_badge", "label": "Yearly button badge", "default": "Pay yearly & save" },
     { "type": "text", "id": "yearly_save_prefix", "label": "\"Save\" prefix on the yearly price line", "default": "Save" },
     { "type": "header", "content": "Standard card" },
     { "type": "text", "id": "standard_tag", "label": "Badge", "default": "Most popular" },
