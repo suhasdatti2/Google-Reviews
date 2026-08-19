@@ -61,8 +61,8 @@
       <button type="button" class="bset-category-tab" data-bset-category="wristbands" aria-pressed="false">{{ section.settings.wristband_category_label | default: 'Wristbands' | escape }}</button>
     </div>
     <div class="bset-category-descwrap">
-      <p class="bset-category-desc is-active" data-bset-cat-desc="cards">{{ section.settings.cards_category_desc | default: 'Premium NFC cards designed for effortless customer interactions.' | escape }}</p>
-      <p class="bset-category-desc" data-bset-cat-desc="wristbands">{{ section.settings.wristband_category_desc | default: 'Premium wearable NFC products designed for businesses, events, and customer engagement.' | escape }}</p>
+      <p class="bset-category-desc is-active" data-bset-cat-desc="cards">{{ section.settings.cards_category_desc | default: 'Premium cards designed for effortless customer interactions.' | escape }}</p>
+      <p class="bset-category-desc" data-bset-cat-desc="wristbands">{{ section.settings.wristband_category_desc | default: 'Premium wearable products designed for businesses, events, and customer engagement.' | escape }}</p>
     </div>
   </div>
 
@@ -274,18 +274,18 @@
 
             <div class="prem-pdp__field">
               <label for="prem-cards-business-{{ slot }}-{{ section.id }}">Business name</label>
-              <input id="prem-cards-business-{{ slot }}-{{ section.id }}" type="text" name="properties[Business name]" form="bset-cards-form-{{ section.id }}" required placeholder="e.g. Fresh Fades Barbershop">
+              <input id="prem-cards-business-{{ slot }}-{{ section.id }}" type="text" name="properties[Business name]" form="bset-cards-form-{{ section.id }}" placeholder="e.g. Fresh Fades Barbershop">
             </div>
 
             <div class="prem-pdp__field">
               <label for="prem-cards-link-{{ slot }}-{{ section.id }}">Google review link</label>
-              <input id="prem-cards-link-{{ slot }}-{{ section.id }}" type="text" name="properties[Google review link]" form="bset-cards-form-{{ section.id }}" required placeholder="Review link, website, or business name" autocomplete="off" spellcheck="false">
+              <input id="prem-cards-link-{{ slot }}-{{ section.id }}" type="text" name="properties[Google review link]" form="bset-cards-form-{{ section.id }}" placeholder="Review link, website, or business name" autocomplete="off" spellcheck="false">
               <p class="prem-pdp__hint">Anything works - your review link, your website, or just your business name and city. We will track down the exact link before we programme your {{ p_noun }}.</p>
             </div>
 
             <div class="prem-pdp__field">
               <label for="prem-cards-contact-{{ slot }}-{{ section.id }}">Best email or phone</label>
-              <input id="prem-cards-contact-{{ slot }}-{{ section.id }}" type="text" name="properties[Contact email or phone]" form="bset-cards-form-{{ section.id }}" required placeholder="you@business.com">
+              <input id="prem-cards-contact-{{ slot }}-{{ section.id }}" type="text" name="properties[Contact email or phone]" form="bset-cards-form-{{ section.id }}" placeholder="you@business.com">
             </div>
           </div>
         {%- endfor -%}
@@ -391,9 +391,9 @@
 
     { "type": "header", "content": "Categories" },
     { "type": "text", "id": "cards_category_label", "label": "Cards tab label", "default": "Cards" },
-    { "type": "textarea", "id": "cards_category_desc", "label": "Cards tab description", "default": "Premium NFC cards designed for effortless customer interactions." },
+    { "type": "textarea", "id": "cards_category_desc", "label": "Cards tab description", "default": "Premium cards designed for effortless customer interactions." },
     { "type": "text", "id": "wristband_category_label", "label": "Wristbands tab label", "default": "Wristbands" },
-    { "type": "textarea", "id": "wristband_category_desc", "label": "Wristbands tab description", "default": "Premium wearable NFC products designed for businesses, events, and customer engagement." },
+    { "type": "textarea", "id": "wristband_category_desc", "label": "Wristbands tab description", "default": "Premium wearable products designed for businesses, events, and customer engagement." },
 
     { "type": "header", "content": "Cards" },
     {

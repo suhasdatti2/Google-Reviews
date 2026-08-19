@@ -193,9 +193,14 @@
         </div>
 
         {%- comment -%}
-          No novalidate: the browser's own required-field check has to run
-          before submit, otherwise an order arrives with no review link and
-          there is nothing to programme the chip with.
+          Personalisation fields below are deliberately not `required`. A
+          browser blocks form submission entirely on an empty required field -
+          silently, with no error visible to any script - which meant Add to
+          Cart could look completely dead to a shopper who had not yet typed
+          into all three fields. Collecting this at checkout time is
+          convenience, not a hard gate: an order that arrives without it can
+          still be followed up on by email, but one that never reaches
+          checkout at all is a lost sale.
         {%- endcomment -%}
         {%- form 'product', product, class: 'stu-form' -%}
           <input type="hidden" name="id" value="{{ v.id }}" data-stu-id>
@@ -263,7 +268,7 @@
 
               <div class="stu-field">
                 <label for="stu-business">Business name</label>
-                <input id="stu-business" type="text" name="properties[Business name]" required placeholder="e.g. Fresh Fades Barbershop">
+                <input id="stu-business" type="text" name="properties[Business name]" placeholder="e.g. Fresh Fades Barbershop">
               </div>
 
               {%- comment -%}
@@ -276,13 +281,13 @@
               {%- endcomment -%}
               <div class="stu-field">
                 <label for="stu-link">Google review link</label>
-                <input id="stu-link" type="text" name="properties[Google review link]" required placeholder="Review link, website, or business name" autocomplete="off" spellcheck="false">
+                <input id="stu-link" type="text" name="properties[Google review link]" placeholder="Review link, website, or business name" autocomplete="off" spellcheck="false">
                 <p class="stu-hint">Anything works - your review link, your website, or just your business name and city. We will track down the exact link before we programme your {{ noun }}.</p>
               </div>
 
               <div class="stu-field">
                 <label for="stu-contact">Best email or phone</label>
-                <input id="stu-contact" type="text" name="properties[Contact email or phone]" required placeholder="you@business.com">
+                <input id="stu-contact" type="text" name="properties[Contact email or phone]" placeholder="you@business.com">
               </div>
             </div>
           {%- endif -%}
