@@ -122,27 +122,40 @@
     <div class="bset-stage">
       {%- for slot in slots -%}
         {%- liquid
+          assign gallery_use_product_images = true
           if slot == 'counter'
             assign p = counter
             assign slot_name = section.settings.counter_label | default: 'Main Counter Card'
             assign fallback_main = blank
+            assign gallery_use_product_images = false
           elsif slot == 'bulk'
             assign p = bulk
             assign slot_name = section.settings.bulk_label | default: 'Bulk Square Handout Cards'
             assign fallback_main = blank
+            assign gallery_use_product_images = false
           else
             assign p = wristband
             assign slot_name = section.settings.wristband_label | default: 'Wristband'
             assign fallback_main = section.settings.wristband_image
           endif
         -%}
+        {%- comment -%}
+          Cards only show the two curated swatch photos (Black/White) -
+          Main Counter Card and Bulk Square Handout Cards each have exactly
+          one photo attached in Shopify that was uploaded for a different
+          purpose elsewhere on the page (a lifestyle section), never meant
+          to be a selectable purchase-gallery shot here. Wristband has no
+          swatch photos of its own yet, so it still falls back to its
+          product images/fallback photo as before.
+        {%- endcomment -%}
         {% render 'bset-gallery',
            product: p,
            slot: slot,
            swatches: swatches,
            label: slot_name,
            is_active: forloop.first,
-           main_image: fallback_main %}
+           main_image: fallback_main,
+           include_product_images: gallery_use_product_images %}
       {%- endfor -%}
     </div>
 

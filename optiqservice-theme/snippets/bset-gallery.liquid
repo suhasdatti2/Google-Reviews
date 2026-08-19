@@ -17,7 +17,13 @@
     3. "Colour option" blocks for this slot that carry an image — still
        supported for anyone who wants more than three variations; these get
        data-shot-value so choosing that colour brings its own photo forward.
-    4. The product's own Shopify images.
+    4. The product's own Shopify images - skipped entirely when
+       `include_product_images` is explicitly false. Some callers only want
+       the curated swatch photos on screen (a merchant may have uploaded an
+       incidental lifestyle photo to the product itself for other uses -
+       e.g. a separate lifestyle section elsewhere on the page - that was
+       never meant to double as a purchase-gallery shot here); omitting the
+       param keeps every existing caller's behaviour exactly as it was.
   With none of the above, a single flat placeholder stands in (prem-media),
   matching the rest of the Premium pages.
 
@@ -32,10 +38,16 @@
   Accepts: product, slot, swatches, label, is_active, main_image,
            extra1_image, extra1_value, extra1_value2,
            extra2_image, extra2_value, extra2_value2,
-           extra3_image, extra3_value, extra3_value2
+           extra3_image, extra3_value, extra3_value2,
+           include_product_images (default true)
 {%- endcomment -%}
 
 {%- liquid
+  assign use_product_images = true
+  if include_product_images == false
+    assign use_product_images = false
+  endif
+
   assign shot_n = 0
   if main_image != blank
     assign shot_n = shot_n | plus: 1
@@ -54,7 +66,7 @@
       assign shot_n = shot_n | plus: 1
     endif
   endfor
-  if product != blank
+  if product != blank and use_product_images
     assign shot_n = shot_n | plus: product.images.size
   endif
 -%}
@@ -102,7 +114,7 @@
       {%- endif -%}
     {%- endfor -%}
 
-    {%- if product != blank -%}
+    {%- if product != blank and use_product_images -%}
       {%- for img in product.images -%}
         {%- if i == 0 -%}{%- assign load = 'eager' -%}{%- else -%}{%- assign load = 'lazy' -%}{%- endif -%}
         <div class="bset-shot{% if i == 0 %} is-active{% endif %}" data-shot="{{ i }}">
@@ -193,7 +205,7 @@
         {%- endif -%}
       {%- endfor -%}
 
-      {%- if product != blank -%}
+      {%- if product != blank and use_product_images -%}
         {%- for img in product.images -%}
           <button type="button"
                   class="bset-thumb{% if t == 0 %} is-active{% endif %}"
