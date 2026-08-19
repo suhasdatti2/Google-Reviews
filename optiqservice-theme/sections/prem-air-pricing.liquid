@@ -424,13 +424,30 @@
 .prem-air-price__save {
   display: inline-block;
   margin-left: 8px;
-  padding: 2px 8px;
+  padding: 3px 9px;
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.02em;
   color: var(--ink, #1a1a1a);
   border: 1px solid var(--border, #e3e1da);
+}
+
+/* assets/prem-air.css sets `.prem-air-price__billing { display: block; }`,
+   which is an author rule and so overrides the browser's own default
+   `[hidden] { display: none }` for that element - the "hidden" attribute
+   the JS toggle sets was doing nothing, and both the monthly and yearly
+   lines stayed visible at once. !important guarantees this wins regardless
+   of which stylesheet loads last. Also sizing the line up from the base
+   12px, which read as an afterthought next to the large price figure
+   above it - this is the actual recurring cost, so it should read as one. */
+.prem-air-price__billing {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink, #1a1a1a);
+}
+.prem-air-price__billing[hidden] {
+  display: none !important;
 }
 {% endstylesheet %}
 
