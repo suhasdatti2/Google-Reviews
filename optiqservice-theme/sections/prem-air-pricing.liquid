@@ -188,13 +188,13 @@
 
         <div class="prem-air-price__amount">
           <span class="prem-air-price__figure">
-            {%- if standard_setup != blank -%}{{ standard_setup.price | money_without_trailing_zeros }}{%- else -%}$699{%- endif -%}
+            {%- if standard_setup != blank -%}{{ standard_setup.price | money_without_trailing_zeros }}{%- else -%}$799{%- endif -%}
           </span>
           <span class="prem-air-price__per">{{ section.settings.standard_down_label | escape }}</span>
         </div>
         <span class="prem-air-price__billing" data-air-billing-line="monthly">
           {{ section.settings.standard_then_prefix | escape }}
-          {%- if standard_monthly != blank -%}{{ standard_monthly.price | money_without_trailing_zeros }}{%- else -%}$299{%- endif -%}{{ section.settings.standard_monthly_suffix | escape }}
+          {%- if standard_monthly != blank -%}{{ standard_monthly.price | money_without_trailing_zeros }}{%- else -%}$599{%- endif -%}{{ section.settings.standard_monthly_suffix | escape }}
           &middot; {{ section.settings.standard_billing_note | escape }}
         </span>
         {%- if standard_yearly != blank -%}
@@ -265,7 +265,7 @@
         </div>
         <span class="prem-air-price__billing" data-air-billing-line="monthly">
           {{ section.settings.premium_then_prefix | escape }}
-          {%- if premium_monthly != blank -%}{{ premium_monthly.price | money_without_trailing_zeros }}{%- else -%}$599{%- endif -%}{{ section.settings.premium_monthly_suffix | escape }}
+          {%- if premium_monthly != blank -%}{{ premium_monthly.price | money_without_trailing_zeros }}{%- else -%}$1,099{%- endif -%}{{ section.settings.premium_monthly_suffix | escape }}
           &middot; {{ section.settings.premium_billing_note | escape }}
         </span>
         {%- if premium_yearly != blank -%}
