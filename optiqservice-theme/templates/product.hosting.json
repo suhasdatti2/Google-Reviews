@@ -1,0 +1,55 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "studio-product",
+      "blocks": {
+        "b1": {
+          "type": "benefit",
+          "settings": {
+            "title": "Required for your card to work",
+            "text": "Hosting powers the tap-to-review redirect on every Optiq card you own."
+          }
+        },
+        "b2": {
+          "type": "benefit",
+          "settings": {
+            "title": "Free link updates",
+            "text": "If your Google review link ever changes, we repoint it at no extra cost."
+          }
+        },
+        "a1": {
+          "type": "accordion",
+          "settings": {
+            "heading": "What happens if I cancel?",
+            "content": "<p>The tap-to-review redirect on your cards is switched off, and they will no longer open your review page when tapped.</p>"
+          }
+        },
+        "a2": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Billing",
+            "content": "<p>$4.99 per month.</p>"
+          }
+        }
+      },
+      "block_order": ["b1", "b2", "a1", "a2"],
+      "settings": {
+        "tagline": "Keeps your Optiq card's tap-to-review redirect live and pointed at your Google Business Profile.",
+        "buy_label": "Add to Cart",
+        "show_payment_button": true,
+        "show_personalise": false,
+        "show_description": true
+      }
+    }
+  },
+  "order": ["main"]
+}

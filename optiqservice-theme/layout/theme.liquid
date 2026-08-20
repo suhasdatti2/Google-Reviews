@@ -266,6 +266,32 @@
     }
   </script>
 
+  {%- comment -%}
+    WebSite schema, sitewide. The SearchAction points at Shopify's own native
+    search route (routes.search_url), which is real, working functionality
+    on every page - not a hypothetical or hardcoded path. Built with capture
+    rather than a single `{{ }}` expression, since the literal curly braces
+    in "{search_term_string}" break Liquid's own tag parser when they sit
+    inside a filter chain's string argument.
+  {%- endcomment -%}
+  {%- capture search_url_template -%}{{ shop.url }}{{ routes.search_url }}?q={search_term_string}{%- endcapture -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": {{ shop.name | json }},
+      "url": {{ shop.url | json }},
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": {{ search_url_template | json }}
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+  </script>
+
 {%- unless template == 'index' -%}
 <script>
   (function () {

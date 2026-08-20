@@ -475,6 +475,28 @@
     ]
   }
   </script>
+
+  {%- comment -%} BreadcrumbList - Home > AI Receptionist. {%- endcomment -%}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": {{ shop.url | json }}
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": {{ air_product.title | json }},
+        "item": {{ air_product.url | prepend: shop.url | json }}
+      }
+    ]
+  }
+  </script>
 {%- endif -%}
 
 {% schema %}

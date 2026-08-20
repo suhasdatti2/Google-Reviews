@@ -1,0 +1,69 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "studio-product",
+      "blocks": {
+        "b1": {
+          "type": "benefit",
+          "settings": {
+            "title": "Free link updates",
+            "text": "If your Google review link ever changes, we update every card you own at no extra cost."
+          }
+        },
+        "b2": {
+          "type": "benefit",
+          "settings": {
+            "title": "Monthly check-in",
+            "text": "A monthly look at your Google reviews, so you always know where you stand."
+          }
+        },
+        "b3": {
+          "type": "benefit",
+          "settings": {
+            "title": "Ready-to-use templates",
+            "text": "Review request templates your team can send as-is."
+          }
+        },
+        "b4": {
+          "type": "benefit",
+          "settings": {
+            "title": "Priority support & card discounts",
+            "text": "Faster replies, plus discounts on future card orders."
+          }
+        },
+        "a1": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Is this required?",
+            "content": "<p>No. Your Optiq card works forever with no monthly fee, whether or not you ever add this plan. It's an optional extra for businesses that want a bit of ongoing help.</p>"
+          }
+        },
+        "a2": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Billing",
+            "content": "<p>$14.99 per month. Cancel anytime.</p>"
+          }
+        }
+      },
+      "block_order": ["b1", "b2", "b3", "b4", "a1", "a2"],
+      "settings": {
+        "tagline": "An optional monthly add-on that keeps your Google review link current and your reviews on track.",
+        "buy_label": "Add to Cart",
+        "show_payment_button": true,
+        "show_personalise": false,
+        "show_description": true
+      }
+    }
+  },
+  "order": ["main"]
+}
