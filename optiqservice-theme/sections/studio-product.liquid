@@ -566,6 +566,48 @@
 })();
 </script>
 
+{%- comment -%}
+  Product structured data, built entirely from the real Shopify product and
+  variant objects - same pattern as the JSON-LD in prem-air-pricing.liquid.
+  Nothing here is hardcoded: prices come from each variant's own `price`
+  (raw cents, so divided by 100 to match schema.org's plain decimal), and
+  the image array is only emitted when the product actually has media, so a
+  product with no photos yet (like Optiq Signature before photography is
+  uploaded) never claims one that does not exist.
+{%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": {{ product.title | json }},
+  "description": {{ product.description | strip_html | truncate: 300 | json }},
+  {%- if product.images.size > 0 -%}
+  "image": [
+    {%- for img in product.images -%}
+      {{ img | image_url: width: 1600 | prepend: 'https:' | json }}{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ],
+  {%- endif -%}
+  "brand": { "@type": "Brand", "name": {{ shop.name | json }} },
+  "url": {{ product.url | prepend: shop.url | json }},
+  "offers": [
+    {%- for v in product.variants -%}
+    {
+      "@type": "Offer",
+      "name": {{ v.title | json }},
+      {%- if v.sku != blank -%}
+      "sku": {{ v.sku | json }},
+      {%- endif -%}
+      "price": {{ v.price | divided_by: 100.0 | json }},
+      "priceCurrency": {{ shop.currency | json }},
+      "availability": {% if v.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %},
+      "url": {{ v.url | prepend: shop.url | json }}
+    }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+}
+</script>
+
 {% schema %}
 {
   "name": "Studio product",

@@ -3,9 +3,10 @@
   fixed cards rather than a repeatable block list, since the wireframe is
   specifically Ring + Metal Card, not an open-ended product grid.
 
-  The Ring has no real product yet, so its explore link defaults to "#" -
-  see the schema info text. Metal Cards defaults to the real, existing
-  Optiq Signature product.
+  Both cards now link straight to their real Shopify product pages
+  (/products/optiq-signature-ring and /products/optiq-signature) via the
+  template's own settings, so search engines and shoppers alike have a
+  direct, real path to each product - not just the fallback below.
 {%- endcomment -%}
 
 <section class="prem-showcase" id="prem-showcase" {{ section.shopify_attributes }}>
@@ -43,7 +44,7 @@
     { "type": "image_picker", "id": "ring_image", "label": "Photo" },
     { "type": "text", "id": "ring_caption", "label": "Caption", "default": "A symbol of commitment and identity." },
     { "type": "text", "id": "ring_cta", "label": "Link label", "default": "Explore Rings" },
-    { "type": "url", "id": "ring_url", "label": "Link URL", "info": "The Ring is not a real product yet - link this once it exists. Defaults to a dead link (#)." },
+    { "type": "url", "id": "ring_url", "label": "Link URL", "info": "Defaults to a dead link (#) if left empty - the template sets this to /products/optiq-signature-ring." },
 
     { "type": "header", "content": "Metal Cards" },
     { "type": "text", "id": "cards_heading", "label": "Heading", "default": "Metal Cards" },

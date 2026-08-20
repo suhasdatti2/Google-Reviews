@@ -1,0 +1,77 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "studio-product",
+      "blocks": {
+        "b1": {
+          "type": "benefit",
+          "settings": {
+            "title": "One tap, no typing",
+            "text": "Customers tap the card and your Google review page opens instantly, while the good experience is still fresh."
+          }
+        },
+        "b2": {
+          "type": "benefit",
+          "settings": {
+            "title": "Programmed for you",
+            "text": "Send us your review link at checkout and the card arrives set up, tested, and ready to use out of the box."
+          }
+        },
+        "b3": {
+          "type": "benefit",
+          "settings": {
+            "title": "No app, no QR code required",
+            "text": "Works with modern iPhones and Androids. Nothing to install, nothing to scan."
+          }
+        },
+        "b4": {
+          "type": "benefit",
+          "settings": {
+            "title": "Precision metal, finished by hand",
+            "text": "Machined and finished to a heavier, premium standard than a printed card - built to be kept for years."
+          }
+        },
+        "a1": {
+          "type": "accordion",
+          "settings": {
+            "heading": "How programming works",
+            "content": "<p>At checkout you'll enter your business name and Google review link. We program the chip, tap-test it on iPhone and Android, and ship it ready to use. If you'd rather send the link later, email it to sales@optiqservice.com with your order number.</p><p>Don't know your review link? Order anyway — we'll email you a quick guide to finding it, or find it for you if you share your business name and city.</p>"
+          }
+        },
+        "a2": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Shipping & returns",
+            "content": "<p>Every card is programmed with your review link and tap-tested before it ships. Most orders are prepared within a few business days, and you'll get a tracking email as soon as yours is on the way.</p><p>If a card ever arrives damaged or doesn't tap correctly, email sales@optiqservice.com and we'll sort out a replacement. Because each card is custom-programmed with your review link, we can't take back correctly working cards.</p>"
+          }
+        },
+        "a3": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Key details",
+            "content": "<p>Precision metal construction, finished by hand in your choice of Gold, Matte Black, or Brushed Silver. Chip inside, powered by the customer's phone — no batteries, no charging. Works with almost all iPhones and Android phones released in the last several years. One-time purchase, no monthly fee. Available as a single card or a set of three.</p>"
+          }
+        }
+      },
+      "block_order": ["b1", "b2", "b3", "b4", "a1", "a2", "a3"],
+      "settings": {
+        "tagline": "Programmed with your Google review link. Precision metal, finished by hand.",
+        "buy_label": "Add to Cart",
+        "show_payment_button": true,
+        "show_personalise": true,
+        "qr_note": "Optional backup for phones that cannot tap.",
+        "show_description": true
+      }
+    }
+  },
+  "order": ["main"]
+}

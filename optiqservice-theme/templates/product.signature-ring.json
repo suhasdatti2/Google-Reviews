@@ -1,0 +1,76 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "studio-product",
+      "blocks": {
+        "b1": {
+          "type": "benefit",
+          "settings": {
+            "title": "Machined from a single piece",
+            "text": "Solid ceramic, shaped and finished by hand rather than cast or assembled from parts."
+          }
+        },
+        "b2": {
+          "type": "benefit",
+          "settings": {
+            "title": "Built to be worn every day",
+            "text": "Finished for daily wear, not just for display."
+          }
+        },
+        "b3": {
+          "type": "benefit",
+          "settings": {
+            "title": "Two finishes, two styles, seven sizes",
+            "text": "Choose Black or White, Classic or Business Professional, and your size from 6 to 12."
+          }
+        },
+        "b4": {
+          "type": "benefit",
+          "settings": {
+            "title": "Pairs with the metal card",
+            "text": "Part of the Optiq Signature line - wear it alongside the Optiq Signature metal tap card to complete your set."
+          }
+        },
+        "a1": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Sizing & fit",
+            "content": "<p>Available in sizes 6 through 12. If you're unsure of your size, order the closest match and email sales@optiqservice.com — we're happy to help you get the right fit.</p>"
+          }
+        },
+        "a2": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Shipping & returns",
+            "content": "<p>Most orders are prepared within a few business days, and you'll get a tracking email as soon as yours is on the way.</p><p>If your ring ever arrives damaged, email sales@optiqservice.com and we'll sort out a replacement.</p>"
+          }
+        },
+        "a3": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Key details",
+            "content": "<p>Solid ceramic construction, machined from a single piece and finished by hand. Available in Black or White, Classic or Business Professional style, sizes 6-12.</p>"
+          }
+        }
+      },
+      "block_order": ["b1", "b2", "b3", "b4", "a1", "a2", "a3"],
+      "settings": {
+        "tagline": "A solid ceramic signet ring from the Optiq Signature line, finished by hand.",
+        "buy_label": "Add to Cart",
+        "show_payment_button": true,
+        "show_personalise": false,
+        "show_description": true
+      }
+    }
+  },
+  "order": ["main"]
+}
