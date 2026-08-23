@@ -17,6 +17,14 @@
       {%- else -%}
         <div class="product-card-grid">
           {%- for product in collection.products -%}
+            {%- comment -%}
+              Card Hosting is a $4.99/month hosting fee, not a product a
+              customer would ever browse the catalog looking for - it stays
+              a real, active, purchasable product (and still has its own
+              page and SEO metadata), just skipped in this grid.
+            {%- endcomment -%}
+            {%- if product.handle == 'card-hosting' -%}{%- continue -%}{%- endif -%}
+
             {%- assign catalog_image = blank -%}
             {%- case product.handle -%}
               {%- when 'bulk-restaurant-pack' -%}
@@ -27,14 +35,14 @@
                 {%- assign catalog_image = section.settings.main_counter_card_image -%}
               {%- when 'review-growth-plan' -%}
                 {%- assign catalog_image = section.settings.review_growth_plan_image -%}
-              {%- when 'card-hosting' -%}
-                {%- assign catalog_image = section.settings.card_hosting_image -%}
               {%- when 'google-review-nfc-wristband' -%}
                 {%- assign catalog_image = section.settings.wristband_image -%}
               {%- when 'optiq-signature' -%}
                 {%- assign catalog_image = section.settings.signature_image -%}
               {%- when 'optiq-signature-ring' -%}
                 {%- assign catalog_image = section.settings.signature_ring_image -%}
+              {%- when 'ai-receptionist' -%}
+                {%- assign catalog_image = section.settings.ai_receptionist_image -%}
             {%- endcase -%}
             <a class="product-card" href="{{ product.url }}">
               <div class="product-card__media">
@@ -96,11 +104,6 @@
     },
     {
       "type": "image_picker",
-      "id": "card_hosting_image",
-      "label": "Card Hosting image"
-    },
-    {
-      "type": "image_picker",
       "id": "wristband_image",
       "label": "Google Review Wristband image"
     },
@@ -113,6 +116,11 @@
       "type": "image_picker",
       "id": "signature_ring_image",
       "label": "Optiq Signature Ring image"
+    },
+    {
+      "type": "image_picker",
+      "id": "ai_receptionist_image",
+      "label": "AI Receptionist image"
     }
   ]
 }
