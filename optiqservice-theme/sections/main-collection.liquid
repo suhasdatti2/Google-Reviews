@@ -17,10 +17,31 @@
       {%- else -%}
         <div class="product-card-grid">
           {%- for product in collection.products -%}
+            {%- assign catalog_image = blank -%}
+            {%- case product.handle -%}
+              {%- when 'bulk-restaurant-pack' -%}
+                {%- assign catalog_image = section.settings.bulk_restaurant_pack_image -%}
+              {%- when 'bulk-review-cards' -%}
+                {%- assign catalog_image = section.settings.bulk_square_handout_cards_image -%}
+              {%- when 'google-review-nfc-card' -%}
+                {%- assign catalog_image = section.settings.main_counter_card_image -%}
+              {%- when 'review-growth-plan' -%}
+                {%- assign catalog_image = section.settings.review_growth_plan_image -%}
+              {%- when 'card-hosting' -%}
+                {%- assign catalog_image = section.settings.card_hosting_image -%}
+              {%- when 'google-review-nfc-wristband' -%}
+                {%- assign catalog_image = section.settings.wristband_image -%}
+              {%- when 'optiq-signature' -%}
+                {%- assign catalog_image = section.settings.signature_image -%}
+              {%- when 'optiq-signature-ring' -%}
+                {%- assign catalog_image = section.settings.signature_ring_image -%}
+            {%- endcase -%}
             <a class="product-card" href="{{ product.url }}">
               <div class="product-card__media">
-                {%- if product.featured_image != blank -%}
-                  {{ product.featured_image | image_url: width: 600 | image_tag: alt: product.featured_image.alt }}
+                {%- if catalog_image != blank -%}
+                  {{ catalog_image | image_url: width: 900 | image_tag: alt: product.title, loading: 'lazy' }}
+                {%- elsif product.featured_image != blank -%}
+                  {{ product.featured_image | image_url: width: 600 | image_tag: alt: product.featured_image.alt, loading: 'lazy' }}
                 {%- else -%}
                   {% render 'image-placeholder', square: true %}
                 {%- endif -%}
@@ -44,6 +65,55 @@
 {% schema %}
 {
   "name": "Collection",
-  "settings": []
+  "settings": [
+    {
+      "type": "header",
+      "content": "Catalog product photos"
+    },
+    {
+      "type": "paragraph",
+      "content": "These override the product-card images on the catalog page. If a field is empty, the card falls back to the product media."
+    },
+    {
+      "type": "image_picker",
+      "id": "bulk_restaurant_pack_image",
+      "label": "Bulk Restaurant Pack image"
+    },
+    {
+      "type": "image_picker",
+      "id": "bulk_square_handout_cards_image",
+      "label": "Bulk Square Handout Cards image"
+    },
+    {
+      "type": "image_picker",
+      "id": "main_counter_card_image",
+      "label": "Main Counter Card image"
+    },
+    {
+      "type": "image_picker",
+      "id": "review_growth_plan_image",
+      "label": "Review Growth Plan image"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_hosting_image",
+      "label": "Card Hosting image"
+    },
+    {
+      "type": "image_picker",
+      "id": "wristband_image",
+      "label": "Google Review Wristband image"
+    },
+    {
+      "type": "image_picker",
+      "id": "signature_image",
+      "label": "Optiq Signature image"
+    },
+    {
+      "type": "image_picker",
+      "id": "signature_ring_image",
+      "label": "Optiq Signature Ring image"
+    }
+  ]
 }
 {% endschema %}
