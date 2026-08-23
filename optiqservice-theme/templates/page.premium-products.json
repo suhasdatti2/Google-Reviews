@@ -39,12 +39,12 @@
         "ring_image": "shopify://shop_images/Screenshot_2026-08-16_184605.png",
         "ring_caption": "A symbol of commitment and identity.",
         "ring_cta": "Explore Rings",
-        "ring_url": "/products/optiq-signature-ring",
+        "ring_url": "/pages/build-your-set",
         "cards_heading": "Metal Cards",
         "cards_image": "shopify://shop_images/ChatGPT_Image_Aug_16_2026_06_45_11_PM.png",
         "cards_caption": "Tap. Share. Leave an impression.",
         "cards_cta": "Explore Cards",
-        "cards_url": "/products/optiq-signature"
+        "cards_url": "/pages/build-your-set"
       }
     },
     "premconfig": {
