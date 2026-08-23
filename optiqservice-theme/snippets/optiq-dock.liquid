@@ -1,0 +1,317 @@
+{%- comment -%}
+  OPTIQ dock - fixed bottom-centre taskbar.
+
+  Port of a React/Tailwind "minimal dock" component into this theme's actual
+  stack (Liquid + vanilla CSS). No JS of its own: hover, tooltips and the
+  active state are all CSS, so the dock works with JS disabled and there is
+  no extra rAF loop competing with Lenis or the scroll reveals.
+
+  Two deliberate changes from the original component:
+
+    - The reflection layer is gone. It was positioned at `top: 100%`, i.e.
+      directly BELOW the dock - fine when the dock floats mid-screen in a
+      demo, but here the dock is pinned to the bottom of the viewport, so
+      the reflection would render entirely off-screen. It would have been
+      pure DOM weight for something nobody can see.
+
+    - The whole-container hover scale is gone. On a persistent nav it moves
+      the buttons out from under the cursor, which causes hover flicker at
+      the edges of each target. The per-item lift is kept.
+
+  Cart integration: the badge carries `data-o-cart-count`, which the existing
+  assets/optiq-cart.js already updates on every cart mutation - so it stays
+  live for free. The button carries `data-o-drawer-open="cart"` so optiq-ui.js
+  opens the drawer, and keeps a real /cart href as the no-JS fallback.
+
+  Search is deliberately not in this list. Shopify's default search results
+  page is not styled to match the rest of this theme, so the button led
+  somewhere that looked broken next to everything else here. Removed rather
+  than left pointing at something unfinished.
+{%- endcomment -%}
+
+{%- liquid
+  assign path = request.path
+  assign home_url = routes.root_url
+  assign catalog_url = routes.all_products_collection_url
+  assign contact_url = '/pages/contact'
+  assign cart_url = routes.cart_url
+
+  assign is_home = false
+  if path == home_url
+    assign is_home = true
+  endif
+
+  assign is_catalog = false
+  if path contains '/collections' or path contains '/products'
+    assign is_catalog = true
+  endif
+
+  assign is_contact = false
+  if path contains '/pages/contact'
+    assign is_contact = true
+  endif
+
+  assign is_account = false
+  if path contains '/account' or path contains '/pages/my-receptionist' or path contains '/pages/sign-in'
+    assign is_account = true
+  endif
+
+  assign is_cart = false
+  if path contains '/cart'
+    assign is_cart = true
+  endif
+-%}
+
+<nav class="optiq-dock" aria-label="Quick navigation">
+  <ul class="optiq-dock__bar">
+
+    <li class="optiq-dock__slot">
+      <a class="optiq-dock__item" href="{{ home_url }}"{% if is_home %} aria-current="page"{% endif %}>
+        {% render 'icon', name: 'home' %}
+        <span class="optiq-dock__label">Home</span>
+        <span class="o-visually-hidden">Home</span>
+      </a>
+    </li>
+
+    <li class="optiq-dock__slot">
+      <a class="optiq-dock__item" href="{{ catalog_url }}"{% if is_catalog %} aria-current="page"{% endif %}>
+        {% render 'icon', name: 'grid' %}
+        <span class="optiq-dock__label">Catalog</span>
+        <span class="o-visually-hidden">Catalog</span>
+      </a>
+    </li>
+
+    <li class="optiq-dock__slot">
+      <a class="optiq-dock__item" href="{{ contact_url }}"{% if is_contact %} aria-current="page"{% endif %}>
+        {% render 'icon', name: 'mail' %}
+        <span class="optiq-dock__label">Contact</span>
+        <span class="o-visually-hidden">Contact</span>
+      </a>
+    </li>
+
+    {%- comment -%}
+      Only rendered when customer accounts are actually switched on - the
+      underlying login flow 404s otherwise, and a dead button in a
+      persistent nav is worse than one fewer button.
+
+      Signed out -> our own /pages/sign-in (the custom "Continue with
+      Google" / "Continue with email" page). Signed in -> /pages/my-receptionist,
+      the gated personal dashboard, rather than Shopify's generic /account
+      page. Mirrors the header's login pill exactly.
+    {%- endcomment -%}
+    {%- if shop.customer_accounts_enabled -%}
+      <li class="optiq-dock__slot">
+        <a
+          class="optiq-dock__item"
+          href="{% if customer %}/pages/my-receptionist{% else %}/pages/sign-in{% endif %}"
+          {% if is_account %}aria-current="page"{% endif %}
+        >
+          {% render 'icon', name: 'account' %}
+          <span class="optiq-dock__label">{% if customer %}Account{% else %}Log in{% endif %}</span>
+          <span class="o-visually-hidden">{% if customer %}Account{% else %}Log in{% endif %}</span>
+        </a>
+      </li>
+    {%- endif -%}
+
+    <li class="optiq-dock__slot">
+      <a
+        class="optiq-dock__item optiq-dock__item--cart"
+        href="{{ cart_url }}"
+        data-o-drawer-open="cart"
+        aria-expanded="false"
+        {% if is_cart %}aria-current="page"{% endif %}
+      >
+        {% render 'icon', name: 'cart' %}
+        <span class="optiq-dock__label">Cart</span>
+        <span class="o-visually-hidden">Cart</span>
+        <span
+          class="optiq-dock__count"
+          data-o-cart-count
+          {% if cart.item_count == 0 %}hidden{% endif %}
+        >{{ cart.item_count }}</span>
+      </a>
+    </li>
+
+  </ul>
+</nav>
+
+<style>
+  :root {
+    /* Published so the body padding below and any future bottom-anchored
+       UI can reserve the same space instead of guessing at it. */
+    --optiq-dock-h: 76px;
+  }
+
+  .optiq-dock {
+    position: fixed;
+    left: 50%;
+    /* env() keeps it clear of the iOS home indicator; max() gives a sane
+       floor on every other device. */
+    bottom: max(18px, env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%);
+    /* Above the sticky header (--o-z-header: 60), below the drawer overlay
+       (--o-z-overlay: 80) - so opening the cart correctly dims and covers
+       the dock rather than leaving it floating over the scrim. */
+    z-index: 70;
+    pointer-events: none;
+  }
+
+  .optiq-dock__bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    padding: 12px 20px;
+    list-style: none;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 40px -8px rgba(0, 0, 0, 0.7);
+    pointer-events: auto;
+  }
+
+  .optiq-dock__slot { position: relative; display: flex; }
+
+  .optiq-dock__item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease,
+                border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .optiq-dock__item:hover {
+    transform: translateY(-4px) scale(1.1);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 24px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  .optiq-dock__item:active { transform: translateY(-1px) scale(1.04); }
+
+  .optiq-dock__item:focus-visible {
+    outline: 2px solid var(--o-accent, #e8c07a);
+    outline-offset: 3px;
+  }
+
+  /* Current page: a dot under the tile, rather than a fill - the tiles are
+     small enough that a background change reads as "hovered", not "here". */
+  .optiq-dock__item[aria-current="page"] {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.22);
+  }
+  .optiq-dock__item[aria-current="page"]::after {
+    content: "";
+    position: absolute;
+    bottom: -7px;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    margin-left: -2px;
+    border-radius: 50%;
+    background: var(--o-accent, #e8c07a);
+  }
+
+  /* Tooltip */
+  .optiq-dock__label {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    padding: 5px 10px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.78);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-family: var(--o-font-body, sans-serif);
+    font-size: 12px;
+    line-height: 1.3;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .optiq-dock__label::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    margin: -4px 0 0 -4px;
+    background: rgba(0, 0, 0, 0.78);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    transform: rotate(45deg);
+  }
+
+  /* Tooltips only where there is a real cursor. On touch there is no hover
+     state to reveal them, and the visually-hidden span already gives every
+     button an accessible name. */
+  @media (hover: hover) and (pointer: fine) {
+    .optiq-dock__item:hover .optiq-dock__label,
+    .optiq-dock__item:focus-visible .optiq-dock__label {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  /* Cart count - matches the header badge treatment. */
+  .optiq-dock__count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--o-accent, #e8c07a);
+    color: var(--o-accent-ink, #14100a);
+    font-family: var(--o-font-display, sans-serif);
+    font-size: 10px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .optiq-dock__count[hidden] { display: none; }
+
+  /* The dock covers the last ~76px of every page, so give the document that
+     space back - otherwise the footer's bottom row sits permanently behind
+     it and can never be scrolled into view. */
+  body { padding-bottom: calc(var(--optiq-dock-h) + env(safe-area-inset-bottom, 0px)); }
+
+  @media (max-width: 620px) {
+    :root { --optiq-dock-h: 68px; }
+    .optiq-dock { bottom: max(10px, env(safe-area-inset-bottom, 0px)); }
+    .optiq-dock__bar { gap: 6px; padding: 8px 10px; border-radius: 16px; }
+    .optiq-dock__item { width: 40px; height: 40px; border-radius: 10px; }
+    /* Five 40px tiles + gaps + padding fit inside a 320px viewport without
+       wrapping or horizontal scroll, with room to spare. */
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .optiq-dock__item,
+    .optiq-dock__label { transition: none; }
+    .optiq-dock__item:hover,
+    .optiq-dock__item:active { transform: none; }
+  }
+
+  @media print {
+    .optiq-dock { display: none; }
+    body { padding-bottom: 0; }
+  }
+</style>

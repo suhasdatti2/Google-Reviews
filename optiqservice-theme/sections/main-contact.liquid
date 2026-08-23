@@ -9,16 +9,17 @@
     <div class="rte">
       {{ section.settings.intro }}
       <p><strong>Email:</strong> <a href="mailto:{{ settings.contact_email }}">{{ settings.contact_email }}</a></p>
+      <p><strong>Phone:</strong> <a href="tel:+14253819372">425-381-9372</a></p>
       {%- if page.content != blank -%}{{ page.content }}{%- endif -%}
     </div>
 
     <div>
       {%- form 'contact', class: 'contact-form' -%}
         {%- if form.posted_successfully? -%}
-          <p class="form-status">Thanks — your message is in. We'll get back to you within one business day.</p>
+          <p class="form-status">Thanks, your message is in. We'll get back to you within one business day.</p>
         {%- endif -%}
         {%- if form.errors -%}
-          <p class="form-status">Something didn't go through — please check your email address and try again.</p>
+          <p class="form-status">Something didn't go through, please check your email address and try again.</p>
         {%- endif -%}
 
         <div class="form-field">
@@ -52,7 +53,7 @@
       "type": "richtext",
       "id": "intro",
       "label": "Intro",
-      "default": "<p>Questions about your order, your review link, or bulk pricing for multiple locations? Send us a message — a real person reads every one, and we reply within one business day.</p><p>Already ordered and need to send your Google review link? Email it to us with your order number and we'll take care of the rest.</p>"
+      "default": "<p>Questions about your order, your review link, or bulk pricing for multiple locations? Send us a message. A real person reads every one, and we reply within one business day.</p><p>Already ordered and need to send your Google review link? Email it to us with your order number and we'll take care of the rest.</p>"
     }
   ]
 }
