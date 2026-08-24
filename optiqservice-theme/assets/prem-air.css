@@ -45,7 +45,7 @@
   justify-content: center;
   gap: clamp(16px, 2.4vw, 32px);
   list-style: none;
-  margin: 36px 0 0;
+  margin: clamp(44px, 6vw, 60px) 0 0;
   padding: 0;
 }
 .prem-air-trust li {
