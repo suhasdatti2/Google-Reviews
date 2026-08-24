@@ -49,6 +49,19 @@
 body:has(.oqapp) .oqa,
 body:has(.oqauth) .oqa { display: none !important; }
 
+/* Homepage splash: the OPTIQ wordmark sits huge in this same bottom-right
+   corner, and the launcher's normal spot was landing right on top of the
+   Q. There is no real room to drop it lower - it already sits just above
+   the bottom dock with barely any gap to spare - so it moves further in
+   from the edge instead, clearing the wordmark without risking an overlap
+   with the dock underneath it. */
+body:has(.opsh--splash) .oqa {
+  right: max(130px, calc(env(safe-area-inset-right, 0px) + 130px));
+}
+@media (max-width: 560px) {
+  body:has(.opsh--splash) .oqa { right: max(70px, env(safe-area-inset-right, 0px) + 70px); }
+}
+
 .oqa__sr {
   position: absolute; width: 1px; height: 1px;
   padding: 0; margin: -1px; overflow: hidden;
