@@ -23,7 +23,6 @@
     },
     "premintro": {
       "type": "premium-intro",
-      "disabled": true,
       "settings": {
         "eyebrow": "Introducing",
         "heading": "Optiq Signature",
@@ -35,7 +34,6 @@
     },
     "premshowcase": {
       "type": "premium-showcase",
-      "disabled": true,
       "settings": {
         "ring_heading": "The Ring",
         "ring_image": "shopify://shop_images/Screenshot_2026-08-16_184605.png",
@@ -51,7 +49,6 @@
     },
     "premconfig": {
       "type": "premium-configurator",
-      "disabled": true,
       "blocks": {
         "ring1": {
           "type": "ring_option",
@@ -132,7 +129,6 @@
     },
     "flagshipcard": {
       "type": "prem-flagship-card",
-      "disabled": true,
       "settings": {}
     },
     "shopgrid": {
