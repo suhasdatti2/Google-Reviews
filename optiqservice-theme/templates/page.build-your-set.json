@@ -43,9 +43,9 @@
           "type": "feature",
           "settings": {
             "product": "card",
-            "icon": "box",
-            "title": "Precision Metal",
-            "body": "Engineered from precision metal and finished by hand."
+            "icon": "spark",
+            "title": "Real Laser Engraving",
+            "body": "Permanently engraved into premium metal — never printed, stickered, or inked."
           }
         },
         "cardf2": {
@@ -61,17 +61,18 @@
           "type": "feature",
           "settings": {
             "product": "card",
-            "icon": "spark",
-            "title": "Programmed for You",
-            "body": "Arrives programmed with your link, ready to use."
+            "icon": "box",
+            "title": "Your Finish, Your Destination",
+            "body": "Choose your metal finish and digital destination — we engrave and program it for you."
           }
         },
         "ringsw1": { "type": "swatch", "settings": { "product": "ring", "value": "Black", "value2": "Business Professional" } },
         "ringsw2": { "type": "swatch", "settings": { "product": "ring", "value": "Black", "value2": "Classic" } },
         "ringsw3": { "type": "swatch", "settings": { "product": "ring", "value": "White", "value2": "Classic" } },
-        "cardsw1": { "type": "swatch", "settings": { "product": "card", "value": "Gold" } },
-        "cardsw2": { "type": "swatch", "settings": { "product": "card", "value": "Matte Black" } },
-        "cardsw3": { "type": "swatch", "settings": { "product": "card", "value": "Brushed Silver" } }
+        "cardsw1": { "type": "swatch", "settings": { "product": "card", "value": "Black Anodized Stainless Steel", "color": "#1c1c1c" } },
+        "cardsw2": { "type": "swatch", "settings": { "product": "card", "value": "White Anodized Steel", "color": "#efece4" } },
+        "cardsw3": { "type": "swatch", "settings": { "product": "card", "value": "Anodized Premium Brass", "color": "#b08d57" } },
+        "cardsw4": { "type": "swatch", "settings": { "product": "card", "value": "Gold-Plated Stainless Steel", "color": "#d4af37" } }
       },
       "block_order": [
         "ringf1",
@@ -85,12 +86,14 @@
         "ringsw3",
         "cardsw1",
         "cardsw2",
-        "cardsw3"
+        "cardsw3",
+        "cardsw4"
       ],
       "settings": {
+        "mode": "both",
         "ring_handle": "optiq-signature-ring",
         "ring_label": "Ring",
-        "card_handle": "optiq-signature",
+        "card_handle": "laser-engraved-signature-card",
         "card_label": "Metal Card",
         "bundle_enabled": true,
         "bundle_title": "Build your set & save",

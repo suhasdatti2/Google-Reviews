@@ -1,0 +1,68 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "buildset": {
+      "type": "premium-buildset",
+      "blocks": {
+        "cardf1": {
+          "type": "feature",
+          "settings": {
+            "product": "card",
+            "icon": "box",
+            "title": "Precision Metal",
+            "body": "Engineered from precision metal and finished by hand."
+          }
+        },
+        "cardf2": {
+          "type": "feature",
+          "settings": {
+            "product": "card",
+            "icon": "card",
+            "title": "One Tap to Share",
+            "body": "The same one-tap technology as every Optiq card."
+          }
+        },
+        "cardf3": {
+          "type": "feature",
+          "settings": {
+            "product": "card",
+            "icon": "spark",
+            "title": "Programmed for You",
+            "body": "Arrives programmed with your link, ready to use."
+          }
+        },
+        "cardsw1": { "type": "swatch", "settings": { "product": "card", "value": "Gold" } },
+        "cardsw2": { "type": "swatch", "settings": { "product": "card", "value": "Matte Black" } },
+        "cardsw3": { "type": "swatch", "settings": { "product": "card", "value": "Brushed Silver" } }
+      },
+      "block_order": [
+        "cardf1",
+        "cardf2",
+        "cardf3",
+        "cardsw1",
+        "cardsw2",
+        "cardsw3"
+      ],
+      "settings": {
+        "mode": "card",
+        "card_handle": "optiq-signature",
+        "card_label": "Metal Card",
+        "bundle_enabled": false,
+        "parent_label": "Premium Products",
+        "parent_url": "/pages/premium-products",
+        "secure_note": "Secure Checkout",
+        "wordmark": "Optiq",
+        "wordmark_sub": "Signature"
+      }
+    }
+  },
+  "order": ["buildset"]
+}

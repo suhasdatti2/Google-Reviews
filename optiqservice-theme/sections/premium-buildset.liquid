@@ -36,9 +36,23 @@
   assign features = section.blocks | where: 'type', 'feature'
   assign swatches = section.blocks | where: 'type', 'swatch'
 
-  assign slots = 'ring,card' | split: ','
+  assign mode = section.settings.mode | default: 'both'
+  case mode
+    when 'card'
+      assign slots = 'card' | split: ','
+    when 'ring'
+      assign slots = 'ring' | split: ','
+    else
+      assign slots = 'ring,card' | split: ','
+  endcase
 
   assign bundle_cents = section.settings.bundle_discount | times: 100 | round
+
+  if slots.first == 'ring'
+    assign first_product = ring
+  else
+    assign first_product = card
+  endif
 -%}
 
 <div class="prem-page" data-bset-root>
@@ -171,24 +185,26 @@
       {%- comment -%} ---------- RIGHT: purchase panel ---------- {%- endcomment -%}
       <div class="bset-panel">
 
-        <div class="bset-field bset-switchwrap">
-          <span class="bset-label" id="bset-switch-{{ section.id }}">Product</span>
-          <div class="bset-switch" role="group" aria-labelledby="bset-switch-{{ section.id }}">
-            {%- for slot in slots -%}
-              {%- liquid
-                if slot == 'ring'
-                  assign slot_name = section.settings.ring_label | default: 'Ring'
-                else
-                  assign slot_name = section.settings.card_label | default: 'Metal Card'
-                endif
-              -%}
-              <button type="button"
-                      class="bset-switch__btn"
-                      data-bset-switch="{{ slot }}"
-                      aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">{{ slot_name | escape }}</button>
-            {%- endfor -%}
+        {%- if slots.size > 1 -%}
+          <div class="bset-field bset-switchwrap">
+            <span class="bset-label" id="bset-switch-{{ section.id }}">Product</span>
+            <div class="bset-switch" role="group" aria-labelledby="bset-switch-{{ section.id }}">
+              {%- for slot in slots -%}
+                {%- liquid
+                  if slot == 'ring'
+                    assign slot_name = section.settings.ring_label | default: 'Ring'
+                  else
+                    assign slot_name = section.settings.card_label | default: 'Metal Card'
+                  endif
+                -%}
+                <button type="button"
+                        class="bset-switch__btn"
+                        data-bset-switch="{{ slot }}"
+                        aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}">{{ slot_name | escape }}</button>
+              {%- endfor -%}
+            </div>
           </div>
-        </div>
+        {%- endif -%}
 
         <div class="bset-field bset-qtywrap">
           <label class="bset-label" for="bset-qty-{{ section.id }}">Quantity</label>
@@ -298,7 +314,7 @@
           </div>
         {%- endfor -%}
 
-        {%- if section.settings.bundle_enabled -%}
+        {%- if section.settings.bundle_enabled and slots.size > 1 -%}
           <div class="bset-field bset-bundlewrap">
             <div class="bset-bundle" data-bset-bundle>
               <p class="bset-bundle__eyebrow" data-bset-bundle-eyebrow>{{ section.settings.bundle_title | escape }}</p>
@@ -316,12 +332,12 @@
               enctype="multipart/form-data"
               data-bset-form>
           <input type="hidden" name="id" data-bset-variant-id
-                 value="{% if ring != blank %}{{ ring.selected_or_first_available_variant.id }}{% endif %}">
+                 value="{% if first_product != blank %}{{ first_product.selected_or_first_available_variant.id }}{% endif %}">
 
           <div class="bset-total">
             <span class="bset-total__label">Total</span>
             <span class="bset-total__value" data-bset-total aria-live="polite">
-              {%- if ring != blank -%}{{ ring.price_min | money }}{%- endif -%}
+              {%- if first_product != blank -%}{{ first_product.price_min | money }}{%- endif -%}
             </span>
           </div>
           <p class="bset-total__note" data-bset-total-note hidden></p>
@@ -346,10 +362,10 @@
       {
         "moneyFormat": {{ shop.money_format | json }},
         "bundle": {
-          "enabled": {% if section.settings.bundle_enabled %}true{% else %}false{% endif %},
+          "enabled": {% if section.settings.bundle_enabled and slots.size > 1 %}true{% else %}false{% endif %},
           "discountCents": {{ bundle_cents | default: 0 }},
           "title": {{ section.settings.bundle_title | json }},
-          "keys": ["ring", "card"]
+          "keys": [{%- for slot in slots -%}{{ slot | json }}{% unless forloop.last %},{% endunless %}{%- endfor -%}]
         },
         "products": {
           {%- for slot in slots -%}
@@ -410,10 +426,23 @@
 {
   "name": "Build Your Set",
   "settings": [
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "select",
+      "id": "mode",
+      "label": "Products shown",
+      "options": [
+        { "value": "both", "label": "Ring + Metal Card (switcher + bundle)" },
+        { "value": "card", "label": "Metal Card only" },
+        { "value": "ring", "label": "Ring only" }
+      ],
+      "default": "both",
+      "info": "Single-product modes hide the switcher and the bundle offer automatically."
+    },
     { "type": "header", "content": "Products" },
     {
       "type": "paragraph",
-      "content": "Both products are looked up by handle, so options, sizes, prices and stock always come from Shopify. Nothing about the catalogue is duplicated here."
+      "content": "Products are looked up by handle, so options, sizes, prices and stock always come from Shopify. Nothing about the catalogue is duplicated here."
     },
     { "type": "text", "id": "ring_handle", "label": "Ring product handle", "default": "optiq-signature-ring" },
     { "type": "text", "id": "ring_label", "label": "Ring switch label", "default": "Ring" },
