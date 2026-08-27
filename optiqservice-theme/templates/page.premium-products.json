@@ -23,6 +23,7 @@
     },
     "premintro": {
       "type": "premium-intro",
+      "disabled": true,
       "settings": {
         "eyebrow": "Introducing",
         "heading": "Optiq Signature",
@@ -34,6 +35,7 @@
     },
     "premshowcase": {
       "type": "premium-showcase",
+      "disabled": true,
       "settings": {
         "ring_heading": "The Ring",
         "ring_image": "shopify://shop_images/Screenshot_2026-08-16_184605.png",
@@ -49,6 +51,7 @@
     },
     "premconfig": {
       "type": "premium-configurator",
+      "disabled": true,
       "blocks": {
         "ring1": {
           "type": "ring_option",
@@ -129,7 +132,48 @@
     },
     "flagshipcard": {
       "type": "prem-flagship-card",
+      "disabled": true,
       "settings": {}
+    },
+    "shopgrid": {
+      "type": "premium-shopgrid",
+      "blocks": {
+        "card1": {
+          "type": "card",
+          "settings": {
+            "product_handle": "laser-engraved-signature-card",
+            "title": "",
+            "image": "",
+            "cta_label": "Shop Now",
+            "cta_url": "/pages/build-your-set"
+          }
+        },
+        "card2": {
+          "type": "card",
+          "settings": {
+            "product_handle": "optiq-signature-ring",
+            "title": "",
+            "image": "",
+            "cta_label": "Shop Now",
+            "cta_url": "/pages/build-your-set"
+          }
+        },
+        "card3": {
+          "type": "card",
+          "settings": {
+            "product_handle": "optiq-signature",
+            "title": "",
+            "image": "",
+            "cta_label": "Shop Now",
+            "cta_url": "/pages/signature"
+          }
+        }
+      },
+      "block_order": ["card1", "card2", "card3"],
+      "settings": {
+        "eyebrow": "",
+        "heading": ""
+      }
     },
     "premlifestyle": {
       "type": "premium-lifestyle",
@@ -153,6 +197,7 @@
   },
   "order": [
     "premhero",
+    "shopgrid",
     "premintro",
     "premshowcase",
     "premconfig",

@@ -485,3 +485,61 @@ body:has(.prem-page) { padding-bottom: 0 !important; background: var(--prem-whit
 @media (max-width: 700px) {
   .prem-contact__grid { grid-template-columns: 1fr; }
 }
+
+/* --------------------------------------------------------------------------
+   Shop grid (Balenciaga-style) - one image, name, price, one link per card.
+   -------------------------------------------------------------------------- */
+
+.prem-shopgrid {
+  padding-block: clamp(48px, 7vw, 88px);
+}
+.prem-shopgrid .prem-config__heading {
+  margin-bottom: clamp(28px, 4vw, 44px);
+}
+.prem-shopgrid__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(18px, 2.4vw, 32px);
+}
+.prem-shopgrid__card {
+  display: flex;
+  flex-direction: column;
+  color: inherit;
+  text-decoration: none;
+}
+.prem-shopgrid__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--prem-ph);
+}
+.prem-shopgrid__media img,
+.prem-shopgrid__media .prem-ph { width: 100%; height: 100%; }
+.prem-shopgrid__media img {
+  object-fit: cover;
+  display: block;
+  transition: transform 500ms var(--prem-ease);
+}
+.prem-shopgrid__card:hover .prem-shopgrid__media img { transform: scale(1.035); }
+.prem-shopgrid__body { padding-top: 16px; }
+.prem-shopgrid__name {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin: 0 0 6px;
+  color: var(--prem-ink);
+}
+.prem-shopgrid__price {
+  font-size: 13px;
+  color: var(--prem-ink-2);
+  margin: 0 0 14px;
+}
+
+@media (max-width: 860px) {
+  .prem-shopgrid__grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 520px) {
+  .prem-shopgrid__grid { grid-template-columns: 1fr; }
+}
