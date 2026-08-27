@@ -118,6 +118,10 @@
         "card_note": "Fully customizable design, to client's choice."
       }
     },
+    "flagshipcard": {
+      "type": "prem-flagship-card",
+      "settings": {}
+    },
     "premlifestyle": {
       "type": "premium-lifestyle",
       "settings": {
@@ -143,6 +147,7 @@
     "premintro",
     "premshowcase",
     "premconfig",
+    "flagshipcard",
     "premlifestyle",
     "premcontact"
   ]

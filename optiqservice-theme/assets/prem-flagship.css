@@ -1,0 +1,220 @@
+/* ==========================================================================
+   PREM FLAGSHIP - Laser Engraved Signature Metal Card
+   --------------------------------------------------------------------------
+   Layers on top of optiq-premium.css (tokens, .prem-link, .prem-ph, .prem-pdp
+   header/footer repaint) and optiq-buildset.css (.bset-layout/.bset-info/
+   .bset-stage/.bset-panel/.bset-media/.bset-shot/.bset-thumbs, the same
+   3-column PDP scaffold sections/prem-product.liquid already uses) - this
+   file only adds what makes the flagship product read as a step above the
+   rest of the catalog: larger imagery, more negative space, and a
+   swatch-card finish picker in place of the small colour-dot pattern used
+   on the ordinary metal cards.
+
+   The commerce logic (variant matching, gallery, quantity, cart form) is
+   entirely assets/prem-product.js, completely unchanged - every interactive
+   element below carries the exact same data-prem-* attributes it already
+   knows how to drive. Only the visual layer here is new.
+   ========================================================================== */
+
+.flag-eyebrow {
+  font-family: var(--prem-serif);
+  font-style: italic;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  color: var(--prem-ink-2);
+  margin: 0 0 16px;
+}
+
+.flag-title {
+  font-family: var(--prem-serif);
+  font-weight: 500;
+  font-size: clamp(2rem, 1.4rem + 2.6vw, 3.1rem);
+  letter-spacing: 0.005em;
+  line-height: 1.08;
+  margin: 0 0 16px;
+}
+
+.flag-sub {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--prem-ink-2);
+  max-width: 40ch;
+  margin: 0 0 28px;
+}
+
+/* Flagship badge - used in the hero and on the Premium Products card. */
+.flag-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--prem-ink);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--prem-ink);
+  margin-bottom: 18px;
+}
+
+/* --------------------------------------------------------------------------
+   Supporting shots - a small editorial triptych beneath the main gallery
+   (engraving close-up, card in use, lifestyle shot). Purely presentational,
+   not part of the interactive slideshow, so the gallery JS stays untouched.
+   -------------------------------------------------------------------------- */
+.flag-support {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  max-width: var(--bset-media-max);
+  margin: 22px auto 0;
+}
+.flag-support__shot { aspect-ratio: 1 / 1; overflow: hidden; }
+.flag-support__shot .prem-ph { min-height: 0; font-size: 9.5px; }
+.flag-support__shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* --------------------------------------------------------------------------
+   Finish picker - swatch CARDS, not the small colour dots used on the
+   ordinary card products. Same data-prem-value / data-prem-option-index /
+   aria-pressed contract as .bset-swatch, so assets/prem-product.js drives
+   selection, availability greying-out and keyboard focus with no code
+   changes - only the visual treatment below is new.
+   -------------------------------------------------------------------------- */
+.flag-swatches {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.flag-swatch {
+  appearance: none;
+  cursor: pointer;
+  display: grid;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--prem-line);
+  background: var(--prem-white);
+  text-align: left;
+  transition: border-color 200ms var(--prem-ease), box-shadow 200ms var(--prem-ease);
+}
+.flag-swatch__media { aspect-ratio: 1 / 1; overflow: hidden; background: var(--prem-ph); }
+.flag-swatch__media .prem-ph { min-height: 0; font-size: 10px; }
+.flag-swatch__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.flag-swatch__name {
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--prem-ink);
+}
+.flag-swatch:hover { border-color: var(--prem-ink-3); }
+.flag-swatch[aria-pressed="true"] {
+  border-color: var(--prem-ink);
+  box-shadow: 0 0 0 1px var(--prem-ink);
+}
+.flag-swatch:focus-visible { outline: 2px solid var(--prem-ink); outline-offset: 2px; }
+.flag-swatch.is-unavailable { opacity: 0.4; }
+.flag-swatch.is-unavailable .flag-swatch__name { text-decoration: line-through; }
+
+/* --------------------------------------------------------------------------
+   Digital destination - type select + one value field, both real form
+   fields so the choice flows to the cart as a line item property through
+   the existing global handler exactly like every other personalisation
+   field on the site (assets/optiq-cart.js already forwards every
+   name="properties[...]" field - nothing new needed there).
+   -------------------------------------------------------------------------- */
+.flag-dest { display: grid; gap: 10px; }
+.flag-dest select,
+.flag-dest input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--prem-line);
+  background: var(--prem-white);
+  color: var(--prem-ink);
+  font-family: inherit;
+  font-size: 14px;
+}
+.flag-dest select:focus-visible,
+.flag-dest input:focus-visible { outline: 2px solid var(--prem-ink); outline-offset: 1px; }
+.flag-dest__hint {
+  font-size: 12px;
+  color: var(--prem-ink-3);
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Trust section
+   -------------------------------------------------------------------------- */
+.flag-trust {
+  text-align: center;
+  padding-block: clamp(56px, 8vw, 96px);
+  border-top: 1px solid var(--prem-line);
+}
+.flag-trust__title { max-width: 640px; margin: 0 auto; }
+.flag-trust .prem-config__body { max-width: 52ch; margin: 18px auto 0; }
+.flag-trust__list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(14px, 2vw, 28px);
+  margin: 30px 0 0;
+  padding: 0;
+}
+.flag-trust__list li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  color: var(--prem-ink-2);
+}
+.flag-trust__list svg { width: 13px; height: 13px; flex: none; color: var(--prem-ink); }
+
+/* --------------------------------------------------------------------------
+   Flagship card - Premium Products page. Sits below the existing Ring /
+   Metal Card showcase as the top of the hierarchy: deliberately its own
+   section rather than a third card squeezed into premium-showcase.liquid's
+   fixed two-card grid, so that section's existing layout stays untouched.
+   -------------------------------------------------------------------------- */
+.flag-card {
+  border: 1px solid var(--prem-ink);
+  padding: clamp(32px, 5vw, 64px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
+  gap: clamp(28px, 4vw, 56px);
+  align-items: center;
+}
+.flag-card__media { aspect-ratio: 4 / 3; overflow: hidden; }
+.flag-card__media .prem-ph { min-height: 0; }
+.flag-card__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.flag-card__price {
+  font-family: var(--prem-serif);
+  font-weight: 500;
+  font-size: 1.6rem;
+  margin: 4px 0 14px;
+}
+.flag-card__tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--prem-ink-2);
+  margin: 0 0 6px;
+}
+.flag-card__desc {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--prem-ink-2);
+  max-width: 46ch;
+  margin: 0 0 24px;
+}
+
+@media (max-width: 760px) {
+  .flag-card { grid-template-columns: 1fr; }
+  .flag-card__media { order: -1; }
+}
+
+@media (max-width: 480px) {
+  .flag-swatches { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flag-swatch { transition: none !important; }
+}
