@@ -77,25 +77,33 @@
         "card1": {
           "type": "card_option",
           "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_Aug_16_2026_07_50_36_PM.png",
-            "label": "",
-            "swatch_color": ""
+            "image": "",
+            "label": "Black Anodized Stainless Steel",
+            "swatch_color": "#1c1c1c"
           }
         },
         "card2": {
           "type": "card_option",
           "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_Aug_16_2026_07_51_12_PM.png",
-            "label": "",
-            "swatch_color": ""
+            "image": "",
+            "label": "White Anodized Steel",
+            "swatch_color": "#efece4"
           }
         },
         "card3": {
           "type": "card_option",
           "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_Aug_16_2026_07_52_01_PM.png",
-            "label": "",
-            "swatch_color": ""
+            "image": "",
+            "label": "Anodized Premium Brass",
+            "swatch_color": "#b08d57"
+          }
+        },
+        "card4": {
+          "type": "card_option",
+          "settings": {
+            "image": "",
+            "label": "Gold-Plated Stainless Steel",
+            "swatch_color": "#d4af37"
           }
         }
       },
@@ -105,7 +113,8 @@
         "ring3",
         "card1",
         "card2",
-        "card3"
+        "card3",
+        "card4"
       ],
       "settings": {
         "eyebrow": "Make It Yours",
@@ -114,8 +123,8 @@
         "cta_label": "Build Your Set",
         "cta_link": "",
         "ring_label": "Ring",
-        "card_label": "Metal Card",
-        "card_note": "Fully customizable design, to client's choice."
+        "card_label": "Laser Engraved Metal Card",
+        "card_note": "Real laser engraving. Choose your finish and destination."
       }
     },
     "flagshipcard": {

@@ -1,20 +1,18 @@
 {%- comment -%}
-  Flagship product card - Premium Products page. Sits below the existing
-  Ring / Metal Card showcase (sections/premium-showcase.liquid) as a
-  deliberately separate section, so that section's fixed two-card grid is
-  never touched. This card is the top of the hierarchy: Premium -> the
-  existing premium metal cards -> the Signature Collection.
+  Product card - Premium Products page, sitting below the "Choose Your
+  Signature" configurator. Despite the file name (prem-flagship-card), this
+  now represents the CLASSIC Optiq Signature (PVC) card, not the flagship
+  engraved one - the flagship Laser Engraved Metal Card is promoted by the
+  configurator above (sections/premium-configurator.liquid) and sold through
+  Build Your Set. Kept as its own section, separate from the fixed
+  Ring / Metal Card showcase grid (sections/premium-showcase.liquid).
 
   Price and availability are read from the real Shopify product, exactly
   like every other price shown across this theme - never hardcoded here.
 
-  The CTA does NOT link straight to the flagship product's own page: that
-  page only renders correctly once templateSuffix is set on the product,
-  which can't happen until the draft holding product.signature-collection.json
-  is published (see the note on that assignment). Until then, and by
-  explicit choice even after, it points at /pages/signature - the classic
-  Optiq Signature card's own single-product page (premium-buildset in
-  "card only" mode, no ring, no bundle).
+  Links to /pages/signature - the classic Optiq Signature card's own
+  single-product page (premium-buildset in "card only" mode, no ring,
+  no bundle).
 {%- endcomment -%}
 
 {{ 'optiq-premium.css' | asset_url | stylesheet_tag }}
@@ -23,7 +21,7 @@
 {%- liquid
   assign flag_product = section.settings.product
   if flag_product == blank
-    assign flag_product = all_products['laser-engraved-signature-card']
+    assign flag_product = all_products['optiq-signature']
   endif
   assign card_url = section.settings.cta_url | default: '/pages/signature'
 -%}
@@ -39,7 +37,7 @@
           <p class="flag-card__tag">{{ section.settings.tag | default: 'The Signature Collection' | escape }}</p>
           <h2 class="prem-config__heading" style="margin-bottom: 4px;">{{ section.settings.heading | default: flag_product.title | escape }}</h2>
           <p class="flag-card__price">{{ flag_product.price | money }}</p>
-          <p class="flag-card__desc">{{ section.settings.description | default: 'Our most premium metal card. Real laser engraving, permanently engraved into premium metal, and customized to your digital identity.' | escape }}</p>
+          <p class="flag-card__desc">{{ section.settings.description | default: 'Premium PVC construction with one-tap sharing, fully customizable to your brand.' | escape }}</p>
           <a class="prem-link" href="{{ card_url }}">{{ section.settings.cta_label | default: 'Explore Signature' | escape }}</a>
         </div>
         <div class="flag-card__media">
@@ -52,17 +50,17 @@
 
 {% schema %}
 {
-  "name": "Flagship card",
+  "name": "Signature product card",
   "settings": [
-    { "type": "product", "id": "product", "label": "Product", "info": "Defaults to the Laser Engraved Signature Metal Card." },
-    { "type": "text", "id": "badge", "label": "Badge", "default": "Flagship" },
+    { "type": "product", "id": "product", "label": "Product", "info": "Defaults to Optiq Signature." },
+    { "type": "text", "id": "badge", "label": "Badge", "info": "Leave blank to hide." },
     { "type": "text", "id": "tag", "label": "Overline", "default": "The Signature Collection" },
     { "type": "text", "id": "heading", "label": "Heading", "info": "Defaults to the product's own title." },
-    { "type": "textarea", "id": "description", "label": "Description", "default": "Our most premium metal card. Real laser engraving, permanently engraved into premium metal, and customized to your digital identity." },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "Premium PVC construction with one-tap sharing, fully customizable to your brand." },
     { "type": "text", "id": "cta_label", "label": "Link label", "default": "Explore Signature" },
     { "type": "url", "id": "cta_url", "label": "Link URL", "info": "Defaults to /pages/signature, the classic Optiq Signature card page." },
     { "type": "image_picker", "id": "image", "label": "Card image" }
   ],
-  "presets": [{ "name": "Flagship card" }]
+  "presets": [{ "name": "Signature product card" }]
 }
 {% endschema %}
