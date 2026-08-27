@@ -49,6 +49,7 @@
     },
     "premconfig": {
       "type": "premium-configurator",
+      "disabled": true,
       "blocks": {
         "ring1": {
           "type": "ring_option",
@@ -129,6 +130,7 @@
     },
     "flagshipcard": {
       "type": "prem-flagship-card",
+      "disabled": true,
       "settings": {}
     },
     "shopgrid": {
