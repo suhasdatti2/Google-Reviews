@@ -510,7 +510,7 @@ body:has(.prem-page) { padding-bottom: 0 !important; background: var(--prem-whit
 .prem-shopgrid__media {
   position: relative;
   width: 100%;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
   background: var(--prem-ph);
 }
