@@ -216,11 +216,19 @@
       var shots = all('[data-shot]', gallery);
       if (!shots.length) { return; }
 
-      var exact = null, generic = null;
+      /* A shot with no data-shot-value matches purely on the SECOND option
+         (e.g. the Metal Card's Chip Size), independent of the first
+         (Finish) - for a product where only the second option has its own
+         photography. */
+      var exact = null, generic = null, secondOnly = null;
       shots.forEach(function (shot) {
         var shotValue = shot.getAttribute('data-shot-value');
-        if (shotValue === null || shotValue !== lead) { return; }
         var shotValue2 = shot.getAttribute('data-shot-value2');
+        if (shotValue === null) {
+          if (!secondOnly && shotValue2 !== null && shotValue2 === second) { secondOnly = shot; }
+          return;
+        }
+        if (shotValue !== lead) { return; }
         if (shotValue2) {
           if (!exact && shotValue2 === second) { exact = shot; }
         } else if (!generic) {
@@ -228,7 +236,7 @@
         }
       });
 
-      var target = exact || generic || shots[0];
+      var target = exact || generic || secondOnly || shots[0];
       setShot(gallery, target.getAttribute('data-shot'));
     }
 
@@ -247,20 +255,20 @@
        style) just as much as clicking the swatch itself - so it has to move
        the same state the swatch buttons do, or the two controls drift out of
        sync with each other. Only touches option indexes the shot actually
-       names; a shot with no data-shot-value (e.g. a plain product photo)
-       changes nothing. */
+       names; a shot with no data-shot-value/data-shot-value2 (e.g. a plain
+       product photo) changes nothing. */
     function syncSelectionToShot(gallery, index) {
       var key = gallery.getAttribute('data-bset-gallery');
       var shot = gallery.querySelector('[data-shot="' + index + '"]');
       if (!shot) { return; }
 
       var value = shot.getAttribute('data-shot-value');
-      if (value === null) { return; }
       var value2 = shot.getAttribute('data-shot-value2');
+      if (value === null && value2 === null) { return; }
 
       var selection = state.selections[key];
       var changed = false;
-      if (selection[0] !== value) { selection[0] = value; changed = true; }
+      if (value !== null && selection[0] !== value) { selection[0] = value; changed = true; }
       if (value2 && selection.length > 1 && selection[1] !== value2) { selection[1] = value2; changed = true; }
 
       if (changed) { renderOptions(); renderTotals(); renderBuyState(); }

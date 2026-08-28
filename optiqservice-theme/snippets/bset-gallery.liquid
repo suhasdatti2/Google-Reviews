@@ -76,21 +76,21 @@
     {%- assign i = 0 -%}
 
     {%- if extra1_image != blank -%}
-      <div class="bset-shot{% if i == 0 %} is-active{% endif %}" data-shot="{{ i }}" data-shot-value="{{ extra1_value | escape }}"{% if extra1_value2 != blank %} data-shot-value2="{{ extra1_value2 | escape }}"{% endif %}>
+      <div class="bset-shot{% if i == 0 %} is-active{% endif %}" data-shot="{{ i }}"{% if extra1_value != blank %} data-shot-value="{{ extra1_value | escape }}"{% endif %}{% if extra1_value2 != blank %} data-shot-value2="{{ extra1_value2 | escape }}"{% endif %}>
         {% render 'prem-media', image: extra1_image, width: 1400, alt: label, label: label, loading: 'eager' %}
       </div>
       {%- assign i = i | plus: 1 -%}
     {%- endif -%}
 
     {%- if extra2_image != blank -%}
-      <div class="bset-shot{% if i == 0 %} is-active{% endif %}" data-shot="{{ i }}" data-shot-value="{{ extra2_value | escape }}"{% if extra2_value2 != blank %} data-shot-value2="{{ extra2_value2 | escape }}"{% endif %}>
+      <div class="bset-shot{% if i == 0 %} is-active{% endif %}" data-shot="{{ i }}"{% if extra2_value != blank %} data-shot-value="{{ extra2_value | escape }}"{% endif %}{% if extra2_value2 != blank %} data-shot-value2="{{ extra2_value2 | escape }}"{% endif %}>
         {% render 'prem-media', image: extra2_image, width: 1400, alt: label, label: label, loading: 'lazy' %}
       </div>
       {%- assign i = i | plus: 1 -%}
     {%- endif -%}
 
     {%- if extra3_image != blank -%}
-      <div class="bset-shot{% if i == 0 %} is-active{% endif %}" data-shot="{{ i }}" data-shot-value="{{ extra3_value | escape }}"{% if extra3_value2 != blank %} data-shot-value2="{{ extra3_value2 | escape }}"{% endif %}>
+      <div class="bset-shot{% if i == 0 %} is-active{% endif %}" data-shot="{{ i }}"{% if extra3_value != blank %} data-shot-value="{{ extra3_value | escape }}"{% endif %}{% if extra3_value2 != blank %} data-shot-value2="{{ extra3_value2 | escape }}"{% endif %}>
         {% render 'prem-media', image: extra3_image, width: 1400, alt: label, label: label, loading: 'lazy' %}
       </div>
       {%- assign i = i | plus: 1 -%}
@@ -152,7 +152,7 @@
                 class="bset-thumb{% if t == 0 %} is-active{% endif %}"
                 data-shot-go="{{ t }}"
                 aria-pressed="{% if t == 0 %}true{% else %}false{% endif %}"
-                aria-label="Show {{ extra1_value | escape }}">
+                aria-label="Show {{ extra1_value | default: extra1_value2 | escape }}">
           {{ extra1_image | image_url: width: 220 | image_tag: alt: '', loading: 'lazy' }}
         </button>
         {%- assign t = t | plus: 1 -%}
@@ -163,7 +163,7 @@
                 class="bset-thumb{% if t == 0 %} is-active{% endif %}"
                 data-shot-go="{{ t }}"
                 aria-pressed="{% if t == 0 %}true{% else %}false{% endif %}"
-                aria-label="Show {{ extra2_value | escape }}">
+                aria-label="Show {{ extra2_value | default: extra2_value2 | escape }}">
           {{ extra2_image | image_url: width: 220 | image_tag: alt: '', loading: 'lazy' }}
         </button>
         {%- assign t = t | plus: 1 -%}
@@ -174,7 +174,7 @@
                 class="bset-thumb{% if t == 0 %} is-active{% endif %}"
                 data-shot-go="{{ t }}"
                 aria-pressed="{% if t == 0 %}true{% else %}false{% endif %}"
-                aria-label="Show {{ extra3_value | escape }}">
+                aria-label="Show {{ extra3_value | default: extra3_value2 | escape }}">
           {{ extra3_image | image_url: width: 220 | image_tag: alt: '', loading: 'lazy' }}
         </button>
         {%- assign t = t | plus: 1 -%}
