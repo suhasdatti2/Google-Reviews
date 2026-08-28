@@ -165,22 +165,14 @@
             "cta_label": "Shop Now",
             "cta_url": "/pages/signature"
           }
-        },
-        "card4": {
-          "type": "card",
-          "settings": {
-            "product_handle": "",
-            "title": "Build Your Set",
-            "image": "",
-            "cta_label": "Bundle & Save",
-            "cta_url": "/pages/build-your-set"
-          }
         }
       },
-      "block_order": ["card1", "card2", "card3", "card4"],
+      "block_order": ["card1", "card2", "card3"],
       "settings": {
         "eyebrow": "",
-        "heading": ""
+        "heading": "",
+        "bundle_label": "Buy as a Bundle & Save",
+        "bundle_url": "/pages/build-your-set"
       }
     },
     "premlifestyle": {

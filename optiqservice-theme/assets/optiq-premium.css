@@ -498,8 +498,8 @@ body:has(.prem-page) { padding-bottom: 0 !important; background: var(--prem-whit
 }
 .prem-shopgrid__grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: clamp(16px, 2vw, 28px);
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(18px, 2.4vw, 32px);
 }
 .prem-shopgrid__card {
   display: flex;
@@ -535,6 +535,10 @@ body:has(.prem-page) { padding-bottom: 0 !important; background: var(--prem-whit
   font-size: 13px;
   color: var(--prem-ink-2);
   margin: 0 0 14px;
+}
+.prem-shopgrid__bundle {
+  text-align: center;
+  margin: clamp(28px, 4vw, 44px) 0 0;
 }
 
 @media (max-width: 860px) {

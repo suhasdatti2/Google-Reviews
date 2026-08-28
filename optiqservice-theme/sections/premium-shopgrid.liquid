@@ -48,6 +48,12 @@
           </a>
         {%- endfor -%}
       </div>
+
+      {%- if section.settings.bundle_label != blank -%}
+        <p class="prem-shopgrid__bundle">
+          <a class="prem-link" href="{{ section.settings.bundle_url | default: '/pages/build-your-set' }}">{{ section.settings.bundle_label | escape }}</a>
+        </p>
+      {%- endif -%}
     </div>
   </section>
 {%- endif -%}
@@ -57,7 +63,9 @@
   "name": "Shop grid",
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "info": "Leave blank to hide." },
-    { "type": "text", "id": "heading", "label": "Heading", "info": "Leave blank to hide." }
+    { "type": "text", "id": "heading", "label": "Heading", "info": "Leave blank to hide." },
+    { "type": "text", "id": "bundle_label", "label": "Bundle link text", "default": "Buy as a Bundle & Save", "info": "Leave blank to hide. A secondary link below the grid to the 3-way Build Your Set / Bundle page." },
+    { "type": "url", "id": "bundle_url", "label": "Bundle link URL", "info": "Defaults to /pages/build-your-set." }
   ],
   "blocks": [
     {
