@@ -105,6 +105,16 @@
       });
     });
 
+    /* Pre-select a slot via ?show=<key> in the URL, e.g. a shop-grid card
+       linking straight into Build Your Set with its own product already
+       open - the switcher still lets the shopper move to a different slot
+       or add the others to build a bundle. Falls back to keys[0] when the
+       param is missing or doesn't match a slot on this page. */
+    try {
+      var showParam = new URLSearchParams(window.location.search).get('show');
+      if (showParam && keys.indexOf(showParam) !== -1) { state.key = showParam; }
+    } catch (err) { /* URLSearchParams unsupported - keeps keys[0] */ }
+
     /* ---- elements ------------------------------------------------------ */
     var el = {
       form: root.querySelector('[data-bset-form]'),
