@@ -498,8 +498,8 @@ body:has(.prem-page) { padding-bottom: 0 !important; background: var(--prem-whit
 }
 .prem-shopgrid__grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(18px, 2.4vw, 32px);
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(16px, 2vw, 28px);
 }
 .prem-shopgrid__card {
   display: flex;

@@ -143,7 +143,7 @@
             "title": "",
             "image": "",
             "cta_label": "Shop Now",
-            "cta_url": "/pages/build-your-set"
+            "cta_url": "/pages/signature-metal"
           }
         },
         "card2": {
@@ -153,7 +153,7 @@
             "title": "",
             "image": "",
             "cta_label": "Shop Now",
-            "cta_url": "/pages/build-your-set"
+            "cta_url": "/pages/signature-ring"
           }
         },
         "card3": {
@@ -165,9 +165,19 @@
             "cta_label": "Shop Now",
             "cta_url": "/pages/signature"
           }
+        },
+        "card4": {
+          "type": "card",
+          "settings": {
+            "product_handle": "",
+            "title": "Build Your Set",
+            "image": "",
+            "cta_label": "Bundle & Save",
+            "cta_url": "/pages/build-your-set"
+          }
         }
       },
-      "block_order": ["card1", "card2", "card3"],
+      "block_order": ["card1", "card2", "card3", "card4"],
       "settings": {
         "eyebrow": "",
         "heading": ""

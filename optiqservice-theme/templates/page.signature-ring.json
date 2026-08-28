@@ -1,0 +1,68 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "buildset": {
+      "type": "premium-buildset",
+      "blocks": {
+        "ringf1": {
+          "type": "feature",
+          "settings": {
+            "product": "ring",
+            "icon": "box",
+            "title": "Finished by Hand",
+            "body": "Every piece is finished by hand before it ships."
+          }
+        },
+        "ringf2": {
+          "type": "feature",
+          "settings": {
+            "product": "ring",
+            "icon": "ring",
+            "title": "Built to Be Kept",
+            "body": "Made for daily wear, not for a drawer."
+          }
+        },
+        "ringf3": {
+          "type": "feature",
+          "settings": {
+            "product": "ring",
+            "icon": "spark",
+            "title": "Your Size, Your Finish",
+            "body": "Choose the finish and size that match how you carry it."
+          }
+        },
+        "ringsw1": { "type": "swatch", "settings": { "product": "ring", "value": "Black", "value2": "Business Professional" } },
+        "ringsw2": { "type": "swatch", "settings": { "product": "ring", "value": "Black", "value2": "Classic" } },
+        "ringsw3": { "type": "swatch", "settings": { "product": "ring", "value": "White", "value2": "Classic" } }
+      },
+      "block_order": [
+        "ringf1",
+        "ringf2",
+        "ringf3",
+        "ringsw1",
+        "ringsw2",
+        "ringsw3"
+      ],
+      "settings": {
+        "mode": "ring",
+        "ring_handle": "optiq-signature-ring",
+        "ring_label": "Ring",
+        "bundle_enabled": false,
+        "parent_label": "Premium Products",
+        "parent_url": "/pages/premium-products",
+        "secure_note": "Secure Checkout",
+        "wordmark": "Optiq",
+        "wordmark_sub": "Signature"
+      }
+    }
+  },
+  "order": ["buildset"]
+}

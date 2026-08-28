@@ -66,13 +66,43 @@
             "body": "Choose your metal finish and digital destination — we engrave and program it for you."
           }
         },
+        "pvcf1": {
+          "type": "feature",
+          "settings": {
+            "product": "pvc",
+            "icon": "box",
+            "title": "Built to Last",
+            "body": "Durable PVC construction, finished by hand for everyday use."
+          }
+        },
+        "pvcf2": {
+          "type": "feature",
+          "settings": {
+            "product": "pvc",
+            "icon": "card",
+            "title": "One Tap to Share",
+            "body": "The same one-tap technology as every Optiq card."
+          }
+        },
+        "pvcf3": {
+          "type": "feature",
+          "settings": {
+            "product": "pvc",
+            "icon": "spark",
+            "title": "Fully Customizable",
+            "body": "Your design, your colors — made to match your brand."
+          }
+        },
         "ringsw1": { "type": "swatch", "settings": { "product": "ring", "value": "Black", "value2": "Business Professional" } },
         "ringsw2": { "type": "swatch", "settings": { "product": "ring", "value": "Black", "value2": "Classic" } },
         "ringsw3": { "type": "swatch", "settings": { "product": "ring", "value": "White", "value2": "Classic" } },
         "cardsw1": { "type": "swatch", "settings": { "product": "card", "value": "Black Anodized Stainless Steel", "color": "#1c1c1c" } },
         "cardsw2": { "type": "swatch", "settings": { "product": "card", "value": "White Anodized Steel", "color": "#efece4" } },
         "cardsw3": { "type": "swatch", "settings": { "product": "card", "value": "Anodized Premium Brass", "color": "#b08d57" } },
-        "cardsw4": { "type": "swatch", "settings": { "product": "card", "value": "Gold-Plated Stainless Steel", "color": "#d4af37" } }
+        "cardsw4": { "type": "swatch", "settings": { "product": "card", "value": "Gold-Plated Stainless Steel", "color": "#d4af37" } },
+        "pvcsw1": { "type": "swatch", "settings": { "product": "pvc", "value": "Gold" } },
+        "pvcsw2": { "type": "swatch", "settings": { "product": "pvc", "value": "Matte Black" } },
+        "pvcsw3": { "type": "swatch", "settings": { "product": "pvc", "value": "Brushed Silver" } }
       },
       "block_order": [
         "ringf1",
@@ -81,20 +111,28 @@
         "cardf1",
         "cardf2",
         "cardf3",
+        "pvcf1",
+        "pvcf2",
+        "pvcf3",
         "ringsw1",
         "ringsw2",
         "ringsw3",
         "cardsw1",
         "cardsw2",
         "cardsw3",
-        "cardsw4"
+        "cardsw4",
+        "pvcsw1",
+        "pvcsw2",
+        "pvcsw3"
       ],
       "settings": {
-        "mode": "both",
+        "mode": "bundle",
         "ring_handle": "optiq-signature-ring",
         "ring_label": "Ring",
         "card_handle": "laser-engraved-signature-card",
         "card_label": "Metal Card",
+        "pvc_handle": "optiq-signature",
+        "pvc_label": "PVC Card",
         "bundle_enabled": true,
         "bundle_title": "Build your set & save",
         "bundle_discount": "29.99",

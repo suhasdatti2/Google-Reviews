@@ -2,12 +2,17 @@
   BUILD YOUR SET — the purchase experience behind the CTA of the same name.
 
   Three columns, matching the supplied wireframe: identity left, photography
-  centre, purchase panel right. One panel serves both products; switching
-  between Ring and Metal Card swaps the identity, the gallery and the option
-  set, so ring-only controls never appear under a card and vice versa.
+  centre, purchase panel right. One panel serves any number of products (see
+  the "mode" setting); switching between them swaps the identity, the
+  gallery and the option set, so one product's controls never appear under
+  another. Three concrete products are supported - Ring, Metal Card (the
+  laser-engraved flagship) and PVC Card (the classic Optiq Signature) -
+  shown solo, as the original Ring+Card pair ("both"), or all three at once
+  ("bundle") for a shopper who wants to switch between and add any
+  combination to cart.
 
-  Everything on this page is driven by REAL product data. The two products are
-  looked up by handle through all_products, so their options, option values,
+  Everything on this page is driven by REAL product data. Every product is
+  looked up by handle through all_products, so its options, option values,
   variants, prices and availability all come from Shopify — nothing about the
   catalogue is hard-coded here. Add a size in the admin and it appears; sell
   out of one and its chip strikes through.
@@ -20,9 +25,11 @@
   pre-selected variant.
 
   The bundle saving is a real Shopify automatic discount (Buy Ring → Metal Card
-  discounted), so it lands in the cart and at checkout on its own. The setting
-  below is the DISPLAY figure only; it is stated as such in the schema so the
-  two cannot silently disagree.
+  discounted) covering exactly those two products, so it lands in the cart and
+  at checkout on its own. The setting below is the DISPLAY figure only; it is
+  stated as such in the schema so the two cannot silently disagree. It only
+  ever shows in two-product modes - a three-way "bundle" has no matching real
+  discount to quote, so that box stays off and the switcher does the work.
 {%- endcomment -%}
 
 {{ 'optiq-premium.css' | asset_url | stylesheet_tag }}
@@ -32,6 +39,7 @@
 {%- liquid
   assign ring = all_products[section.settings.ring_handle]
   assign card = all_products[section.settings.card_handle]
+  assign pvc = all_products[section.settings.pvc_handle]
 
   assign features = section.blocks | where: 'type', 'feature'
   assign swatches = section.blocks | where: 'type', 'swatch'
@@ -42,17 +50,24 @@
       assign slots = 'card' | split: ','
     when 'ring'
       assign slots = 'ring' | split: ','
+    when 'pvc'
+      assign slots = 'pvc' | split: ','
+    when 'bundle'
+      assign slots = 'ring,card,pvc' | split: ','
     else
       assign slots = 'ring,card' | split: ','
   endcase
 
   assign bundle_cents = section.settings.bundle_discount | times: 100 | round
 
-  if slots.first == 'ring'
-    assign first_product = ring
-  else
-    assign first_product = card
-  endif
+  case slots.first
+    when 'ring'
+      assign first_product = ring
+    when 'pvc'
+      assign first_product = pvc
+    else
+      assign first_product = card
+  endcase
 -%}
 
 <div class="prem-page" data-bset-root>
@@ -77,15 +92,20 @@
 
         {%- for slot in slots -%}
           {%- liquid
-            if slot == 'ring'
-              assign p = ring
-              assign slot_desc = section.settings.ring_desc
-              assign slot_name = section.settings.ring_label | default: 'Ring'
-            else
-              assign p = card
-              assign slot_desc = section.settings.card_desc
-              assign slot_name = section.settings.card_label | default: 'Metal Card'
-            endif
+            case slot
+              when 'ring'
+                assign p = ring
+                assign slot_desc = section.settings.ring_desc
+                assign slot_name = section.settings.ring_label | default: 'Ring'
+              when 'pvc'
+                assign p = pvc
+                assign slot_desc = section.settings.pvc_desc
+                assign slot_name = section.settings.pvc_label | default: 'PVC Card'
+              else
+                assign p = card
+                assign slot_desc = section.settings.card_desc
+                assign slot_name = section.settings.card_label | default: 'Metal Card'
+            endcase
           -%}
 
           <div class="bset-head" data-bset-for="{{ slot }}"{% unless forloop.first %} hidden{% endunless %}>
@@ -141,33 +161,47 @@
       <div class="bset-stage">
         {%- for slot in slots -%}
           {%- liquid
-            if slot == 'ring'
-              assign p = ring
-              assign slot_name = section.settings.ring_label | default: 'Ring'
-              assign slot_image = section.settings.ring_image
-              assign extra1_image = section.settings.ring_image_bp_black
-              assign extra1_value = 'Black'
-              assign extra1_value2 = 'Business Professional'
-              assign extra2_image = section.settings.ring_image_classic_black
-              assign extra2_value = 'Black'
-              assign extra2_value2 = 'Classic'
-              assign extra3_image = section.settings.ring_image_classic_white
-              assign extra3_value = 'White'
-              assign extra3_value2 = 'Classic'
-            else
-              assign p = card
-              assign slot_name = section.settings.card_label | default: 'Metal Card'
-              assign slot_image = section.settings.card_image
-              assign extra1_image = section.settings.card_image_gold
-              assign extra1_value = 'Gold'
-              assign extra1_value2 = blank
-              assign extra2_image = section.settings.card_image_matte_black
-              assign extra2_value = 'Matte Black'
-              assign extra2_value2 = blank
-              assign extra3_image = section.settings.card_image_brushed_silver
-              assign extra3_value = 'Brushed Silver'
-              assign extra3_value2 = blank
-            endif
+            case slot
+              when 'ring'
+                assign p = ring
+                assign slot_name = section.settings.ring_label | default: 'Ring'
+                assign slot_image = section.settings.ring_image
+                assign extra1_image = section.settings.ring_image_bp_black
+                assign extra1_value = 'Black'
+                assign extra1_value2 = 'Business Professional'
+                assign extra2_image = section.settings.ring_image_classic_black
+                assign extra2_value = 'Black'
+                assign extra2_value2 = 'Classic'
+                assign extra3_image = section.settings.ring_image_classic_white
+                assign extra3_value = 'White'
+                assign extra3_value2 = 'Classic'
+              when 'pvc'
+                assign p = pvc
+                assign slot_name = section.settings.pvc_label | default: 'PVC Card'
+                assign slot_image = section.settings.pvc_image
+                assign extra1_image = section.settings.pvc_image_gold
+                assign extra1_value = 'Gold'
+                assign extra1_value2 = blank
+                assign extra2_image = section.settings.pvc_image_matte_black
+                assign extra2_value = 'Matte Black'
+                assign extra2_value2 = blank
+                assign extra3_image = section.settings.pvc_image_brushed_silver
+                assign extra3_value = 'Brushed Silver'
+                assign extra3_value2 = blank
+              else
+                assign p = card
+                assign slot_name = section.settings.card_label | default: 'Metal Card'
+                assign slot_image = section.settings.card_image
+                assign extra1_image = blank
+                assign extra1_value = blank
+                assign extra1_value2 = blank
+                assign extra2_image = blank
+                assign extra2_value = blank
+                assign extra2_value2 = blank
+                assign extra3_image = blank
+                assign extra3_value = blank
+                assign extra3_value2 = blank
+            endcase
           -%}
           {% render 'bset-gallery',
              product: p,
@@ -191,11 +225,14 @@
             <div class="bset-switch" role="group" aria-labelledby="bset-switch-{{ section.id }}">
               {%- for slot in slots -%}
                 {%- liquid
-                  if slot == 'ring'
-                    assign slot_name = section.settings.ring_label | default: 'Ring'
-                  else
-                    assign slot_name = section.settings.card_label | default: 'Metal Card'
-                  endif
+                  case slot
+                    when 'ring'
+                      assign slot_name = section.settings.ring_label | default: 'Ring'
+                    when 'pvc'
+                      assign slot_name = section.settings.pvc_label | default: 'PVC Card'
+                    else
+                      assign slot_name = section.settings.card_label | default: 'Metal Card'
+                  endcase
                 -%}
                 <button type="button"
                         class="bset-switch__btn"
@@ -227,11 +264,14 @@
 
         {%- for slot in slots -%}
           {%- liquid
-            if slot == 'ring'
-              assign p = ring
-            else
-              assign p = card
-            endif
+            case slot
+              when 'ring'
+                assign p = ring
+              when 'pvc'
+                assign p = pvc
+              else
+                assign p = card
+            endcase
           -%}
 
           <div class="bset-field bset-options" data-bset-for="{{ slot }}"{% unless forloop.first %} hidden{% endunless %}>
@@ -314,7 +354,14 @@
           </div>
         {%- endfor -%}
 
-        {%- if section.settings.bundle_enabled and slots.size > 1 -%}
+        {%- comment -%}
+          The savings box only ever describes a real Shopify automatic
+          discount (Ring + Metal Card), which is two products. In "bundle"
+          mode (all three) that math has no single real discount to quote,
+          so the box stays off and the switcher alone lets shoppers add
+          any combination to cart.
+        {%- endcomment -%}
+        {%- if section.settings.bundle_enabled and slots.size == 2 -%}
           <div class="bset-field bset-bundlewrap">
             <div class="bset-bundle" data-bset-bundle>
               <p class="bset-bundle__eyebrow" data-bset-bundle-eyebrow>{{ section.settings.bundle_title | escape }}</p>
@@ -362,7 +409,7 @@
       {
         "moneyFormat": {{ shop.money_format | json }},
         "bundle": {
-          "enabled": {% if section.settings.bundle_enabled and slots.size > 1 %}true{% else %}false{% endif %},
+          "enabled": {% if section.settings.bundle_enabled and slots.size == 2 %}true{% else %}false{% endif %},
           "discountCents": {{ bundle_cents | default: 0 }},
           "title": {{ section.settings.bundle_title | json }},
           "keys": [{%- for slot in slots -%}{{ slot | json }}{% unless forloop.last %},{% endunless %}{%- endfor -%}]
@@ -370,13 +417,17 @@
         "products": {
           {%- for slot in slots -%}
             {%- liquid
-              if slot == 'ring'
-                assign p = ring
-                assign slot_name = section.settings.ring_label | default: 'Ring'
-              else
-                assign p = card
-                assign slot_name = section.settings.card_label | default: 'Metal Card'
-              endif
+              case slot
+                when 'ring'
+                  assign p = ring
+                  assign slot_name = section.settings.ring_label | default: 'Ring'
+                when 'pvc'
+                  assign p = pvc
+                  assign slot_name = section.settings.pvc_label | default: 'PVC Card'
+                else
+                  assign p = card
+                  assign slot_name = section.settings.card_label | default: 'Metal Card'
+              endcase
             -%}
             {{ slot | json }}: {
               "key": {{ slot | json }},
@@ -433,11 +484,13 @@
       "label": "Products shown",
       "options": [
         { "value": "both", "label": "Ring + Metal Card (switcher + bundle)" },
+        { "value": "bundle", "label": "All 3 (switcher, no bundle offer)" },
         { "value": "card", "label": "Metal Card only" },
-        { "value": "ring", "label": "Ring only" }
+        { "value": "ring", "label": "Ring only" },
+        { "value": "pvc", "label": "PVC Card only" }
       ],
       "default": "both",
-      "info": "Single-product modes hide the switcher and the bundle offer automatically."
+      "info": "Single-product modes hide the switcher and the bundle offer automatically. The bundle offer only ever shows for exactly two products, since that's what the real Shopify discount covers."
     },
     { "type": "header", "content": "Products" },
     {
@@ -451,13 +504,17 @@
     { "type": "image_picker", "id": "ring_image_bp_black", "label": "Photo — Business Professional, Black" },
     { "type": "image_picker", "id": "ring_image_classic_black", "label": "Photo — Classic, Black" },
     { "type": "image_picker", "id": "ring_image_classic_white", "label": "Photo — Classic, White" },
-    { "type": "text", "id": "card_handle", "label": "Metal Card product handle", "default": "optiq-signature" },
+    { "type": "text", "id": "card_handle", "label": "Metal Card product handle", "default": "laser-engraved-signature-card" },
     { "type": "text", "id": "card_label", "label": "Metal Card switch label", "default": "Metal Card" },
     { "type": "richtext", "id": "card_desc", "label": "Metal Card description", "info": "Leave blank to use the product's own description." },
-    { "type": "image_picker", "id": "card_image", "label": "Metal Card photo (fallback)", "info": "Shown only when none of the three specific photos below are set." },
-    { "type": "image_picker", "id": "card_image_gold", "label": "Photo — Gold" },
-    { "type": "image_picker", "id": "card_image_matte_black", "label": "Photo — Matte Black" },
-    { "type": "image_picker", "id": "card_image_brushed_silver", "label": "Photo — Brushed Silver" },
+    { "type": "image_picker", "id": "card_image", "label": "Metal Card photo (fallback)", "info": "Its real finishes are photographed via Colour option blocks below instead of named fields, since there are four of them." },
+    { "type": "text", "id": "pvc_handle", "label": "PVC Card product handle", "default": "optiq-signature" },
+    { "type": "text", "id": "pvc_label", "label": "PVC Card switch label", "default": "PVC Card" },
+    { "type": "richtext", "id": "pvc_desc", "label": "PVC Card description", "info": "Leave blank to use the product's own description." },
+    { "type": "image_picker", "id": "pvc_image", "label": "PVC Card photo (fallback)", "info": "Shown only when none of the three specific photos below are set." },
+    { "type": "image_picker", "id": "pvc_image_gold", "label": "Photo — Gold" },
+    { "type": "image_picker", "id": "pvc_image_matte_black", "label": "Photo — Matte Black" },
+    { "type": "image_picker", "id": "pvc_image_brushed_silver", "label": "Photo — Brushed Silver" },
 
     { "type": "header", "content": "Bundle" },
     {
@@ -490,7 +547,8 @@
           "label": "Shown for",
           "options": [
             { "value": "ring", "label": "Ring" },
-            { "value": "card", "label": "Metal Card" }
+            { "value": "card", "label": "Metal Card" },
+            { "value": "pvc", "label": "PVC Card" }
           ],
           "default": "ring"
         },
@@ -528,7 +586,8 @@
           "label": "Product",
           "options": [
             { "value": "ring", "label": "Ring" },
-            { "value": "card", "label": "Metal Card" }
+            { "value": "card", "label": "Metal Card" },
+            { "value": "pvc", "label": "PVC Card" }
           ],
           "default": "ring"
         },
