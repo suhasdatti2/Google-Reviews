@@ -240,15 +240,40 @@
       setShot(gallery, target.getAttribute('data-shot'));
     }
 
+    /* Real product photos vary in framing - some tightly cropped, some with
+       generous margin, portrait or landscape - so no single fixed box shape
+       fits all of them without letterboxing something. Instead the box
+       reshapes itself to the ACTIVE photo's own natural dimensions, so
+       object-fit: contain always has (essentially) nothing left to pad.
+       Falls back to the CSS default shape for a placeholder shot (no <img>
+       at all) or before a fresh image finishes loading. */
+    function syncMediaAspect(gallery, shot) {
+      var media = gallery.querySelector('.bset-media');
+      if (!media) { return; }
+      var img = shot ? shot.querySelector('img') : null;
+      if (!img) { media.style.removeProperty('aspect-ratio'); return; }
+
+      function apply() {
+        if (img.naturalWidth && img.naturalHeight) {
+          media.style.aspectRatio = img.naturalWidth + ' / ' + img.naturalHeight;
+        }
+      }
+      if (img.complete) { apply(); } else { img.addEventListener('load', apply, { once: true }); }
+    }
+
     function setShot(gallery, index) {
+      var activeShot = null;
       all('[data-shot]', gallery).forEach(function (shot) {
-        shot.classList.toggle('is-active', shot.getAttribute('data-shot') === index);
+        var on = shot.getAttribute('data-shot') === index;
+        shot.classList.toggle('is-active', on);
+        if (on) { activeShot = shot; }
       });
       all('[data-shot-go]', gallery).forEach(function (control) {
         var on = control.getAttribute('data-shot-go') === index;
         control.classList.toggle('is-active', on);
         control.setAttribute('aria-pressed', on ? 'true' : 'false');
       });
+      syncMediaAspect(gallery, activeShot);
     }
 
     /* Picking a thumbnail/dot is choosing a colour (and, for the Ring, a
