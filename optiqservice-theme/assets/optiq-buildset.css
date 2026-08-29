@@ -23,7 +23,7 @@
   --bset-gap: clamp(22px, 2.4vw, 34px);
   --bset-rule: var(--prem-line);
   --bset-radius: 3px;
-  --bset-media-max: 460px;
+  --bset-media-max: 520px;
 }
 
 /* Several toggled panels below (.bset-gallery, .bset-features, …) set their
@@ -325,14 +325,16 @@
   width: 100%;
   max-width: var(--bset-media-max);
   margin-inline: auto;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
   background: var(--prem-ph-2);
 }
 /* Each candidate photo is stacked in the same box and crossfaded, so changing
    colour never reflows the page. object-fit: contain (not cover) so a photo
-   whose proportions don't match the box - e.g. a front+back card stack - is
-   never cropped; any letterboxing shows the same neutral fill as an empty
+   whose proportions don't match the box is never cropped. The box itself is
+   a portrait 3:4 - close to a real front+back card stack, the actual shape
+   of this product's photography - so contain rarely has much left to
+   letterbox; whatever's left shows the same neutral fill as an empty
    placeholder instead of bare white. */
 .bset-shot {
   position: absolute;
@@ -741,7 +743,7 @@
   }
 
   .bset-stage { position: static; }
-  .bset-media { aspect-ratio: 4 / 3.4; }
+  .bset-media { aspect-ratio: 3 / 4; }
 
   .bset-crumbs      { order: 0; padding-top: 20px; }
   .bset-stage       { order: 1; margin-top: 20px; }
