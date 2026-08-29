@@ -195,15 +195,16 @@
    (.prem-ph / .bset-media) is the only visible surface, sitting straight on
    the page's white background. Pinned with align-self: start (not center -
    sticky positioning inside a grid item is unreliable across browsers when
-   combined with align-self: center) and given extra top padding instead, so
-   it still reads as "settled in", not glued to the very top edge. Stays in
-   view while the (taller) purchase panel scrolls beside it. */
+   combined with align-self: center). Top padding kept light so the photo
+   sits high, near the other columns' own content; any leftover space is
+   left at the bottom instead. Stays in view while the (taller) purchase
+   panel scrolls beside it. */
 .bset-stage {
   position: sticky;
   top: 24px;
   align-self: start;
   min-width: 0;
-  padding: clamp(64px, 8vw, 120px) clamp(20px, 2.4vw, 32px) clamp(28px, 4vw, 56px);
+  padding: clamp(20px, 2.4vw, 32px) clamp(20px, 2.4vw, 32px) clamp(28px, 4vw, 56px);
 }
 
 /* --------------------------------------------------------------------------
