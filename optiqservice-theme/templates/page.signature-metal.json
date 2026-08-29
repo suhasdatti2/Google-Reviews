@@ -42,7 +42,9 @@
         "cardsw1": { "type": "swatch", "settings": { "product": "card", "value": "Black Anodized Stainless Steel", "color": "#1c1c1c" } },
         "cardsw2": { "type": "swatch", "settings": { "product": "card", "value": "White Anodized Steel", "color": "#efece4" } },
         "cardsw3": { "type": "swatch", "settings": { "product": "card", "value": "Anodized Premium Brass", "color": "#b08d57" } },
-        "cardsw4": { "type": "swatch", "settings": { "product": "card", "value": "Gold-Plated Stainless Steel", "color": "#d4af37" } }
+        "cardsw4": { "type": "swatch", "settings": { "product": "card", "value": "Gold-Plated Stainless Steel", "color": "#d4af37" } },
+        "cardsw5": { "type": "swatch", "settings": { "product": "card", "value": "", "value2": "1/3 Size" } },
+        "cardsw6": { "type": "swatch", "settings": { "product": "card", "value": "", "value2": "Full Size" } }
       },
       "block_order": [
         "cardf1",
@@ -51,7 +53,9 @@
         "cardsw1",
         "cardsw2",
         "cardsw3",
-        "cardsw4"
+        "cardsw4",
+        "cardsw5",
+        "cardsw6"
       ],
       "settings": {
         "mode": "card",

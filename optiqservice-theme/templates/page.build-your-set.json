@@ -100,6 +100,8 @@
         "cardsw2": { "type": "swatch", "settings": { "product": "card", "value": "White Anodized Steel", "color": "#efece4" } },
         "cardsw3": { "type": "swatch", "settings": { "product": "card", "value": "Anodized Premium Brass", "color": "#b08d57" } },
         "cardsw4": { "type": "swatch", "settings": { "product": "card", "value": "Gold-Plated Stainless Steel", "color": "#d4af37" } },
+        "cardsw5": { "type": "swatch", "settings": { "product": "card", "value": "", "value2": "1/3 Size" } },
+        "cardsw6": { "type": "swatch", "settings": { "product": "card", "value": "", "value2": "Full Size" } },
         "pvcsw1": { "type": "swatch", "settings": { "product": "pvc", "value": "Gold" } },
         "pvcsw2": { "type": "swatch", "settings": { "product": "pvc", "value": "Matte Black" } },
         "pvcsw3": { "type": "swatch", "settings": { "product": "pvc", "value": "Brushed Silver" } }
@@ -121,6 +123,8 @@
         "cardsw2",
         "cardsw3",
         "cardsw4",
+        "cardsw5",
+        "cardsw6",
         "pvcsw1",
         "pvcsw2",
         "pvcsw3"

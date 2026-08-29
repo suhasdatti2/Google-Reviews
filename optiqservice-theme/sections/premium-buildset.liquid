@@ -192,12 +192,19 @@
                 assign p = card
                 assign slot_name = section.settings.card_label | default: 'Metal Card'
                 assign slot_image = section.settings.card_image
-                assign extra1_image = section.settings.card_image_third_size
+                comment
+                  The Metal Card's per-value photos (both Finish and Chip
+                  Size) come from "Colour option" blocks below instead of
+                  named fields here, since there are up to six of them (4
+                  finishes + 2 chip sizes) - one clearly labelled block each,
+                  editable straight from the block list in the sidebar.
+                endcomment
+                assign extra1_image = blank
                 assign extra1_value = blank
-                assign extra1_value2 = '1/3 Size'
-                assign extra2_image = section.settings.card_image_full_size
+                assign extra1_value2 = blank
+                assign extra2_image = blank
                 assign extra2_value = blank
-                assign extra2_value2 = 'Full Size'
+                assign extra2_value2 = blank
                 assign extra3_image = blank
                 assign extra3_value = blank
                 assign extra3_value2 = blank
@@ -522,9 +529,7 @@
     { "type": "text", "id": "card_handle", "label": "Metal Card product handle", "default": "laser-engraved-signature-card" },
     { "type": "text", "id": "card_label", "label": "Metal Card switch label", "default": "Metal Card" },
     { "type": "richtext", "id": "card_desc", "label": "Metal Card description", "info": "Leave blank to use the product's own description." },
-    { "type": "image_picker", "id": "card_image", "label": "Metal Card photo (fallback)", "info": "Its real finishes are photographed via Colour option blocks below instead of named fields, since there are four of them." },
-    { "type": "image_picker", "id": "card_image_third_size", "label": "Metal Card photo — 1/3 Size chip", "info": "Shown when 1/3 Size is selected under Card Chip / NFC Size, regardless of finish." },
-    { "type": "image_picker", "id": "card_image_full_size", "label": "Metal Card photo — Full Size chip", "info": "Shown when Full Size is selected under Card Chip / NFC Size, regardless of finish." },
+    { "type": "image_picker", "id": "card_image", "label": "Metal Card photo (fallback)", "info": "Its real finishes and chip sizes are photographed via Colour option blocks below instead of named fields, since there are up to six of them." },
     { "type": "text", "id": "pvc_handle", "label": "PVC Card product handle", "default": "optiq-signature" },
     { "type": "text", "id": "pvc_label", "label": "PVC Card switch label", "default": "PVC Card" },
     { "type": "richtext", "id": "pvc_desc", "label": "PVC Card description", "info": "Leave blank to use the product's own description." },
@@ -608,12 +613,12 @@
           ],
           "default": "ring"
         },
-        { "type": "text", "id": "value", "label": "Option value", "info": "Must match Shopify exactly, e.g. Gold, Brushed Silver." },
+        { "type": "text", "id": "value", "label": "Option value", "info": "Must match Shopify exactly, e.g. Gold, Brushed Silver. Leave blank for a photo keyed only by Style / Chip Size below, regardless of this product's first option." },
         {
           "type": "text",
           "id": "value2",
-          "label": "Style (Ring only)",
-          "info": "Only needed for the Ring, which has a second option (Style) that also changes the photo - e.g. \"Classic\" or \"Business Professional\". Must match Shopify exactly. Leave blank for the Metal Card, or to use this photo for any Style."
+          "label": "Style / Chip Size (2nd option)",
+          "info": "Only needed for a product with a second real option - the Ring's Style (\"Classic\", \"Business Professional\") or the Metal Card's Chip Size (\"1/3 Size\", \"Full Size\"). Must match Shopify exactly. For a Chip Size photo that doesn't depend on Finish, leave Option value blank and set only this field."
         },
         { "type": "color", "id": "color", "label": "Swatch colour", "info": "Leave blank for the built-in metallic finish." },
         { "type": "image_picker", "id": "image", "label": "Photo", "info": "Shown when this option is selected." }

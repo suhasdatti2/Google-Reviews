@@ -106,8 +106,9 @@
     {%- for b in swatches -%}
       {%- if b.settings.product == slot and b.settings.image != blank -%}
         {%- if i == 0 -%}{%- assign load = 'eager' -%}{%- else -%}{%- assign load = 'lazy' -%}{%- endif -%}
-        {%- assign shot_alt = label | append: ' — ' | append: b.settings.value -%}
-        <div class="bset-shot{% if i == 0 %} is-active{% endif %}" data-shot="{{ i }}" data-shot-value="{{ b.settings.value | escape }}"{% if b.settings.value2 != blank %} data-shot-value2="{{ b.settings.value2 | escape }}"{% endif %} {{ b.shopify_attributes }}>
+        {%- assign shot_val = b.settings.value | default: b.settings.value2 -%}
+        {%- assign shot_alt = label | append: ' — ' | append: shot_val -%}
+        <div class="bset-shot{% if i == 0 %} is-active{% endif %}" data-shot="{{ i }}"{% if b.settings.value != blank %} data-shot-value="{{ b.settings.value | escape }}"{% endif %}{% if b.settings.value2 != blank %} data-shot-value2="{{ b.settings.value2 | escape }}"{% endif %} {{ b.shopify_attributes }}>
           {% render 'prem-media', image: b.settings.image, width: 1400, alt: shot_alt, label: label, loading: load %}
         </div>
         {%- assign i = i | plus: 1 -%}
@@ -197,7 +198,7 @@
                   class="bset-thumb{% if t == 0 %} is-active{% endif %}"
                   data-shot-go="{{ t }}"
                   aria-pressed="{% if t == 0 %}true{% else %}false{% endif %}"
-                  aria-label="Show {{ b.settings.value | escape }}"
+                  aria-label="Show {{ b.settings.value | default: b.settings.value2 | escape }}"
                   {{ b.shopify_attributes }}>
             {{ b.settings.image | image_url: width: 220 | image_tag: alt: '', loading: 'lazy' }}
           </button>
