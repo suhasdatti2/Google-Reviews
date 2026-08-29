@@ -14,9 +14,15 @@
        labelled field each, no free-text value to mistype or let go stale.
     2. `main_image` - a single fallback image_picker, shown only when none
        of the three specific photos above are set for the current selection.
-    3. "Colour option" blocks for this slot that carry an image — still
-       supported for anyone who wants more than three variations; these get
-       data-shot-value so choosing that colour brings its own photo forward.
+    3. "Colour option" blocks for this slot — for anyone who wants more than
+       three variations, or a photo per (value, value2) combination. EVERY
+       block for this slot gets a shot, image or not: an unphotographed one
+       still renders (via prem-media's own placeholder), still matches its
+       value/value2 like a real photo, and still carries shopify_attributes,
+       so the box on screen is always tied to one specific block - clicking
+       it in the theme editor opens exactly that block's image field. Only
+       blocks that already have a photo count toward shot_n below, so an
+       unphotographed one never adds a dot or thumbnail.
     4. The product's own Shopify images - skipped entirely when
        `include_product_images` is explicitly false. Some callers only want
        the curated swatch photos on screen (a merchant may have uploaded an
@@ -103,8 +109,20 @@
       {%- assign i = i | plus: 1 -%}
     {%- endif -%}
 
+    {%- comment -%}
+      Every "Colour option" block for this slot gets a shot, WITH an image or
+      not - not just the ones that already have a photo. A block with no
+      photo still renders (via prem-media's built-in placeholder), still
+      carries shopify_attributes, and still matches the same value/value2
+      tiers as a real photo - so whichever combination is selected, the grey
+      box on screen is always tied to ONE specific block. Clicking it in the
+      theme editor opens that exact block, image field included, instead of
+      an anonymous box that can only select the whole section. Only shots
+      that already have a real photo count toward shot_n (dots/thumbnails
+      below), so an unphotographed combination doesn't clutter the strip.
+    {%- endcomment -%}
     {%- for b in swatches -%}
-      {%- if b.settings.product == slot and b.settings.image != blank -%}
+      {%- if b.settings.product == slot -%}
         {%- if i == 0 -%}{%- assign load = 'eager' -%}{%- else -%}{%- assign load = 'lazy' -%}{%- endif -%}
         {%- assign shot_val = b.settings.value | default: b.settings.value2 -%}
         {%- assign shot_alt = label | append: ' — ' | append: shot_val -%}
