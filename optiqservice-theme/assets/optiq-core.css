@@ -118,6 +118,20 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* `overflow-x: hidden` used to sit on <body> itself as a blanket guard
+   against full-bleed sections (marquees, negative-margin grids) causing a
+   horizontal scrollbar. Any non-visible `overflow` on an ancestor - even
+   just one axis - turns that ancestor into the containing block for
+   `position: sticky` descendants instead of the viewport, which is exactly
+   why the sticky header (and the Premium pages' own nav) would scroll away
+   like ordinary content and only "reappear" once you scrolled back up past
+   where it started - most visible in Safari. Scoping the guard to the main
+   content area instead keeps the header and footer (both siblings of
+   <main>, not inside it) clear of that containing-block trap, while still
+   clipping anything inside the page body that would otherwise overflow. */
+#main-content {
   overflow-x: hidden;
 }
 
