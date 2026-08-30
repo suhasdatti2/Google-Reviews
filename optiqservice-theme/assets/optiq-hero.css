@@ -198,58 +198,6 @@
 
 @keyframes opsh-up { to { opacity: 1; transform: translateY(0); } }
 
-/* ---------------- confirmation ---------------- */
-
-.opsh__confirm {
-  position: absolute;
-  inset: 0;
-  z-index: 40;
-  display: grid;
-  place-items: center;
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(6px);
-  transition: opacity 400ms cubic-bezier(.16, 1, .3, 1), visibility 400ms;
-}
-.opsh[data-chosen] .opsh__confirm { opacity: 1; visibility: visible; }
-.opsh__confirmbox {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  padding: 18px 26px;
-  border-radius: 3px;
-  background: #111110;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.4);
-}
-.opsh__confirmtick {
-  display: grid;
-  place-items: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: #e8c07a;
-  color: #111110;
-}
-.opsh__confirmtext {
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
-}
-.opsh__confirmtext em {
-  display: block;
-  margin-bottom: 3px;
-  font-style: normal;
-  font-family: var(--opsh-font);
-  font-size: 19px;
-  letter-spacing: 0;
-  text-transform: none;
-  color: #fff;
-}
-
 /* ---------------- mobile ---------------- */
 
 @media (max-width: 780px) {
