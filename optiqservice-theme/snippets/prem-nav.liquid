@@ -1,37 +1,40 @@
 {%- comment -%}
-  Shared nav for the Premium world (/pages/premium-products and
-  /pages/build-your-set). Extracted from premium-hero.liquid so the two pages
-  cannot drift apart — one nav, rendered twice with each section's own
-  settings.
+  Shared nav for the Premium world (/pages/premium-products,
+  /pages/build-your-set, /pages/google-review-cards). Extracted from
+  premium-hero.liquid so these pages cannot drift apart - one nav, rendered
+  identically everywhere.
 
-  Accepts: wordmark, wordmark_sub, ring_label, ring_url, cards_label,
-  cards_url. Every one is optional; the defaults below are the real
-  destinations — Ring and Metal Cards both default to Build Your Set, the
-  one page that actually sells both (with its own in-page switcher), so
-  there is a single purchase destination rather than two competing ones.
-  About and Collections were removed: both pointed at unbuilt placeholder
-  pages, which have since been deleted.
+  Same content, same Balenciaga-style type, and the same permanently sticky
+  behaviour as the site's own header (sections/header.liquid) - AI
+  Receptionist / Cards and Wristbands / Premium Products on the left, OPTIQ
+  centred, Account and Cart on the right, no search. The two are separate
+  markup because this page family hides the site's own header entirely
+  (body:has(.prem-page) in this stylesheet) rather than repainting it, but
+  they are meant to read as the exact same bar.
 
   The cart count carries data-o-cart-count so the theme's cart controller
-  (assets/optiq-cart.js) repaints it after an AJAX add — a server-rendered
+  (assets/optiq-cart.js) repaints it after an AJAX add - a server-rendered
   number would otherwise go stale the moment something is added.
 {%- endcomment -%}
 
 <header class="prem-nav">
   <div class="prem-nav__inner">
-    <nav class="prem-nav__links" aria-label="Shop">
-      <a href="{{ ring_url | default: '/pages/build-your-set' }}">{{ ring_label | default: 'Ring' | escape }}</a>
-      <a href="{{ cards_url | default: '/pages/build-your-set' }}">{{ cards_label | default: 'Metal Cards' | escape }}</a>
+    <nav class="prem-nav__links" aria-label="Main navigation">
+      <a href="{{ routes.root_url }}pages/ai-receptionist">AI Receptionist</a>
+      <a href="{{ routes.root_url }}pages/google-review-cards">Cards and Wristbands</a>
+      <a href="{{ routes.root_url }}pages/premium-products">Premium Products</a>
     </nav>
 
     <a class="prem-nav__mark" href="{{ routes.root_url }}">
-      <span class="prem-nav__mark-word">{{ wordmark | default: 'Optiq' | escape }}</span>
-      <span class="prem-nav__mark-sub">{{ wordmark_sub | default: 'Signature' | escape }}</span>
+      <span class="prem-nav__mark-word">Optiq</span>
     </a>
 
     <nav class="prem-nav__links prem-nav__links--right" aria-label="Account">
-      <a href="{{ routes.search_url }}">Search</a>
-      <a href="{{ routes.account_url }}">Account</a>
+      {%- if shop.customer_accounts_enabled -%}
+        <a href="{% if customer %}/pages/my-receptionist{% else %}/pages/sign-in{% endif %}">
+          {%- if customer -%}Account{%- else -%}Login{%- endif -%}
+        </a>
+      {%- endif -%}
       <a href="{{ routes.cart_url }}">
         Cart
         <span class="prem-nav__count" data-o-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>

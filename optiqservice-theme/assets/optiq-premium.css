@@ -85,7 +85,13 @@ body:has(.prem-page) { padding-bottom: 0 !important; background: var(--prem-whit
    Header / nav
    -------------------------------------------------------------------------- */
 
+/* Sticky at all times, on every page that renders it - not conditional on
+   which section happens to be first, and never hidden or faded on scroll. */
 .prem-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--prem-white);
   border-bottom: 1px solid var(--prem-line);
 }
 .prem-nav__inner {
@@ -115,6 +121,21 @@ body:has(.prem-page) { padding-bottom: 0 !important; background: var(--prem-whit
   transition: opacity 200ms var(--prem-ease);
 }
 .prem-nav__links a:hover { opacity: 0.55; }
+.prem-nav__count {
+  display: inline-block;
+  min-width: 15px;
+  margin-left: 4px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--prem-ink);
+  color: var(--prem-white);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 15px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.prem-nav__count[hidden] { display: none; }
 
 .prem-nav__mark {
   text-align: center;
@@ -122,21 +143,16 @@ body:has(.prem-page) { padding-bottom: 0 !important; background: var(--prem-whit
   color: var(--prem-ink);
   line-height: 1;
 }
+/* Bold uppercase grotesque, not the serif used for display headings
+   elsewhere on these pages - a persistent top-bar wordmark reads as a
+   logotype, not a heading. */
 .prem-nav__mark-word {
   display: block;
-  font-family: var(--prem-serif);
-  font-weight: 500;
-  font-size: clamp(20px, 2.6vw, 28px);
-  letter-spacing: 0.02em;
-}
-.prem-nav__mark-sub {
-  display: block;
-  margin-top: 3px;
-  font-size: 9.5px;
-  font-weight: 600;
-  letter-spacing: 0.32em;
+  font-family: var(--prem-sans);
+  font-weight: 700;
+  font-size: clamp(16px, 1.4vw, 19px);
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--prem-ink-2);
 }
 
 @media (max-width: 860px) {

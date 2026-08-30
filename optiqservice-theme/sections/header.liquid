@@ -1,5 +1,9 @@
 {%- comment -%}
   Header - three-column: navigation left, wordmark centred, actions right.
+  The one persistent top bar for the whole site (Balenciaga-style: uppercase
+  tracked links, plain text actions, no search) - sticky at all times via
+  .o-header in optiq-components.css, never transparent, never hidden or
+  swapped for a page-specific bar.
 
   The wordmark is centred on the viewport rather than sitting beside the nav,
   which is what makes the layout read as a storefront rather than an app bar.
@@ -7,51 +11,36 @@
   assets/optiq-studio.css), so the centre stays optically centred no matter
   how many nav links or actions are present.
 
-  This markup is theme-neutral. It inherits the dark palette used by the AI
-  receptionist pages and the dashboard, and optiq-studio.css repaints it for
-  cream studio pages via body:has(.stu-page). One header, two skins - rather
-  than a second header section that would drift out of sync.
+  The three links are hardcoded rather than pulled from a Shopify link_list:
+  this is meant to always be exactly AI Receptionist / Cards and Wristbands /
+  Premium Products - the site's three real sections - not whatever a merchant
+  last saved into the "main-menu" navigation in Admin.
 
   Cart and menu both drive the theme's existing drawer controller
   (assets/optiq-ui.js): a [data-o-drawer-open="x"] button opens the matching
   [data-o-drawer="x"] panel, with focus trapping, scroll lock and Escape
   already handled. The count badge is [data-o-cart-count], which
   assets/optiq-cart.js repaints after every add.
-
-  Icons are inline rather than {% render 'icon' %} so this section cannot be
-  broken by a name that does not exist in that snippet.
 {%- endcomment -%}
 
 {%- comment -%}
   Loaded here rather than from each studio section because the header is the
   first element in the body: a stylesheet link blocks rendering of everything
   that follows it, so the header itself paints already themed instead of
-  flashing dark and correcting once a section further down the page pulls the
-  sheet in. Same pattern the Signature sections already use for their own
-  stylesheet. Everything inside is gated behind body:has(.stu-page), so this
-  is inert on the dark receptionist and dashboard pages.
+  flashing unstyled and correcting once a section further down the page
+  pulls the sheet in. Same pattern the Signature sections already use for
+  their own stylesheet.
 {%- endcomment -%}
 {{ 'optiq-studio.css' | asset_url | stylesheet_tag }}
 
-{%- liquid
-  assign links = section.settings.menu.links
--%}
-
-<header class="o-header" data-o-header {{ section.shopify_attributes }}>
+<header class="o-header" {{ section.shopify_attributes }}>
   <div class="o-wrap stu-hdr">
 
     {%- comment -%} Left: navigation (desktop) / menu button (mobile) {%- endcomment -%}
     <nav class="stu-nav" aria-label="Main navigation">
-      {%- if links.size > 0 -%}
-        {%- for link in links -%}
-          <a href="{{ link.url }}">{{ link.title | escape }}</a>
-        {%- endfor -%}
-      {%- else -%}
-        <a href="{{ routes.root_url }}">Home</a>
-        <a href="{{ routes.root_url }}#collection">Shop</a>
-        <a href="{{ routes.root_url }}pages/ai-receptionist">Receptionist</a>
-        <a href="{{ routes.root_url }}pages/contact">Contact</a>
-      {%- endif -%}
+      <a href="{{ routes.root_url }}pages/ai-receptionist">AI Receptionist</a>
+      <a href="{{ routes.root_url }}pages/google-review-cards">Cards and Wristbands</a>
+      <a href="{{ routes.root_url }}pages/premium-products">Premium Products</a>
     </nav>
 
     <button
@@ -82,15 +71,11 @@
       {%- endif -%}
     </a>
 
-    {%- comment -%} Right: search, account, cart {%- endcomment -%}
-    <div class="stu-hdr__right">
-
-      <a class="stu-hdr__act" href="{{ routes.search_url }}" aria-label="Search">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
-          <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
-        </svg>
-      </a>
-
+    {%- comment -%}
+      Right: account, cart - text links matching the nav, not icons. No
+      search: this bar only ever shows these five destinations.
+    {%- endcomment -%}
+    <nav class="stu-nav stu-nav--right" aria-label="Account">
       {%- comment -%}
         Only rendered when customer accounts are actually switched on - the
         underlying login flow 404s otherwise, and a dead control in a
@@ -98,33 +83,16 @@
         the gated dashboard, not Shopify's generic /account.
       {%- endcomment -%}
       {%- if shop.customer_accounts_enabled -%}
-        <a
-          class="stu-hdr__act"
-          href="{% if customer %}/pages/my-receptionist{% else %}/pages/sign-in{% endif %}"
-          aria-label="{% if customer %}Your account{% else %}Log in{% endif %}"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="8" r="3.6"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/>
-          </svg>
+        <a href="{% if customer %}/pages/my-receptionist{% else %}/pages/sign-in{% endif %}">
+          {%- if customer -%}Account{%- else -%}Login{%- endif -%}
         </a>
       {%- endif -%}
 
-      <button
-        type="button"
-        class="stu-hdr__act"
-        data-o-drawer-open="cart"
-        aria-expanded="false"
-        aria-label="Open cart"
-      >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/>
-        </svg>
-        <span class="stu-hdr__count" data-o-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>
-          {{- cart.item_count -}}
-        </span>
+      <button type="button" class="stu-navcart" data-o-drawer-open="cart" aria-expanded="false">
+        Cart
+        <span class="stu-hdr__count" data-o-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>{{- cart.item_count -}}</span>
       </button>
-
-    </div>
+    </nav>
   </div>
 </header>
 
@@ -138,16 +106,9 @@
     <button type="button" class="stu-menu__x" data-o-drawer-close aria-label="Close menu">&times;</button>
   </div>
   <nav class="stu-menu__links">
-    {%- if links.size > 0 -%}
-      {%- for link in links -%}
-        <a href="{{ link.url }}" data-o-drawer-close>{{ link.title | escape }}</a>
-      {%- endfor -%}
-    {%- else -%}
-      <a href="{{ routes.root_url }}" data-o-drawer-close>Home</a>
-      <a href="{{ routes.root_url }}#collection" data-o-drawer-close>Shop</a>
-      <a href="{{ routes.root_url }}pages/ai-receptionist" data-o-drawer-close>Receptionist</a>
-      <a href="{{ routes.root_url }}pages/contact" data-o-drawer-close>Contact</a>
-    {%- endif -%}
+    <a href="{{ routes.root_url }}pages/ai-receptionist" data-o-drawer-close>AI Receptionist</a>
+    <a href="{{ routes.root_url }}pages/google-review-cards" data-o-drawer-close>Cards and Wristbands</a>
+    <a href="{{ routes.root_url }}pages/premium-products" data-o-drawer-close>Premium Products</a>
   </nav>
 </div>
 
@@ -155,7 +116,6 @@
 {
   "name": "Header",
   "settings": [
-    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" },
     { "type": "text", "id": "wordmark", "label": "Wordmark", "default": "OPTIQ", "info": "Used when no logo image is set." },
     { "type": "image_picker", "id": "logo", "label": "Logo", "info": "Leave empty to use the wordmark." },
     {

@@ -1007,25 +1007,22 @@ body:has(.stu-page) .o-footer__bottom {
   border-top: 1px solid rgba(244, 242, 238, 0.14);
 }
 
-body:has(.stu-page) .o-header {
+/* Always solid and dark-on-light - the one steady top bar for every page,
+   never dependent on a .stu-page marker or a scroll position. */
+.o-header {
   background: var(--stu-paper);
   border-bottom: 1px solid var(--stu-line);
   color: var(--stu-ink);
 }
 /* The header is laid out with the theme-wide .o-wrap (1240px) while studio
    content runs to 1560px. Left unmatched, the nav and the cart sit visibly
-   inboard of the grid directly beneath them. */
+   inboard of the grid directly beneath them. Still scoped to studio pages -
+   this is a width match for THAT page grid, not a header colour. */
 body:has(.stu-page) .o-header .o-wrap {
   max-width: var(--stu-max);
   padding-inline: var(--stu-pad);
 }
-body:has(.stu-page) .stu-nav a,
-body:has(.stu-page) .stu-hdr__act { color: var(--stu-ink); }
-body:has(.stu-page) .stu-logo { color: var(--stu-ink); }
-body:has(.stu-page) .stu-hdr__act:hover { background: rgba(16, 16, 16, 0.06); }
-body:has(.stu-page) .stu-hdr__count { background: var(--stu-ink); color: var(--stu-paper); }
 
-/* Header layout itself is theme-neutral so the dark pages keep working. */
 .stu-hdr {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -1034,17 +1031,35 @@ body:has(.stu-page) .stu-hdr__count { background: var(--stu-ink); color: var(--s
   min-height: 66px;
 }
 
-.stu-nav { display: flex; align-items: center; gap: 26px; }
-.stu-nav a {
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.01em;
+/* Balenciaga-style link type: small, uppercase, evenly tracked. Shared by
+   the left nav, the right-hand account/cart nav, and the mobile drawer
+   links so every list of destinations on the site reads as one system. */
+.stu-nav { display: flex; align-items: center; gap: clamp(18px, 2.2vw, 30px); }
+.stu-nav a,
+.stu-nav .stu-navcart {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   text-decoration: none;
-  color: inherit;
-  opacity: 0.86;
+  color: var(--stu-ink);
+  cursor: pointer;
+  opacity: 0.82;
   transition: opacity 200ms var(--stu-ease);
 }
-.stu-nav a:hover { opacity: 1; }
+.stu-nav a:hover,
+.stu-nav .stu-navcart:hover { opacity: 1; }
+.stu-nav--right { justify-content: flex-end; }
+.stu-navcart {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+}
 
 .stu-logo {
   justify-self: center;
@@ -1054,7 +1069,7 @@ body:has(.stu-page) .stu-hdr__count { background: var(--stu-ink); color: var(--s
   letter-spacing: 0.28em;
   text-transform: uppercase;
   text-decoration: none;
-  color: inherit;
+  color: var(--stu-ink);
   white-space: nowrap;
   /* Optical centring: the tracking adds a trailing gap after the last
      letter that the box model still counts, pulling the word left. */
@@ -1062,12 +1077,6 @@ body:has(.stu-page) .stu-hdr__count { background: var(--stu-ink); color: var(--s
 }
 .stu-logo img { display: block; height: var(--o-logo-h, 30px); width: auto; }
 
-.stu-hdr__right {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 4px;
-}
 .stu-hdr__act {
   position: relative;
   display: grid;
@@ -1077,27 +1086,23 @@ body:has(.stu-page) .stu-hdr__count { background: var(--stu-ink); color: var(--s
   border: 0;
   border-radius: 50%;
   background: none;
-  color: inherit;
+  color: var(--stu-ink);
   cursor: pointer;
   text-decoration: none;
   transition: background 200ms var(--stu-ease);
 }
-.stu-hdr__act:hover { background: rgba(255, 255, 255, 0.08); }
+.stu-hdr__act:hover { background: rgba(16, 16, 16, 0.06); }
 .stu-hdr__act svg { width: 18px; height: 18px; }
 
 .stu-hdr__count {
-  position: absolute;
-  top: 3px;
-  right: 2px;
-  min-width: 17px;
-  height: 17px;
-  padding: 0 5px;
+  min-width: 15px;
+  padding: 0 4px;
   border-radius: 999px;
-  background: #fff;
-  color: #111;
+  background: var(--stu-ink);
+  color: var(--stu-paper);
   font-size: 10px;
   font-weight: 700;
-  line-height: 17px;
+  line-height: 15px;
   text-align: center;
   font-variant-numeric: tabular-nums;
 }
@@ -1107,7 +1112,10 @@ body:has(.stu-page) .stu-hdr__count { background: var(--stu-ink); color: var(--s
 
 @media (max-width: 900px) {
   .stu-hdr { grid-template-columns: auto 1fr auto; }
-  .stu-nav { display: none; }
+  /* The right nav (account/cart) stays visible - only the left link list
+     collapses behind the menu button, same as it carries those same links
+     inside the drawer below. */
+  .stu-nav:not(.stu-nav--right) { display: none; }
   .stu-burger { display: grid; }
   .stu-logo { justify-self: center; }
 }
@@ -1190,9 +1198,8 @@ body:has(.stu-page) .stu-hdr__count { background: var(--stu-ink); color: var(--s
    belonging to the focused cell rather than bleeding over its neighbour. */
 .stu-card:focus-visible { outline-offset: -3px; }
 
-/* Controls that sit on the hero photo, or in the header on the dark
-   receptionist pages, take their ring from the text colour already proven
-   legible there - an ink ring would disappear into both. */
+/* Controls that sit on the hero photo take their ring from the text colour
+   already proven legible there - an ink ring would disappear into it. */
 .stu-hero .stu-btn:focus-visible,
 .stu-hdr__act:focus-visible,
 .stu-nav a:focus-visible,

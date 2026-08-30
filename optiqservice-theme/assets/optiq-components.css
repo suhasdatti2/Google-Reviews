@@ -57,24 +57,13 @@
    Header
    ========================================================================== */
 
+/* Always solid and pinned at the top - the one steady bar for every page,
+   never transparent-until-scrolled and never swapped out for a page-specific
+   nav. optiq-studio.css supplies the actual light-theme colours below. */
 .o-header {
   position: sticky;
   top: 0;
   z-index: var(--o-z-header);
-  background: transparent;
-  border-bottom: 1px solid transparent;
-  transition:
-    background var(--o-dur) var(--o-ease),
-    border-color var(--o-dur) var(--o-ease),
-    backdrop-filter var(--o-dur) var(--o-ease);
-}
-/* Condensed state is driven by a scroll flag on <html>, not by a
-   per-frame scroll handler. */
-.o-header.is-condensed {
-  background: rgba(255, 255, 255, 0.86);
-  backdrop-filter: saturate(150%) blur(14px);
-  -webkit-backdrop-filter: saturate(150%) blur(14px);
-  border-bottom-color: var(--o-hairline);
 }
 
 .o-header__inner {

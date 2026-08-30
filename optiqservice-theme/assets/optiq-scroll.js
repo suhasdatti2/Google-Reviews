@@ -50,22 +50,26 @@
       // the documented target/fallback if `lerp` is ever removed in favour
       // of duration-based easing instead.
       //
-      // Tuned for a fast, high-velocity feel (Maison Margiela's site is the
-      // reference) rather than the slower, floaty glide the previous
-      // lerp: 0.1 / wheelMultiplier: 1 produced. `lerp` closer to 1 makes
-      // the page catch up to the target position almost immediately each
-      // frame (snappier, less trailing lag); `wheelMultiplier` scales how
-      // far a single wheel tick moves the page (raw speed/distance). This
-      // only touches scroll velocity - the magnetic hover effect below is
-      // untouched.
-      lerp: 0.22,
-      duration: 0.65,
+      // Tuned for a calm, steady glide rather than the fast, high-velocity
+      // feel a previous pass dialled in here: that combination of a high
+      // wheelMultiplier and a lerp close to 1 made one wheel tick cover a
+      // lot of ground and catch up to it almost instantly, which read as
+      // abrupt rather than smooth. Lower `lerp` means the page trails the
+      // target position a little longer each frame (a gentler settle,
+      // still nowhere near sluggish); `wheelMultiplier` at 1 means a wheel
+      // tick moves the page the same distance the browser's own native
+      // scroll would, instead of amplifying it. This only touches scroll
+      // velocity - no scroll-snap/"magnetic" section-snapping is used
+      // anywhere in this file, and the magnetic HOVER effect below (a
+      // completely different thing - buttons pulling toward the cursor)
+      // is untouched.
+      lerp: 0.12,
+      duration: 1.1,
       smoothWheel: true,
       // Mobile touch scroll stays native (default) rather than simulated -
-      // it's already fast and smooth on touch devices and cheaper to leave
-      // alone.
+      // it's already smooth on touch devices and cheaper to leave alone.
       syncTouch: false,
-      wheelMultiplier: 2.2,
+      wheelMultiplier: 1,
       touchMultiplier: 1
     });
 
