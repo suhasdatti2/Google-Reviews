@@ -4,7 +4,7 @@
   premium-hero.liquid so these pages cannot drift apart - one nav, rendered
   identically everywhere.
 
-  Same content, same Balenciaga-style type, and the same permanently sticky
+  Same content, same Balenciaga-style type, and the same permanently fixed
   behaviour as the site's own header (sections/header.liquid) - AI
   Receptionist / Cards and Wristbands / Premium Products on the left, OPTIQ
   centred, Account and Cart on the right, no search. The two are separate
@@ -17,7 +17,7 @@
   number would otherwise go stale the moment something is added.
 {%- endcomment -%}
 
-<header class="prem-nav">
+<header class="prem-nav" data-prem-nav>
   <div class="prem-nav__inner">
     <nav class="prem-nav__links" aria-label="Main navigation">
       <a href="{{ routes.root_url }}pages/ai-receptionist">AI Receptionist</a>
@@ -42,3 +42,29 @@
     </nav>
   </div>
 </header>
+
+<script>
+(function () {
+  /* .prem-nav is `position: fixed` (optiq-premium.css), so .prem-page
+     needs matching top padding to clear it - published here as
+     --prem-nav-h from the nav's real rendered height, the same pattern
+     assets/optiq-motion.js uses for the site's own header. */
+  function initPremNavHeight() {
+    var nav = document.querySelector('[data-prem-nav]');
+    if (!nav) return;
+
+    function setHeight() {
+      document.documentElement.style.setProperty('--prem-nav-h', nav.offsetHeight + 'px');
+    }
+    setHeight();
+    if ('ResizeObserver' in window) new ResizeObserver(setHeight).observe(nav);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPremNavHeight);
+  } else {
+    initPremNavHeight();
+  }
+  document.addEventListener('shopify:section:load', initPremNavHeight);
+})();
+</script>

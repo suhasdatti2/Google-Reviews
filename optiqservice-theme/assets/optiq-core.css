@@ -130,9 +130,17 @@ body {
    where it started - most visible in Safari. Scoping the guard to the main
    content area instead keeps the header and footer (both siblings of
    <main>, not inside it) clear of that containing-block trap, while still
-   clipping anything inside the page body that would otherwise overflow. */
+   clipping anything inside the page body that would otherwise overflow.
+   The top padding compensates for the announcement bar + header now being
+   `position: fixed` (removed from flow entirely) - --o-announce-h and
+   --o-header-h are the real rendered heights, set by optiq-motion.js, so
+   this tracks them exactly rather than guessing a fixed number. On a
+   .prem-page, both are hidden (display: none, so 0 height) and this page
+   family uses its own fixed nav + its own padding instead - see
+   .prem-page in optiq-premium.css. */
 #main-content {
   overflow-x: hidden;
+  padding-top: calc(var(--o-announce-h, 0px) + var(--o-header-h, 66px));
 }
 
 body.o-scroll-locked {

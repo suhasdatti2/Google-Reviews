@@ -39,6 +39,13 @@
   font-family: var(--prem-sans);
   -webkit-font-smoothing: antialiased;
 }
+/* .prem-nav is `position: fixed` (below), removed from flow entirely, so
+   its own page content needs the matching top padding to clear it -
+   --prem-nav-h is the nav's real rendered height, set by the small script
+   in prem-nav.liquid. */
+.prem-page {
+  padding-top: var(--prem-nav-h, 68px);
+}
 
 body:has(.prem-page) .o-header,
 body:has(.prem-page) .o-announce,
@@ -85,11 +92,18 @@ body:has(.prem-page) { padding-bottom: 0 !important; background: var(--prem-whit
    Header / nav
    -------------------------------------------------------------------------- */
 
-/* Sticky at all times, on every page that renders it - not conditional on
-   which section happens to be first, and never hidden or faded on scroll. */
+/* Fixed, not sticky - pinned to the viewport at every scroll position, on
+   every page that renders it, with no edge cases where an ancestor's
+   `overflow` or a not-tall-enough containing block quietly stops `sticky`
+   from sticking (see optiq-core.css for exactly that happening to the
+   site's own header). Removed from flow entirely, so .prem-page carries
+   the matching top padding above. */
 .prem-nav {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
   z-index: 50;
   background: var(--prem-white);
   border-bottom: 1px solid var(--prem-line);

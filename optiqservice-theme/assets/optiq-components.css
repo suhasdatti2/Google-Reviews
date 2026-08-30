@@ -7,8 +7,21 @@
    Announcement bar
    ========================================================================== */
 
+/* Fixed, not sticky - `sticky` still stops covering the viewport once its
+   own containing block runs out of room (or gets tripped up by an
+   ancestor's `overflow`, as the header once was - see optiq-core.css).
+   `fixed` has no such edge cases: it stays pinned to the viewport at every
+   scroll position, full stop. Stacked directly above .o-header (below,
+   below it) via --o-announce-h, set from its real rendered height by
+   optiq-motion.js so the two never overlap regardless of message length or
+   viewport width. */
 .o-announce {
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: var(--o-z-header);
   background: var(--o-surface-1);
   border-bottom: 1px solid var(--o-hairline);
   font-size: var(--o-t-xs);
@@ -59,10 +72,17 @@
 
 /* Always solid and pinned at the top - the one steady bar for every page,
    never transparent-until-scrolled and never swapped out for a page-specific
-   nav. optiq-studio.css supplies the actual light-theme colours below. */
+   nav. optiq-studio.css supplies the actual light-theme colours below.
+   Fixed (see .o-announce above for why), sitting just below the
+   announcement bar via --o-announce-h - 0px when there is no announcement
+   bar, or it is hidden (display: none computes to 0 height), so the header
+   sits flush at the very top on every page that doesn't have one. */
 .o-header {
-  position: sticky;
-  top: 0;
+  position: fixed;
+  top: var(--o-announce-h, 0px);
+  left: 0;
+  right: 0;
+  width: 100%;
   z-index: var(--o-z-header);
 }
 
