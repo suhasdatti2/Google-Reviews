@@ -330,6 +330,11 @@
   overflow: hidden;
   background: var(--prem-ph-2);
 }
+/* The Ring's own photography reads as too large at the shared default size -
+   scoped to its gallery only, so the Metal Card and PVC Card stay unaffected. */
+.bset-gallery[data-bset-gallery="ring"] .bset-media {
+  max-width: 380px;
+}
 /* Each candidate photo is stacked in the same box and crossfaded, so changing
    colour never reflows the page. object-fit: contain (not cover) so a photo
    whose proportions don't match the box is never cropped. The box itself is
@@ -384,6 +389,10 @@
   max-width: var(--bset-media-max);
   margin-inline: auto;
   padding-top: 16px;
+}
+/* Kept the same width as the Ring's own smaller photo box above it. */
+.bset-gallery[data-bset-gallery="ring"] .bset-thumbs {
+  max-width: 380px;
 }
 .bset-thumb {
   width: clamp(56px, 5.4vw, 74px);
