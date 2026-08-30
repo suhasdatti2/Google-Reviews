@@ -131,85 +131,13 @@
   {%- endcomment -%}
   <script src="https://unpkg.com/lenis@1.3.25/dist/lenis.min.js" defer></script>
   <script src="{{ 'optiq-scroll.js' | asset_url }}" defer></script>
-
-  {%- comment -%}
-    Entrance loader styles. The markup and the counter below are skipped on
-    the homepage - that screen is the services splash, which is its own
-    entrance animation, and stacking the 0-100 curtain in front of it just
-    delays the thing people came to look at. Every other page still gets it,
-    including /pages/google-review-cards.
-  {%- endcomment -%}
-<style>
-  :root {
-    --optiq-bg: #0a1410;             /* pitch-at-night background — swap for your brand color */
-    --optiq-line: #d4af6a;           /* warm gold accent — swap for your brand accent */
-    --optiq-track: rgba(212, 175, 106, 0.15);
-    --optiq-text: #e8e4d8;           /* warm off-white, not pure white */
-    --optiq-dim: rgba(232, 228, 216, 0.45);
-  }
-  #optiq-preloader {
-    position: fixed;
-    inset: 0;
-    z-index: 99999;
-    background: var(--optiq-bg);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1);
-  }
-  #optiq-preloader.is-done {
-    transform: translateY(-100%);
-  }
-  #optiq-preloader__mark {
-    font-family: 'Arial Narrow', Arial, sans-serif; /* swap for real brand font */
-    font-weight: 700;
-    font-size: clamp(1.75rem, 5vw, 2.75rem);
-    letter-spacing: 0.4em;
-    color: var(--optiq-text);
-    margin-bottom: 2rem;
-  }
-  #optiq-preloader__track {
-    width: min(240px, 60vw);
-    height: 2px;
-    background: var(--optiq-track);
-    overflow: hidden;
-    border-radius: 1px;
-  }
-  #optiq-preloader__fill {
-    height: 100%;
-    width: 0%;
-    background: var(--optiq-line);
-    box-shadow: 0 0 8px var(--optiq-line);
-  }
-  #optiq-preloader__count {
-    margin-top: 1rem;
-    font-family: 'Courier New', monospace;
-    font-variant-numeric: tabular-nums;
-    font-size: 0.85rem;
-    letter-spacing: 0.15em;
-    color: var(--optiq-dim);
-  }
-  body.optiq-loading {
-    overflow: hidden;
-  }
-</style>
 </head>
 
 <body class="template-{{ request.page_type | handle }}{% if template == 'index' %} is-home{% endif %}{% if template.suffix == 'reviews' %} o-flow-page{% endif %}{% if show_air_flow_bg %} o-air-flow{% endif %}">
-{%- unless template == 'index' -%}
-<div id="optiq-preloader">
-  <div id="optiq-preloader__mark">OPTIQ</div>
-  <div id="optiq-preloader__track">
-    <div id="optiq-preloader__fill"></div>
-  </div>
-  <div id="optiq-preloader__count">0%</div>
-</div>
-{%- endunless -%}
-
   {%- comment -%}
-    Thin top-of-viewport bar for internal link navigation - deliberately NOT
-    a replay of the full-screen curtain above. See the snippet for why.
+    Thin top-of-viewport bar for internal link navigation - a lightweight
+    YouTube/GitHub-style progress line, not a blocking full-screen loader.
+    See the snippet for why.
   {%- endcomment -%}
   {% render 'optiq-nav-progress' %}
 
@@ -292,51 +220,5 @@
     }
   </script>
 
-{%- unless template == 'index' -%}
-<script>
-  (function () {
-    var loader = document.getElementById('optiq-preloader');
-    if (!loader) return;
-
-    // Plays on EVERY page load except the homepage - the reload button, the
-    // logo, and any other full navigation. The sessionStorage gate that used
-    // to live here (and the matching setItem in reveal()) has been removed
-    // entirely, which is what the original snippet's comment described as the
-    // way to make this run every time. Removing it also drops the last
-    // sessionStorage call in the theme, so a browser with storage blocked can
-    // no longer throw here and strand the curtain on screen.
-    document.body.classList.add('optiq-loading');
-    var fill = document.getElementById('optiq-preloader__fill');
-    var count = document.getElementById('optiq-preloader__count');
-    var progress = 0;
-
-    // Milliseconds per integer. Still ticks every number 0-100 in order -
-    // this only shortens the gap between them, so nothing is skipped.
-    // 100 ticks x 9ms = ~0.9s to count, vs ~1.4s at the previous 14ms.
-    // Raise for a slower count, lower for a quicker one; below about 4ms
-    // browsers clamp nested timers and the count stops getting faster.
-    var STEP_MS = 9;
-
-    var tick = setInterval(function () {
-      progress += 1; // hits every integer 0-100, in order, no skipped numbers
-      if (progress >= 100) {
-        progress = 100;
-        clearInterval(tick);
-        setTimeout(reveal, 300); // brief hold at 100% before the reveal
-      }
-      fill.style.width = progress + '%';
-      count.textContent = progress + '%';
-    }, STEP_MS);
-
-    function reveal() {
-      loader.classList.add('is-done');
-      document.body.classList.remove('optiq-loading');
-      setTimeout(function () {
-        loader.remove();
-      }, 900); // matches the CSS transition duration above
-    }
-  })();
-</script>
-{%- endunless -%}
 </body>
 </html>
