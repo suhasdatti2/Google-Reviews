@@ -268,35 +268,7 @@
         shot.classList.toggle('is-active', on);
         if (on) { activeShot = shot; }
       });
-      all('[data-shot-go]', gallery).forEach(function (control) {
-        var on = control.getAttribute('data-shot-go') === index;
-        control.classList.toggle('is-active', on);
-        control.setAttribute('aria-pressed', on ? 'true' : 'false');
-      });
       syncMediaAspect(gallery, activeShot);
-    }
-
-    /* Picking a thumbnail/dot is choosing a colour (and, for the Ring, a
-       style) just as much as clicking the swatch itself - so it has to move
-       the same state the swatch buttons do, or the two controls drift out of
-       sync with each other. Only touches option indexes the shot actually
-       names; a shot with no data-shot-value/data-shot-value2 (e.g. a plain
-       product photo) changes nothing. */
-    function syncSelectionToShot(gallery, index) {
-      var key = gallery.getAttribute('data-bset-gallery');
-      var shot = gallery.querySelector('[data-shot="' + index + '"]');
-      if (!shot) { return; }
-
-      var value = shot.getAttribute('data-shot-value');
-      var value2 = shot.getAttribute('data-shot-value2');
-      if (value === null && value2 === null) { return; }
-
-      var selection = state.selections[key];
-      var changed = false;
-      if (value !== null && selection[0] !== value) { selection[0] = value; changed = true; }
-      if (value2 && selection.length > 1 && selection[1] !== value2) { selection[1] = value2; changed = true; }
-
-      if (changed) { renderOptions(); renderTotals(); renderBuyState(); }
     }
 
     function renderTotals() {
@@ -499,16 +471,6 @@
         return;
       }
 
-      var shotGo = target.closest('[data-shot-go]');
-      if (shotGo && root.contains(shotGo)) {
-        event.preventDefault();
-        var galleryEl = shotGo.closest('[data-bset-gallery]');
-        var shotIndex = shotGo.getAttribute('data-shot-go');
-        setShot(galleryEl, shotIndex);
-        syncSelectionToShot(galleryEl, shotIndex);
-        return;
-      }
-
       var cta = target.closest('[data-bset-bundle-cta]');
       if (cta && root.contains(cta) && !cta.hidden) {
         event.preventDefault();
@@ -572,7 +534,7 @@
       renderAll();
     }
 
-    /* ---- submit guard ---------------------------------------------------
+    /* ---- submit guard -----------------------------------------------------
        Runs before the theme's delegated document-level handler. If the
        selection is incomplete we stop the event here so nothing reaches the
        cart; otherwise we let it bubble and optiq-cart.js takes over. */

@@ -354,62 +354,6 @@
 .bset-shot .prem-ph { width: 100%; height: 100%; }
 .bset-shot img { object-fit: contain; object-position: center; display: block; }
 
-/* Dots overlaid on the photo, as in the reference. */
-.bset-dots {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  z-index: 2;
-}
-.bset-dot {
-  width: 7px;
-  height: 7px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: rgba(17, 17, 16, 0.24);
-  cursor: pointer;
-  transition: background 200ms var(--prem-ease), transform 200ms var(--prem-ease);
-}
-.bset-dot:hover { transform: scale(1.25); }
-.bset-dot.is-active { background: var(--prem-ink); }
-.bset-dot:focus-visible { outline: 2px solid var(--prem-ink); outline-offset: 3px; }
-
-/* Thumbnail strip */
-.bset-thumbs {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  max-width: var(--bset-media-max);
-  margin-inline: auto;
-  padding-top: 16px;
-}
-/* Kept the same width as the Ring's own smaller photo box above it. */
-.bset-gallery[data-bset-gallery="ring"] .bset-thumbs {
-  max-width: 380px;
-}
-.bset-thumb {
-  width: clamp(56px, 5.4vw, 74px);
-  aspect-ratio: 1 / 1;
-  padding: 0;
-  border: 1px solid transparent;
-  background: var(--prem-ph);
-  cursor: pointer;
-  overflow: hidden;
-  transition: border-color 200ms var(--prem-ease), opacity 200ms var(--prem-ease);
-  opacity: 0.72;
-}
-.bset-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.bset-thumb:hover { opacity: 1; }
-.bset-thumb.is-active { border-color: var(--prem-ink); opacity: 1; }
-.bset-thumb:focus-visible { outline: 2px solid var(--prem-ink); outline-offset: 2px; }
-
 /* --------------------------------------------------------------------------
    Right column — purchase panel
    -------------------------------------------------------------------------- */
@@ -786,7 +730,6 @@
   .bset-swatch__dot { width: 36px; height: 36px; }
   .bset-chip { min-width: 44px; height: 46px; }  /* comfortable touch target */
   .bset-qty { width: 100%; }
-  .bset-thumb { width: 60px; }
 
   .bset-categories { padding-block: 20px 16px; }
   .bset-category-tabs { gap: 26px; }
@@ -800,8 +743,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .bset-shot,
-  .bset-dot,
-  .bset-thumb,
   .bset-swatch__dot,
   .bset-chip,
   .bset-switch__btn,
@@ -812,6 +753,5 @@
   .bset-category-desc {
     transition: none !important;
   }
-  .bset-swatch:hover .bset-swatch__dot,
-  .bset-dot:hover { transform: none; }
+  .bset-swatch:hover .bset-swatch__dot { transform: none; }
 }
