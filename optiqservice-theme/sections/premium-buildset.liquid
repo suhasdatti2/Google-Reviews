@@ -112,8 +112,40 @@
             <h1 class="bset-title">
               {%- if p != blank -%}{{ p.title }}{%- else -%}{{ slot_name | escape }}{%- endif -%}
             </h1>
-            <div class="bset-desc">
-              {%- if slot_desc != blank -%}
+            <div class="bset-desc" data-bset-desc="{{ slot }}">
+              {%- if slot == 'card' -%}
+                {%- comment -%}
+                  The Metal Card's Chip Size changes what the back of the
+                  card can carry (a small 1/3-size chip leaves room to
+                  engrave the back too; a full-size chip covers it), so the
+                  two sizes get their own short bullet copy instead of one
+                  essay-style description. assets/optiq-buildset.js swaps
+                  which list is visible from the same Chip Size selection
+                  that already drives the photo swap.
+                {%- endcomment -%}
+                <ul class="bset-desc-list" data-desc-variant data-desc-value2="1/3 Size">
+                  <li><strong>Real Anodized Stainless Steel</strong> — premium metal construction with a durable engraved finish</li>
+                  <li><strong>Premium Anodized Stainless Steel</strong> — premium metal construction with a durable engraved finish</li>
+                  <li><strong>Unlimited Taps</strong> — tap your card as many times as you want, with no ongoing fees</li>
+                  <li><strong>One-Time Fee</strong> — pay once, use it indefinitely</li>
+                  <li><strong>Fully Custom Design</strong> — customize the front &amp; back with your own branding, name, contact info, and layout</li>
+                  <li><strong>QR Code Included</strong> — every card comes with a scannable QR code as a backup to NFC</li>
+                  <li><strong>Digital Destination</strong> — send contacts to your website, digital business card, socials, contact info, reviews, or any link you choose</li>
+                  <li><strong>Laser Engraved</strong> — precision engraving directly into the metal for a premium finish</li>
+                  <li><strong>Built for Your Brand</strong> — no generic templates; your card is designed around your business</li>
+                </ul>
+                <ul class="bset-desc-list" data-desc-variant data-desc-value2="Full Size" hidden>
+                  <li><strong>Premium Anodized Stainless Steel</strong> — premium metal construction with a durable engraved finish</li>
+                  <li><strong>Unlimited Taps</strong> — tap your card as many times as you want, with no ongoing fees</li>
+                  <li><strong>One-Time Fee</strong> — pay once, use it indefinitely</li>
+                  <li><strong>Front Custom Design</strong> — customize the front with your own branding, name, contact info, and layout</li>
+                  <li><strong>QR Code Included</strong> — every card comes with a scannable QR code as a backup to NFC</li>
+                  <li><strong>Digital Destination</strong> — send contacts to your website, digital business card, socials, contact info, reviews, or any link you choose</li>
+                  <li><strong>Laser Engraved</strong> — precision engraving directly into the metal for a premium finish</li>
+                  <li><strong>Built for Your Brand</strong> — no generic templates; your card is designed around your business</li>
+                  <li><strong>4 Different Steel Options</strong></li>
+                </ul>
+              {%- elsif slot_desc != blank -%}
                 {{ slot_desc }}
               {%- elsif p != blank -%}
                 {{ p.description }}

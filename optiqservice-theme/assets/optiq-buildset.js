@@ -271,6 +271,25 @@
       syncMediaAspect(gallery, activeShot);
     }
 
+    /* Some slots (the Metal Card) carry more than one description variant,
+       one per value of the second option (Chip Size) - see the two
+       data-desc-variant lists in sections/premium-buildset.liquid. A slot
+       with only one description (Ring, PVC Card) has no such nodes and
+       this is a no-op, leaving its plain p.description/richtext untouched. */
+    function renderDescription() {
+      var key = state.key;
+      var descRoot = root.querySelector('[data-bset-desc="' + key + '"]');
+      if (!descRoot) { return; }
+      var variants = all('[data-desc-variant]', descRoot);
+      if (!variants.length) { return; }
+
+      var second = state.selections[key].length > 1 ? state.selections[key][1] : null;
+      var matched = variants.some(function (v) { return v.getAttribute('data-desc-value2') === second; });
+      variants.forEach(function (v, i) {
+        v.hidden = matched ? (v.getAttribute('data-desc-value2') !== second) : i !== 0;
+      });
+    }
+
     function renderTotals() {
       var key = state.key;
       var product = products[key];
@@ -411,6 +430,7 @@
       renderPanels();
       renderOptions();
       renderGallery();
+      renderDescription();
       renderTotals();
       renderBuyState();
       renderBundle();
