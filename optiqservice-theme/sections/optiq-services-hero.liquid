@@ -28,6 +28,15 @@
     #shopify-section-footer { display: none !important; }
     body { overflow: hidden; padding-bottom: 0 !important; }
   </style>
+  {%- comment -%}
+    This full-bleed photo is the page's LCP element. Hinting the browser to
+    fetch it immediately, at the same resized/re-encoded URL the matching
+    background-image below actually uses (so this doesn't cause a second,
+    different download) shaves the time-to-first-paint of the one photo
+    that matters before the crossfade cycle ever needs the rest.
+  {%- endcomment -%}
+  <link rel="preload" as="image" media="(max-width: 780px)" href="https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260811_233031_fdf9a3f9-7d1b-4ef6-9013-21acb3528fa1.png?v=1786491919&width=1200&format=webp">
+  <link rel="preload" as="image" media="(min-width: 781px)" href="https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260807_032922_b8902637-8c24-4a47-8c13-39b2ad594145.png?v=1786077834&width=2400&format=webp">
 {%- endif -%}
 
 {%- comment -%}
@@ -43,11 +52,20 @@
 {%- endcomment -%}
 
 <section class="opsh{{ splash }}" data-optiq-services-hero aria-label="{{ section.settings.aria_label | escape }}">
+  {%- comment -%}
+    Every slide's source photo is a full-resolution studio original
+    (5504px on its long edge) - not the size any browser needs to paint a
+    background-cover photo. &width=/&format=webp asks Shopify's own image
+    CDN to resize and re-encode the SAME uploaded file on the fly (the
+    file itself is untouched); 2400/1200 comfortably covers even a 2x
+    retina desktop or phone viewport at the size this photo actually
+    renders on screen.
+  {%- endcomment -%}
   <div class="opsh__bg" data-opsh-bg aria-hidden="true">
-    <div class="opsh__bg-slide is-active" style="--opsh-bg-d: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260807_032922_b8902637-8c24-4a47-8c13-39b2ad594145.png?v=1786077834'); --opsh-bg-m: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260811_233031_fdf9a3f9-7d1b-4ef6-9013-21acb3528fa1.png?v=1786491919');"></div>
-    <div class="opsh__bg-slide" style="--opsh-bg-d: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260810_051812_b4b31f05-54af-40a6-b2b9-980d76d76771.png?v=1786339506'); --opsh-bg-m: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260811_233259_191f850c-fa56-4ae1-988e-3c4a9f9981bd.png?v=1786491919');"></div>
-    <div class="opsh__bg-slide" style="--opsh-bg-d: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260810_052110_1adb636b-a4cb-4366-a593-fa37701c602b.png?v=1786342744'); --opsh-bg-m: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260811_234017_19e3dbd6-e08e-443c-a95b-d5bfac67c023.png?v=1786491919');"></div>
-    <div class="opsh__bg-slide" style="--opsh-bg-d: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260809_191808_d7032847-de25-498e-a132-a2ed7ceedbde.png?v=1786342744'); --opsh-bg-m: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260811_234319_60fe0384-d2b8-46d0-9f13-fbd982cf4273.png?v=1786491919');"></div>
+    <div class="opsh__bg-slide is-active" style="--opsh-bg-d: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260807_032922_b8902637-8c24-4a47-8c13-39b2ad594145.png?v=1786077834&width=2400&format=webp'); --opsh-bg-m: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260811_233031_fdf9a3f9-7d1b-4ef6-9013-21acb3528fa1.png?v=1786491919&width=1200&format=webp');"></div>
+    <div class="opsh__bg-slide" style="--opsh-bg-d: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260810_051812_b4b31f05-54af-40a6-b2b9-980d76d76771.png?v=1786339506&width=2400&format=webp'); --opsh-bg-m: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260811_233259_191f850c-fa56-4ae1-988e-3c4a9f9981bd.png?v=1786491919&width=1200&format=webp');"></div>
+    <div class="opsh__bg-slide" style="--opsh-bg-d: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260810_052110_1adb636b-a4cb-4366-a593-fa37701c602b.png?v=1786342744&width=2400&format=webp'); --opsh-bg-m: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260811_234017_19e3dbd6-e08e-443c-a95b-d5bfac67c023.png?v=1786491919&width=1200&format=webp');"></div>
+    <div class="opsh__bg-slide" style="--opsh-bg-d: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260809_191808_d7032847-de25-498e-a132-a2ed7ceedbde.png?v=1786342744&width=2400&format=webp'); --opsh-bg-m: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260811_234319_60fe0384-d2b8-46d0-9f13-fbd982cf4273.png?v=1786491919&width=1200&format=webp');"></div>
   </div>
   <div class="opsh__scrim" aria-hidden="true"></div>
 

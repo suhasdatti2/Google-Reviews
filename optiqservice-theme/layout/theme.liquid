@@ -40,12 +40,37 @@
   {%- endif -%}
 
   {%- comment -%}
-    Fonts. Preconnect first so the stylesheet request does not pay for a
-    fresh DNS + TLS handshake, and swap so text is never invisible.
+    Fonts, self-hosted - same three Google Fonts families and weights as
+    before (DM Sans 400/500/600, Space Grotesk 500/600/700, Bodoni Moda
+    400/500/600/700), just served from this theme's own asset CDN instead
+    of fonts.googleapis.com + fonts.gstatic.com. Google serves the exact
+    same variable-weight woff2 file for every weight within one family (a
+    single file covers its whole weight axis), so this is 3 font files
+    total, not 10 - each @font-face below just points a different
+    font-weight at the same file, matching how Google's own stylesheet was
+    already structured. Same-origin removes a second DNS/TLS handshake and
+    the "fetch CSS, discover font URLs, then fetch fonts" waterfall that a
+    third-party stylesheet forces - the browser can start these two
+    requests the moment it reads this file. Only the two families that
+    render above the fold sitewide (DM Sans, the default body font) and on
+    the homepage splash specifically (Bodoni Moda, the wordmark) are
+    preloaded; Space Grotesk (headings, further down every page) still
+    loads, just without jumping the queue.
   {%- endcomment -%}
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=Bodoni+Moda:wght@400;500;600;700&display=swap">
+  <link rel="preload" as="font" type="font/woff2" href="{{ 'dm-sans-variable.woff2' | asset_url }}" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="{{ 'bodoni-moda-variable.woff2' | asset_url }}" crossorigin>
+  <style>
+    @font-face { font-family: 'DM Sans'; font-style: normal; font-weight: 400; font-display: swap; src: url('{{ "dm-sans-variable.woff2" | asset_url }}') format('woff2'); }
+    @font-face { font-family: 'DM Sans'; font-style: normal; font-weight: 500; font-display: swap; src: url('{{ "dm-sans-variable.woff2" | asset_url }}') format('woff2'); }
+    @font-face { font-family: 'DM Sans'; font-style: normal; font-weight: 600; font-display: swap; src: url('{{ "dm-sans-variable.woff2" | asset_url }}') format('woff2'); }
+    @font-face { font-family: 'Space Grotesk'; font-style: normal; font-weight: 500; font-display: swap; src: url('{{ "space-grotesk-variable.woff2" | asset_url }}') format('woff2'); }
+    @font-face { font-family: 'Space Grotesk'; font-style: normal; font-weight: 600; font-display: swap; src: url('{{ "space-grotesk-variable.woff2" | asset_url }}') format('woff2'); }
+    @font-face { font-family: 'Space Grotesk'; font-style: normal; font-weight: 700; font-display: swap; src: url('{{ "space-grotesk-variable.woff2" | asset_url }}') format('woff2'); }
+    @font-face { font-family: 'Bodoni Moda'; font-style: normal; font-weight: 400; font-display: swap; src: url('{{ "bodoni-moda-variable.woff2" | asset_url }}') format('woff2'); }
+    @font-face { font-family: 'Bodoni Moda'; font-style: normal; font-weight: 500; font-display: swap; src: url('{{ "bodoni-moda-variable.woff2" | asset_url }}') format('woff2'); }
+    @font-face { font-family: 'Bodoni Moda'; font-style: normal; font-weight: 600; font-display: swap; src: url('{{ "bodoni-moda-variable.woff2" | asset_url }}') format('woff2'); }
+    @font-face { font-family: 'Bodoni Moda'; font-style: normal; font-weight: 700; font-display: swap; src: url('{{ "bodoni-moda-variable.woff2" | asset_url }}') format('woff2'); }
+  </style>
 
   {{ content_for_header }}
 
@@ -123,13 +148,22 @@
 
   {%- comment -%}
     Smooth inertia scroll. Lenis is not a bundled dependency in this theme
-    (no build step / package.json), so it loads from a CDN build - both tags
-    are `defer`, which execute in this document order regardless of download
+    (no build step / package.json), so there is no npm install step to pin
+    a version through - assets/lenis.min.js is instead the exact,
+    byte-for-byte v1.3.25 build straight from the published npm package
+    (verified against its own published shasum before it was ever added
+    here), just served from this theme's own asset CDN instead of a
+    third-party one - one less external origin, and no separate DNS/TLS
+    handshake to unpkg.com for a single small library. Both tags are
+    `defer`, which execute in this document order regardless of download
     timing, so window.Lenis is guaranteed to exist before optiq-scroll.js
-    runs. See assets/optiq-scroll.js for the actual setup + the magnetic
-    hover effect for `.magnetic` elements.
+    runs. To pick up a newer Lenis release later, replace this file with
+    that version's dist/lenis.min.js from the npm package (not unpkg -
+    same content, but npm publishes a shasum to verify it against). See
+    assets/optiq-scroll.js for the actual setup + the magnetic hover effect
+    for `.magnetic` elements.
   {%- endcomment -%}
-  <script src="https://unpkg.com/lenis@1.3.25/dist/lenis.min.js" defer></script>
+  <script src="{{ 'lenis.min.js' | asset_url }}" defer></script>
   <script src="{{ 'optiq-scroll.js' | asset_url }}" defer></script>
 </head>
 

@@ -101,5 +101,48 @@
 </div>
 
 {% render 'optiq-ai-knowledge' %}
-<script src="{{ 'optiq-ai.js' | asset_url }}" defer></script>
+{%- comment -%}
+  optiq-ai.js is a real chat client (~75KB) most visitors never open in
+  their first seconds on a page - shipping it on every page load the same
+  way as the launcher button itself competes with the actually-critical
+  above-the-fold JS for bandwidth and parse time for no benefit most
+  visits. Loaded instead on real intent to use it: hovering or
+  keyboard-focusing the launcher warms it up in the background (so a
+  desktop click usually finds it already loaded, opening with no visible
+  delay), and a click with nothing loaded yet loads it and opens the panel
+  the moment it's ready - same one click, same result, just not paid for
+  by every visitor who never touches it. Once the real script has booted
+  and attached its own click handler here, this bootstrap removes its own
+  listener and gets out of the way entirely.
+{%- endcomment -%}
+<script>
+  (function () {
+    var launcher = document.querySelector('[data-oqa-launch]');
+    if (!launcher) return;
+    var src = {{ 'optiq-ai.js' | asset_url | json }};
+    var loading = false, pendingOpen = false;
+
+    function onClick(e) {
+      e.preventDefault();
+      pendingOpen = true;
+      load();
+    }
+
+    function load() {
+      if (loading) return;
+      loading = true;
+      var s = document.createElement('script');
+      s.src = src;
+      s.onload = function () {
+        launcher.removeEventListener('click', onClick);
+        if (pendingOpen && window.OptiqAI && window.OptiqAI.open) { window.OptiqAI.open(); }
+      };
+      document.body.appendChild(s);
+    }
+
+    launcher.addEventListener('pointerenter', load, { once: true });
+    launcher.addEventListener('focus', load, { once: true });
+    launcher.addEventListener('click', onClick);
+  })();
+</script>
 {%- endif -%}
