@@ -98,17 +98,6 @@ html {
   html { scroll-behavior: auto; }
 }
 
-/* ---- Lenis (assets/optiq-scroll.js) ----
-   Lenis tags <html> with these classes itself once it initialises. The
-   `lenis-smooth` override below is what stops the native CSS
-   `scroll-behavior: smooth` above from fighting Lenis's own easing on
-   anchor-link jumps. If Lenis never loads (CDN down, JS disabled), none of
-   these classes appear and the native smooth-scroll rule above is the only
-   one active - the intended no-JS fallback. */
-.lenis.lenis-smooth { scroll-behavior: auto !important; }
-.lenis.lenis-stopped { overflow: hidden; }
-.lenis.lenis-scrolling iframe { pointer-events: none; }
-
 body {
   margin: 0;
   background: var(--o-bg);

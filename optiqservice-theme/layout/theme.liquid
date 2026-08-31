@@ -145,25 +145,6 @@
   <script src="{{ 'optiq-ui.js' | asset_url }}" defer></script>
   <script src="{{ 'optiq-motion.js' | asset_url }}" defer></script>
   <script src="{{ 'optiq-cart.js' | asset_url }}" defer></script>
-
-  {%- comment -%}
-    Smooth inertia scroll. Lenis is not a bundled dependency in this theme
-    (no build step / package.json), so there is no npm install step to pin
-    a version through - assets/lenis.min.js is instead the exact,
-    byte-for-byte v1.3.25 build straight from the published npm package
-    (verified against its own published shasum before it was ever added
-    here), just served from this theme's own asset CDN instead of a
-    third-party one - one less external origin, and no separate DNS/TLS
-    handshake to unpkg.com for a single small library. Both tags are
-    `defer`, which execute in this document order regardless of download
-    timing, so window.Lenis is guaranteed to exist before optiq-scroll.js
-    runs. To pick up a newer Lenis release later, replace this file with
-    that version's dist/lenis.min.js from the npm package (not unpkg -
-    same content, but npm publishes a shasum to verify it against). See
-    assets/optiq-scroll.js for the actual setup.
-  {%- endcomment -%}
-  <script src="{{ 'lenis.min.js' | asset_url }}" defer></script>
-  <script src="{{ 'optiq-scroll.js' | asset_url }}" defer></script>
 </head>
 
 <body class="template-{{ request.page_type | handle }}{% if template == 'index' %} is-home{% endif %}{% if template.suffix == 'reviews' %} o-flow-page{% endif %}{% if show_air_flow_bg %} o-air-flow{% endif %}">
