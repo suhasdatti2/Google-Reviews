@@ -1,4 +1,4 @@
-/* OPTIQ - smooth inertia scroll (Lenis) + magnetic hover.
+/* OPTIQ - smooth inertia scroll (Lenis).
 
    Lenis loads from a CDN <script> tag in layout/theme.liquid, placed right
    before this file so `window.Lenis` is guaranteed to exist by the time
@@ -55,9 +55,7 @@
       // starts, not pulled toward anything as you scroll. That's still not
       // scroll-snap - nothing here jumps to or locks onto a section; it is
       // ordinary continuous scrolling, just eased. No scroll-snap/"magnetic"
-      // section-snapping is used anywhere in this file, and the magnetic
-      // HOVER effect below (a completely different thing - buttons pulling
-      // toward the cursor) is untouched.
+      // section-snapping is used anywhere in this file.
       duration: 1.2,
       easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
       smoothWheel: true,
@@ -138,78 +136,8 @@
     });
   }
 
-  /* ------------------------------------------------------------------
-     Magnetic hover
-     GSAP is not a dependency of this theme, so this is a small custom
-     lerp loop rather than gsap.quickTo(). If GSAP is added later, swap
-     the per-frame lerp below for quickTo and drop this rAF loop.
-
-     Tuning per element:
-       data-magnetic-radius   px the cursor has to be within to engage (default 55)
-       data-magnetic-strength multiplier on the pull, bigger = more travel (default 0.35)
-     ------------------------------------------------------------------ */
-  function initMagnetic() {
-    var els = $$('.magnetic');
-    if (!els.length || reduce) return;
-    // No persistent hover on touch - the mousemove this depends on simply
-    // will not fire there, but skip attaching the listener at all.
-    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-
-    var items = els.map(function (el) {
-      return { el: el, rect: el.getBoundingClientRect(), curX: 0, curY: 0, tgtX: 0, tgtY: 0 };
-    });
-
-    function refreshRects() {
-      items.forEach(function (item) { item.rect = item.el.getBoundingClientRect(); });
-    }
-    window.addEventListener('resize', refreshRects, { passive: true });
-    window.addEventListener('scroll', refreshRects, { passive: true });
-
-    document.addEventListener('mousemove', function (e) {
-      items.forEach(function (item) {
-        var radius = parseFloat(item.el.getAttribute('data-magnetic-radius')) || 55;
-        var strength = parseFloat(item.el.getAttribute('data-magnetic-strength')) || 0.35;
-        var r = item.rect;
-        var cx = r.left + r.width / 2;
-        var cy = r.top + r.height / 2;
-        var dx = e.clientX - cx;
-        var dy = e.clientY - cy;
-        var dist = Math.sqrt(dx * dx + dy * dy);
-
-        if (dist < radius) {
-          // Falls off toward both the centre (nothing to pull toward) and
-          // the radius edge (barely engaged) - naturally self-limits to a
-          // few px without an explicit clamp. Peak travel is roughly
-          // (radius / 4) * strength, at dist == radius / 2.
-          var pull = 1 - dist / radius;
-          item.tgtX = dx * pull * strength;
-          item.tgtY = dy * pull * strength;
-        } else {
-          item.tgtX = 0;
-          item.tgtY = 0;
-        }
-      });
-    }, { passive: true });
-
-    document.addEventListener('mouseleave', function () {
-      items.forEach(function (item) { item.tgtX = 0; item.tgtY = 0; });
-    });
-
-    var LERP = 0.18;
-    function tick() {
-      items.forEach(function (item) {
-        item.curX += (item.tgtX - item.curX) * LERP;
-        item.curY += (item.tgtY - item.curY) * LERP;
-        item.el.style.transform = 'translate3d(' + item.curX.toFixed(2) + 'px, ' + item.curY.toFixed(2) + 'px, 0)';
-      });
-      window.requestAnimationFrame(tick);
-    }
-    window.requestAnimationFrame(tick);
-  }
-
   function init() {
     initSmoothScroll();
-    initMagnetic();
   }
 
   if (document.readyState === 'loading') {

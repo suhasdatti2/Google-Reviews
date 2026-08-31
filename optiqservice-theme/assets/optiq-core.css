@@ -380,11 +380,6 @@ h4, h5, h6 {
 .o-link svg { transition: transform var(--o-dur) var(--o-ease); }
 .o-link:hover svg { transform: translateX(3px); }
 
-/* ---- Magnetic hover (assets/optiq-scroll.js) ----
-   Transform is written every frame by JS, so no CSS transition here - one
-   would fight the JS lerp every tick and lag/stutter against it. */
-.magnetic { will-change: transform; }
-
 /* ---- Form fields ---- */
 
 .o-field { display: grid; gap: 8px; }

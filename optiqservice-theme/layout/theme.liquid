@@ -160,21 +160,13 @@
     runs. To pick up a newer Lenis release later, replace this file with
     that version's dist/lenis.min.js from the npm package (not unpkg -
     same content, but npm publishes a shasum to verify it against). See
-    assets/optiq-scroll.js for the actual setup + the magnetic hover effect
-    for `.magnetic` elements.
+    assets/optiq-scroll.js for the actual setup.
   {%- endcomment -%}
   <script src="{{ 'lenis.min.js' | asset_url }}" defer></script>
   <script src="{{ 'optiq-scroll.js' | asset_url }}" defer></script>
 </head>
 
 <body class="template-{{ request.page_type | handle }}{% if template == 'index' %} is-home{% endif %}{% if template.suffix == 'reviews' %} o-flow-page{% endif %}{% if show_air_flow_bg %} o-air-flow{% endif %}">
-  {%- comment -%}
-    Thin top-of-viewport bar for internal link navigation - a lightweight
-    YouTube/GitHub-style progress line, not a blocking full-screen loader.
-    See the snippet for why.
-  {%- endcomment -%}
-  {% render 'optiq-nav-progress' %}
-
   <a class="o-skip" href="#main-content">{{ 'accessibility.skip_to_content' | t }}</a>
 
   {%- comment -%}
