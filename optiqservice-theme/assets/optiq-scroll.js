@@ -45,26 +45,21 @@
       });
 
     var lenis = new window.Lenis({
-      // `lerp` takes priority over `duration`/`easing` in Lenis - it is the
-      // value actually driving the feel below. `duration` is left set as
-      // the documented target/fallback if `lerp` is ever removed in favour
-      // of duration-based easing instead.
-      //
-      // Tuned for a calm, steady glide rather than the fast, high-velocity
-      // feel a previous pass dialled in here: that combination of a high
-      // wheelMultiplier and a lerp close to 1 made one wheel tick cover a
-      // lot of ground and catch up to it almost instantly, which read as
-      // abrupt rather than smooth. Lower `lerp` means the page trails the
-      // target position a little longer each frame (a gentler settle,
-      // still nowhere near sluggish); `wheelMultiplier` at 1 means a wheel
-      // tick moves the page the same distance the browser's own native
-      // scroll would, instead of amplifying it. This only touches scroll
-      // velocity - no scroll-snap/"magnetic" section-snapping is used
-      // anywhere in this file, and the magnetic HOVER effect below (a
-      // completely different thing - buttons pulling toward the cursor)
-      // is untouched.
-      lerp: 0.12,
-      duration: 1.1,
+      // Driven by `duration` + a custom `easing` curve rather than `lerp` -
+      // Lenis only honours one or the other, and lerp (a per-frame
+      // exponential catch-up) reads as continuous rubber-banding, never
+      // quite settling. duration+easing instead plays out ONE fixed,
+      // weighted deceleration curve per scroll input - fast off the top,
+      // easing gently into place - which is the actual "glide" a premium
+      // site's scroll has, and where that curve ends is fixed the moment it
+      // starts, not pulled toward anything as you scroll. That's still not
+      // scroll-snap - nothing here jumps to or locks onto a section; it is
+      // ordinary continuous scrolling, just eased. No scroll-snap/"magnetic"
+      // section-snapping is used anywhere in this file, and the magnetic
+      // HOVER effect below (a completely different thing - buttons pulling
+      // toward the cursor) is untouched.
+      duration: 1.2,
+      easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
       smoothWheel: true,
       // Mobile touch scroll stays native (default) rather than simulated -
       // it's already smooth on touch devices and cheaper to leave alone.
