@@ -387,6 +387,14 @@
 .bset-shot .prem-ph { width: 100%; height: 100%; }
 .bset-shot img { object-fit: contain; object-position: center; display: block; }
 
+/* The Metal Card's finish/chip-size photos are near-uniform card crops, so
+   contain was leaving a thin sliver of the placeholder grey (--prem-ph-2)
+   beside the photo whenever its exact pixel ratio didn't perfectly match
+   the box. cover fills the box completely - there is no letterboxing left
+   for that grey to show through. Scoped to the card gallery only; Ring and
+   PVC Card keep contain, since their photos vary more in framing. */
+.bset-gallery[data-bset-gallery="card"] .bset-shot img { object-fit: cover; }
+
 /* --------------------------------------------------------------------------
    Right column — purchase panel
    -------------------------------------------------------------------------- */
