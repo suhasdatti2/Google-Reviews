@@ -16,8 +16,8 @@
     <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 48, height: 48 }}">
     <link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180, height: 180 }}">
   {%- else -%}
-    <link rel="icon" type="image/png" href="{{ 'shopify://shop_images/optiq-favicon-o.png' | image_url: width: 48, height: 48 }}">
-    <link rel="apple-touch-icon" href="{{ 'shopify://shop_images/optiq-favicon-o.png' | image_url: width: 180, height: 180 }}">
+    <link rel="icon" type="image/png" href="{{ images['optiq-favicon-o.png'] | image_url: width: 48, height: 48 }}">
+    <link rel="apple-touch-icon" href="{{ images['optiq-favicon-o.png'] | image_url: width: 180, height: 180 }}">
   {%- endif -%}
 
   <title>{{ page_title }}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}</title>
