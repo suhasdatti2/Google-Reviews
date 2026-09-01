@@ -12,28 +12,33 @@
   endif
 
   comment
-    Merchant-editable photo rotation: any "Photo" block with an image set
-    replaces the built-in default slides entirely, in the order the blocks
-    are listed - so adding, removing or reordering is just editing blocks
-    in the theme editor, no code involved. With zero photo blocks added
-    (the default, untouched state), the section falls back to the four
-    photos it always shipped with, so nothing changes until a merchant
-    opts in by adding their own.
+    Every photo in the rotation is a "Photo" block now - including the
+    theme's own four - specifically so each one is a real, clickable thing
+    in the editor: clicking the photo on screen selects that exact block
+    and jumps the sidebar straight to its own Image field (with add/
+    duplicate/remove controls right there), instead of only ever landing on
+    the section's general settings. Order on screen follows block order, so
+    reordering is drag-and-drop in the sidebar. The single fallback slide
+    below only ever fires if every block is removed - it keeps the hero
+    from ever rendering with no photo at all.
   endcomment
-  assign custom_slide_count = 0
-  assign first_custom_image = blank
+  assign first_slide_image = blank
+  assign first_slide_mobile = blank
   for block in section.blocks
     if block.type == 'slide' and block.settings.image != blank
-      assign custom_slide_count = custom_slide_count | plus: 1
-      if first_custom_image == blank
-        assign first_custom_image = block.settings.image
-      endif
+      assign first_slide_image = block.settings.image
+      assign first_slide_mobile = block.settings.mobile_image
+      break
     endif
   endfor
 
-  if first_custom_image != blank
-    assign preload_d = first_custom_image | image_url: width: 2400, format: 'webp'
-    assign preload_m = first_custom_image | image_url: width: 1200, height: 1500, crop: 'center', format: 'webp'
+  if first_slide_image != blank
+    assign preload_d = first_slide_image | image_url: width: 2400, format: 'webp'
+    if first_slide_mobile != blank
+      assign preload_m = first_slide_mobile | image_url: width: 1200, format: 'webp'
+    else
+      assign preload_m = first_slide_image | image_url: width: 1200, height: 1500, crop: 'center', format: 'webp'
+    endif
   endif
 -%}
 
@@ -58,9 +63,7 @@
     fetch it immediately, at the same resized/re-encoded URL the matching
     background-image below actually uses (so this doesn't cause a second,
     different download) shaves the time-to-first-paint of the one photo
-    that matters before the crossfade cycle ever needs the rest. Points at
-    whichever photo actually renders first - a merchant's own first Photo
-    block once one is added, otherwise the built-in default.
+    that matters before the crossfade cycle ever needs the rest.
   {%- endcomment -%}
   {%- if preload_d -%}
     <link rel="preload" as="image" media="(max-width: 780px)" href="{{ preload_m }}">
@@ -75,8 +78,7 @@
   Full-bleed photo hero: the product photography fills the entire screen and
   auto-cycles (assets/optiq-hero.js), with the row links and wordmark
   overlaid directly on top of the image instead of sitting in a separate
-  white column. Every background photo is one of the theme's real product
-  photos - nothing invented.
+  white column.
 
   Each row link is only rendered when its label is set, so removing a row
   (e.g. Other Services, whose page was deleted) is just clearing its label
@@ -85,40 +87,36 @@
 
 <section class="opsh{{ splash }}" data-optiq-services-hero aria-label="{{ section.settings.aria_label | escape }}">
   <div class="opsh__bg" data-opsh-bg aria-hidden="true">
-    {%- if custom_slide_count > 0 -%}
-      {%- comment -%}
-        Merchant-supplied photos. One image field per block covers both
-        desktop and mobile - the CDN derives a taller, phone-friendly crop
-        from the same upload (height: 1500, crop: center) rather than
-        requiring a second file, since a plain 16:9-in-a-9:16-box "cover"
-        crop would zoom in and lose most of the shot.
-      {%- endcomment -%}
-      {%- assign i = 0 -%}
-      {%- for block in section.blocks -%}
-        {%- if block.type == 'slide' and block.settings.image != blank -%}
-          <div
-            class="opsh__bg-slide{% if i == 0 %} is-active{% endif %}"
-            style="--opsh-bg-d: url('{{ block.settings.image | image_url: width: 2400, format: 'webp' }}'); --opsh-bg-m: url('{{ block.settings.image | image_url: width: 1200, height: 1500, crop: 'center', format: 'webp' }}');"
-            {{ block.shopify_attributes }}
-          ></div>
-          {%- assign i = i | plus: 1 -%}
+    {%- comment -%}
+      &width=/&format=webp asks Shopify's own image CDN to resize and
+      re-encode the SAME uploaded file on the fly (the file itself is
+      untouched); 2400/1200 comfortably covers even a 2x retina desktop or
+      phone viewport at the size this photo actually renders on screen. A
+      block without its own Mobile image gets a taller crop of the same
+      photo derived automatically (height: 1500, crop: center) - a plain
+      16:9-in-a-9:16-box "cover" crop would zoom in and lose most of the
+      shot, so this asks the CDN for a phone-shaped crop instead of relying
+      on CSS alone.
+    {%- endcomment -%}
+    {%- assign i = 0 -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'slide' and block.settings.image != blank -%}
+        {%- assign bg_d = block.settings.image | image_url: width: 2400, format: 'webp' -%}
+        {%- if block.settings.mobile_image != blank -%}
+          {%- assign bg_m = block.settings.mobile_image | image_url: width: 1200, format: 'webp' -%}
+        {%- else -%}
+          {%- assign bg_m = block.settings.image | image_url: width: 1200, height: 1500, crop: 'center', format: 'webp' -%}
         {%- endif -%}
-      {%- endfor -%}
-    {%- else -%}
-      {%- comment -%}
-        Built-in default rotation - the theme's own product photography.
-        Every slide's source photo is a full-resolution studio original
-        (5504px on its long edge) - not the size any browser needs to paint
-        a background-cover photo. &width=/&format=webp asks Shopify's own
-        image CDN to resize and re-encode the SAME uploaded file on the fly
-        (the file itself is untouched); 2400/1200 comfortably covers even a
-        2x retina desktop or phone viewport at the size this photo actually
-        renders on screen.
-      {%- endcomment -%}
+        <div
+          class="opsh__bg-slide{% if i == 0 %} is-active{% endif %}"
+          style="--opsh-bg-d: url('{{ bg_d }}'); --opsh-bg-m: url('{{ bg_m }}');"
+          {{ block.shopify_attributes }}
+        ></div>
+        {%- assign i = i | plus: 1 -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if i == 0 -%}
       <div class="opsh__bg-slide is-active" style="--opsh-bg-d: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260807_032922_b8902637-8c24-4a47-8c13-39b2ad594145.png?v=1786077834&width=2400&format=webp'); --opsh-bg-m: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260811_233031_fdf9a3f9-7d1b-4ef6-9013-21acb3528fa1.png?v=1786491919&width=1200&format=webp');"></div>
-      <div class="opsh__bg-slide" style="--opsh-bg-d: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260810_051812_b4b31f05-54af-40a6-b2b9-980d76d76771.png?v=1786339506&width=2400&format=webp'); --opsh-bg-m: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260811_233259_191f850c-fa56-4ae1-988e-3c4a9f9981bd.png?v=1786491919&width=1200&format=webp');"></div>
-      <div class="opsh__bg-slide" style="--opsh-bg-d: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260810_052110_1adb636b-a4cb-4366-a593-fa37701c602b.png?v=1786342744&width=2400&format=webp'); --opsh-bg-m: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260811_234017_19e3dbd6-e08e-443c-a95b-d5bfac67c023.png?v=1786491919&width=1200&format=webp');"></div>
-      <div class="opsh__bg-slide" style="--opsh-bg-d: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260809_191808_d7032847-de25-498e-a132-a2ed7ceedbde.png?v=1786342744&width=2400&format=webp'); --opsh-bg-m: url('https://cdn.shopify.com/s/files/1/0797/5554/2760/files/hf_20260811_234319_60fe0384-d2b8-46d0-9f13-fbd982cf4273.png?v=1786491919&width=1200&format=webp');"></div>
     {%- endif -%}
   </div>
   <div class="opsh__scrim" aria-hidden="true"></div>
@@ -187,7 +185,8 @@
       "type": "slide",
       "name": "Photo",
       "settings": [
-        { "type": "image_picker", "id": "image", "label": "Image", "info": "16:9 works best. Add one or more of these to replace the default photo rotation with your own - the order here is the order they cycle in." }
+        { "type": "image_picker", "id": "image", "label": "Image", "info": "16:9 works best. Shows on desktop, and is auto-cropped for phones unless you add a mobile image below." },
+        { "type": "image_picker", "id": "mobile_image", "label": "Mobile image (optional)", "info": "A taller crop of the same photo for phone screens. Leave blank to auto-crop the image above instead." }
       ]
     }
   ],
