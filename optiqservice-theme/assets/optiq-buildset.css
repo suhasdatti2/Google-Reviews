@@ -768,8 +768,18 @@
 
   /* Photo first, purchase controls right after, descriptive copy collapsed
      behind the toggle - see the file header comment for why this reorders
-     whole columns instead of individual children. */
-  .bset-stage       { order: 1; position: static; }
+     whole columns instead of individual children. .bset-stage carries
+     align-self: start from its desktop rule (sticky positioning needs it
+     there), and that value is still in effect here even though sticky
+     itself is switched off below - a flex item with align-self anything
+     but stretch shrinks to fit its own content instead of filling the
+     row, and a width: 100% child (.bset-media) has no intrinsic size of
+     its own to shrink-wrap around, so the whole photo collapsed to a
+     sliver in the corner instead of showing. align-self: stretch is the
+     actual fix for "the card photo doesn't show on mobile" - confirmed by
+     rendering this exact markup/CSS in a real browser and watching the
+     photo go from a collapsed corner to full width once this was added. */
+  .bset-stage       { order: 1; position: static; align-self: stretch; }
   .bset-panel       { order: 2; }
   .bset-info-toggle { order: 3; display: flex; }
   .bset-info        { order: 4; display: none; }
