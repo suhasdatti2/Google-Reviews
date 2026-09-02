@@ -11,10 +11,21 @@
    hairline rules between them. Nothing is boxed in a card; whitespace and the
    rules do the work.
 
-   On mobile the three columns collapse to one flow. The column wrappers become
-   `display: contents` so their children reorder freely into the sequence the
-   brief specifies (image, name, price, info, switcher, customisation,
-   quantity, bundle, total, buy) instead of being trapped in column order.
+   On mobile the three columns collapse to one flow, in this order: photo,
+   then the purchase panel (switcher, finish, size, quantity, price, Add to
+   Cart), then everything else (name, description, features) behind a
+   "View Product Details" toggle. The photo and buying controls are what
+   someone showing the product in person actually needs on screen first;
+   the descriptive copy is real but not urgent, so it stays out of the way
+   until asked for. An earlier version of this file made the two column
+   wrappers `display: contents` and reordered every child individually so
+   the whole page interleaved into one specific sequence - Safari doesn't
+   reliably honour flex `order` on the descendants of a `display: contents`
+   element, so on an iPhone that collapsed straight back to plain DOM order:
+   all of the identity column's text, THEN the photo, which is exactly the
+   "I can't see the card at all" bug this replaced. Reordering whole,
+   un-dissolved columns instead sidesteps that bug entirely - `order` on a
+   real flex child is about as reliably supported as CSS gets.
    ========================================================================== */
 
 :root {
@@ -706,7 +717,41 @@
 .bset-alert[hidden] { display: none; }
 
 /* --------------------------------------------------------------------------
-   Responsive — single flow, brief's mobile order, sticky buy bar
+   Mobile "View Product Details" toggle — reveals the identity column
+   (name, description, features) below the photo and purchase panel on
+   narrow screens. Present in the markup at every width but only ever
+   shown under the 900px breakpoint below, where that column is collapsed
+   by default; above it, .bset-info is always visible in its own column
+   and this button plays no part at all.
+   -------------------------------------------------------------------------- */
+
+.bset-info-toggle {
+  display: none;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  appearance: none;
+  border: 0;
+  border-top: 1px solid var(--bset-rule);
+  border-bottom: 1px solid var(--bset-rule);
+  background: var(--prem-white);
+  color: var(--prem-ink);
+  font-family: inherit;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 16px var(--prem-gutter);
+  cursor: pointer;
+}
+.bset-info-toggle:hover { background: rgba(17, 17, 16, 0.03); }
+.bset-info-toggle:focus-visible { outline: 2px solid var(--prem-ink); outline-offset: -3px; }
+.bset-info-toggle__chevron { flex: none; transition: transform 220ms var(--prem-ease); }
+.bset-info-toggle[aria-expanded="true"] .bset-info-toggle__chevron { transform: rotate(180deg); }
+
+/* --------------------------------------------------------------------------
+   Responsive — single flow, sticky buy bar
    -------------------------------------------------------------------------- */
 
 @media (max-width: 1080px) {
@@ -721,36 +766,16 @@
 @media (max-width: 900px) {
   .bset-layout { display: flex; flex-direction: column; }
 
-  /* Columns dissolve so their children can be ordered individually. */
-  .bset-info,
-  .bset-panel {
-    display: contents;
-  }
-  .bset-info > *,
-  .bset-panel > * {
-    padding-inline: var(--prem-gutter);
-  }
-  .bset-field + .bset-field,
-  .bset-price-lead,
-  .bset-features {
-    padding-top: 26px;
-    margin-top: 0;
-  }
+  /* Photo first, purchase controls right after, descriptive copy collapsed
+     behind the toggle - see the file header comment for why this reorders
+     whole columns instead of individual children. */
+  .bset-stage       { order: 1; position: static; }
+  .bset-panel       { order: 2; }
+  .bset-info-toggle { order: 3; display: flex; }
+  .bset-info        { order: 4; display: none; }
+  .bset-info.is-open { display: flex; }
 
-  .bset-stage { position: static; }
   .bset-media { aspect-ratio: 3 / 4; }
-
-  .bset-crumbs      { order: 0; padding-top: 20px; }
-  .bset-stage       { order: 1; margin-top: 20px; }
-  .bset-head        { order: 2; padding-top: 26px; }
-  .bset-cardhead    { order: 2; padding-top: 26px; }
-  .bset-price-lead  { order: 3; border-top: 0; }
-  .bset-features    { order: 4; }
-  .bset-switchwrap  { order: 5; }
-  .bset-options     { order: 6; }
-  .bset-qtywrap     { order: 7; }
-  .bset-bundlewrap  { order: 8; }
-  .bset-buy         { order: 9; }
 
   /* The buy block parks itself at the bottom of the viewport once reached. */
   .bset-buy {

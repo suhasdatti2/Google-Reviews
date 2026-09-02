@@ -499,6 +499,19 @@
         if (firstOption) { firstOption.focus(); }
         return;
       }
+
+      var infoToggle = target.closest('[data-bset-info-toggle]');
+      if (infoToggle && root.contains(infoToggle)) {
+        event.preventDefault();
+        var infoPanel = document.getElementById(infoToggle.getAttribute('aria-controls'));
+        if (!infoPanel) { return; }
+        var open = !infoPanel.classList.contains('is-open');
+        infoPanel.classList.toggle('is-open', open);
+        infoToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        var toggleLabel = infoToggle.querySelector('[data-bset-info-toggle-label]');
+        if (toggleLabel) { toggleLabel.textContent = open ? 'Hide Product Details' : 'View Product Details'; }
+        return;
+      }
     });
 
     if (el.qtyInput) {

@@ -81,7 +81,7 @@
     <div class="bset-layout">
 
       {%- comment -%} ---------- LEFT: identity ---------- {%- endcomment -%}
-      <div class="bset-info">
+      <div class="bset-info" id="bset-info-{{ section.id }}">
         <nav class="bset-crumbs" aria-label="Breadcrumb">
           <a href="{{ routes.root_url }}">Home</a>
           <span aria-hidden="true">/</span>
@@ -453,6 +453,25 @@
           </p>
         </form>
       </div>
+
+      {%- comment -%}
+        Mobile-only trigger for the collapsed identity column (name,
+        description, features) - see assets/optiq-buildset.css for why it
+        exists and assets/optiq-buildset.js for the click handler. Placed
+        after .bset-panel in the markup so it never disturbs the desktop
+        grid's column auto-placement (info/stage/panel, in that DOM order);
+        `order` alone repositions it on narrow screens, and it stays
+        display: none above that breakpoint regardless of where it sits in
+        the DOM.
+      {%- endcomment -%}
+      <button type="button"
+              class="bset-info-toggle"
+              data-bset-info-toggle
+              aria-expanded="false"
+              aria-controls="bset-info-{{ section.id }}">
+        <span data-bset-info-toggle-label>View Product Details</span>
+        <svg class="bset-info-toggle__chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
     </div>
 
     {%- comment -%}
