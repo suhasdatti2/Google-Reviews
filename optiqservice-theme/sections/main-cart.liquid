@@ -39,10 +39,39 @@
       <form class="o-cart__body" action="{{ routes.cart_url }}" method="post" novalidate>
         <div class="o-cart__list">
           {%- for item in cart.items -%}
+            {%- comment -%}
+              A product with no variant image of its own (see
+              assets/optiq-cart-page.css's header comment - most of the
+              catalogue has none) falls back to a "Fallback product image"
+              block below instead of the flat placeholder, if the merchant
+              has added one for this exact product. That block's
+              shopify_attributes go on .o-cart__media whenever a match
+              exists - even before an image is uploaded to it - so the box
+              is clickable/selectable in the theme editor the moment the
+              block exists, opening straight to its image field in the left
+              panel. A gray box with no block behind it yet can't do that;
+              there is no settings field for the editor to open until one is
+              added ("Add block" in the sidebar), which is the one manual
+              step this can't skip - Shopify has no way to invent an
+              editable field for an arbitrary product it hasn't been told
+              about.
+            {%- endcomment -%}
+            {%- liquid
+              assign fallback_block = blank
+              if item.image == blank
+                for b in section.blocks
+                  if b.type == 'fallback_image' and b.settings.product.id == item.product_id
+                    assign fallback_block = b
+                  endif
+                endfor
+              endif
+            -%}
             <div class="o-cart__line">
-              <div class="o-cart__media">
+              <div class="o-cart__media"{% if fallback_block %} {{ fallback_block.shopify_attributes }}{% endif %}>
                 {%- if item.image -%}
                   {{ item.image | image_url: width: 280 | image_tag: widths: '140,280', sizes: '(max-width: 900px) 76px, 96px', class: 'o-cart__img', alt: item.image.alt | default: item.title, loading: 'lazy' }}
+                {%- elsif fallback_block.settings.image -%}
+                  {{ fallback_block.settings.image | image_url: width: 280 | image_tag: widths: '140,280', sizes: '(max-width: 900px) 76px, 96px', class: 'o-cart__img', alt: item.title, loading: 'lazy' }}
                 {%- else -%}
                   <div class="o-cart__img o-cart__img--placeholder" aria-hidden="true"></div>
                 {%- endif -%}
@@ -120,6 +149,26 @@
 {% schema %}
 {
   "name": "Cart",
-  "settings": []
+  "settings": [],
+  "blocks": [
+    {
+      "type": "fallback_image",
+      "name": "Fallback product image",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Pick the product this photo is for."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Shown in the cart whenever this product's variant has no photo of its own in Shopify - the real fix is still adding photos to the product/variants directly, but this covers it here in the meantime."
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}
