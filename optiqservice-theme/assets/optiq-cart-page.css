@@ -76,10 +76,18 @@
 }
 
 .o-cart__media { width: 96px; height: 96px; flex: none; }
+/* contain, not cover: several products (the Laser Engraved Metal Card
+   variants especially) use one tall photo showing both the front and back
+   of the card stacked in a single image - confirmed 1098x1433px, nowhere
+   close to square. `cover` crops a box like that to fill a square thumb,
+   which was slicing the top/bottom off the card and cutting real content
+   (the back panel's QR code, contact text). `contain` always shows the
+   whole photo, letterboxed on whichever axis is shorter, so nothing is
+   ever cropped regardless of the source image's own aspect ratio. */
 .o-cart__img {
   width: 96px;
   height: 96px;
-  object-fit: cover;
+  object-fit: contain;
   background: var(--prem-ph);
 }
 .o-cart__img--placeholder { display: block; }
