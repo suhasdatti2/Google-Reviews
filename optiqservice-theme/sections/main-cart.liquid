@@ -1,53 +1,121 @@
-<section class="cart-page">
-  <div class="page-width">
-    <h1>Your cart</h1>
+{%- comment -%}
+  Full-page cart. Rebuilt as its own minimal, full-width "Premium world" page
+  (same .prem-page takeover premium-buildset.liquid uses - shared nav, white
+  ground, the theme's own header/footer/dock hidden so nothing doubles up)
+  rather than a plain form dropped into the ordinary page chrome, since a
+  cart this bare needs to read as an intentional destination, not an
+  unstyled fallback screen.
 
+  Deliberately plain form submission, not the AJAX drawer path
+  (assets/optiq-cart.js): that controller repaints a `[data-o-cart-content]`
+  mount that only exists inside the (currently unused) cart-drawer section,
+  so reusing its data-attributes here would silently desync this page's own
+  DOM from the real cart on every remove/quantity change. Native
+  `updates[line]` + `url_to_remove` need no JS at all and cannot drift.
+  Submitting via the `checkout` button applies any pending quantity edits
+  and proceeds to checkout in the same step - standard Shopify cart form
+  behaviour.
+{%- endcomment -%}
+
+{{ 'optiq-premium.css' | asset_url | stylesheet_tag }}
+{{ 'optiq-cart-page.css' | asset_url | stylesheet_tag }}
+
+<div class="prem-page o-cart-page">
+  {% render 'prem-nav' %}
+
+  <section class="o-cart" {{ section.shopify_attributes }}>
     {%- if cart.item_count == 0 -%}
-      <div class="empty-state">
-        <p>Your cart is empty.</p>
-        <a class="btn btn--primary" href="/products/google-review-nfc-card">Get My Review Card</a>
+      <div class="o-cart__empty">
+        <p class="o-cart__empty-eyebrow">Cart</p>
+        <h1 class="o-cart__empty-title">Your cart is empty</h1>
+        <a class="o-cart-btn o-cart-btn--primary" href="{{ routes.all_products_collection_url }}">Keep Shopping</a>
       </div>
     {%- else -%}
-      <form action="{{ routes.cart_url }}" method="post" novalidate>
-        {%- for item in cart.items -%}
-          <div class="cart-line">
-            {%- if item.image != blank -%}
-              {{ item.image | image_url: width: 176 | image_tag: class: 'cart-line__img', alt: item.title }}
-            {%- else -%}
-              <div class="cart-line__img"></div>
-            {%- endif -%}
-            <div>
-              <div class="cart-line__title">{{ item.product.title }}{% unless item.variant.title == 'Default Title' %} — {{ item.variant.title }}{% endunless %}</div>
-              {%- if item.properties.size > 0 -%}
-                <div class="cart-line__props">
-                  {%- for property in item.properties -%}
-                    {%- if property.last != blank -%}
-                      <div>{{ property.first }}: {{ property.last }}</div>
-                    {%- endif -%}
-                  {%- endfor -%}
-                </div>
-              {%- endif -%}
-              <a class="cart-line__remove" href="{{ item.url_to_remove }}">Remove</a>
-            </div>
-            <div class="cart-line__qty">
-              <input type="number" name="updates[]" value="{{ item.quantity }}" min="0" aria-label="Quantity">
-            </div>
-            <div>{{ item.final_line_price | money }}</div>
-          </div>
-        {%- endfor -%}
+      <div class="o-cart__head">
+        <h1 class="o-cart__title">Cart</h1>
+        <span class="o-cart__count">{{ cart.item_count }} item{% if cart.item_count != 1 %}s{% endif %}</span>
+      </div>
 
-        <div class="cart-footer">
-          <span class="cart-footer__total">Subtotal: {{ cart.total_price | money }}</span>
-          <span class="cart-footer__note">Programming is included — taxes and shipping calculated at checkout.</span>
-          <div style="display: flex; gap: 12px;">
-            <button type="submit" name="update" class="btn btn--ghost">Update Cart</button>
-            <button type="submit" name="checkout" class="btn btn--primary">Checkout</button>
-          </div>
+      <form class="o-cart__body" action="{{ routes.cart_url }}" method="post" novalidate>
+        <div class="o-cart__list">
+          {%- for item in cart.items -%}
+            <div class="o-cart__line">
+              <div class="o-cart__media">
+                {%- if item.image -%}
+                  {{ item.image | image_url: width: 280 | image_tag: widths: '140,280', sizes: '(max-width: 900px) 76px, 96px', class: 'o-cart__img', alt: item.image.alt | default: item.title, loading: 'lazy' }}
+                {%- else -%}
+                  <div class="o-cart__img o-cart__img--placeholder" aria-hidden="true"></div>
+                {%- endif -%}
+              </div>
+
+              <div class="o-cart__info">
+                <p class="o-cart__name">{{ item.product.title }}</p>
+                {%- unless item.variant.title == 'Default Title' -%}
+                  <p class="o-cart__variant">{{ item.variant.title | replace: ' / ', ' · ' }}</p>
+                {%- endunless -%}
+                {%- if item.properties.size > 0 -%}
+                  <dl class="o-cart__props">
+                    {%- for property in item.properties -%}
+                      {%- assign prop_value = property.last -%}
+                      {%- if prop_value != blank -%}
+                        <div><dt>{{ property.first }}</dt><dd>{{ prop_value }}</dd></div>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </dl>
+                {%- endif -%}
+                <a class="o-cart__remove" href="{{ item.url_to_remove }}">Remove</a>
+              </div>
+
+              <div class="o-cart__qty" data-o-qty>
+                <button type="button" class="o-cart__qty-btn" data-o-qty-step="-1" aria-label="Decrease quantity">&minus;</button>
+                <input
+                  class="o-cart__qty-input"
+                  type="number"
+                  name="updates[{{ item.key }}]"
+                  value="{{ item.quantity }}"
+                  min="0"
+                  inputmode="numeric"
+                  aria-label="Quantity"
+                  data-o-cart-page-qty
+                >
+                <button type="button" class="o-cart__qty-btn" data-o-qty-step="1" aria-label="Increase quantity">&plus;</button>
+              </div>
+
+              <div class="o-cart__price">{{ item.final_line_price | money }}</div>
+            </div>
+          {%- endfor -%}
         </div>
+
+        <aside class="o-cart__summary">
+          <div class="o-cart__subtotal">
+            <span>Subtotal</span>
+            <strong>{{ cart.total_price | money }}</strong>
+          </div>
+          <div class="o-cart__actions">
+            <a class="o-cart-btn o-cart-btn--ghost" href="{{ routes.all_products_collection_url }}">Keep Shopping</a>
+            <button type="submit" name="checkout" class="o-cart-btn o-cart-btn--primary">Checkout</button>
+          </div>
+        </aside>
       </form>
     {%- endif -%}
-  </div>
-</section>
+  </section>
+</div>
+
+<script>
+  /* Quantity edits are real `updates[line]` fields on a real cart form - a
+     changed number just resubmits it, no fetch/JSON path to keep in sync
+     with the server. The stepper buttons already work with no JS of their
+     own (assets/optiq-cart.js listens for [data-o-qty-step] site-wide and
+     fires `change` on the paired input); this only has to act on that
+     change once it lands. */
+  document.addEventListener('change', function (event) {
+    var input = event.target.closest('[data-o-cart-page-qty]');
+    if (!input) { return; }
+    var value = parseInt(input.value, 10);
+    if (isNaN(value) || value < 0) { input.value = 0; }
+    input.form.submit();
+  });
+</script>
 
 {% schema %}
 {

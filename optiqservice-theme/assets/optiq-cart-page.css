@@ -1,0 +1,284 @@
+/* ==========================================================================
+   OPTIQ CART — full-page cart, Supreme-simple but full-width.
+
+   Builds on .prem-page (optiq-premium.css): pure white ground, the shared
+   .prem-nav header, and the same body:has(.prem-page) rule that hides the
+   theme's own header/footer/dock so nothing doubles up. This page adds
+   nothing to that reset except its own layout below the nav.
+
+   The whole point is ONE screen on desktop, no page scroll: .o-cart is
+   sized to exactly the viewport height left under the fixed nav
+   (--prem-nav-h, published by prem-nav.liquid's own script), laid out as a
+   fixed header row + a body that fills whatever is left. If the line-item
+   list is ever too long for that remaining space, THAT list scrolls inside
+   its own box - the page frame around it (nav, headline, summary) never
+   moves. Below 900px the constraint is intentionally dropped (a cart with
+   many items cannot promise one screen on a phone) and the summary becomes
+   a sticky bar instead of a side panel, matching .bset-buy elsewhere on the
+   site.
+   ========================================================================== */
+
+.o-cart {
+  display: flex;
+  flex-direction: column;
+  height: calc(100svh - var(--prem-nav-h, 68px));
+  max-width: var(--prem-maxw);
+  margin-inline: auto;
+  padding-inline: var(--prem-gutter);
+}
+
+.o-cart__head {
+  flex: none;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding-block: clamp(28px, 4vh, 44px) clamp(16px, 2.4vh, 24px);
+  border-bottom: 1px solid var(--prem-line);
+}
+.o-cart__title {
+  font-family: var(--prem-sans);
+  font-size: clamp(26px, 3vw, 34px);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.o-cart__count {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--prem-ink-3);
+}
+
+.o-cart__body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  align-items: stretch;
+}
+
+/* --------------------------------------------------------------------------
+   Line items — the only part allowed to scroll on its own.
+   -------------------------------------------------------------------------- */
+
+.o-cart__list {
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.o-cart__line {
+  display: grid;
+  grid-template-columns: 96px 1fr auto auto;
+  align-items: center;
+  gap: clamp(16px, 2.2vw, 28px);
+  padding-block: clamp(20px, 3vh, 28px);
+  border-bottom: 1px solid var(--prem-line);
+}
+
+.o-cart__media { width: 96px; height: 96px; flex: none; }
+.o-cart__img {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  background: var(--prem-ph);
+}
+.o-cart__img--placeholder { display: block; }
+
+.o-cart__info { min-width: 0; display: grid; gap: 4px; }
+.o-cart__name {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.o-cart__variant {
+  font-size: 13px;
+  color: var(--prem-ink-2);
+}
+.o-cart__props {
+  display: grid;
+  gap: 2px;
+  margin-top: 2px;
+}
+.o-cart__props div {
+  display: flex;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--prem-ink-2);
+}
+.o-cart__props dt { font-weight: 600; }
+.o-cart__props dt::after { content: ":"; }
+.o-cart__props dd { overflow-wrap: anywhere; }
+
+.o-cart__remove {
+  justify-self: start;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--prem-ink-3);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.o-cart__remove:hover { color: var(--prem-ink); }
+
+.o-cart__qty {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  border: 1px solid var(--prem-line);
+  height: 38px;
+}
+.o-cart__qty-btn {
+  width: 34px;
+  height: 36px;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--prem-ink);
+}
+.o-cart__qty-input {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  text-align: center;
+  font: inherit;
+  font-size: 14px;
+  -moz-appearance: textfield;
+}
+.o-cart__qty-input::-webkit-outer-spin-button,
+.o-cart__qty-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+.o-cart__price {
+  min-width: 84px;
+  text-align: right;
+  font-size: 14.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   Summary — static, never scrolls with the list.
+   -------------------------------------------------------------------------- */
+
+.o-cart__summary {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: clamp(20px, 3vh, 28px);
+  padding: clamp(20px, 3vh, 28px) 0 clamp(28px, 4vh, 40px) clamp(28px, 3vw, 44px);
+  border-left: 1px solid var(--prem-line);
+}
+
+.o-cart__subtotal {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--prem-ink-2);
+}
+.o-cart__subtotal strong {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--prem-ink);
+}
+
+.o-cart__actions { display: grid; gap: 10px; }
+
+.o-cart-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 54px;
+  border: 1px solid var(--prem-ink);
+  font-family: var(--prem-sans);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: opacity 160ms var(--prem-ease);
+}
+.o-cart-btn--primary { background: var(--prem-ink); color: var(--prem-white); }
+.o-cart-btn--ghost { background: transparent; color: var(--prem-ink); }
+.o-cart-btn:hover { opacity: 0.72; }
+
+/* --------------------------------------------------------------------------
+   Empty state.
+   -------------------------------------------------------------------------- */
+
+.o-cart__empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+}
+.o-cart__empty-eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--prem-ink-3);
+}
+.o-cart__empty-title {
+  font-family: var(--prem-sans);
+  font-size: clamp(24px, 3vw, 30px);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.o-cart__empty .o-cart-btn { width: auto; min-width: 240px; padding-inline: 32px; margin-top: 10px; }
+
+/* ==========================================================================
+   Below 900px: the one-screen guarantee is dropped (only ever promised for
+   desktop), the list becomes normal scrolling page content, and the summary
+   turns into a sticky bottom bar - same convention as .bset-buy.
+   ========================================================================== */
+@media (max-width: 900px) {
+  .o-cart { height: auto; min-height: calc(100svh - var(--prem-nav-h, 68px)); }
+  .o-cart__body { display: block; }
+  .o-cart__list { overflow-y: visible; padding-right: 0; }
+
+  .o-cart__line {
+    grid-template-columns: 76px 1fr;
+    grid-template-areas:
+      "media info"
+      "media qty"
+      "media price";
+    row-gap: 10px;
+  }
+  .o-cart__media, .o-cart__img { width: 76px; height: 76px; grid-area: media; }
+  .o-cart__info { grid-area: info; }
+  .o-cart__qty { grid-area: qty; justify-self: start; }
+  .o-cart__price { grid-area: price; justify-self: start; text-align: left; }
+
+  .o-cart__summary {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    border-left: 0;
+    border-top: 1px solid var(--prem-line);
+    background: var(--prem-white);
+    padding: 16px 0 calc(16px + env(safe-area-inset-bottom, 0px));
+    margin-top: 8px;
+    box-shadow: 0 -8px 24px rgba(17, 17, 16, 0.06);
+  }
+  /* grid-auto-flow: column alone leaves each track auto-sized to its
+     button's own min-content width - at this font-size/letter-spacing
+     "KEEP SHOPPING" doesn't fit two-up in an auto track, which pushed the
+     row (and everything above it, sharing the same grid) past the
+     viewport. Explicit equal tracks cap each button at half the row
+     instead, letting `width: 100%` actually mean something. */
+  .o-cart__actions { grid-template-columns: 1fr 1fr; }
+}
+
+@media (min-width: 901px) and (max-width: 1080px) {
+  .o-cart__body { grid-template-columns: 1fr 320px; }
+}

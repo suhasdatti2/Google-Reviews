@@ -16,11 +16,12 @@
   Premium Products - the site's three real sections - not whatever a merchant
   last saved into the "main-menu" navigation in Admin.
 
-  Cart and menu both drive the theme's existing drawer controller
-  (assets/optiq-ui.js): a [data-o-drawer-open="x"] button opens the matching
-  [data-o-drawer="x"] panel, with focus trapping, scroll lock and Escape
-  already handled. The count badge is [data-o-cart-count], which
-  assets/optiq-cart.js repaints after every add.
+  Menu still drives the theme's drawer controller ([data-o-drawer-open="x"]
+  opens the matching [data-o-drawer="x"] panel). Cart is a plain link to
+  routes.cart_url instead - there is no cart-drawer section/controller for
+  it to open, so a button wired to that same convention was a dead control.
+  The count badge is [data-o-cart-count], which assets/optiq-cart.js
+  repaints after every add.
 {%- endcomment -%}
 
 {%- comment -%}
@@ -88,10 +89,10 @@
         </a>
       {%- endif -%}
 
-      <button type="button" class="stu-navcart" data-o-drawer-open="cart" aria-expanded="false">
+      <a class="stu-navcart" href="{{ routes.cart_url }}">
         Cart
         <span class="stu-hdr__count" data-o-cart-count {% if cart.item_count == 0 %}hidden{% endif %}>{{- cart.item_count -}}</span>
-      </button>
+      </a>
     </nav>
   </div>
 </header>

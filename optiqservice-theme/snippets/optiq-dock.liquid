@@ -20,8 +20,8 @@
 
   Cart integration: the badge carries `data-o-cart-count`, which the existing
   assets/optiq-cart.js already updates on every cart mutation - so it stays
-  live for free. The button carries `data-o-drawer-open="cart"` so optiq-ui.js
-  opens the drawer, and keeps a real /cart href as the no-JS fallback.
+  live for free. The item is a plain link to routes.cart_url - there is no
+  cart-drawer section/controller for it to open instead.
 
   Search is deliberately not in this list. Shopify's default search results
   page is not styled to match the rest of this theme, so the button led
@@ -117,8 +117,6 @@
       <a
         class="optiq-dock__item optiq-dock__item--cart"
         href="{{ cart_url }}"
-        data-o-drawer-open="cart"
-        aria-expanded="false"
         {% if is_cart %}aria-current="page"{% endif %}
       >
         {% render 'icon', name: 'cart' %}
