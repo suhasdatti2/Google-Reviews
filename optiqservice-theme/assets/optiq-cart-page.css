@@ -75,22 +75,28 @@
   border-bottom: 1px solid var(--prem-line);
 }
 
-.o-cart__media { width: 96px; height: 96px; flex: none; }
-/* contain, not cover: several products (the Laser Engraved Metal Card
-   variants especially) use one tall photo showing both the front and back
-   of the card stacked in a single image - confirmed 1098x1433px, nowhere
-   close to square. `cover` crops a box like that to fill a square thumb,
-   which was slicing the top/bottom off the card and cutting real content
-   (the back panel's QR code, contact text). `contain` always shows the
-   whole photo, letterboxed on whichever axis is shorter, so nothing is
-   ever cropped regardless of the source image's own aspect ratio. */
+.o-cart__media { width: 96px; flex: none; }
+/* Fixed width, height auto: several products (the Laser Engraved Metal
+   Card variants especially) use one tall photo showing both the front and
+   back of the card stacked in a single image - confirmed 1098x1433px,
+   nowhere close to square. A fixed square box has no crop-free way to show
+   that: `cover` sliced real content off the top/bottom (the back panel's
+   QR code, contact text), and `contain` stopped cropping but padded the
+   sides with the box's own fill colour instead, which just traded a crop
+   for a visible grey letterbox. Letting height track the image's own
+   ratio at a fixed width needs neither - the box becomes exactly as tall
+   as this one photo actually is, so nothing is cropped and nothing needs
+   filling in. max-height is a ceiling for an extreme outlier photo only;
+   ordinary product shots (including this 1433px-tall one, ~125px at this
+   width) come in well under it. */
 .o-cart__img {
   width: 96px;
-  height: 96px;
+  height: auto;
+  max-height: 168px;
   object-fit: contain;
   background: var(--prem-ph);
 }
-.o-cart__img--placeholder { display: block; }
+.o-cart__img--placeholder { height: 96px; }
 
 .o-cart__info { min-width: 0; display: grid; gap: 4px; }
 .o-cart__name {
@@ -262,7 +268,9 @@
       "media price";
     row-gap: 10px;
   }
-  .o-cart__media, .o-cart__img { width: 76px; height: 76px; grid-area: media; }
+  .o-cart__media { width: 76px; grid-area: media; }
+  .o-cart__img { width: 76px; max-height: 133px; grid-area: media; }
+  .o-cart__img--placeholder { height: 76px; }
   .o-cart__info { grid-area: info; }
   .o-cart__qty { grid-area: qty; justify-self: start; }
   .o-cart__price { grid-area: price; justify-self: start; text-align: left; }
